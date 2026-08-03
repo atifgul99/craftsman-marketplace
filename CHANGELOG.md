@@ -20,6 +20,42 @@ may still land in MINOR while the project settles). `1.0.0` is reserved for the 
 and workflow are considered stable enough to commit to strict SemVer against the trigger surface —
 not a synonym for "public."
 
+## [0.2.1] — 2026-08-03
+
+Corrections found after the 0.2.0 tag was cut, so this release brings the published version in
+line with what the project actually does.
+
+### Added
+
+- **README Quickstart and Compatibility sections.** Walks a first-time reader from install through
+  the trigger phrase, the `.craftsman/` workspace files that appear, and acting on findings via
+  `craft-fix`.
+
+### Changed
+
+- README/ROADMAP/CHANGELOG/manifest wording no longer describes the re-run protocol as a compiled
+  "fingerprint diff" or readiness grades as "mechanical" — both are agent-executed against a
+  written rule, and the text now says so.
+- Corrected the worked example's domain count in two places (nine of ten, not four).
+- Compatibility section no longer converts an absent minimum Claude Code version into a positive
+  guarantee.
+- Stale `*-craft` naming corrected to `craft-*` in `ROADMAP.md`, `CONTRIBUTING.md`, and
+  `craft-audit/SKILL.md`.
+
+### Fixed
+
+- A re-run whose domain pass didn't execute could mark prior open findings `fixed`, inverting the
+  project's "not seen ≠ fixed" rule and contradicting `rerun.md` (which is authoritative). Both
+  sites in `workspace.md` now require the pass to have actually run and re-checked the resource.
+- The cross-skill pointer check in `scripts/check-invariants.mjs` still matched the pre-rename
+  `<name>-craft` form, so it had been passing vacuously since the rename — it validated nothing.
+  Corrected to `craft-*`; it now exercises the real pointers.
+
+### Removed
+
+- `displayName` from the plugin manifest — it imposed a Claude Code v2.1.143 floor for a purely
+  cosmetic field.
+
 ## [0.2.0] — 2026-08-03 (public launch)
 
 Dev work (craft-ai graduation) landed 2026-07-15; the version was held back from public installs

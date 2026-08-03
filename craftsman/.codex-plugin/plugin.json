@@ -1,6 +1,6 @@
 {
   "name": "craftsman",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Cross-project engineering craft \u2014 a whole-project audit orchestrator plus ten active, opinionated domain skills for production-readiness reviews across UX, frontend, backend, database, security, infrastructure, observability, testing, lint/static quality gates, and AI/LLM integrations, plus the craft-fix companion that drives fixes off the audit's findings.",
   "author": {
     "name": "Atif Gul",
