@@ -18,7 +18,8 @@ Built for one job: **take a cool-but-fragile vibe-coded MVP (Lovable / Replit / 
 enterprise-grade** — with plain-language findings and a ruthlessly prioritized "fix these first"
 sequence, meeting the project where it is rather than demanding a rewrite. The loop closes with
 `craft-fix`: the audit finds, `craft-fix` drives the fixes, and a `craft-audit` re-run
-verifies — a fixer never marks its own work `fixed`, only a re-run's fingerprint diff can.
+verifies — a fixer never marks its own work `fixed`, only a re-run's re-observation of the finding
+can.
 
 ## What makes it different
 
@@ -26,11 +27,15 @@ verifies — a fixer never marks its own work `fixed`, only a re-run's fingerpri
   across sessions — discovery, applicability, the audit plan, and every finding are on disk. A
   typical single-app audit runs tens of minutes; a large monorepo can run to hours — either way it
   can pause and resume without re-deriving context.
-- **Fingerprint-based re-run diffing — "not seen ≠ fixed."** Re-running the audit doesn't just
-  regenerate a fresh report; it re-observes each prior finding, classifies it (open / fixed /
-  regressed / new), and refuses to let a skipped check masquerade as a resolved one.
-- **Mechanical readiness grades.** Each (surface, domain) gets a derived 🔴 Blocked / 🟡 At risk /
-  🟢 Solid / ❔ Unaudited grade computed from open findings — no hand-waved scores, no theater.
+- **A written re-observation protocol — "not seen ≠ fixed."** Every finding carries a stable identity
+  (scope, domain, defect class, resource) independent of line numbers or file moves. Re-running the
+  audit doesn't just regenerate a fresh report; the agent re-observes each prior finding against that
+  identity, classifies it (open / fixed / regressed / new), and the protocol refuses to let a skipped
+  check masquerade as a resolved one.
+- **A fixed, stated grading rule.** Each (surface, domain) gets a 🔴 Blocked / 🟡 At risk / 🟢 Solid /
+  ❔ Unaudited grade the agent derives from open findings using a rule that's written down and doesn't
+  vary by mood or run — see the table below. It's not enforced by a separate program; the value is
+  that the rule is explicit and deterministic, not hand-waved.
 - **One coherent opinion system, not a grab-bag of checklists.** Every domain skill shares the same
   design principles (meet the project where it is, prioritize ruthlessly, plain language before
   jargon) and the same graduation bar: a new domain stays out of the active set until its
@@ -39,7 +44,7 @@ verifies — a fixer never marks its own work `fixed`, only a re-run's fingerpri
 
 ## What the output looks like
 
-From the worked example — a fictional SaaS audited across four domains:
+From the worked example — a fictional SaaS audited across nine of the ten applicable domains:
 
 ```
 ## Climb sequence (do these first)
@@ -75,26 +80,29 @@ Full worked example, including per-domain findings and the audit status table, i
 
 1. **Install** — the two commands above.
 2. **Trigger it** — these are auto-triggering skills, not slash commands. Just say what you want in
-   plain language, e.g. "is my app production-ready" or "take this from MVP to production" — Claude
-   picks up `craft-audit` from that phrasing on its own.
-3. **What happens** — `craft-audit` tells you in chat what it's about to do, then creates a gitignored
-   `.craftsman/` workspace at your project root: `discovery.md` (what the project actually is),
-   `applicability.md` (which of the 10 domains apply), `master-tracker.md` (the climb sequence and
-   readiness grades), and per-surface `audits/<scope>/<domain>/plan.md` + `findings.md`. A single-app
-   audit runs tens of minutes; a monorepo can run to hours — it checkpoints to disk as it goes, so you
-   can walk away and resume later instead of losing progress.
+   plain language, e.g. "is my app production-ready" or "take this from MVP to production" —
+   `craft-audit` is written to trigger on that phrasing. Skill selection is model behavior, not a
+   guarantee, so if it doesn't fire, ask for it by name: "use craft-audit."
+3. **What happens** — `craft-audit` tells you in chat what it's about to do, then creates a
+   `.craftsman/` workspace at your project root and adds it to your `.gitignore` (verify the entry
+   landed — this is an action the skill takes, not a property it enforces): `discovery.md` (what the
+   project actually is), `applicability.md` (which of up to 10 domains apply), `master-tracker.md`
+   (the climb sequence and readiness grades), and per-surface `audits/<scope>/<domain>/plan.md` +
+   `findings.md`. A single-app audit runs tens of minutes; a monorepo can run to hours — it
+   checkpoints to disk as it goes, so you can walk away and resume later instead of losing progress.
 4. **Act on the results** — once you have a climb sequence, say "fix the findings" (or name one, e.g.
    "fix SEC-003") to invoke `craft-fix`. It re-verifies each pick against current code, gets your
-   sign-off, and executes a scoped batch — it never marks anything `fixed` itself; only a `craft-audit`
-   re-run's fingerprint diff does that.
+   sign-off, and executes a scoped batch — it never marks anything `fixed` itself; only a
+   `craft-audit` re-run's re-observation of the finding does that.
 
 ## Compatibility
 
-Requires **Claude Code v2.1.143 or later**. The plugin manifest (`craftsman/.claude-plugin/plugin.json`)
-sets `displayName`, which Claude Code only reads starting at that version — earlier versions ignore
-the field and fall back to `name` in the `/plugin` picker. Plugin marketplaces and plugin-provided
-skills (what `craft-audit` and the domain skills rely on) work on far older versions, so `displayName`
-is the highest floor this repo currently sets. Check your version with `claude --version`.
+Neither manifest (`craftsman/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`) sets a
+field with a documented minimum-version requirement — plugin marketplaces and plugin-provided skills
+(what `craft-audit` and the domain skills rely on) are base plugin-system features with no version
+floor called out in the Claude Code docs. In short: any Claude Code version with plugin marketplace
+support should work. Check your version with `claude --version`, and if you hit an install or
+loading issue, update to the latest release first.
 
 ## The skills
 
@@ -159,8 +167,9 @@ craftsman-marketplace/          ← marketplace (this repo)
   CONTRIBUTING.md               ← how to propose changes to the skills
 ```
 
-The orchestrator's `.craftsman/` workspace lives in the **project being audited** (gitignored), not
-in this repo — it's per-project audit state.
+The orchestrator's `.craftsman/` workspace lives in the **project being audited**, not in this
+repo — it's per-project audit state. `craft-audit` adds it to that project's `.gitignore` as part of
+setup; verify the entry landed if you want it kept out of version control.
 
 ## The split that matters
 

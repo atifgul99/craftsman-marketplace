@@ -15,18 +15,15 @@ follow this intent:
 - **PATCH** — guidance edits within an existing reference or `SKILL.md` that don't change trigger
   semantics or add/remove a skill/reference.
 
-While still private / pre-public-launch, dogfooding milestones use the `0.x` line (breaking
-changes may land in MINOR). A public 1.0.0 is reserved for the launch pass (including pre-ship
-cleanup of internal dogfooding instrumentation).
+The project is publicly launched at `0.2.0`; the `0.x` line continues post-launch (breaking changes
+may still land in MINOR while the project settles). `1.0.0` is reserved for the point the skill set
+and workflow are considered stable enough to commit to strict SemVer against the trigger surface —
+not a synonym for "public."
 
-## [Unreleased]
+## [0.2.0] — 2026-08-03 (public launch)
 
-### Removed
-
-- Pre-ship cleanup: internal dogfooding feedback folder and its marker blocks stripped from the
-  skills, README, ROADMAP, CLAUDE.md, and `.gitignore` ahead of the public launch pass.
-
-## [0.2.0] — 2026-07-15
+Dev work (craft-ai graduation) landed 2026-07-15; the version was held back from public installs
+until pre-ship cleanup finished, so this entry carries the public-release date.
 
 ### Added
 
@@ -41,6 +38,15 @@ cleanup of internal dogfooding instrumentation).
 - Domain count: nine → ten. Skill total: craft-audit + craft-fix + 10 domains = 12 skills.
 - Plugin/marketplace descriptions and README skill table updated for craft-ai.
 - `drafts/` empty (no domains currently incubating).
+
+### Removed
+
+- Pre-ship cleanup: internal dogfooding feedback folder and its marker blocks stripped from the
+  skills, README, ROADMAP, CLAUDE.md, and `.gitignore` ahead of the public launch pass.
+
+### Released
+
+- **Public launch.** Marketplace and plugin opened to external installs at this version.
 
 ## [0.1.0] — 2026-07-15
 
