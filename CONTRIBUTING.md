@@ -5,7 +5,7 @@ contribution" looks like.
 
 ## Contributions are opinion edits
 
-Each `*-craft` skill encodes one engineer's standard for a domain — the method and the opinionated
+Each `craft-*` skill encodes one engineer's standard for a domain — the method and the opinionated
 stack, not a neutral survey of options. A contribution that changes what a skill recommends is
 changing that opinion, and needs to earn it the same way an internal design decision would:
 

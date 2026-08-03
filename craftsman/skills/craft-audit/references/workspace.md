@@ -230,7 +230,14 @@ On a second audit of the same project, match by **fingerprint**, not by ID or li
    - **fingerprint matches a `fixed` prior, but the problem is back** → keep its ID, set `regressed`.
    - **no fingerprint match** → genuinely new; assign the next sequential ID for that scope/domain.
 3. For each prior `open` finding whose fingerprint is **not** re-observed → set status `fixed`
-   (don't delete — the history is the value).
+   **only if the domain pass for its scope actually ran this re-run and specifically re-checked that
+   resource** (don't delete either way — the history is the value). If the domain pass **did not run**
+   this re-run — skipped for budget, deemed unchanged, or failed — the finding stays `open` with its
+   prior `last-checked` stamp untouched. It is *stale-unknown*, not fixed, and it is never silently
+   dropped from `findings.md`. This is the "not seen ≠ fixed" rule; `rerun.md` is authoritative on it
+   and on the full classification table (open/fixed/regressed/wontfix/new), targeted verification, and
+   how it interacts with Fix-attempt lines — load it before executing a re-run rather than relying on
+   this summary.
 4. **Merge/split/rename:** if two prior findings collapse into one (e.g. "no validation anywhere"),
    keep the lowest ID, mark the other `fixed (merged into <ID>)`. If one splits into two, the
    original keeps its ID and the new aspect gets a fresh ID. A renamed file changes no fingerprint, so
@@ -410,8 +417,9 @@ duplicates exist.)
 The `craft-fix` companion sets a climb-sequence row's **Status** cell to `open · fix-attempted
 <YYYY-MM-DD>` after recording a Fix-attempt on that finding. Like "rolled up under", this is tracker
 **display metadata**, not a lifecycle status — counts and grades still treat the finding as plain
-`open`. The next re-run resolves it: to `fixed` if the fingerprint isn't re-observed, or back to
-plain `open` if the fix didn't hold.
+`open`. The next re-run resolves it per the "not seen ≠ fixed" rule: to `fixed` only if the domain pass ran
+and the fingerprint isn't re-observed, back to plain `open` (fix-attempt annotated "did not hold") if
+it's re-observed, or left `open` with the stamp untouched if the domain pass didn't run this time.
 
 ## Readiness (derived — never hand-set)
 One honest grade per applicable (scope, domain), **computed mechanically from open findings** so it

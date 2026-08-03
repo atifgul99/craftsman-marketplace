@@ -142,7 +142,7 @@ function checkReferenceCrossLinking() {
     // "craft-security references/authz.md" or "craft-security → `references/authz.md`") — those
     // point at a different skill's files, not this skill's own reference index, so they're
     // intentionally not required to exist here.
-    const CROSS_SKILL_PREFIX = /`?(?:[a-z][a-z0-9-]*-craft)`?\s*(?:→|->)?\s*`?$/i;
+    const CROSS_SKILL_PREFIX = /`?(?:craft-[a-z0-9-]*)`?\s*(?:→|->)?\s*`?$/i;
     const mentioned = new Set();
     for (const m of indexSection.matchAll(/references\/([A-Za-z0-9_\-./]+\.md)/g)) {
       const before = indexSection.slice(Math.max(0, m.index - 40), m.index);
@@ -199,11 +199,11 @@ function findAllSkillMdFiles() {
 // skill token and filename is bounded and excludes newlines so we don't span paragraphs.
 const CROSS_SKILL_PATTERNS = [
   // "craft-security ... references/authz.md" (literal "references/" substring)
-  /([a-z][a-z0-9-]*-craft)[^\n]{0,80}?references\/([a-z0-9-]+\.md)/g,
+  /(craft-[a-z0-9-]*)[^\n]{0,80}?references\/([a-z0-9-]+\.md)/g,
   // "`craft-security` → `authz.md`" / "craft-security's `authz.md`" (backtick-only form)
-  /([a-z][a-z0-9-]*-craft)[`*'"\s]{0,10}(?:→|->|'s)[^\n]{0,60}?`([a-z0-9-]+\.md)`/g,
+  /(craft-[a-z0-9-]*)[`*'"\s]{0,10}(?:→|->|'s)[^\n]{0,60}?`([a-z0-9-]+\.md)`/g,
   // direct path form: "craft-security/references/authz.md"
-  /([a-z][a-z0-9-]*-craft)\/references\/([a-z0-9-]+\.md)/g,
+  /(craft-[a-z0-9-]*)\/references\/([a-z0-9-]+\.md)/g,
 ];
 
 function checkCrossSkillPointers() {

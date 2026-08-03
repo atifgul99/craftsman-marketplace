@@ -52,7 +52,7 @@ demand a rewrite of a working stack).
 
 ### P2 — depth (BUILT — 2026-06-22)
 
-- [x] Per-domain audit protocols emit their own todo lists. Each `*-craft` `SKILL.md` now carries a
+- [x] Per-domain audit protocols emit their own todo lists. Each `craft-*` `SKILL.md` now carries a
       canonical `## Audit checklist (for craft-audit)` section; the orchestrator writes
       `plan.md` from discovery context, and each subagent merges the domain checklist as its first
       act before auditing. Ownership of the checklist lives with the domain that knows the surface.

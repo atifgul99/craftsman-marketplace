@@ -18,7 +18,7 @@ description: >-
 
 # Craftsman Audit — the production-readiness orchestrator
 
-This is the **conductor**, not another peer domain. The ten `*-craft` skills each own one surface
+This is the **conductor**, not another peer domain. The ten `craft-*` skills each own one surface
 (ux, frontend, backend, db, security, infra, observability, testing, lint, ai). This skill stands above them: it looks
 at the whole project, decides which of those surfaces apply, plans an audit for each, routes the
 actual findings to the domain skills, and keeps a durable record of what's been audited and what's
