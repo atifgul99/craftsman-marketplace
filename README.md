@@ -71,6 +71,31 @@ Full worked example, including per-domain findings and the audit status table, i
 /plugin install craftsman@craftsman-marketplace
 ```
 
+## Quickstart
+
+1. **Install** — the two commands above.
+2. **Trigger it** — these are auto-triggering skills, not slash commands. Just say what you want in
+   plain language, e.g. "is my app production-ready" or "take this from MVP to production" — Claude
+   picks up `craft-audit` from that phrasing on its own.
+3. **What happens** — `craft-audit` tells you in chat what it's about to do, then creates a gitignored
+   `.craftsman/` workspace at your project root: `discovery.md` (what the project actually is),
+   `applicability.md` (which of the 10 domains apply), `master-tracker.md` (the climb sequence and
+   readiness grades), and per-surface `audits/<scope>/<domain>/plan.md` + `findings.md`. A single-app
+   audit runs tens of minutes; a monorepo can run to hours — it checkpoints to disk as it goes, so you
+   can walk away and resume later instead of losing progress.
+4. **Act on the results** — once you have a climb sequence, say "fix the findings" (or name one, e.g.
+   "fix SEC-003") to invoke `craft-fix`. It re-verifies each pick against current code, gets your
+   sign-off, and executes a scoped batch — it never marks anything `fixed` itself; only a `craft-audit`
+   re-run's fingerprint diff does that.
+
+## Compatibility
+
+Requires **Claude Code v2.1.143 or later**. The plugin manifest (`craftsman/.claude-plugin/plugin.json`)
+sets `displayName`, which Claude Code only reads starting at that version — earlier versions ignore
+the field and fall back to `name` in the `/plugin` picker. Plugin marketplaces and plugin-provided
+skills (what `craft-audit` and the domain skills rely on) work on far older versions, so `displayName`
+is the highest floor this repo currently sets. Check your version with `claude --version`.
+
 ## The skills
 
 The method and checklists are stack-agnostic and discover the actual stack at runtime, but the
