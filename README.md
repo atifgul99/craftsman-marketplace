@@ -12,6 +12,9 @@ actually is, then finds the gaps between a working demo and something you'd trus
 customers. It writes everything it finds to disk so you can pick it back up later instead of
 losing the work.
 
+Written by [Atif Gul](https://github.com/atifgul99), a software engineer of 25 years, including
+time at Microsoft and Amazon.
+
 ## What it catches
 
 Here's the kind of thing an audit like this turns up:
@@ -218,6 +221,15 @@ Built for the builder of a cool-but-fragile MVP: someone who shipped something w
 Replit, or v0 that demos well but is nowhere near production-grade (no real states, weak or no auth,
 no observability, data that corrupts under load, fragile infra). Findings lead with plain-language
 consequence, not jargon.
+
+## Why this exists
+
+I have been building software for 25 years, including at Microsoft and Amazon. These days I build
+and ship my own products: Next.js apps on Postgres, with real users and real money moving through
+them. I kept doing the same review by hand every time one of them got close to launch. Same areas,
+same questions, same handful of things that turned out to be wrong. So I wrote it down, turned it
+into something Claude Code could run, and pointed it at my own repos until it stopped surprising
+me. The opinions in it are mine, and they come from shipping things and watching them break.
 
 ## Contributing
 

@@ -1,5 +1,5 @@
 .DS_Store
 node_modules/
 
-# .remember/ is local session memory — never shared, never shipped.
+# .remember/ is local session memory, never shared, never shipped.
 .remember/

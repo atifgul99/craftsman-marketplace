@@ -7,7 +7,7 @@ assignees: ""
 ---
 
 <!--
-Fill in what you can — the more specific, the more actionable. If this isn't yet a concrete,
+Fill in what you can. The more specific, the more actionable. If this isn't yet a concrete,
 evidence-backed finding, consider opening a Discussion instead.
 -->
 
@@ -19,9 +19,9 @@ evidence-backed finding, consider opening a Discussion instead.
 
 **Evidence:**
 <!-- What happened, or what's missing. Cite file:line/section in the skill, and what the
-guidance said vs. what was actually needed. A vague "this could be better" can't be acted on —
-point to the specific passage and the concrete failure mode (what broke, who was confused, what
-was produced incorrectly). -->
+guidance said vs. what was actually needed. A vague "this could be better" can't be acted on.
+Point to the specific passage and the concrete failure mode: what broke, who was confused, what
+was produced incorrectly. -->
 
 **Suggested change:**
-<!-- Optional but valued — how would you fix or improve it? -->
+<!-- Optional but valued. How would you fix or improve it? -->

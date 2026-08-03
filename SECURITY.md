@@ -26,5 +26,5 @@ triaged privately.
 
 This policy covers the contents of this repository (the marketplace and plugin manifests, the
 skill files, and `scripts/check-invariants.mjs`). It does not cover Claude Code, Codex, Cursor, or
-any other host tool that loads these skills — report issues in those tools to their respective
+any other host tool that loads these skills. Report issues in those tools to their respective
 maintainers.
