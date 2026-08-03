@@ -97,12 +97,10 @@ Full worked example, including per-domain findings and the audit status table, i
 
 ## Compatibility
 
-Neither manifest (`craftsman/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`) sets a
-field with a documented minimum-version requirement — plugin marketplaces and plugin-provided skills
-(what `craft-audit` and the domain skills rely on) are base plugin-system features with no version
-floor called out in the Claude Code docs. In short: any Claude Code version with plugin marketplace
-support should work. Check your version with `claude --version`, and if you hit an install or
-loading issue, update to the latest release first.
+Neither manifest (`craftsman/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`) declares
+a minimum Claude Code version. Use a current Claude Code release with plugin marketplace support;
+older versions are unverified. Check your version with `claude --version`, and if you hit an install
+or loading issue, update to the latest release first.
 
 ## The skills
 
@@ -129,8 +127,8 @@ See each skill's `SKILL.md` under `craftsman/skills/<name>/` for its full trigge
 
 ## Worked example
 
-A complete, synthetic end-to-end audit — a fictional "Invoicely" SaaS app audited across four
-domains — is committed at
+A complete, synthetic end-to-end audit — a fictional "Invoicely" SaaS app audited across nine of
+the ten applicable domains — is committed at
 [`craftsman/examples/craftsman-output/`](./craftsman/examples/craftsman-output/). It's a teaching
 artifact showing the full shape of a `.craftsman/` workspace: discovery, applicability, the master
 tracker with readiness grades, and per-domain findings.

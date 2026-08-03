@@ -9,8 +9,8 @@
 
 Cross-project engineering craft as Claude Code skills. Two kinds of skill:
 
-- **Domain skills** (`*-craft`) — one per surface (ux, frontend, backend, db, security, infra,
-  observability, testing, lint). Principle-based, stack-agnostic, depth in `references/`, discover
+- **Domain skills** (`craft-*`) — one per surface (ux, frontend, backend, db, security, infra,
+  observability, testing, lint, ai). Principle-based, stack-agnostic, depth in `references/`, discover
   project specifics rather than hardcode them.
 - **The orchestrator** (`craft-audit`) — the front door. Audits a whole project for
   production-readiness, decides which domains apply, plans + tracks the audit in a `.craftsman/`
@@ -29,8 +29,9 @@ demand a rewrite of a working stack).
 
 ## Where audit state lives
 
-- **`.craftsman/`** (in the audited project, gitignored) — the audit's working state *about that
-  project*; produced by `craft-audit`.
+- **`.craftsman/`** (in the audited project) — the audit's working state *about that project*;
+  produced by `craft-audit`, which creates it and adds it to `.gitignore` as an action, not an
+  enforced property.
 
 ---
 
@@ -56,8 +57,9 @@ demand a rewrite of a working stack).
       `plan.md` from discovery context, and each subagent merges the domain checklist as its first
       act before auditing. Ownership of the checklist lives with the domain that knows the surface.
 - [x] Worked end-to-end example: a complete illustrative `.craftsman/` tree (fictional "Invoicely" SaaS,
-      scope `root`, 4 domains audited) committed at `craftsman/examples/craftsman-output/`. Synthetic by
-      design — a portable teaching artifact that doesn't bake another repo's real holes into this one.
+      scope `root`, now 9 of 10 domains audited) committed at `craftsman/examples/craftsman-output/`.
+      Synthetic by design — a portable teaching artifact that doesn't bake another repo's real holes
+      into this one.
 - [x] Per-domain readiness grade in the master tracker — a derived 🔴 Blocked / 🟡 At risk / 🟢 Solid /
       ❔ Unaudited per (scope, domain), plus an overall = worst applicable surface. Computed mechanically
       from open findings (no numeric scores) so it can't drift into theater. Spec in `workspace.md`.
@@ -98,8 +100,8 @@ demand a rewrite of a working stack).
       data-handling fixes behind a short written plan, batches fixes by surface (disjoint-file-ownership
       rule for parallel subagents), hands fixer subagents only the finding record + referenced domain
       docs (never the whole workspace), and appends a `Fix-attempt` annotation without ever setting
-      status to `fixed` itself — only a `craft-audit` re-run's fingerprint diff can, per "not seen
-      ≠ fixed". `SKILL.md` + `references/fix-protocol.md`; `scripts/check-invariants.mjs` exempts it
+      status to `fixed` itself — only a `craft-audit` re-run's re-observation of the finding can, per
+      "not seen ≠ fixed". `SKILL.md` + `references/fix-protocol.md`; `scripts/check-invariants.mjs` exempts it
       from the domain audit-checklist heading requirement by name.
 
 ---

@@ -66,7 +66,7 @@ gates, full nine-domain worked example. Internal dogfooding instrumentation rema
   user approval before editing, gates 🔴 auth/migration/data-handling fixes behind a written plan,
   batches by surface (disjoint file ownership for parallel subagents), and appends a `Fix-attempt`
   annotation without ever setting a finding's status to `fixed` itself — only a `craft-audit`
-  re-run's fingerprint diff can, per "not seen ≠ fixed". `scripts/check-invariants.mjs` exempts
+  re-run's re-observation of the finding can, per "not seen ≠ fixed". `scripts/check-invariants.mjs` exempts
   `craft-fix` from the domain `## Audit checklist (for craft-audit)` heading requirement.
 - **Findings emission contract:** canonical `findings.md` heading grammar + mechanical validation
   before synthesis (path-bound scope/domain, re-prompt on fail, no normalizer). Restated in all
