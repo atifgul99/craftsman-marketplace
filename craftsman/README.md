@@ -1,11 +1,13 @@
 # Craftsman
 
-`craftsman` is a whole-project production-readiness audit plugin: one orchestrator
+The engineering review you'd get from the technical co-founder you don't have.
+
+`craftsman` is a whole-project production-readiness audit plugin: a front-door skill
 (`craft-audit`), ten domain craft skills (ux, frontend, backend, db, security, infra,
 observability, testing, lint, ai), and an action companion (`craft-fix`) that drives fixes off an
-existing audit.
+existing audit. Security is one of the ten domains, not the whole product.
 
-**Full docs, the skill table, and a worked example → [repo root README](../README.md).**
+**Full docs, the skill table, and a worked example: see the [repo root README](../README.md).**
 
 ## Install
 
@@ -22,7 +24,7 @@ for install details.
 ### Codex (experimental)
 
 The `.codex-plugin/plugin.json` manifest is provided for Codex environments that support local
-plugin installs, but this path is **experimental and not verified end-to-end** — treat it as
+plugin installs, but this path is **experimental and not verified end-to-end**, treat it as
 best-effort. The reliable fallback, if plugin install doesn't work in your Codex environment, is to
 symlink the skill folders directly into `~/.codex/skills/`:
 
@@ -36,7 +38,7 @@ done
 
 Any tool that reads `SKILL.md`-based skill folders can, in principle, use the same
 `skills/<skill-name>/` directories directly. This isn't verified against Cursor's actual skill
-loader — the reliable fallback is the same symlink approach as above, pointed at that tool's skills
+loader. The reliable fallback is the same symlink approach as above, pointed at that tool's skills
 directory.
 
 ## Where the skills live

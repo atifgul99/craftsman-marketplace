@@ -1,7 +1,7 @@
 {
   "name": "craftsman",
   "version": "0.2.1",
-  "description": "Cross-project engineering craft \u2014 a whole-project audit orchestrator plus ten active, opinionated domain skills for production-readiness reviews across UX, frontend, backend, database, security, infrastructure, observability, testing, lint/static quality gates, and AI/LLM integrations, plus the craft-fix companion that drives fixes off the audit's findings.",
+  "description": "The engineering review you'd get from the technical co-founder you don't have. Findings are ranked by real consequence, not alphabetically, so a broken invoice check beats a missing comment. Audits a whole project for production-readiness across ten areas (UX, frontend, backend, database, security, infrastructure, observability, testing, lint, AI integrations), not just security. The craft-fix companion drives the fixes but can never mark its own work fixed.",
   "author": {
     "name": "Atif Gul",
     "url": "https://github.com/atifgul99"
@@ -29,8 +29,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Craftsman",
-    "shortDescription": "Audit a project for production-readiness",
-    "longDescription": "Run whole-project production-readiness audits with a front-door orchestrator and opinionated domain skills covering UX, frontend architecture, backend contracts, databases, security, infrastructure, observability, testing, lint/static quality gates, and AI/LLM integrations.",
+    "shortDescription": "The engineering review you'd get from the technical co-founder you don't have",
+    "longDescription": "Ship something with Lovable, Replit, Bolt, v0, or Claude Code and it works, but no engineer has checked it yet. This audits the whole project the way one would: UX, frontend, backend, database, security, infrastructure, observability, testing, lint, and AI integrations. Findings are ranked by real consequence, so a broken invoice check beats a missing comment; security is one of ten areas here, not the whole check. Everything lands in a workspace inside your project so a long audit can pause and resume. The fixer companion drives the fixes but can never mark its own work fixed; only a fresh audit pass can confirm that.",
     "developerName": "Atif Gul",
     "category": "Developer Tools",
     "capabilities": [
@@ -39,9 +39,9 @@
     ],
     "websiteURL": "https://github.com/atifgul99/craftsman-marketplace",
     "defaultPrompt": [
-      "Audit this repo for production-readiness",
-      "Run a frontend and backend craft review on this project",
-      "Create a .craftsman workspace and prioritize the highest-risk fixes"
+      "Is my app production-ready before I let real customers in?",
+      "What would a senior engineer flag in this project?",
+      "Audit this repo across all ten areas and prioritize the highest-risk fixes"
     ],
     "brandColor": "#1f3a37"
   }
