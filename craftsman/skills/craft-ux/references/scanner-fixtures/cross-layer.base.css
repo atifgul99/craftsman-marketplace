@@ -1,0 +1,11 @@
+/* Scanner fixture for check 8 (category g) — cross-layer leak in the BASE STYLESHEET.
+   KNOWN POSITIVE: composing token-layer utilities via @apply in the base stylesheet smuggles
+   component styling into the system-definition layer. Check 8 runs
+   `rg '@apply\s+[^;]*(shadow-|bg-|text-|border-)' "$BASE_STYLESHEET"` — it MUST fire on the line below.
+   (A bare @keyframes here is the CORRECT home for keyframes and must NOT be flagged by check 8.) */
+
+@keyframes spin { to { transform: rotate(360deg); } } /* correct home — no hit expected */
+
+.card {
+  @apply shadow-lg bg-card text-foreground; /* leak — KNOWN POSITIVE */
+}

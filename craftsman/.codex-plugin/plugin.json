@@ -1,0 +1,48 @@
+{
+  "name": "craftsman",
+  "version": "0.2.0",
+  "description": "Cross-project engineering craft \u2014 a whole-project audit orchestrator plus ten active, opinionated domain skills for production-readiness reviews across UX, frontend, backend, database, security, infrastructure, observability, testing, lint/static quality gates, and AI/LLM integrations, plus the craft-fix companion that drives fixes off the audit's findings.",
+  "author": {
+    "name": "Atif Gul",
+    "url": "https://github.com/atifgul99"
+  },
+  "homepage": "https://github.com/atifgul99/craftsman-marketplace",
+  "repository": "https://github.com/atifgul99/craftsman-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "craftsman",
+    "audit",
+    "engineering",
+    "production-readiness",
+    "frontend",
+    "backend",
+    "database",
+    "security",
+    "infrastructure",
+    "observability",
+    "testing",
+    "lint",
+    "eslint",
+    "ux",
+    "ai"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Craftsman",
+    "shortDescription": "Audit a project for production-readiness",
+    "longDescription": "Run whole-project production-readiness audits with a front-door orchestrator and opinionated domain skills covering UX, frontend architecture, backend contracts, databases, security, infrastructure, observability, testing, lint/static quality gates, and AI/LLM integrations.",
+    "developerName": "Atif Gul",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/atifgul99/craftsman-marketplace",
+    "defaultPrompt": [
+      "Audit this repo for production-readiness",
+      "Run a frontend and backend craft review on this project",
+      "Create a .craftsman workspace and prioritize the highest-risk fixes"
+    ],
+    "brandColor": "#1f3a37"
+  }
+}

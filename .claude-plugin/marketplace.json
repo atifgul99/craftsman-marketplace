@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "craftsman-marketplace",
+  "owner": {
+    "name": "Atif Gul",
+    "url": "https://github.com/atifgul99"
+  },
+  "description": "Atif Gul's personal engineering-standards marketplace. Portable, opinionated craft skills applied identically across all repos.",
+  "plugins": [
+    {
+      "name": "craftsman",
+      "source": "./craftsman",
+      "description": "Production-readiness audit skills for Claude Code \u2014 orchestrated whole-project audits with durable, re-runnable findings, plus the craft-fix companion that drives the fixes. The orchestrator (craft-audit) discovers project shape, decides which of ten domains apply (ux, frontend, backend, db, security, infra, observability, testing, lint, ai), and plans/tracks the audit in a .craftsman/ workspace \u2014 with derived per-domain readiness grades and re-run intelligence (staleness detection + finding-by-finding diffing across runs). Each domain skill exposes an audit checklist the orchestrator turns into the plan. craft-fix then re-verifies picks against current code, batches fixes by surface, and never marks a finding fixed itself \u2014 only a re-run's fingerprint diff can. One trigger per domain, depth in references/, project specifics discovered from the repo rather than hardcoded. A worked example ships under examples/; drafts/ incubates future domains until filled.",
+      "version": "0.2.0",
+      "author": {
+        "name": "Atif Gul",
+        "url": "https://github.com/atifgul99"
+      },
+      "homepage": "https://github.com/atifgul99/craftsman-marketplace",
+      "license": "MIT",
+      "keywords": [
+        "engineering-standards",
+        "audit",
+        "production-readiness",
+        "ux",
+        "frontend",
+        "backend",
+        "database",
+        "security",
+        "infra",
+        "observability",
+        "testing",
+        "lint",
+        "eslint",
+        "ai"
+      ]
+    }
+  ]
+}
