@@ -18,10 +18,19 @@ time at Microsoft and Amazon.
 ## In short
 
 It's free and MIT licensed. It runs inside your own Claude Code session, makes no network calls,
-and collects no telemetry (see [SECURITY.md](./SECURITY.md)). `craft-audit` only reads your code
-and writes notes into one new local folder, `.craftsman/`. Nothing in your app changes unless you
-separately ask `craft-fix`, and it asks for your sign-off before it touches anything. Expect under
-an hour for a typical single-app audit.
+and collects no telemetry (see [SECURITY.md](./SECURITY.md)). `craft-audit` only reads your code.
+The writes it makes are a new local folder, `.craftsman/`, holding its notes, and one line added to
+your project's `.gitignore` (the file that tells git which files to skip) so that folder stays out
+of version control. Nothing in your app's own code changes unless you separately ask `craft-fix`,
+and it asks for your sign-off before it touches anything. Expect under an hour for a typical
+single-app audit.
+
+## Is this for you
+
+You shipped something real with Claude Code, Lovable, Replit, Bolt, or v0. It works, and it demos
+well. You don't have an engineering background, and you can't say for sure what a senior engineer
+would flag before you let paying customers in. If that's you, this is for you. If you already have
+someone doing this kind of review, you probably don't need it.
 
 ## Install
 
@@ -34,8 +43,8 @@ Type these into Claude Code's chat box, not a terminal:
 /plugin install craftsman@craftsman-marketplace
 ```
 
-If you're working headlessly, or scripting this for an agent, use the terminal equivalents
-instead:
+If you're working headlessly (running Claude Code without the interactive chat window, e.g. from a
+script), use the terminal equivalents instead:
 
 ```bash
 claude plugin marketplace add atifgul99/craftsman-marketplace
@@ -62,13 +71,6 @@ findings, unedited.
 None of this means your app is bad. It means nobody who knew what to check has looked yet. That's
 the gap craftsman closes.
 
-## Is this for you
-
-You shipped something real with Claude Code, Lovable, Replit, Bolt, or v0. It works, and it demos
-well. You don't have an engineering background, and you can't say for sure what a senior engineer
-would flag before you let paying customers in. If that's you, this is for you. If you already have
-someone doing this kind of review, you probably don't need it.
-
 ## What stands between your app and enterprise-grade
 
 Most tools built for this moment check one thing: security. Security matters, and craftsman
@@ -93,18 +95,20 @@ under an hour to run, not seconds, because reading a whole project properly take
 ## Quickstart
 
 1. **Install.** The commands above.
-2. **Trigger it.** These are auto-triggering skills, not slash commands. Just say what you want in
-   plain language, e.g. "is my app production-ready" or "take this from MVP to production."
-   `craft-audit` is written to trigger on that phrasing. Skill selection is model behavior, not a
-   guarantee, so if it doesn't fire, ask for it by name: "use craft-audit."
+2. **Trigger it.** These skills auto-trigger from what you type, rather than needing a typed
+   command like `/some-command`. Just say what you want in plain language, e.g. "is my app
+   production-ready" or "take this from MVP to production." `craft-audit` is written to trigger on
+   that phrasing. Which skill fires is a judgment call Claude makes, not a guarantee, so if it
+   doesn't fire, ask for it by name: "use craft-audit."
 3. **What happens.** `craft-audit` tells you in chat what it's about to do, then creates a
    `.craftsman/` workspace at your project root and adds it to your `.gitignore` (verify the entry
    landed; this is an action the skill takes, not a property it enforces): `discovery.md` (what the
    project actually is), `applicability.md` (which of up to 10 domains apply), `master-tracker.md`
-   (the climb sequence and readiness grades), and per-surface `audits/<scope>/<domain>/plan.md` +
-   `findings.md`. A single-app audit usually finishes in under an hour; a monorepo can take longer.
-   It checkpoints to disk as it goes, so you can walk away and resume later instead of losing
-   progress.
+   (the master tracker: the climb sequence plus a readiness grade, Blocked/At risk/Solid, for each
+   area), and per-surface `audits/<scope>/<domain>/plan.md` + `findings.md`. A single-app audit
+   usually finishes in under an hour; a monorepo (one repo holding multiple apps or packages) can
+   take longer. It checkpoints to disk as it goes, so you can walk away and resume later instead of
+   losing progress.
 4. **Act on the results.** Once you have a climb sequence, say "fix the findings" (or name one, e.g.
    "fix SEC-003") to invoke `craft-fix`. It re-verifies each pick against current code, gets your
    sign-off, and executes a scoped batch. It never marks anything `fixed` itself; only a
@@ -112,7 +116,8 @@ under an hour to run, not seconds, because reading a whole project properly take
 
 ## What the output looks like
 
-From the worked example, a fictional SaaS audited across nine of the ten applicable domains:
+From the worked example, a fictional SaaS (software you access by logging into a website, rather
+than installing) audited across nine of the ten applicable domains:
 
 ```
 ## Climb sequence (do these first)
@@ -134,21 +139,18 @@ From the worked example, a fictional SaaS audited across nine of the ten applica
 shipment. Clearing SEC-001 + DB-001 promotes both surfaces toward 🟡 At risk.
 ```
 
-Full worked example, including per-domain findings and the audit status table, is at
-[`craftsman/examples/craftsman-output/`](./craftsman/examples/craftsman-output/).
-
-## Worked example
-
-A complete, synthetic end-to-end audit, a fictional "Invoicely" SaaS app audited across nine of
-the ten applicable domains, is committed at
+This is from a complete, synthetic end-to-end audit of a fictional "Invoicely" SaaS app, audited
+across nine of the ten applicable domains. The full worked example, including per-domain findings
+and the audit status table, is committed at
 [`craftsman/examples/craftsman-output/`](./craftsman/examples/craftsman-output/). It's a teaching
 artifact showing the full shape of a `.craftsman/` workspace: discovery, applicability, the master
 tracker with readiness grades, and per-domain findings.
 
 ## The skills
 
-The method and checklists are stack-agnostic and discover the actual stack at runtime, but the
-deepest guidance leans TypeScript/Next.js/Postgres/serverless, the vibe-coder default stack.
+The method and checklists aren't tied to one tech stack: they discover the actual stack your
+project uses at runtime, but the deepest guidance leans TypeScript/Next.js/Postgres/serverless, the
+vibe-coder default stack.
 
 | Skill | What it covers | Example trigger phrase |
 | --- | --- | --- |
@@ -183,8 +185,12 @@ installed but turn it off).
 
 The `.craftsman/` folder an audit creates lives in the project you audited, not in this repo. It's
 just local files: findings, plans, and the master tracker, all plain Markdown. It's safe to delete
-at any time. Deleting it costs you the finding history, so a later re-run starts from scratch
-instead of picking up where you left off, but it doesn't touch your app's code.
+once an audit or fix session has actually finished. Don't delete it mid-run: while a run is active,
+the folder holds a `.run-in-progress` marker, and `craft-fix` refuses to touch findings while that
+marker exists, so deleting the folder partway through can race with in-progress writes. Deleting it
+costs you the finding history, so a later re-run starts from scratch instead of picking up where you
+left off, but it doesn't touch your app's code. It also leaves behind the `.craftsman` line in your
+`.gitignore`, which you can remove by hand if you want it gone too.
 
 Anything `craft-fix` changes is an ordinary file edit in your working tree. Review it the same way
 you'd review any other change, and revert it the same way, with your editor, git, or however you
