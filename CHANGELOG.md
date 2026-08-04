@@ -23,7 +23,7 @@ not a synonym for "public."
 
 ## [0.3.0] (2026-08-03)
 
-The response to the first detailed field report from a live production audit — a nine-domain,
+The response to the first detailed field report from a live production audit: a nine-domain,
 107-finding run against a real revenue-carrying app. Every change here closes a gap that run
 actually hit.
 
@@ -32,43 +32,43 @@ actually hit.
 - **Shipping-target check in discovery.** A run from a branch behind the default branch reported
   already-shipped fixes as missing. `craft-audit` now compares `HEAD` against the default remote
   branch (or a project-declared deploy branch/commit) before reading any code, and stops to ask
-  which tree to audit when behind or diverged. No remote at all is common and not an error — it's
-  recorded as "shipping target unknown" and the audit proceeds against the working checkout.
+  which tree to audit when behind or diverged. No remote at all is common and not an error. It's
+  recorded as "shipping target unknown," and the audit proceeds against the working checkout.
 - **Subagent write precondition and the fenced-block fallback contract.** The subagent prompt now
   states outright that the worker must write its own `findings.md` and confirm it did. When a
   harness policy blocks that, the worker instead returns the complete file as one fenced code
   block and nothing else, and the orchestrator persists it verbatim before running validation.
-  Transport corruption (HTML entities, truncation) is never patched over with a normalizer —
+  Transport corruption (HTML entities, truncation) is never patched over with a normalizer:
   a persisted file that fails validation gets re-prompted, not repaired.
 - **`scripts/validate-findings.mjs`**, a deterministic implementation of the six-check mechanical
   validation checklist already documented in `workspace.md`. It's now the preferred way to run
-  that checklist — hand-checking remains the documented fallback — which makes "a file that fails
+  that checklist. Hand-checking remains the documented fallback, which makes "a file that fails
   any check is a blocker" an enforceable rule instead of an aspiration.
 - **Optional `Confidence` field** (`verified | inferred | unverified-from-repo`) on a finding,
   appended after `Last-checked`. Absence means `verified`, so every existing `findings.md` stays
   valid unchanged. `unverified-from-repo` covers claims that depend on something outside the repo
   (dashboard config, branch protection, secrets) and must describe the repo gap plus the human
-  check needed — never assert the external condition is true.
+  check needed, without asserting the external condition is true.
 - **Semantic cross-domain rollup fallback.** The exact `(scope, class, resource)` key rollup
-  produced zero groups on the real 107-finding run even though genuine duplicates existed —
+  produced zero groups on the real 107-finding run even though genuine duplicates existed:
   independent domain passes invent different `class`/`resource` vocabulary for the same defect on
   a first run. A mandatory second pass now groups by what a finding actually cites (file:line,
   route, table, env key) instead of by string match.
 - **Repo-native context docs** (`CLAUDE.md`, `AGENTS.md`, `README.md`, applicable `docs/`) added to
-  the discovery evidence list, with an explicit re-verify caveat — cite the doc, then check the
+  the discovery evidence list, with an explicit re-verify caveat: cite the doc, then check the
   code, never treat it as ground truth on its own. "Documentation contradicts code" is now a
   finding class in its own right.
 - **Gated surfaces in `craft-fix`.** Optional, no setup required: a project can declare surfaces
   (payment webhooks, billing math, etc.) via `.craftsman/gated-surfaces.md`, its own
   `CLAUDE.md`/`AGENTS.md`/README, or the user saying so in chat. A finding touching a declared
-  surface is never auto-fixed, regardless of severity or how small the diff looks — it's routed to
+  surface is never auto-fixed, regardless of severity or how small the diff looks. It's routed to
   a human-approval bucket instead.
 
 ### Changed
 
 - The step-5 false-negative guard (verify with grep before accepting a reviewer's "this is
   missing" claim) now has its converse stated: the tree being grepped has to be the tree that
-  ships, per the new shipping-target check — a stale checkout makes already-shipped fixes look
+  ships, per the new shipping-target check. A stale checkout makes already-shipped fixes look
   missing just as easily as a bad grep makes a real gap look present.
 
 ### Notes

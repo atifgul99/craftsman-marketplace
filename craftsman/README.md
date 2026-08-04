@@ -60,7 +60,8 @@ directory.
 craftsman/
 ├── .claude-plugin/plugin.json
 ├── .codex-plugin/plugin.json
-├── skills/            ← SKILL.md + references/ per skill (source of truth for behavior)
+├── skills/            ← SKILL.md + references/ per skill (source of truth for behavior);
+│                        craft-audit and craft-lint also ship a scripts/ helper
 ├── examples/          ← a worked end-to-end .craftsman/ audit
 └── drafts/            ← incubating domains, not loaded
 ```

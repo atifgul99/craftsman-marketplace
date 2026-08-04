@@ -243,6 +243,7 @@ craftsman-marketplace/          ← marketplace (this repo)
     .claude-plugin/plugin.json
     skills/                     ← ACTIVE (all loaded): SKILL.md + references/ each
       craft-audit/          ← the front-door orchestrator: discovery, applicability, planning, tracking
+                                 + scripts/validate-findings.mjs (mechanical findings-format check)
       craft-fix/            ← the action companion: drives fixes off an existing .craftsman/ audit
       craft-ux/                 ← + references/motion/ and scanner-fixtures/
       craft-frontend/
@@ -250,7 +251,7 @@ craftsman-marketplace/          ← marketplace (this repo)
       craft-db/
       craft-security/
       craft-infra/
-      craft-lint/
+      craft-lint/                ← + scripts/eslint-rule-audit.mjs
       craft-observability/
       craft-testing/
       craft-ai/
