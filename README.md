@@ -204,9 +204,9 @@ I built my own products with Replit and Claude Code. They worked, and they were 
 that makes software safe to put in front of real users: no error tracking, no tests on the paths
 that move money, permissions that looked right and were not.
 
-I have been building software long enough to know what was missing, so I taught Claude to add it.
-Then I did the same on the next product, and the one after that, slightly differently each time,
-which is its own problem.
+I knew what was missing because I have spent 25 years building and shipping enterprise software,
+where none of that is optional. So I taught Claude to add it. Then I did the same on the next
+product, and the one after that, slightly differently each time, which is its own problem.
 
 So I wrote the standard down once, in a form Claude Code can run, and pointed it at every repo I
 own. The opinions in it are mine, and they come from shipping things and watching them break.
