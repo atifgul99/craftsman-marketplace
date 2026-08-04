@@ -15,6 +15,33 @@ losing the work.
 Written by [Atif Gul](https://github.com/atifgul99), a software engineer of 25 years, including
 time at Microsoft and Amazon.
 
+## In short
+
+It's free and MIT licensed. It runs inside your own Claude Code session, makes no network calls,
+and collects no telemetry (see [SECURITY.md](./SECURITY.md)). `craft-audit` only reads your code
+and writes notes into one new local folder, `.craftsman/`. Nothing in your app changes unless you
+separately ask `craft-fix`, and it asks for your sign-off before it touches anything. Expect under
+an hour for a typical single-app audit.
+
+## Install
+
+You need Claude Code installed first: see [code.claude.com/docs](https://code.claude.com/docs).
+
+Type these into Claude Code's chat box, not a terminal:
+
+```
+/plugin marketplace add atifgul99/craftsman-marketplace
+/plugin install craftsman@craftsman-marketplace
+```
+
+If you're working headlessly, or scripting this for an agent, use the terminal equivalents
+instead:
+
+```bash
+claude plugin marketplace add atifgul99/craftsman-marketplace
+claude plugin install craftsman@craftsman-marketplace
+```
+
 ## What it catches
 
 Here's the kind of thing an audit like this turns up:
@@ -35,6 +62,13 @@ findings, unedited.
 None of this means your app is bad. It means nobody who knew what to check has looked yet. That's
 the gap craftsman closes.
 
+## Is this for you
+
+You shipped something real with Claude Code, Lovable, Replit, Bolt, or v0. It works, and it demos
+well. You don't have an engineering background, and you can't say for sure what a senior engineer
+would flag before you let paying customers in. If that's you, this is for you. If you already have
+someone doing this kind of review, you probably don't need it.
+
 ## What stands between your app and enterprise-grade
 
 Most tools built for this moment check one thing: security. Security matters, and craftsman
@@ -52,29 +86,29 @@ actually fixed" are not the same claim, and most tools let the first one stand i
 
 It is not a penetration test. It is not continuous monitoring; nothing runs in the background
 between sessions. It is not legal or compliance advice. It does not output a numeric score, on
-purpose, because a single number invites false confidence. And it takes tens of minutes to run, not
-seconds, because reading a whole project properly takes time.
+purpose, because a single number invites false confidence. The skill that applies fixes,
+`craft-fix`, can never mark its own work fixed; only a fresh audit confirms that. And it takes
+under an hour to run, not seconds, because reading a whole project properly takes time.
 
-## What makes it different
+## Quickstart
 
-- **A durable workspace, not a one-shot report.** `.craftsman/` persists in the audited project
-  across sessions: discovery, applicability, the audit plan, and every finding are on disk. A
-  typical single-app audit finishes in under an hour; a large monorepo can take longer. Either way
-  it can pause and resume without redoing the work.
-- **A written rule for what counts as fixed.** Every finding carries a stable identity (scope,
-  domain, defect class, resource) that survives line-number and file-move churn. Re-running the
-  audit doesn't just regenerate a fresh report. The agent re-checks each prior finding against that
-  identity, classifies it as open, fixed, regressed, or new, and a skipped check can never pass
-  itself off as a resolved one.
-- **A fixed, stated grading rule.** Each surface and domain gets a grade (Blocked, At risk, Solid,
-  or Unaudited) derived from open findings, using a rule that is written down and does not vary by
-  mood or by run. See the table below. The value is that the rule is explicit and repeatable, not
-  hand-waved.
-- **One coherent opinion system, not a grab-bag of checklists.** Every domain skill shares the same
-  principles (meet the project where it is, prioritize ruthlessly, plain language before jargon)
-  and the same bar for shipping: a new domain stays out of the active set until its reference
-  material holds concrete, reviewed guidance. A skill that routes to an empty stub is worse than no
-  skill at all.
+1. **Install.** The commands above.
+2. **Trigger it.** These are auto-triggering skills, not slash commands. Just say what you want in
+   plain language, e.g. "is my app production-ready" or "take this from MVP to production."
+   `craft-audit` is written to trigger on that phrasing. Skill selection is model behavior, not a
+   guarantee, so if it doesn't fire, ask for it by name: "use craft-audit."
+3. **What happens.** `craft-audit` tells you in chat what it's about to do, then creates a
+   `.craftsman/` workspace at your project root and adds it to your `.gitignore` (verify the entry
+   landed; this is an action the skill takes, not a property it enforces): `discovery.md` (what the
+   project actually is), `applicability.md` (which of up to 10 domains apply), `master-tracker.md`
+   (the climb sequence and readiness grades), and per-surface `audits/<scope>/<domain>/plan.md` +
+   `findings.md`. A single-app audit usually finishes in under an hour; a monorepo can take longer.
+   It checkpoints to disk as it goes, so you can walk away and resume later instead of losing
+   progress.
+4. **Act on the results.** Once you have a climb sequence, say "fix the findings" (or name one, e.g.
+   "fix SEC-003") to invoke `craft-fix`. It re-verifies each pick against current code, gets your
+   sign-off, and executes a scoped batch. It never marks anything `fixed` itself; only a
+   `craft-audit` re-run's re-observation of the finding does that.
 
 ## What the output looks like
 
@@ -103,63 +137,6 @@ shipment. Clearing SEC-001 + DB-001 promotes both surfaces toward 🟡 At risk.
 Full worked example, including per-domain findings and the audit status table, is at
 [`craftsman/examples/craftsman-output/`](./craftsman/examples/craftsman-output/).
 
-## Install
-
-```
-/plugin marketplace add atifgul99/craftsman-marketplace
-/plugin install craftsman@craftsman-marketplace
-```
-
-## Quickstart
-
-1. **Install.** The two commands above.
-2. **Trigger it.** These are auto-triggering skills, not slash commands. Just say what you want in
-   plain language, e.g. "is my app production-ready" or "take this from MVP to production."
-   `craft-audit` is written to trigger on that phrasing. Skill selection is model behavior, not a
-   guarantee, so if it doesn't fire, ask for it by name: "use craft-audit."
-3. **What happens.** `craft-audit` tells you in chat what it's about to do, then creates a
-   `.craftsman/` workspace at your project root and adds it to your `.gitignore` (verify the entry
-   landed; this is an action the skill takes, not a property it enforces): `discovery.md` (what the
-   project actually is), `applicability.md` (which of up to 10 domains apply), `master-tracker.md`
-   (the climb sequence and readiness grades), and per-surface `audits/<scope>/<domain>/plan.md` +
-   `findings.md`. A single-app audit usually finishes in under an hour; a monorepo can take longer.
-   It checkpoints to disk as it goes, so you can walk away and resume later instead of losing
-   progress.
-4. **Act on the results.** Once you have a climb sequence, say "fix the findings" (or name one, e.g.
-   "fix SEC-003") to invoke `craft-fix`. It re-verifies each pick against current code, gets your
-   sign-off, and executes a scoped batch. It never marks anything `fixed` itself; only a
-   `craft-audit` re-run's re-observation of the finding does that.
-
-## Compatibility
-
-Neither manifest (`craftsman/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`) declares
-a minimum Claude Code version. Use a current Claude Code release with plugin marketplace support;
-older versions are unverified. Check your version with `claude --version`, and if you hit an install
-or loading issue, update to the latest release first.
-
-## The skills
-
-The method and checklists are stack-agnostic and discover the actual stack at runtime, but the
-deepest guidance leans TypeScript/Next.js/Postgres/serverless, the vibe-coder default stack.
-
-| Skill | What it audits | Example trigger phrase |
-| --- | --- | --- |
-| `craft-audit` | Whole-project production-readiness. Discovers project shape, routes to the domains below, tracks findings in `.craftsman/` | "is my app production-ready" |
-| `craft-ux` | Design-system tokens, component/state/motion layers, accessibility, AI-tells anti-patterns | "audit my design tokens" |
-| `craft-frontend` | Component architecture, state management, data fetching, forms, bundle size | "this page is slow" |
-| `craft-backend` | API routes, request validation, the auth boundary, service logic, background jobs | "why is this returning 500" |
-| `craft-db` | Schema design, migrations, query/indexing, multi-tenant data scoping | "this query is slow" |
-| `craft-security` | Authorization policy, input validation, secrets, headers/CORS, dependency vulnerabilities | "is this secure" |
-| `craft-infra` | Deployment, env/config, CI/CD, health probes, rate limiting, rollback | "set up CI" |
-| `craft-observability` | Sentry, structured logging, Grafana/OpenTelemetry, SLOs and alerting | "why can't we see errors" |
-| `craft-testing` | Test strategy, unit/integration/e2e selection, flaky-test triage, test-gate policy | "why is this test flaky" |
-| `craft-lint` | ESLint rule policy, typed linting, zero-warning CI gates, lint config hardening | "standardize linting" |
-| `craft-ai` | LLM integrations: prompt injection, key/spend safety, PII-to-model APIs, reliability/evals | "is my chatbot secure" |
-| `craft-fix` | Drives fixes against an existing `.craftsman/` audit. Re-verifies, batches by surface, tracks attempts, never self-marks `fixed` | "fix the findings" / "fix SEC-003" |
-
-See each skill's `SKILL.md` under `craftsman/skills/<name>/` for its full trigger description and
-`references/` for the method behind it.
-
 ## Worked example
 
 A complete, synthetic end-to-end audit, a fictional "Invoicely" SaaS app audited across nine of
@@ -168,13 +145,89 @@ the ten applicable domains, is committed at
 artifact showing the full shape of a `.craftsman/` workspace: discovery, applicability, the master
 tracker with readiness grades, and per-domain findings.
 
-## The one rule that prevents the next mess
+## The skills
+
+The method and checklists are stack-agnostic and discover the actual stack at runtime, but the
+deepest guidance leans TypeScript/Next.js/Postgres/serverless, the vibe-coder default stack.
+
+| Skill | What it covers | Example trigger phrase |
+| --- | --- | --- |
+| `craft-audit` | Looks at your whole project and tells you what's not ready for real customers yet. Figures out what you built, checks the areas below, and keeps a running list you can pick back up later. | "is my app production-ready" |
+| `craft-ux` | How your interface looks and feels: cluttered spacing, inconsistent colors and fonts, clunky screens, and the small details that make an app look unfinished or obviously AI-built. | "audit my design tokens" |
+| `craft-frontend` | How your app behaves as people click around: pages that hang or crash instead of showing a loading or error message, forms that don't validate, screens that slow to a crawl. | "this page is slow" |
+| `craft-backend` | The server-side code handling requests: routes that let bad or missing data through, code that crashes instead of failing gracefully, and requests that never check who is allowed to make them. | "why is this returning 500" |
+| `craft-db` | How your data is structured and stored: missing safeguards that keep one customer from seeing another's data, migrations that could lose data, and queries slow enough to bog the app down as it grows. | "this query is slow" |
+| `craft-security` | The ways someone could break in or steal data: users reaching things that aren't theirs, forms that accept unsafe input, exposed secrets or keys, and outdated packages with known holes. | "is this secure" |
+| `craft-infra` | How your app gets deployed and stays running: no safety net if a bad deploy goes out, no way to roll it back, and nothing stopping one user from overwhelming the server. | "set up CI" |
+| `craft-observability` | Whether you'd find out if something broke for a real user right now, or whether you'd hear about it from an angry email instead. | "why can't we see errors" |
+| `craft-testing` | Whether the parts of your app that matter, like billing, are actually tested, and whether your tests catch real problems instead of passing while production breaks. | "why is this test flaky" |
+| `craft-lint` | Whether your code-quality checks catch mistakes before they ship, versus rules that are outdated, too loose, or ignored so often they've stopped meaning anything. | "standardize linting" |
+| `craft-ai` | If your app calls an AI model: whether someone could trick it into doing something it shouldn't, whether your bill could spike without warning, and whether private user data reaches the model unnecessarily. | "is my chatbot secure" |
+| `craft-fix` | Once you have a list of what to fix, this does the fixing: re-checks each item is still real, asks you to approve before touching anything, and can never mark its own work done. Only a fresh audit confirms something is actually fixed. | "fix the findings" / "fix SEC-003" |
+
+See each skill's `SKILL.md` under `craftsman/skills/<name>/` for its full trigger description and
+`references/` for the method behind it.
+
+## Compatibility
+
+Neither manifest (`craftsman/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`) declares
+a minimum Claude Code version. Use a current Claude Code release with plugin marketplace support;
+older versions are unverified. Check your version with `claude --version`, and if you hit an install
+or loading issue, update to the latest release first.
+
+## Uninstall and undo
+
+To remove the plugin, run `claude plugin uninstall craftsman@craftsman-marketplace` (see
+`claude plugin --help` for the full command set, including `disable` if you want to keep it
+installed but turn it off).
+
+The `.craftsman/` folder an audit creates lives in the project you audited, not in this repo. It's
+just local files: findings, plans, and the master tracker, all plain Markdown. It's safe to delete
+at any time. Deleting it costs you the finding history, so a later re-run starts from scratch
+instead of picking up where you left off, but it doesn't touch your app's code.
+
+Anything `craft-fix` changes is an ordinary file edit in your working tree. Review it the same way
+you'd review any other change, and revert it the same way, with your editor, git, or however you
+normally undo edits.
+
+## Why this exists
+
+I kept doing the same review by hand every time one of my own products got close to launch. Same
+areas, same questions, same handful of things that turned out to be wrong. So I wrote it down,
+turned it into something Claude Code could run, and pointed it at my own repos until it stopped
+surprising me. The opinions in it are mine, and they come from shipping things and watching them
+break.
+
+## How it works, for the curious
+
+### What makes it different
+
+- **A durable workspace, not a one-shot report.** `.craftsman/` persists in the audited project
+  across sessions: discovery, applicability, the audit plan, and every finding are on disk. A
+  typical single-app audit finishes in under an hour; a large monorepo can take longer. Either way
+  it can pause and resume without redoing the work.
+- **A written rule for what counts as fixed.** Every finding carries a stable identity (scope,
+  domain, defect class, resource) that survives line-number and file-move churn. Re-running the
+  audit doesn't just regenerate a fresh report. The agent re-checks each prior finding against that
+  identity, classifies it as open, fixed, regressed, or new, and a skipped check can never pass
+  itself off as a resolved one.
+- **A fixed, stated grading rule.** Each surface and domain gets a grade (Blocked, At risk, Solid,
+  or Unaudited) derived from open findings, using a rule that is written down and does not vary by
+  mood or by run. See the table above. The value is that the rule is explicit and repeatable, not
+  hand-waved.
+- **One coherent opinion system, not a grab-bag of checklists.** Every domain skill shares the same
+  principles (meet the project where it is, prioritize ruthlessly, plain language before jargon)
+  and the same bar for shipping: a new domain stays out of the active set until its reference
+  material holds concrete, reviewed guidance. A skill that routes to an empty stub is worse than no
+  skill at all.
+
+### The one rule that prevents the next mess
 
 **One trigger per domain. Depth goes in `references/`. A concept earns its own top-level skill only
 if it's an independently-invoked gate/action** (e.g. "audit my design tokens", "run a security
 review") rather than build-time knowledge. Knowledge folds into a domain; gates stand alone.
 
-## Structure
+### Structure
 
 ```
 craftsman-marketplace/          ← marketplace (this repo)
@@ -204,7 +257,7 @@ The audit's `.craftsman/` workspace lives in the **project being audited**, not 
 repo. It's per-project audit state. `craft-audit` adds it to that project's `.gitignore` as part of
 setup; verify the entry landed if you want it kept out of version control.
 
-## The split that matters
+### The split that matters
 
 | Knowledge                        | Lives in                                    | Example                                      |
 | --------------------------------- | -------------------------------------------- | --------------------------------------------- |
@@ -215,22 +268,6 @@ setup; verify the entry landed if you want it kept out of version control.
 Skills **never hardcode a project's nouns**: they discover them from the repo. That's what makes
 one skill work across every repo it's used in.
 
-## Persona
-
-Built for the builder of a cool-but-fragile MVP: someone who shipped something with Claude, Lovable,
-Replit, or v0 that demos well but is nowhere near production-grade (no real states, weak or no auth,
-no observability, data that corrupts under load, fragile infra). Findings lead with plain-language
-consequence, not jargon.
-
-## Why this exists
-
-I have been building software for 25 years, including at Microsoft and Amazon. These days I build
-and ship my own products: Next.js apps on Postgres, with real users and real money moving through
-them. I kept doing the same review by hand every time one of them got close to launch. Same areas,
-same questions, same handful of things that turned out to be wrong. So I wrote it down, turned it
-into something Claude Code could run, and pointed it at my own repos until it stopped surprising
-me. The opinions in it are mine, and they come from shipping things and watching them break.
-
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md). The skills are opinion documents, so contributions are
@@ -238,4 +275,5 @@ opinion edits and need to cite a concrete failure mode.
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+MIT. See [LICENSE](./LICENSE). If you're forking this to reuse the name, read the trademark risk
+note in [ROADMAP.md](./ROADMAP.md#trademark-risk-acceptance-2026-08-03) first.

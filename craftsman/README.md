@@ -13,9 +13,22 @@ existing audit. Security is one of the ten domains, not the whole product.
 
 ### Claude Code (verified)
 
+You need Claude Code installed first: see
+[code.claude.com/docs](https://code.claude.com/docs).
+
+Type these into Claude Code's chat box, not a terminal:
+
 ```
 /plugin marketplace add atifgul99/craftsman-marketplace
 /plugin install craftsman@craftsman-marketplace
+```
+
+If you are working headlessly, or scripting this for an agent, use the terminal equivalents
+instead:
+
+```bash
+claude plugin marketplace add atifgul99/craftsman-marketplace
+claude plugin install craftsman@craftsman-marketplace
 ```
 
 Claude reads the manifest at `.claude-plugin/plugin.json`. See the root [README.md](../README.md)

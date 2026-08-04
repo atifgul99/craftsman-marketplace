@@ -9,5 +9,21 @@
   },
   "homepage": "https://github.com/atifgul99/craftsman-marketplace",
   "repository": "https://github.com/atifgul99/craftsman-marketplace",
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "engineering-standards",
+    "audit",
+    "production-readiness",
+    "ux",
+    "frontend",
+    "backend",
+    "database",
+    "security",
+    "infra",
+    "observability",
+    "testing",
+    "lint",
+    "eslint",
+    "ai"
+  ]
 }
