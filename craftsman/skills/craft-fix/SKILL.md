@@ -51,6 +51,10 @@ Depth for every step lives in `references/fix-protocol.md` — this is the compa
      user is about to pick, recommend a `craft-audit` re-run first. If they don't intersect,
      proceed — "many commits behind" alone isn't a reason to stop. The user may override and proceed
      anyway even when scopes intersect — record that they did.
+   - **Check for declared gated surfaces (optional, no setup required).** In precedence order: (a)
+     `.craftsman/gated-surfaces.md` if the user wrote one, (b) a statement in the project's own
+     `CLAUDE.md`/`AGENTS.md`/README, (c) the user saying so in chat this session. Find none of the
+     three → nothing changes, proceed as below. → `references/fix-protocol.md` "Gated surfaces"
 
 1. **Parse the invocation.** A finding ID (`SEC-003`, `root-SEC-003`) → that one finding. A domain
    name ("fix the security findings") → that domain's open findings. Nothing named → the top 5 open
@@ -80,6 +84,15 @@ Depth for every step lives in `references/fix-protocol.md` — this is the compa
 4. **Plan-first gate.** 🔴 findings touching auth, migrations, or data handling get a short written
    plan (template in `references/fix-protocol.md`) that the user confirms before any edit lands.
    Mechanical 🟡/🟢 findings go straight to execution. → `references/fix-protocol.md` "Plan-first gate"
+
+   **Gated surfaces are stronger: never auto-fixed.** A finding whose file matches a declared gated
+   surface (step 0) is routed to a "requires human approval" bucket instead of the batch — present
+   the finding, risk, test plan, and rollback plan, then stop; do not edit. Approval to fix other
+   findings in the same pick-set is not approval to touch a gated one. Even with nothing declared,
+   treat payment/checkout/subscription/billing, identity and tenant isolation, and PHI/PII-handling
+   code with default suspicion — apply the plan-first gate even below 🔴. A one-line diff is not a
+   low-risk diff: a trivial-looking fix (e.g. adding a missing `await`) can activate dormant
+   enforcement code — see `references/fix-protocol.md` "Gated surfaces" for the worked example.
 
 5. **Execute the approved batch.** Batch by surface — findings touching the same files/routes fix
    together in one pass; a rolled-up finding (see the tracker's Cross-cutting section) gets **one**

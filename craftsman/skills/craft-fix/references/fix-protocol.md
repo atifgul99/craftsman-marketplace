@@ -181,6 +181,45 @@ skip this — they go straight to execution once step 3's batch approval is gran
 because auth/migration/data-handling mistakes are the ones that turn a fix into an incident; a
 missing empty state is not in that category even at scale.
 
+### Gated surfaces — the stronger variant
+
+Plan-first means "confirm a plan, then edit." **Gated** means "present findings, never edit without
+out-of-band approval" — for surfaces the project has declared off-limits to autonomous fixing at all,
+regardless of severity or how trivial the diff looks.
+
+Precedence for what counts as gated (checked at `SKILL.md` step 0, no setup required): (a) an
+explicit `.craftsman/gated-surfaces.md` the user wrote, (b) a statement in the project's own
+`CLAUDE.md`/`AGENTS.md`/README, (c) the user saying so in chat. None declared → this variant never
+fires and craft-fix behaves exactly as the plan-first gate above describes. This is a convention the
+user opts into, not a file craft-fix ships or requires — a vibe-coded MVP builder should never need
+to set this up to get a safe default.
+
+A finding whose file matches a gated surface is **never auto-fixed**, even 🟡/🟢, even after batch
+approval. Route it to a "requires human approval" bucket: present the finding, the risk, the test
+plan, and the rollback plan (same fields as the plan-first template above), then stop. Approval
+covers only what was explicitly approved — sign-off on the rest of a pick-set is not sign-off on a
+gated finding riding along in it.
+
+Apply the same suspicion even with nothing declared: payment/checkout/subscription/billing, identity
+and tenant isolation, and PHI/PII-handling code default to plan-first treatment below 🔴 too. The
+reason is that a one-line diff is not the same as a low-risk diff. A real case: the top finding on a
+payments repo was "add the missing `await`" on a webhook signature check — one word. Applied
+naively, it activates a signature-verification path that has been dormant since it was written; if
+the derived `notificationUrl` doesn't byte-match the provider's configured URL, the now-enforced
+check turns every real webhook into a 401 and silently halts subscription renewals. Trivial diff,
+incident-grade blast radius — exactly what the gate exists to catch.
+
+An example `.craftsman/gated-surfaces.md` shape, for a user who wants one — a glob and a one-line
+reason per entry, nothing more:
+
+```
+app/api/webhooks/**       reason: payment webhook signature enforcement, do not touch without review
+lib/billing/**            reason: billing math, human-approved changes only
+```
+
+This is an example, not a required schema — craft-fix reads whatever globs+reasons are there; it
+does not validate against a fixed format.
+
 ---
 
 ## The fixer subagent prompt contract

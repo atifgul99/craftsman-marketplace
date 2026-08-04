@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "craftsman",
   "description": "The engineering review you'd get from the technical co-founder you don't have. Written by a software engineer of 25 years, including at Microsoft and Amazon. Built for people who shipped a real app with Lovable, Replit, Bolt, v0, or Claude Code without an engineering background, and are about to let real users in. Findings are plain-language and prioritized by real consequence (a broken invoice check beats a missing comment), across ten areas: UX, frontend, backend, database, security, infrastructure, observability, testing, lint, and AI integrations. Security is just one of the ten; most tools in this space only check that one. Everything is tracked in a workspace inside your project so a long audit can pause and resume. The companion skill, craft-fix, drives the fixes, but it is never allowed to mark its own work fixed; only a fresh audit pass can confirm a finding is actually gone. Not a penetration test, not continuous monitoring, no numeric score, no legal advice. A full worked example is included.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": {
     "name": "Atif Gul",
     "url": "https://github.com/atifgul99"

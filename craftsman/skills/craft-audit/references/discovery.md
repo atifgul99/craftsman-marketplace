@@ -14,6 +14,7 @@ API. Read the artifacts, write down what you found *with citations*, then classi
 ## Contents
 
 - [Principle — cite, don't assume](#principle--cite-dont-assume)
+- [Shipping-target provenance](#shipping-target-provenance--is-head-what-actually-ships)
 - [What to read (the evidence)](#what-to-read-the-evidence)
 - [Determining project shape](#determining-project-shape)
 - [Detecting the existing stack](#detecting-the-existing-stack)
@@ -35,6 +36,26 @@ without re-deriving it — and can tell when it's gone stale.
 If something can't be determined from the repo, say so explicitly ("no CI config found —
 deployment process unknown") rather than inventing a plausible answer. An unknown is itself a
 finding.
+
+---
+
+## Shipping-target provenance — is HEAD what actually ships?
+
+Auditing whatever `HEAD` happens to be checked out risks hunting phantoms: a real run 27 commits
+behind `origin/main` had three of nine domain passes report already-shipped fixes as missing.
+
+- Check: `git rev-parse --abbrev-ref origin/HEAD` (fall back to `origin/main`/`origin/master` if
+  unset) for the default branch, then `git rev-list --left-right --count origin/HEAD...HEAD` for
+  behind/ahead counts.
+- Behind or diverged → **stop and ask** which tree the user wants audited; never silently pick.
+- A named deploy branch or production commit (CI config, deploy config, or the project's own docs)
+  beats the default branch — prefer it when the project states one.
+- No remote, or no git at all → **not an error**; many audited projects are local-only. Record
+  "shipping target unknown — audited the working checkout" and continue.
+- Record the outcome (which tree, and why) in `.craftsman/discovery.md`.
+- Optional: `git worktree add --detach <path> origin/main` audits production from a dirty checkout
+  and isolates parallel subagents on a stable tree while the user keeps editing. Offer it, don't
+  require it.
 
 ---
 
@@ -72,6 +93,16 @@ Read these in roughly this order; stop when the picture is clear:
 - **LLM / AI surface** — deps like `openai`, `@ai-sdk/*`, `@anthropic-ai/*`, `langchain`,
   `llamaindex`, or call sites to model APIs. Presence is evidence for `craft-ai`; absence is an
   honest N-A, not a gap.
+- **Repo-native context docs** — root and applicable-scope `CLAUDE.md`, `AGENTS.md`, `README.md`,
+  and `docs/` files clearly relevant to discovery already in hand. These encode hard-won facts an
+  audit can't derive from source alone — vestigial columns never to filter on, invariants with
+  multiple writers, known migration drift, which surfaces are payment-gated. **Treat every claim as
+  one to re-verify, not ground truth**: cite the doc, then check the code. Don't recursively crawl
+  `docs/` or follow outside-project references — same opt-in boundary as "Reference calibration"
+  below. Watch for **documentation contradicting code**: one run's `CLAUDE.md` recorded the business
+  had moved to Ancaster, Ontario and flagged "Montreal" in older docs as stale — the UX pass then
+  found "Montreal" hardcoded in five places on the live site. The correction was written down and
+  never reached the code.
 
 ---
 
@@ -221,6 +252,16 @@ Produce two files (templates in `workspace.md`):
   note which references were consulted and that any outside-project reads were user-authorized.
 - `.craftsman/applicability.md` — the ten-row applies/partial/N-A table with reasons; a count
   ("5 of 10 apply") the master tracker can quote.
+
+**Usual suspects for the unknowns section.** Some production-critical config never lives in the
+repo — pose these as **questions for the human**, not findings: env-var scoping per deployment tier
+(does preview hit the production DB?), branch-protection required checks, WAF/bot rules, deployment
+protection, secret values. Absence of evidence in the repo is not evidence of absence in production —
+a confidently-wrong 🔴 costs more credibility than an honest "I can't see this from here." (One run
+asserted 🔴 "preview deployments run against the production database" when the repo only showed that
+nothing *established* separation.) Findings of this kind carry **Confidence: unverified-from-repo**
+(see `workspace.md`) and must describe the repo gap plus the human check needed — never assert the
+external condition is true.
 
 ---
 

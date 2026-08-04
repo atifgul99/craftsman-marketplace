@@ -125,7 +125,8 @@ Example only: `## <scopeLabel>-AI-001 · severity 🔴 · status open`
 
 Required fields under each heading, in order, with these exact labels:
 `**What breaks (plain language):**` · `**Technical:**` · `**Fix:**` · `**Fingerprint:**` ·
-`**Last-checked:**` (optional `**Fix-attempt:**` only from craft-fix).
+`**Last-checked:**` (optional `**Confidence:**` — `verified | inferred | unverified-from-repo`, absent
+means `verified` — then optional `**Fix-attempt:**` only from craft-fix).
 Assign sequential NNN per (scope, domain); judge severity with craft-audit `prioritization.md`.
 Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as body bullets.
 

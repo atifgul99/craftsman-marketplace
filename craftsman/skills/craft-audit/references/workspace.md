@@ -175,6 +175,31 @@ diff tell `fixed` (the pass ran and the defect is gone) apart from "not re-check
 ran), so a skipped pass can't masquerade as a fix. See `rerun.md` → "not seen ≠ fixed". First run:
 `last-checked` equals the `Generated` stamp.
 
+**Confidence (optional field).** A finding may carry a **`Confidence: verified | inferred |
+unverified-from-repo`** line, appended after `**Last-checked:**` (the canonical optional-label order
+is: `**Last-checked:**`, then optional `**Confidence:**`, then optional `**Fix-attempt:**`). Absent
+means `verified` — every existing `findings.md` stays valid unchanged. The three values:
+
+- `verified` — directly observed at a cited `file:line`.
+- `inferred` — reasoned from adjacent evidence, not directly observed.
+- `unverified-from-repo` — the claim depends on something outside the repo: dashboard config, branch
+  protection, WAF rules, deployment/env settings, secret values. A large class of production-critical
+  configuration is invisible from the repo itself, and a finding like "nothing in the repo establishes
+  preview/production DB separation" should not read with the same apparent certainty as a
+  directly-verified vulnerability.
+
+**Hard rule for `unverified-from-repo`:** the finding must describe the **repo gap actually observed**
+plus the **human check needed** — it must **never** assert the external condition is true or false.
+Absence of evidence is not evidence of absence.
+
+`Confidence` is deliberately **not** folded into the `status` enum (`open|fixed|regressed|wontfix
+(reason)|fixed (merged into <ID>)`): `status` is the lifecycle field the re-run fingerprint diff
+matches on, and a finding that is inherently unverifiable from the repo would never resolve to `fixed`
+on a normal re-run — conflating the two fields would corrupt the "not seen ≠ fixed" guarantee.
+
+An `unverified-from-repo` finding does not gate the readiness grade the way a verified 🔴 does — see
+"Readiness (derived — never hand-set)" below.
+
 **Fix-attempt (optional field).** A finding may carry one or more
 **`Fix-attempt: <YYYY-MM-DD> · <identity> · <one-line what changed>`** lines, appended by the
 `craft-fix` companion (or any session that implements a fix) after the code change + regression
@@ -200,6 +225,19 @@ it currently sits. Compose it from:
 `packages/ui`; **never** a bare app slug like `web`) · `domain` · `class` (the kind of defect, e.g.
 `missing-authz`, `no-empty-state`, `unparameterized-sql`) · `resource` (the canonical thing it's
 about — a route, table, component, or env var — **not** a line number).
+
+**`resource` preference, not a rule:** when the defect is about a file, prefer the repo-relative path
+(`src/app/api/webhooks/square/route.ts`) as `resource` over a hand-written slug. Independent parallel
+subagents coin different vocabulary for the same defect — the same bug can arrive as
+`class=webhook-signature-check-dead-code resource=square-webhook-signature-verification` from one
+domain pass and `class=webhook-signature-not-verified resource=POST /api/webhooks/square` from
+another, with zero string overlap, which silently defeats the `prioritization.md` §2b cross-domain
+rollup (it groups on an exact `(scope, class, resource)` match). A shared file path is the value
+independent passes actually agree on. This is a preference, not a mandate — `resource` stays "the
+canonical thing it's about," so a DB table, an env var, or a component name remains correct where no
+single file is the subject; do not force a file path onto a finding about a table or env var. It
+composes with, and does not relax, the cross-run stability rule below: once a `resource` string is
+chosen for a finding, later runs must reuse it exactly, whether it's a path or a slug.
 
 The `scope` here is the *same* path the directory uses (`audits/<scope>/`) and that the ID label is
 derived from one-way (`scopeLabel = scope.replaceAll('/', '-')`). The fingerprint always carries the
@@ -438,6 +476,11 @@ severity model already in use, surfaced per surface. **Overall project readiness
 across all applicable scopes/domains** (a project is only as production-ready as its weakest applicable
 surface). Recompute both on every run; never carry a stale grade.
 
+An `unverified-from-repo` finding (see "Stable finding IDs and status" above) does not gate this grade
+the way a verified 🔴 does — it can't be mechanically confirmed from the repo, so counting it toward
+🔴 **Blocked** would be false precision in the other direction. Surface it in the finding list and the
+climb sequence as a flagged human check, but exclude it from the grade computation above.
+
 ## Audit status
 | Scope | Domain | Applies | Plan | Findings | Last run | Open 🔴 / 🟡 / 🟢 | Grade |
 | ----- | ------ | ------- | ---- | -------- | -------- | ----------------- | ----- |
@@ -529,7 +572,11 @@ Example: `## apps-web-SEC-001 · severity 🔴 · status open`
 3. `**Fix:**` …
 4. `**Fingerprint:**` `` `scope=<path> · domain=<domain> · class=<class> · resource=<resource>` ``
 5. `**Last-checked:**` `YYYY-MM-DD · <short-sha>` or `YYYY-MM-DD · none (no git)`
-6. optional `**Fix-attempt:**` lines — only appended by craft-fix, never invented by the audit pass
+6. optional `**Confidence:**` `verified | inferred | unverified-from-repo` — absent means `verified`
+7. optional `**Fix-attempt:**` lines — only appended by craft-fix, never invented by the audit pass
+
+The canonical optional-label order after the required fields is: `**Last-checked:**`, then optional
+`**Confidence:**`, then optional `**Fix-attempt:**`.
 
 **Forbidden (reject / re-emit):**
 
@@ -541,6 +588,16 @@ Example: `## apps-web-SEC-001 · severity 🔴 · status open`
 - Omitting `**Fingerprint:**` or `**Last-checked:**`
 
 **Mechanical validation checklist** (orchestrator runs this per `findings.md` before synthesis):
+
+- Prefer the helper script in `scripts/validate-findings.mjs`.
+- Run it from this skill folder against the target repo's workspace:
+
+  ```bash
+  node /absolute/path/to/craftsman/skills/craft-audit/scripts/validate-findings.mjs /absolute/path/to/target-repo/.craftsman
+  ```
+
+- If the script isn't available or fails to run, fall back to executing the six checks below by hand
+  — they are the spec the script implements, and remain the documented fallback.
 
 1. Every finding heading matches (full line, conceptual regex):
    `^## [A-Za-z0-9][A-Za-z0-9-]*-(UX|FE|BE|DB|SEC|INFRA|OBS|TEST|LINT|AI)-\d{3} · severity [🔴🟡🟢] · status (open|fixed|regressed|wontfix \(.+\)|fixed \(merged into .+\))$`
@@ -555,7 +612,10 @@ Example: `## apps-web-SEC-001 · severity 🔴 · status open`
    - Fingerprint value matches: `` `scope=... · domain=... · class=... · resource=...` ``
    - Last-checked value is non-empty and matches:
      `\d{4}-\d{2}-\d{2} · ([0-9a-f]{4,40}|none \(no git\))`
-   - Optional `**Fix-attempt:**` lines only after Last-checked
+   - Optional `**Confidence:**` line, if present, comes immediately after Last-checked (before any
+     Fix-attempt lines) and its value is exactly one of `verified | inferred | unverified-from-repo`;
+     absent means `verified`
+   - Optional `**Fix-attempt:**` lines only after Last-checked (and after Confidence, when present)
 3. No `###` finding headings anywhere in the file
 4. No body bullets `- **Severity:**` or `- **Status:**`
 5. Empty findings file (header only, zero findings) is valid if it has the file header stamp and no

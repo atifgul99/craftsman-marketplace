@@ -95,7 +95,22 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
    a readiness grade at the end. Then create `.craftsman/`, add it to the project's `.gitignore`, drop
    the `README.md` that explains what the folder is. → `references/workspace.md`
 
-2. **Discover what the project actually is.** Evidence-based, never guessed: read `package.json`,
+2. **Discover what the project actually is.**
+
+   **Confirm the shipping target before reading code.** Auditing a stale branch produces findings
+   that are true of the tree and false of production — the fastest way to destroy trust in the
+   report. If a default remote branch is discoverable (`git rev-parse --abbrev-ref origin/HEAD`,
+   else `origin/main`/`origin/master`), compare with
+   `git rev-list --left-right --count origin/HEAD...HEAD`. If `HEAD` is behind or diverged, STOP
+   and ask the user which tree to audit. If the project states a deploy branch or production
+   commit, prefer that over the default branch. No remote at all is common (plenty of these
+   projects are local-only) and is **not** an error — record "shipping target unknown — audited
+   the working checkout" and continue. Record the answer in `.craftsman/discovery.md`. If the
+   working tree is dirty and you need production's actual state, the cleanest path is
+   `git worktree add --detach <path> origin/main` — a suggestion, never required. →
+   `references/discovery.md`
+
+   Evidence-based, never guessed: read `package.json`,
    lockfiles, framework/build configs, the directory layout, CI config, env templates. Determine
    shape (monorepo vs single app vs marketing site vs multiple apps), package manager, frameworks,
    hosting, and the stack already in place. Also make a **maturity read** (pre- / partially- /
@@ -142,7 +157,10 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
    multiplied across 10 subagent passes is expensive to fix after the fact.
 
    **False-negative guard:** if a review pass claims an implementation is missing, verify with grep
-   before accepting the claim — reviewers looking at partial context produce false negatives.
+   before accepting the claim — reviewers looking at partial context produce false negatives. The
+   same guard applies to the tree itself: verify that the tree you are grepping is the tree that
+   ships (step 2's shipping-target check) — a stale checkout makes already-shipped fixes look
+   missing.
 
 6. **Run each applicable surface by loading its craft skill.** Load `craft-ux` / `craft-frontend` /
    `craft-backend` / `craft-db` / `craft-security` / `craft-infra` / `craft-observability` /
@@ -165,9 +183,20 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
    the prompt, do not paraphrase. Subagent emits only that grammar; no `###` headings, no
    `## ID · 🔴 · open` shorthand, no severity/status body bullets. Then this orchestrator reads those
    files back, validates, and synthesizes (step 7). The durable `.craftsman/` files are exactly what
-   makes this safe — each worker coordinates through its own file, nothing is held in chat. (Small
-   audits — ≤ 3 scope/domain pairs — can stay inline; this is conditional, not a mandate.) This is the
-   same "completeness on disk, focus in chat" principle as `prioritization.md`.
+   makes this safe — each worker coordinates through its own file, nothing is held in chat.
+
+   **Write capability is a precondition, not an assumption.** State in the subagent prompt that it
+   MUST write its own `audits/<scope>/<domain>/findings.md` and confirm it did. Fallback when a
+   worker cannot write (harness policy can block it): it must return the complete file contents as
+   ONE fenced code block and nothing else — no summary, no commentary outside the fence. The
+   orchestrator persists that block **verbatim** to the correct path, then runs the step-7a
+   validation on it like any other file. Do NOT repair transport corruption (HTML entities like
+   `&gt;`/`&amp;&amp;`, truncation) — if the persisted file fails validation, re-prompt the worker;
+   a normalizer that guesses at mangled regex literals inside findings is worse than a re-run. Same
+   "prefer re-emission over inventing a normalizer" rule as `workspace.md`.
+
+   (Small audits — ≤ 3 scope/domain pairs — can stay inline; this is conditional, not a mandate.)
+   This is the same "completeness on disk, focus in chat" principle as `prioritization.md`.
 
    **Update the tracker after each pass, before starting the next.** After EACH domain pass
    completes, update that row in `.craftsman/master-tracker.md` — findings count, Last run date,
@@ -179,9 +208,15 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
 
    **Synthesis protocol** — run in this order before writing the tracker:
 
-   a. **Collect:** read every `audits/<scope>/<domain>/findings.md` from disk. Run the mechanical
-      validation checklist from `references/workspace.md` → "Canonical findings.md emission format"
-      on every file:
+   a. **Collect:** read every `audits/<scope>/<domain>/findings.md` from disk. Prefer the helper
+      script for the mechanical validation; run it from this skill folder against the target repo:
+
+      ```bash
+      node /absolute/path/to/craftsman/skills/craft-audit/scripts/validate-findings.mjs /absolute/path/to/target-repo/.craftsman
+      ```
+
+      It exits non-zero and prints `file:line` errors on failure. If the script is unavailable, fall
+      back to the by-hand checklist below — it documents what the script enforces, on every file:
       1. Every finding heading matches (full line):
          `^## [A-Za-z0-9][A-Za-z0-9-]*-(UX|FE|BE|DB|SEC|INFRA|OBS|TEST|LINT|AI)-\d{3} · severity [🔴🟡🟢] · status (open|fixed|regressed|wontfix \(.+\)|fixed \(merged into .+\))$`
          (ID shape: `<scopeLabel>-<DOMAINCODE>-NNN`; DOMAINCODE one of UX|FE|BE|DB|SEC|INFRA|OBS|TEST|LINT|AI; NNN exactly 3 digits)
@@ -190,8 +225,8 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
          then `**Fix:**` then `**Fingerprint:**` then `**Last-checked:**` (multi-line values allowed
          until the next `**` label or heading); Fingerprint value matches
          `` `scope=... · domain=... · class=... · resource=...` ``; Last-checked value is non-empty
-         and matches `\d{4}-\d{2}-\d{2} · ([0-9a-f]{4,40}|none \(no git\))`; optional
-         `**Fix-attempt:**` only after Last-checked
+         and matches `\d{4}-\d{2}-\d{2} · ([0-9a-f]{4,40}|none \(no git\))`; optional labels, in
+         order, may follow: `**Confidence:**` then `**Fix-attempt:**` (both after Last-checked)
       3. No `###` finding headings anywhere in the file
       4. No body bullets `- **Severity:**` or `- **Status:**`
       5. Empty findings file (header only, zero findings) is valid if it has the file header stamp

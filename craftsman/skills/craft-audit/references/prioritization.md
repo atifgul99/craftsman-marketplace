@@ -132,6 +132,19 @@ the register up** — auditing a hardened SaaS monorepo as if it had no auth pro
      defect and re-inflates the 🔴 number the rollup just deduplicated. The per-domain status table
      still shows each domain's own count (DB-001 under db, SEC-002 under security); the *headline*
      collapses the group.
+   - **The exact `(scope, class, resource)` key is a cheap first pass, not the whole rollup.** On a
+     first run — no prior audit vocabulary to reuse — independent domain subagents routinely invent
+     different `class`/`resource` strings for the same defect (a webhook signature bug can arrive as
+     `class=webhook-signature-check-dead-code` from security and `class=webhook-signature-not-verified`
+     from backend, zero string overlap). **A group count of zero does not mean there are no
+     duplicates** — on a first run it usually means the vocabulary diverged, not that the pool is clean.
+   - **Run a second pass by real-world defect.** After exact-key grouping, read the flattened list and
+     compare what each finding actually cites — the concrete file:line, route, table, component, or env
+     key — not the `class` string. Two findings anchored to the same file:line (or the same table/env
+     key) are one defect however differently the domains named it; group and roll them up exactly as
+     above. Preserve each original fingerprint verbatim and record which one was chosen as canonical.
+   - Don't stop after the exact-key pass and call it a clean bill of health — the semantic pass is
+     mandatory, not a fallback for when something looks off.
 
 2c. **Merge cross-scope same-resource findings (one defect in a shared library, seen from multiple
    scopes).** In a monorepo, a shared package (e.g. `packages/shared/src/ai/adapter.ts`) can surface
