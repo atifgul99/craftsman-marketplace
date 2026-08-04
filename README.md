@@ -19,9 +19,10 @@ time at Microsoft and Amazon.
 
 It's free and MIT licensed. It runs inside your own Claude Code session, makes no network calls,
 and collects no telemetry (see [SECURITY.md](./SECURITY.md)). `craft-audit` only reads your code.
-The writes it makes are a new local folder, `.craftsman/`, holding its notes, and one line added to
-your project's `.gitignore` (the file that tells git which files to skip) so that folder stays out
-of version control. Nothing in your app's own code changes unless you separately ask `craft-fix`,
+The writes it makes are a new local folder, `.craftsman/`, holding its notes, and a line in your
+project's `.gitignore` (the file that tells git which files to skip) so that folder stays out
+of version control. If your project doesn't have a `.gitignore` yet, it creates one with that line;
+if it does, it just appends the line. Nothing in your app's own code changes unless you separately ask `craft-fix`,
 and it asks for your sign-off before it touches anything. Expect under an hour for a typical
 single-app audit.
 

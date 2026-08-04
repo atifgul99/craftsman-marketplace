@@ -23,8 +23,8 @@ Type these into Claude Code's chat box, not a terminal:
 /plugin install craftsman@craftsman-marketplace
 ```
 
-If you are working headlessly, or scripting this for an agent, use the terminal equivalents
-instead:
+If you're working headlessly (running Claude Code without the interactive chat window, e.g. from a
+script), use the terminal equivalents instead:
 
 ```bash
 claude plugin marketplace add atifgul99/craftsman-marketplace
