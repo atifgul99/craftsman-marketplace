@@ -24,7 +24,8 @@ project's `.gitignore` (the file that tells git which files to skip) so that fol
 of version control. If your project doesn't have a `.gitignore` yet, it creates one with that line;
 if it does, it just appends the line. Nothing in your app's own code changes unless you separately ask `craft-fix`,
 and it asks for your sign-off before it touches anything. Expect under an hour for a typical
-single-app audit.
+single-app audit. It applies the same standard every time, to every project you point it at,
+instead of a slightly different one each run.
 
 ## Is this for you
 
@@ -199,11 +200,16 @@ normally undo edits.
 
 ## Why this exists
 
-I kept doing the same review by hand every time one of my own products got close to launch. Same
-areas, same questions, same handful of things that turned out to be wrong. So I wrote it down,
-turned it into something Claude Code could run, and pointed it at my own repos until it stopped
-surprising me. The opinions in it are mine, and they come from shipping things and watching them
-break.
+I built my own products with Replit and Claude Code. They worked, and they were missing everything
+that makes software safe to put in front of real users: no error tracking, no tests on the paths
+that move money, permissions that looked right and were not.
+
+I have been building software long enough to know what was missing, so I taught Claude to add it.
+Then I did the same on the next product, and the one after that, slightly differently each time,
+which is its own problem.
+
+So I wrote the standard down once, in a form Claude Code can run, and pointed it at every repo I
+own. The opinions in it are mine, and they come from shipping things and watching them break.
 
 ## How it works, for the curious
 
