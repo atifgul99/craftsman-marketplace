@@ -1,5 +1,7 @@
 # craftsman
 
+![Craftsman inspecting a software system for production risks](./craftsman/assets/craftsman-github-hero.png)
+
 **The engineering review you'd get from the technical co-founder you don't have.**
 
 You built a real app without being an engineer. It works. You're about to let real users in, maybe
@@ -17,7 +19,7 @@ time at Microsoft and Amazon.
 
 ## In short
 
-It's free and MIT licensed. It runs inside your own Claude Code session, makes no network calls,
+It's free and MIT licensed. It runs inside your own Claude Code or Codex session, makes no network calls,
 and collects no telemetry (see [SECURITY.md](./SECURITY.md)). `craft-audit` only reads your code.
 The writes it makes are a new local folder, `.craftsman/`, holding its notes, and a line in your
 project's `.gitignore` (the file that tells git which files to skip) so that folder stays out
@@ -29,12 +31,14 @@ instead of a slightly different one each run.
 
 ## Is this for you
 
-You shipped something real with Claude Code, Lovable, Replit, Bolt, or v0. It works, and it demos
+You shipped something real with Claude Code, Codex, Lovable, Replit, Bolt, or v0. It works, and it demos
 well. You don't have an engineering background, and you can't say for sure what a senior engineer
 would flag before you let paying customers in. If that's you, this is for you. If you already have
 someone doing this kind of review, you probably don't need it.
 
 ## Install
+
+### Claude Code
 
 You need Claude Code installed first: see [code.claude.com/docs](https://code.claude.com/docs).
 
@@ -52,6 +56,26 @@ script), use the terminal equivalents instead:
 claude plugin marketplace add atifgul99/craftsman-marketplace
 claude plugin install craftsman@craftsman-marketplace
 ```
+
+### Codex
+
+Install from the same marketplace in Codex:
+
+```bash
+codex plugin marketplace add atifgul99/craftsman-marketplace
+codex plugin add craftsman@craftsman-marketplace
+```
+
+For a local clone, pass its absolute path to `codex plugin marketplace add` instead. Codex and
+Claude Code load the same 12 skill folders; use the same plain-language triggers after install.
+
+## What you get
+
+![Sample Craftsman audit workspace](./craftsman/assets/craftsman-workspace-preview.svg)
+
+The report is plain Markdown in a local `.craftsman/` folder, so you can inspect every conclusion,
+resume safely, and keep the history in your own project. The preview above is a faithful schematic
+of the included worked example, not a fabricated product screenshot.
 
 ## What it catches
 

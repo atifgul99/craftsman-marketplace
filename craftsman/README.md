@@ -34,12 +34,18 @@ claude plugin install craftsman@craftsman-marketplace
 Claude reads the manifest at `.claude-plugin/plugin.json`. See the root [README.md](../README.md)
 for install details.
 
-### Codex (experimental)
+### Codex (verified)
 
-The `.codex-plugin/plugin.json` manifest is provided for Codex environments that support local
-plugin installs, but this path is **experimental and not verified end-to-end**, treat it as
-best-effort. The reliable fallback, if plugin install doesn't work in your Codex environment, is to
-symlink the skill folders directly into `~/.codex/skills/`:
+Codex loads the same skills through the included `.codex-plugin/plugin.json` manifest. Add the
+marketplace, then install the plugin:
+
+```bash
+codex plugin marketplace add atifgul99/craftsman-marketplace
+codex plugin add craftsman@craftsman-marketplace
+```
+
+From a local clone, replace `atifgul99/craftsman-marketplace` with the absolute path to the clone.
+If your Codex build predates marketplace support, use the direct-skill fallback instead:
 
 ```bash
 for skill in craft-ai craft-backend craft-audit craft-fix craft-db craft-frontend craft-infra craft-lint craft-observability craft-security craft-testing craft-ux; do
@@ -47,7 +53,7 @@ for skill in craft-ai craft-backend craft-audit craft-fix craft-db craft-fronten
 done
 ```
 
-### Cursor / Other skill-based agents (experimental)
+### Cursor / other skill-based agents (experimental)
 
 Any tool that reads `SKILL.md`-based skill folders can, in principle, use the same
 `skills/<skill-name>/` directories directly. This isn't verified against Cursor's actual skill

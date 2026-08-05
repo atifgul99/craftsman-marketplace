@@ -2,11 +2,17 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+# Pull requests, including those from forks, receive only the read permission CI needs.
+permissions:
+  contents: read
 
 jobs:
   check-invariants:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -14,3 +20,5 @@ jobs:
           node-version: "20"
       - name: Run invariant checks
         run: node scripts/check-invariants.mjs
+      - name: Run lint-audit CLI checks
+        run: node scripts/check-eslint-rule-audit.mjs

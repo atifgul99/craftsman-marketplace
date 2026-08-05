@@ -12,7 +12,32 @@ import { spawnSync } from "node:child_process";
 // script with the repo root as argv[2] (or omit argv[2] to use the current working directory,
 // provided you cd to the repo root first).
 
-const targetRoot = path.resolve(process.argv[2] || process.cwd());
+const args = process.argv.slice(2);
+
+if (args.includes("--help") || args.includes("-h")) {
+  console.log("Usage: node eslint-rule-audit.mjs [repository-root]");
+  console.log("Writes a resolved ESLint configuration audit to <repository-root>/.craftsman/lint-audit.");
+  process.exit(0);
+}
+
+if (args.length > 1) {
+  console.error("Usage: node eslint-rule-audit.mjs [repository-root]");
+  process.exit(2);
+}
+
+const targetRoot = path.resolve(args[0] || process.cwd());
+let targetStats;
+try {
+  targetStats = fs.statSync(targetRoot);
+} catch {
+  console.error(`FAIL: repository root does not exist: ${targetRoot}`);
+  process.exit(2);
+}
+if (!targetStats.isDirectory()) {
+  console.error(`FAIL: repository root is not a directory: ${targetRoot}`);
+  process.exit(2);
+}
+
 const outDir = path.join(targetRoot, ".craftsman", "lint-audit");
 fs.mkdirSync(outDir, { recursive: true });
 

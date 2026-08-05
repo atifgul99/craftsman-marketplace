@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Craftsman mark</title>
+  <desc id="desc">A precise green C built from an audit checklist and a check mark.</desc>
+  <rect width="256" height="256" rx="56" fill="#102A27"/>
+  <path d="M177 75a64 64 0 1 0 0 106" fill="none" stroke="#D6E8DD" stroke-linecap="round" stroke-width="24"/>
+  <path d="m100 128 18 18 39-42" fill="none" stroke="#6EE7B7" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+  <circle cx="183" cy="75" r="10" fill="#6EE7B7"/>
+</svg>

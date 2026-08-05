@@ -49,14 +49,41 @@ function checkJsonManifests() {
     "craftsman/.claude-plugin/plugin.json",
     "craftsman/.codex-plugin/plugin.json",
   ];
+  const parsed = new Map();
   for (const rel of manifests) {
     const path = join(ROOT, rel);
     try {
       const raw = readFileSync(path, "utf8");
-      JSON.parse(raw);
+      parsed.set(rel, JSON.parse(raw));
       ok(`${rel} parses as valid JSON`);
     } catch (err) {
       fail(`${rel} failed to parse: ${err.message}`);
+    }
+  }
+
+  const versions = [
+    parsed.get(".claude-plugin/marketplace.json")?.plugins?.find((plugin) => plugin.name === "craftsman")?.version,
+    parsed.get("craftsman/.claude-plugin/plugin.json")?.version,
+    parsed.get("craftsman/.codex-plugin/plugin.json")?.version,
+  ];
+  if (versions.every(Boolean) && new Set(versions).size === 1) {
+    ok(`all plugin manifests declare version ${versions[0]}`);
+  } else {
+    fail(`plugin manifest versions disagree: ${versions.map((version) => version || "missing").join(", ")}`);
+  }
+
+  const codexInterface = parsed.get("craftsman/.codex-plugin/plugin.json")?.interface;
+  for (const key of ["composerIcon", "logo"]) {
+    const asset = codexInterface?.[key];
+    if (typeof asset !== "string" || !asset.startsWith("./")) {
+      fail(`craftsman/.codex-plugin/plugin.json: interface.${key} must be a relative asset path`);
+      continue;
+    }
+    const assetPath = join(ROOT, "craftsman", asset.slice(2));
+    if (!existsSync(assetPath)) {
+      fail(`craftsman/.codex-plugin/plugin.json: interface.${key} points to missing asset ${asset}`);
+    } else {
+      ok(`craftsman/.codex-plugin/plugin.json: interface.${key} asset exists`);
     }
   }
 }
