@@ -3,6 +3,16 @@
 `craftsman` is a set of opinion documents, not application code. That changes what a "good
 contribution" looks like.
 
+## Maintainer gate
+
+The repository is open to contributions, but `main` is maintainer-gated. Do not request direct
+push access: create a fork, open a pull request, and keep the change focused. Only
+[@atifgul99](https://github.com/atifgul99) approves and merges contributions to `main`.
+
+Every pull request must pass CI and have all review conversations resolved before it can merge.
+The maintainer may request changes, close a proposal that does not fit the project, or merge a
+small urgent correction through a pull request using the repository's auditable maintainer bypass.
+
 ## Contributions are opinion edits
 
 Each `craft-*` skill encodes one engineer's standard for a domain: the method and the opinionated

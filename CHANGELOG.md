@@ -21,6 +21,26 @@ may still land in MINOR while the project settles). `1.0.0` is reserved for the 
 and workflow are considered stable enough to commit to strict SemVer against the trigger surface,
 not a synonym for "public."
 
+## [0.3.1] (unreleased)
+
+### Added
+
+- **Maintainer-gated open-source governance.** Contributions now have an explicit fork-and-PR
+  policy, automatic sole-maintainer ownership assignment, a Contributor Covenant Code of Conduct,
+  and a public Discussions space for open-ended feedback.
+- **Native Codex presentation mark.** The Codex manifest now provides a lightweight local SVG for
+  its composer icon and plugin logo. The GitHub README includes a clearly labelled visual preview
+  of the real worked-example report shape.
+- **Lint-audit CLI regression check.** CI now proves the helper's help and invalid-path flows do not
+  create a `.craftsman/` workspace.
+
+### Fixed
+
+- **Verified Codex installation documentation.** Both READMEs now document the native marketplace
+  install flow alongside Claude Code rather than describing Codex as unverified.
+- **Unsafe lint-audit argument handling.** `eslint-rule-audit.mjs` validates the positional root
+  before creating output and treats `--help` as a non-mutating help request.
+
 ## [0.3.0] (2026-08-03)
 
 The response to the first detailed field report from a live production audit: a nine-domain,
