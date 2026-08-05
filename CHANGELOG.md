@@ -25,6 +25,9 @@ not a synonym for "public."
 
 ### Added
 
+- **Marketplace discovery metadata.** Claude marketplace metadata now carries a release version
+  and development category, while the public GitHub listing presents Craftsman as a Claude Code
+  and Codex plugin rather than a Claude-only tool.
 - **Maintainer-gated open-source governance.** Contributions now have an explicit fork-and-PR
   policy, automatic sole-maintainer ownership assignment, a Contributor Covenant Code of Conduct,
   and a public Discussions space for open-ended feedback.
