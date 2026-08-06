@@ -21,7 +21,16 @@ may still land in MINOR while the project settles). `1.0.0` is reserved for the 
 and workflow are considered stable enough to commit to strict SemVer against the trigger surface,
 not a synonym for "public."
 
-## [0.3.1] (unreleased)
+## [0.3.2] (unreleased)
+
+### Security
+
+- **Hardened public-repository controls.** CI actions are pinned to full immutable SHAs and
+  Dependabot now tracks GitHub Actions updates. Published releases and `v*` tags are protected;
+  private vulnerability reporting, Dependabot alerts and updates, malware alerts, grouped security
+  updates, secret push protection, and CodeQL default setup are enabled in GitHub.
+
+## [0.3.1] (2026-08-05)
 
 ### Added
 
