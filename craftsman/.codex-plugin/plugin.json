@@ -1,6 +1,6 @@
 {
   "name": "craftsman",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "The engineering review you'd get from the technical co-founder you don't have. Written by a software engineer of 25 years, including at Microsoft and Amazon. Findings are ranked by real consequence, not alphabetically, so a broken invoice check beats a missing comment. Audits a whole project for production-readiness across ten areas (UX, frontend, backend, database, security, infrastructure, observability, testing, lint, AI integrations), not just security. The craft-fix companion drives the fixes but can never mark its own work fixed.",
   "author": {
     "name": "Atif Gul",
@@ -30,7 +30,7 @@
   "interface": {
     "displayName": "Craftsman",
     "shortDescription": "The engineering review you'd get from the technical co-founder you don't have",
-    "longDescription": "Ship something with Lovable, Replit, Bolt, v0, or Claude Code and it works, but no engineer has checked it yet. This audits the whole project the way one would: UX, frontend, backend, database, security, infrastructure, observability, testing, lint, and AI integrations. Findings are ranked by real consequence, so a broken invoice check beats a missing comment; security is one of ten areas here, not the whole check. Everything lands in a workspace inside your project so a long audit can pause and resume. The fixer companion drives the fixes but can never mark its own work fixed; only a fresh audit pass can confirm that.",
+    "longDescription": "Ship something with Lovable, Replit, Bolt, v0, Claude Code, or Codex and it works, but no engineer has checked it yet. This audits the whole project the way one would: UX, frontend, backend, database, security, infrastructure, observability, testing, lint, and AI integrations. Findings are ranked by real consequence, so a broken invoice check beats a missing comment; security is one of ten areas here, not the whole check. Everything lands in a workspace inside your project so a long audit can pause and resume. The fixer companion drives the fixes but can never mark its own work fixed; only a fresh audit pass can confirm that.",
     "developerName": "Atif Gul",
     "category": "Developer Tools",
     "capabilities": [

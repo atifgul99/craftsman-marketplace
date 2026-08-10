@@ -72,7 +72,8 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
    Before touching anything, check for an existing `.craftsman/` at the project root. If one exists, run
    the staleness check (compare each artifact's stamp to current `HEAD`, regenerate only what actually
    changed) and switch into finding-by-finding diff mode for every re-run pass — including the
-   "not seen ≠ fixed" guard so a skipped pass never masquerades as a fix. → `references/rerun.md`. If
+   remediation-diff review and "not seen ≠ fixed" guards, so neither a skipped pass nor a risky fix
+   masquerades as a verified resolution. → `references/rerun.md`. If
    there's no `.craftsman/`, skip this step and run fresh. On a re-run: skip step 1; steps 2–5 run
    only where the staleness check marked artifacts stale; step 6 runs in diff mode; steps 7–8 ALWAYS
    re-execute (grades and climb sequence are never carried stale).
@@ -121,14 +122,18 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
    `format`, `typecheck`, `quality`, `check`) — record what exists and what's absent. Route
    lint/rule-content findings (ruleset gaps, resolved-config issues, severity calibration) to the
    lint plan section; route CI-gate wiring findings (missing pre-commit hook, missing/optional CI
-   gate, local/CI drift) to the infra plan section (see `references/quality.md`). Write
+   gate, local/CI drift) to the infra plan section (see `references/quality.md`). Inventory explicit
+   repository invariants and every applicable call site, then record a capability profile (browser
+   DOM/CSS vs native UI; Postgres vs SwiftData/etc.) so incompatible checklist sections are never
+   silently transferred. Write
    `.craftsman/discovery.md` with **citations** — what you found and where. → `references/discovery.md`
    · `references/quality.md`
 
 3. **Classify which domains apply.** Not every project needs every surface — craft-observability on a
    static marketing site is noise. Mark each of the ten domains **applies / partial / N-A** with a
-   one-line reason, into `.craftsman/applicability.md`. This makes the tracker honest ("5 of 10
-   apply") and saves wasted passes. → `references/discovery.md` (applicability section)
+   capability-backed reason, into `.craftsman/applicability.md`. Every `partial` row names the
+   checklist sections that run and the incompatible sections skipped. This makes the tracker honest
+   ("5 of 10 apply") and saves wasted passes. → `references/discovery.md` (applicability section)
 
    **Write the tracker skeleton now.** Immediately after applicability is determined, write
    `.craftsman/master-tracker.md` as a SKELETON: the file header plus the "Audit status" table with
@@ -146,8 +151,11 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
    runs will exhaust context on large audits (>3 applicable domain/scope pairs). Instead: the
    orchestrator writes the plan from **discovery context only** — scope specifics, known stack, known
    gaps, maturity tier, what to emphasize. The subagent, as its **first act**, loads its domain skill,
-   reads that checklist, and merges it with the plan before auditing. Small audits (≤ 3 scope/domain
-   pairs) may load the domain skill inline to write the plan — this is conditional, not a mandate.
+   reads that checklist, and merges it with the plan before auditing. Copy every discovery invariant
+   that applies to the domain as an all-call-site coverage checkbox. For content/configuration work,
+   require the governing contract, fixture, seed, generator, or prompt in the plan. Small audits
+   (≤ 3 scope/domain pairs) may load the domain skill inline to write the plan — this is conditional,
+   not a mandate.
 
 5. **Adversarial plan review (skip for ≤ 3 scope/domain pairs).** After all `plan.md` files are
    written (step 4), before launching subagent audit passes (step 6): run a review agent (or Codex
@@ -215,6 +223,12 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
       node /absolute/path/to/craftsman/skills/craft-audit/scripts/validate-findings.mjs /absolute/path/to/target-repo/.craftsman
       ```
 
+      After reconciliation and before writing `master-tracker.md`, run the synthesis gate:
+
+      ```bash
+      node /absolute/path/to/craftsman/skills/craft-audit/scripts/validate-synthesis.mjs /absolute/path/to/target-repo/.craftsman
+      ```
+
       It exits non-zero and prints `file:line` errors on failure. If the script is unavailable, fall
       back to the by-hand checklist below — it documents what the script enforces, on every file:
       1. Every finding heading matches (full line):
@@ -240,16 +254,25 @@ Run these in order. Each step writes its output into `.craftsman/` so the next s
       a normalizer that accepts broken variants. Re-run that domain pass (prefer re-prompting the domain
       subagent with the failed file + the canonical template) or fix the file before continuing.
 
+      **Remediation closure check:** before accepting any `open → fixed` transition that has a
+      Fix-attempt or changed code since the finding's last check, read that domain's
+      `remediation-reviews.md`. Require a matching `cleared` review record with diff provenance and
+      the original invariant; a missing, `pending`, or `follow-up-found` record blocks that transition
+      rather than weakening the finding.
+
    b. **Flatten:** build a single pooled list of all findings. For small audits (≤ 3 domain/scope
       pairs) do this inline. For large audits, delegate to a synthesis agent with the full findings
       list pasted as input — it flattens, deduplicates, and returns the ranked list; you write the
       tracker from that output.
 
    c. **Deduplicate and reconcile:** apply steps 2–2c of `references/prioritization.md` — dedup/merge,
-      cross-domain rollup, and cross-scope same-resource merge.
+      cross-domain rollup, and cross-scope same-resource merge. Write `dedup-map.md` before the
+      tracker: exact-key groups, semantic candidates, every reconciliation decision, and raw versus
+      distinct eligible counts. A zero semantic-rollup outcome requires an explicit review record.
 
    d. **Rank and write:** sort 🔴 Tier 1 → 🟡 Tier 1 → 🔴 Tier 2 → 🟡 Tier 2 → 🟢, then write
-      the master tracker.
+      the master tracker. Keep `unverified-from-repo` items out of ordinary distinct-defect totals
+      and the climb sequence; surface them in **Human verification required** instead.
 
    After presenting the climb sequence to the user, tell them the fix path: to start fixing, invoke
    `craft-fix` (or say "fix the findings" / "fix `<ID>`") — it works through the climb sequence with
@@ -321,6 +344,10 @@ in `CLAUDE.md`.
 - [ ] quality.md is integrated into at least one audit loop step (not just listed in the reference index)
 - [ ] quality.md findings are routed per the boundary sentence: lint/rule-content → lint plan section, CI-gate wiring → infra plan section
 - [ ] Workspace template (`workspace.md`) is complete: all file templates present, `.craftsman/README.md` template orients a returning builder
-- [ ] Re-run protocol (`rerun.md`) correctly describes how to resume a partial audit, including the "not seen ≠ fixed" rule and the delta report format
+- [ ] Re-run protocol (`rerun.md`) correctly describes how to resume a partial audit, including the "not seen ≠ fixed" rule, remediation-diff review before closure, and the delta report format
 - [ ] Delegation thresholds are consistent throughout: ≤ 3 pairs = small project (inline), > 3 pairs = large project (delegate) — no approximations or conflicting numbers
 - [ ] Cross-domain boundaries: domain skills do not duplicate each other's guidance (orchestrator owns discovery/planning/tracking; domain skills own findings)
+- [ ] Discovery requires explicit-invariant all-call-site coverage and records the search basis/exclusions
+- [ ] Applicability is capability-backed; native UI/storage profiles do not inherit browser/CSS or Postgres-only checks by analogy
+- [ ] Synthesis requires `dedup-map.md` plus `validate-synthesis.mjs`; semantic reconciliation cannot be skipped because exact keys do not match
+- [ ] Tracker separates `unverified-from-repo` human checks from eligible totals and exposes grade distance plus overdue Fix-attempt verification

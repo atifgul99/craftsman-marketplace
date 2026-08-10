@@ -408,6 +408,10 @@ const FP_RE = /`scope=([^`]+) · domain=([^`]+) · class=([^`]+) · resource=([^
 const FIX_ATTEMPT_LINE_RE =
   /^\*\*Fix-attempt:\*\* (\d{4}-\d{2}-\d{2}) · (working-tree|[0-9a-f]{7,40}) · .+/;
 const FIX_ATTEMPT_LABEL = "**Fix-attempt:**";
+const CONFIDENCE_LABEL = "**Confidence:**";
+const CONFIDENCE_VALUES = new Set(["verified", "inferred", "unverified-from-repo"]);
+const DEPLOYMENT_STATE_LABEL = "**Deployment-state:**";
+const DEPLOYMENT_STATE_RE = /^(active|not-applicable|unverified-from-repo|pending \(.+\))$/;
 
 const REQUIRED_LABELS = [
   "**What breaks (plain language):**",
@@ -519,16 +523,6 @@ function scanFindingShapedHeadings(content) {
       if (FINDING_SHAPED_HEADING.test(rest)) {
         out.push({ text: line.trimEnd() || unwrapped, kind: "malformed" });
       }
-      continue;
-    }
-
-    // Bare finding-shaped ID line (no hashes) — Setext title or plain misuse
-    const looksLikeIdHeading =
-      /^[A-Za-z0-9][A-Za-z0-9-]*-(UX|FE|BE|DB|SEC|INFRA|OBS|TEST|LINT|AI)-\d{3}\b/.test(unwrapped) &&
-      FINDING_SHAPED_HEADING.test(unwrapped);
-
-    if (looksLikeIdHeading) {
-      out.push({ text: line.trimEnd() || unwrapped, kind: "malformed" });
       continue;
     }
 
@@ -666,8 +660,35 @@ function validateFindingsContent(rel, content, scope, domain) {
       continue;
     }
 
-    // Optional Fix-attempt lines: only after Last-checked; identity is working-tree or short sha.
+    // Optional trailing labels follow the canonical order: Confidence, Deployment-state, Fix-attempt.
     const lcIdx = firstLabelIndex(fullBlock, "**Last-checked:**");
+    const confidenceLines = block.body.filter((l) => l.includes(CONFIDENCE_LABEL));
+    if (confidenceLines.length > 1) {
+      errors.push(`Confidence appears ${confidenceLines.length} times (want at most 1) in ${block.heading}`);
+      continue;
+    }
+    if (confidenceLines.length === 1) {
+      const confidenceIdx = firstLabelIndex(fullBlock, CONFIDENCE_LABEL);
+      const confidenceValue = confidenceLines[0].trim().replace(CONFIDENCE_LABEL, "").trim();
+      if (confidenceIdx < lcIdx || !CONFIDENCE_VALUES.has(confidenceValue)) {
+        errors.push(`Confidence must follow Last-checked and be verified, inferred, or unverified-from-repo in ${block.heading}`);
+        continue;
+      }
+    }
+    const deploymentStateLines = block.body.filter((l) => l.includes(DEPLOYMENT_STATE_LABEL));
+    if (deploymentStateLines.length > 1) {
+      errors.push(`Deployment-state appears ${deploymentStateLines.length} times (want at most 1) in ${block.heading}`);
+      continue;
+    }
+    if (deploymentStateLines.length === 1) {
+      const dsIdx = firstLabelIndex(fullBlock, DEPLOYMENT_STATE_LABEL);
+      const dsValue = deploymentStateLines[0].trim().replace(DEPLOYMENT_STATE_LABEL, "").trim();
+      const confidenceIdx = confidenceLines.length === 1 ? firstLabelIndex(fullBlock, CONFIDENCE_LABEL) : -1;
+      if (dsIdx < lcIdx || (confidenceIdx !== -1 && dsIdx < confidenceIdx) || !DEPLOYMENT_STATE_RE.test(dsValue)) {
+        errors.push(`Deployment-state must follow Confidence (when present) and be active, not-applicable, unverified-from-repo, or pending (reason) in ${block.heading}`);
+        continue;
+      }
+    }
     const fixAttemptIdxs = [];
     {
       let searchFrom = 0;
@@ -687,6 +708,10 @@ function validateFindingsContent(rel, content, scope, domain) {
         fixAttemptOk = false;
         break;
       }
+    }
+    if (deploymentStateLines.length === 1 && fixAttemptIdxs.some((faIdx) => faIdx < firstLabelIndex(fullBlock, DEPLOYMENT_STATE_LABEL))) {
+      errors.push(`Deployment-state must appear before Fix-attempt in ${block.heading}`);
+      continue;
     }
     if (!fixAttemptOk) continue;
 
@@ -831,6 +856,34 @@ function checkFindingsGrammarRegressions() {
       content: `# Backend Findings — root\n\n## root-BE-001 · severity 🔴 · status open\n${body}\n**Fix-attempt:** 2026-06-25 · working-tree · scoped the query to orgId\n`,
       mustFail: false,
       expectValidated: 1,
+    },
+    {
+      name: "ordinary prose beginning with a finding ID is valid",
+      content: `# Backend Findings — root\n\n## root-BE-001 · severity 🔴 · status open\n${body}\nroot-INFRA-002, this is ordinary prose in the finding body.\n`,
+      mustFail: false,
+      expectValidated: 1,
+    },
+    {
+      name: "pending deployment state after Last-checked is valid",
+      content: `# Backend Findings — root\n\n## root-BE-001 · severity 🔴 · status open\n${body}\n**Deployment-state:** pending (migration not applied)\n**Fix-attempt:** 2026-06-25 · b2c9d1e · added migration\n`,
+      mustFail: false,
+      expectValidated: 1,
+    },
+    {
+      name: "Confidence before deployment state is valid",
+      content: `# Backend Findings — root\n\n## root-BE-001 · severity 🔴 · status open\n${body}\n**Confidence:** inferred\n**Deployment-state:** unverified-from-repo\n`,
+      mustFail: false,
+      expectValidated: 1,
+    },
+    {
+      name: "Confidence after deployment state must fail",
+      content: `# Backend Findings — root\n\n## root-BE-001 · severity 🔴 · status open\n${body}\n**Deployment-state:** pending (migration not applied)\n**Confidence:** inferred\n`,
+      mustFail: true,
+    },
+    {
+      name: "invalid Confidence value must fail",
+      content: `# Backend Findings — root\n\n## root-BE-001 · severity 🔴 · status open\n${body}\n**Confidence:** maybe\n`,
+      mustFail: true,
     },
     {
       name: "Fix-attempt before Last-checked must fail",

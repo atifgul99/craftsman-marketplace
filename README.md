@@ -19,8 +19,9 @@ time at Microsoft and Amazon.
 
 ## In short
 
-It's free and MIT licensed. It runs inside your own Claude Code or Codex session, makes no network calls,
-and collects no telemetry (see [SECURITY.md](./SECURITY.md)). `craft-audit` only reads your code.
+It's free and MIT licensed. It runs inside your own Claude Code or Codex session and collects no
+telemetry (see [SECURITY.md](./SECURITY.md)). The plugin does not send your project files or audit
+findings to Craftsman. Its review guidance is bundled locally; `craft-audit` only reads your code.
 The writes it makes are a new local folder, `.craftsman/`, holding its notes, and a line in your
 project's `.gitignore` (the file that tells git which files to skip) so that folder stays out
 of version control. If your project doesn't have a `.gitignore` yet, it creates one with that line;
@@ -38,6 +39,18 @@ someone doing this kind of review, you probably don't need it.
 
 ## Install
 
+**Install the plugin named `craftsman`—not the skill named `craft-audit`.** There are four names
+that look similar but have different jobs:
+
+| This is a… | Exact name | Use it for… |
+| --- | --- | --- |
+| Repository / marketplace source | `atifgul99/craftsman-marketplace` | Adding the marketplace |
+| Marketplace | `craftsman-marketplace` | Selecting the marketplace |
+| Plugin | `craftsman` | Installing the plugin |
+| Main entry skill | `craft-audit` | Starting an audit after installation |
+
+Adding a marketplace does **not** install the plugin. Run both commands in the order shown below.
+
 ### Claude Code
 
 You need Claude Code installed first: see [code.claude.com/docs](https://code.claude.com/docs).
@@ -49,12 +62,16 @@ Type these into Claude Code's chat box, not a terminal:
 /plugin install craftsman@craftsman-marketplace
 ```
 
+Then start a new Claude Code conversation. If Claude Code tells you to reload plugins, run
+`/reload-plugins` first. Open `/plugin` to confirm **Craftsman** appears under Installed.
+
 If you're working headlessly (running Claude Code without the interactive chat window, e.g. from a
 script), use the terminal equivalents instead:
 
 ```bash
 claude plugin marketplace add atifgul99/craftsman-marketplace
 claude plugin install craftsman@craftsman-marketplace
+claude plugin list --json
 ```
 
 ### Codex
@@ -64,10 +81,40 @@ Install from the same marketplace in Codex:
 ```bash
 codex plugin marketplace add atifgul99/craftsman-marketplace
 codex plugin add craftsman@craftsman-marketplace
+codex plugin list --marketplace craftsman-marketplace --json
 ```
 
+Start a new Codex chat after installation. Open `/plugins` to inspect installed plugins. The JSON
+listing should show the `craftsman` plugin from the `craftsman-marketplace` marketplace.
+
 For a local clone, pass its absolute path to `codex plugin marketplace add` instead. Codex and
-Claude Code load the same 12 skill folders; use the same plain-language triggers after install.
+Claude Code load the same 12 skill folders.
+
+### First use
+
+In the project you want to assess, say:
+
+> Use `craft-audit` to tell me whether this app is production-ready. Do not modify anything yet.
+
+`craft-audit` is a skill inside the installed plugin. It is never an install target, so do not run
+`craft-audit@craftsman-marketplace`.
+
+### Installing from an LLM or coding agent
+
+When you give an LLM only this repository URL, give it this instruction too:
+
+```text
+Install Craftsman from https://github.com/atifgul99/craftsman-marketplace.
+
+First identify the host: Claude Code or Codex. Read this README and INSTALL.md before acting.
+The source is atifgul99/craftsman-marketplace; the marketplace is craftsman-marketplace; the plugin
+to install is craftsman; craft-audit is the first skill to invoke after installation, not a plugin.
+Use the host-native marketplace commands, verify that craftsman is installed and enabled, then start
+a new chat/session. Do not run an audit or modify the project until I ask.
+```
+
+For updates, stale-install recovery, uninstallation, and host-specific troubleshooting, see
+[INSTALL.md](./INSTALL.md).
 
 ## What you get
 
@@ -198,16 +245,17 @@ See each skill's `SKILL.md` under `craftsman/skills/<name>/` for its full trigge
 
 ## Compatibility
 
-Neither manifest (`craftsman/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`) declares
-a minimum Claude Code version. Use a current Claude Code release with plugin marketplace support;
-older versions are unverified. Check your version with `claude --version`, and if you hit an install
-or loading issue, update to the latest release first.
+Craftsman is verified with Claude Code and Codex marketplace installs. Neither host manifest declares
+a minimum supported version, so use a current release with plugin marketplace support. Check your
+host with `claude --version` or `codex --version`; if installation or loading fails, update the host,
+refresh the marketplace, and follow the recovery steps in [INSTALL.md](./INSTALL.md).
 
 ## Uninstall and undo
 
-To remove the plugin, run `claude plugin uninstall craftsman@craftsman-marketplace` (see
-`claude plugin --help` for the full command set, including `disable` if you want to keep it
-installed but turn it off).
+To remove the plugin, run `claude plugin uninstall craftsman@craftsman-marketplace` for Claude Code
+or `codex plugin remove craftsman@craftsman-marketplace` for Codex. See
+[INSTALL.md](./INSTALL.md) for marketplace removal, update recovery, and Claude's `disable` option
+when you want to keep the plugin installed but inactive.
 
 The `.craftsman/` folder an audit creates lives in the project you audited, not in this repo. It's
 just local files: findings, plans, and the master tracker, all plain Markdown. It's safe to delete

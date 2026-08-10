@@ -31,7 +31,8 @@ Different repos already have different pieces in place. Before adding anything, 
 extend rather than duplicate or fight it:
 
 - `package.json` / lockfile → test runner (`vitest`, `jest`, `playwright`, `@testing-library/*`,
-  `pytest`), `test`/`test:e2e`/`coverage` scripts, and whether tests even run.
+  `pytest`), `test`/`test:e2e`/`coverage` scripts, and whether tests even run. Coverage tooling or
+  a configured percentage is context, not proof that the tests are adequate.
 - Test config (`vitest.config.*`, `jest.config.*`, `playwright.config.*`, `pytest.ini`,
   `conftest.py`) → environment, setup files, coverage thresholds already set.
 - Existing tests (`*.test.*`, `*.spec.*`, `__tests__/`, `e2e/`, `tests/`) → conventions, what's
@@ -89,8 +90,36 @@ Apply these unless the user overrides — they're what makes the suite worth tru
    is easiest to test.
 3. **Write** — behavior-asserting, deterministic, boundary-correct tests against the repo's existing
    conventions.
-4. **Verify** — run them, and confirm they *fail when the behavior breaks* (mutate the code or comment
-   out the fix and watch the test go red). A test you haven't seen fail is not yet a test.
+4. **Verify** — run them, and confirm they *fail when the behavior breaks*. For a test that is credited
+   with protecting a Tier A invariant, gather direct discriminative evidence as described below. A test
+   you haven't seen fail is not yet a test.
+
+## Discriminative evidence for critical tests
+
+Source review can establish that a test has a meaningful-looking assertion; it cannot establish that
+the test distinguishes the protected behavior from a realistic regression. Do not credit a Tier A test
+as adequate on source review alone.
+
+For each distinct Tier A invariant the audit credits as covered, identify the existing enforcement
+predicate and obtain direct evidence that the relevant test detects it being broken. Examples of
+invariants and predicates include tenant/owner/role checks, payment amount or idempotency checks,
+irreversible-mutation guards, and an entitlement or token expiry comparison.
+
+The usual evidence is one **bounded local fault-injection probe** per distinct invariant: temporarily
+remove, relax, or invert that existing predicate; run the directly relevant test; verify that it fails
+on its behavioral assertion; restore the source; and rerun the test green. Record the invariant,
+predicate, named test, observed red result, and restored-green result in the audit evidence. The probe
+must change production code only — never the test, its assertion, a mock, typechecking, or unrelated
+setup — and must run against isolated test data and provider fakes, never production or a live payment
+provider.
+
+This is a small verification step, not exhaustive mutation testing: do not mutate every conditional,
+set a mutation score, or install a mutation-testing tool merely to conduct a Tier 1 audit. Existing
+verified evidence from a regression test may substitute only when it identifies the same invariant,
+the named test, and the expected behavioral failure. If direct evidence cannot be safely obtained (for
+example, a strictly read-only audit or an unavailable test environment), report that
+invariant-coverage claim as `unverified`; do not grade it adequate or use it to close a critical-path
+coverage finding.
 
 ## Reference index
 
@@ -131,10 +160,13 @@ means `verified` — then optional `**Fix-attempt:**` only from craft-fix).
 Assign sequential NNN per (scope, domain); judge severity with craft-audit `prioritization.md`.
 Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as body bullets.
 
-- [ ] Map the runner, configs, and existing tests; flag tests that assert nothing real (mock-was-called,
-      pinned internals, trivial getters) as if untested → `SKILL.md` (Operating principle)
+- [ ] Map the runner, configs, existing tests, and any coverage command/report; flag tests that assert
+      nothing real (mock-was-called, pinned internals, trivial getters) as if untested. The absence of a
+      repo-wide coverage percentage or coverage configuration is an observation, not itself a TEST
+      finding → `SKILL.md` (Operating principle)
 - [ ] Check the critical paths (auth, authorization, payments, data mutations) actually have tests; flag
-      coverage spent on trivia while the money path is bare → `references/strategy.md`
+      coverage spent on trivia while the money path is bare. If a coverage report is available, use its
+      Tier A branch gaps as leads; do not grade from a global percentage → `references/strategy.md`
 - [ ] Verify tests assert observable behavior, not internal calls — flag suites that break on a private
       rename or mirror the implementation → `references/test-design.md`
 - [ ] Check determinism: frozen clock, seeded randomness, no real network; flag wall-clock/random/live-I/O
@@ -145,10 +177,13 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
       via MSW; flag test-id queries, `fireEvent`, or mocked own modules → `references/frontend-testing.md`
 - [ ] Verify backend/data tests hit the real boundary (real DB via testcontainers/transactional rollback,
       contract tests, seeded data); flag a mocked database → `references/backend-data-testing.md`
-- [ ] Confirm the gating suites and every fixed bug's regression test fail when the behavior breaks; flag
-      tests never seen red and incidents without a reproducing test → `SKILL.md` (Workflow / Verify)
+- [ ] For every Tier A invariant credited as covered, record discriminative evidence: name the existing
+      enforcement predicate and directly relevant test; run one bounded local fault-injection probe (or
+      cite equivalent verified regression evidence); observe the behavioral assertion fail; restore and
+      rerun green. One representative probe per distinct invariant is enough — this is not a mutation
+      score. If it cannot be safely run, mark the claim `unverified`, not adequate; flag tests never
+      seen red and incidents without a reproducing test → `SKILL.md` (Discriminative evidence)
 - [ ] **TEST ↔ INFRA handoff:** this pass owns which suites must gate merge and what "green" means
       (including whether critical-flow e2e exists). Missing e2e *suite* is a TEST finding; if the
       suite exists but is not *wired into CI*, note it and route to craft-infra (pipeline mechanism)
       → `references/strategy.md` · craft-infra `ci-cd.md`
-

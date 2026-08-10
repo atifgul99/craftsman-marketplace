@@ -18,6 +18,8 @@ API. Read the artifacts, write down what you found *with citations*, then classi
 - [What to read (the evidence)](#what-to-read-the-evidence)
 - [Determining project shape](#determining-project-shape)
 - [Detecting the existing stack](#detecting-the-existing-stack)
+- [Codebase-invariant sweep](#codebase-invariant-sweep)
+- [Capability profile](#capability-profile)
 - [The maturity read — which register does this project need?](#the-maturity-read--which-register-does-this-project-need)
 - [Reference calibration (opt-in) — what does this team's own "good" look like?](#reference-calibration-opt-in--what-does-this-teams-own-good-look-like)
 - [Classifying which domains apply](#classifying-which-domains-apply)
@@ -103,6 +105,9 @@ Read these in roughly this order; stop when the picture is clear:
   had moved to Ancaster, Ontario and flagged "Montreal" in older docs as stale — the UX pass then
   found "Montreal" hardcoded in five places on the live site. The correction was written down and
   never reached the code.
+- **Native/mobile signals** — `Package.swift`, `.xcodeproj`, `.xcworkspace`, `*.swift`,
+  `SwiftUI`, `UIKit`, `SwiftData`, Core Data, Android/Compose, Flutter, React Native, or other
+  platform-native entry points. A rendered interface is not automatically a browser DOM/CSS surface.
 
 ---
 
@@ -157,6 +162,38 @@ Record what's **already chosen** so the audit meets the project where it is (and
 
 "None"/"nothing" is the most important value to record — it's where the recommendation engine and the
 highest-severity findings come from.
+
+---
+
+## Codebase-invariant sweep
+
+Treat explicit repository warning language as an auditable contract, not background reading. During
+discovery, inventory concrete, repository-local invariants from `must`, `always`, `never`, `do not`,
+`only if`, `wrong if`, `invariant`, and similar directives in source, types, constants, helpers,
+tests, and repo-native docs already in scope. Focus on correctness/safety contracts—tenant scoping,
+paid-through dates, authorization, idempotency, date boundaries, transaction wrappers, and feature
+flags—not vague style preferences.
+
+For every candidate, record the source citation, normalized rule, search strategy, every applicable
+call site inspected, excluded call sites with a reason, and owning domain. Copy each applicable rule
+into the affected domain `plan.md` as a checkbox: **"Inventory all matching call sites; inspect each;
+record coverage or emit a finding."** A sampled inspection is never adoption evidence. When the
+candidate set is large, derive a bounded search from the helper/type/API and record why it covers the
+call sites; if coverage cannot be established, emit one explicit finding rather than claiming it.
+
+---
+
+## Capability profile
+
+Record the capabilities that make a checklist section transferable, with file evidence: for example
+`browser-dom-css`, `native-ui-swiftui`, `native-ui-uikit`, `android-compose`, `react-native`,
+`sql-postgres`, `sqlite`, `swiftdata`, `core-data`, `document-store`, `server-routes`,
+`background-jobs`, `ci`, and `managed-deploy`.
+
+For every `partial` domain, name the compatible checklist sections and the incompatible sections
+skipped. Translate the underlying principle only when the platform supplies an equivalent mechanism;
+otherwise record **N-A for this capability**, not a generic gap. This prevents browser/CSS and
+Postgres-specific rules from being applied by analogy to SwiftUI/SwiftData.
 
 ---
 
@@ -222,19 +259,20 @@ reads) in `discovery.md` so the calibration is auditable.
 
 ## Classifying which domains apply
 
-For each of the ten, mark **applies / partial / N-A** with a one-line reason. Heuristics:
+For each of the ten, mark **applies / partial / N-A** with a reason and capability profile.
+`partial` is a promise to list which checklist sections run and which are incompatible. Heuristics:
 
 | Domain | Applies when | Often N-A / partial when |
 | --- | --- | --- |
-| **craft-ux** | Any rendered UI | Pure API/library (N-A) |
+| **craft-ux** | Any rendered UI with a matching UI capability | Pure API/library (N-A); SwiftUI/UIKit/Compose (partial unless a native-equivalent review path is available; browser DOM/CSS rules are N-A) |
 | **craft-frontend** | A client app with state/data-fetching/forms | Static content site (partial), API-only (N-A) |
 | **craft-backend** | Any server routes / API | Static site with no server (N-A) |
-| **craft-db** | A persistent datastore | No DB / external-only data (N-A); read-only content (partial) |
+| **craft-db** | A persistent datastore | No DB / external-only data (N-A); read-only content (partial); SwiftData/Core Data/document stores (partial unless the rule is storage-engine neutral; Postgres/RLS/migration syntax rules are N-A) |
 | **craft-security** | Auth, user data, any input, any deploy | Almost always applies — rarely N-A |
 | **craft-infra** | Anything deployed | Local-only prototype (partial) |
 | **craft-observability** | Production traffic, real users, money/data at stake | Static marketing site (partial — error tracking only); throwaway demo (N-A) |
 | **craft-testing** | Any code with logic worth protecting — auth, mutations, money, business rules | Pure static content with no logic (partial — a smoke test); throwaway demo (N-A) |
-| **craft-lint** | Any JS/TS project, especially TypeScript/React/Next/Node | Docs-only repos with no executable JS/TS (N-A); non-JS projects (partial or N-A depending on tooling) |
+| **craft-lint** | Any project with a configured static-analysis tool | Docs-only repos with no executable code (N-A); non-JS projects (partial only for their actual linter/formatter; ESLint-specific rules are N-A) |
 | **craft-ai** | Any LLM integration — chat/agent/RAG, model API calls, tool-use, prompt pipelines (OpenAI/Anthropic/Vercel AI SDK/LangChain/etc.) | No model calls, no LLM SDK, no AI features (N-A) |
 
 `craft-security` should almost never be N-A — if the project takes any input or ships anywhere, it
@@ -248,10 +286,11 @@ Produce two files (templates in `workspace.md`):
 
 - `.craftsman/discovery.md` — shape, **maturity read** (pre/partial/post-Tier-1, with the files that
   earned it), package manager, frameworks, existing stack, each with a file citation; a "generated at
-  \<date\> / \<commit SHA\>" header; an explicit "unknowns" section. If reference calibration was used,
-  note which references were consulted and that any outside-project reads were user-authorized.
-- `.craftsman/applicability.md` — the ten-row applies/partial/N-A table with reasons; a count
-  ("5 of 10 apply") the master tracker can quote.
+  \<date\> / \<commit SHA\>" header; an explicit "unknowns" section; the invariant inventory and
+  coverage method; and the capability profile. If reference calibration was used, note which
+  references were consulted and that any outside-project reads were user-authorized.
+- `.craftsman/applicability.md` — the ten-row applies/partial/N-A table with reasons, capability
+  evidence, compatible/incompatible checklist sections, and a count the master tracker can quote.
 
 **Usual suspects for the unknowns section.** Some production-critical config never lives in the
 repo — pose these as **questions for the human**, not findings: env-var scoping per deployment tier
@@ -278,5 +317,7 @@ external condition is true.
 | No "unknowns" section | Add one; missing CI/deploy info is itself a finding |
 | No maturity read — hardened repo audited at MVP register | Add the pre/partial/post-Tier-1 call with file evidence; shift the register (`prioritization.md`) |
 | "post-Tier-1" claimed because an auth lib is installed | Verify authz is actually *enforced* in routes — installed ≠ enforced |
+| A documented invariant was read but only one caller was sampled | Inventory every applicable call site and record coverage or an explicit gap |
+| Browser/CSS or Postgres guidance applied to SwiftUI/SwiftData by analogy | Record capabilities; run only equivalent sections and mark the rest N-A |
 | Auto-read sibling repos / `.private/*-ref` without asking | Stop — outside-project references need explicit user authorization; inside-monorepo apps are fine |
 | File-naming convention flagged without checking framework major version | Read `package.json` → exact semver first. Example: `proxy.ts` is **correct** for Next.js ≥ 16 — not dead code or a misnamed `middleware.ts`. |

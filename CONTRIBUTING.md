@@ -82,6 +82,24 @@ opening a PR:
 node scripts/check-invariants.mjs
 ```
 
+## Vendored third-party rules
+
+`craftsman/skills/craft-ux/references/web-interface-guidelines.md` is the Vercel Web Interface
+Guidelines rule list (MIT), vendored at publish time and pinned to an upstream commit SHA. Skills
+must **never** fetch instructions from a mutable external branch at review time: the audit runs with
+write access to the user's codebase, so a third-party repo that can change its own `main` would be
+an instruction channel into that codebase. Vendoring puts a human in front of every rule change.
+
+Refresh it as a release step, not from CI — then read the diff before committing, because a new rule
+is a new agent instruction:
+
+```bash
+node scripts/refresh-web-interface-guidelines.mjs
+```
+
+`--check` reports drift without writing. The script strips upstream's command frontmatter,
+`$ARGUMENTS` scaffolding, and output-format section; only the rule list is kept, as data.
+
 ## Reporting feedback without opening a PR
 
 See `.github/ISSUE_TEMPLATE/skill-feedback.md` for the lightweight feedback format (skill,

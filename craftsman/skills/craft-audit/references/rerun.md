@@ -17,6 +17,7 @@ fixed/regressed signal.
 
 - [When this runs (the pre-flight)](#when-this-runs-the-pre-flight)
 - [Part 1 — Staleness detection](#part-1--staleness-detection)
+- [Part 1.5 — Remediation-diff review](#part-15--remediation-diff-review)
 - [Part 2 — Robust diffing (finding-by-finding)](#part-2--robust-diffing-finding-by-finding)
 - [The "not seen ≠ fixed" rule (the one that matters most)](#the-not-seen--fixed-rule-the-one-that-matters-most)
 - [User-scoped re-runs and fix verification](#user-scoped-re-runs-and-fix-verification)
@@ -110,6 +111,52 @@ Don't eyeball it — compute it.
 
 ---
 
+## Part 1.5 — Remediation-diff review
+
+Staleness uses a diff only to route work. Before a re-run closes an attempted fix, review the diff as
+a change in its own right. A missing old fingerprint proves only that the old defect is absent; it does
+not prove the remediation did not create a different breach, charge, migration failure, or integrity
+regression.
+
+For every prior `open` finding that is a candidate for closure and has either a `Fix-attempt` or
+changed code since its `last-checked` stamp:
+
+1. **Establish provenance.** For a SHA identity, inspect the fix commit (`<sha>^!`) and subsequent
+   changes through current `HEAD` (`<sha>..HEAD`); when the prior `last-checked` commit is available,
+   also use `<last-checked>..HEAD` to catch adjacent changes. For `working-tree`, inspect the staged,
+   unstaged, and untracked change set relative to `HEAD` and record that provenance is uncommitted.
+   When no Fix-attempt was recorded but the resource changed since `last-checked`, record
+   `none — unrecorded remediation` and review `<last-checked>..HEAD`. If a required range is
+   unavailable, the review is `pending`, not inferred clear.
+2. **Identify the invariant and changed boundaries.** Start with the finding's fingerprint and
+   technical evidence, then trace callers and alternate entry points touched by the diff: routes,
+   server actions, jobs, webhooks, service methods, schema/data paths, and tests. Do not limit review
+   to the cited line or assume a passing happy path covers those boundaries.
+3. **Escalate semantic risk.** A diff that changes identity, role, ownership, tenant, or authorization
+   checks; payment amounts, idempotency, refunds, ledger/state transitions; migrations, backfills,
+   constraints, defaults, or deploy order; or transactions, uniqueness, deletes, retries, or ownership
+   must receive focused regression review. Load the relevant domain skill(s) for the judgment:
+   `craft-security`, `craft-backend`, `craft-db`, and `craft-testing` as applicable. This is not a
+   second whole-project audit and does not duplicate their standards.
+4. **Check evidence, including the negative path.** Review the tests changed with the fix and run the
+   relevant gate where possible. For a risk-triggered change, verify the important denial, duplicate,
+   expired, invalid, rollback, or existing-data path as well as the repaired happy path. A migration
+   review must cover forward application, existing-data/backfill behavior, constraint/default effects,
+   and rollback or compatibility/deploy-order evidence; an unavailable production step remains
+   `pending`, not silently clear.
+5. **Write the durable result.** Append one record to
+   `audits/<scope>/<domain>/remediation-reviews.md` using the `workspace.md` template. If the review
+   finds a side effect, emit it as a new or regressed finding before closing anything. If it is
+   incomplete, mark the review `pending` and leave the original finding `open`.
+
+Only a `cleared` remediation review, together with direct re-observation that the original fingerprint
+is absent, permits `open → fixed` when remediation is present or plausibly occurred. If the finding
+has a `Deployment-state`, it must additionally be `active` or `not-applicable`; `pending` and
+`unverified-from-repo` keep it open. This check is intentionally bounded to candidate closures; it
+does not turn every staleness diff into a full regression review.
+
+---
+
 ## Part 2 — Robust diffing (finding-by-finding)
 
 When a domain pass re-runs against a scope that already has a `findings.md`, you are **diffing**, not
@@ -128,7 +175,7 @@ never on line number, file path, or the display ID label.
    | Prior status | Re-observed this run? | New status | ID |
    | --- | --- | --- | --- |
    | `open` | yes | `open` (unchanged) | keep |
-   | `open` | no — **and the pass actually re-checked it** | `fixed` | keep |
+   | `open` | no — **and the pass actually re-checked it, with a cleared required remediation review** | `fixed` | keep |
    | `open` | not re-checked (pass skipped/stale) | `open` (stamp `last-checked` unchanged) | keep |
    | `fixed` | yes — defect is back | `regressed` | keep |
    | `wontfix` | yes | `wontfix` (still acknowledged; surface in delta) | keep |
@@ -137,13 +184,13 @@ never on line number, file path, or the display ID label.
    resource. This is what makes the next rerun able to tell "fixed" from "never re-checked" (see the
    rule below). It is recorded per finding, in addition to the file-level `Generated` stamp.
 
-   **Fix-attempt findings** (`workspace.md`): when a prior `open` finding carries one or more
-   `Fix-attempt` lines, the fingerprint diff still decides its fate — a fix-attempt is a claim, never a
-   verification. If its fingerprint is **not** re-observed → set `fixed` as usual; the existing
-   Fix-attempt line(s) now stand as the record of what fixed it and when. If it **is** re-observed →
-   keep `open` and append ` · did not hold (<date>)` to the existing Fix-attempt line, so the next
-   fixer knows that approach failed. Never delete a Fix-attempt line — it's repair history, not a
-   status field. No new record shapes.
+   **Fix-attempt findings** (`workspace.md`): a Fix-attempt is a claim, never a verification. Run
+   Part 1.5 for the attempt being considered. If its fingerprint is **not** re-observed and its
+   remediation review is `cleared` → set `fixed`; the review record, not the Fix-attempt line alone,
+   is the evidence that the fix was safe to close. If it is **re-observed** → keep `open` and append
+   ` · did not hold (<date>)` to the most recent unsuffixed Fix-attempt line. If the review is
+   `pending` or `follow-up-found` → keep `open`, preserve the Fix-attempt history, and report the
+   review state in the delta. Never delete a Fix-attempt line or use it as a status field.
 5. **Reconcile cross-domain rollups at the tracker, not here.** Diffing is per-(scope, domain). The
    cross-domain rollup (`prioritization.md` step 2b) is re-derived after all passes finish — don't try
    to maintain it inside a single domain's diff.
@@ -154,15 +201,18 @@ never on line number, file path, or the display ID label.
 `SKILL.md` step 6 delegates domain passes to subagents for any audit larger than a handful of
 scope/domain pairs — with no memory of this file's procedure by default. When a re-run pass is
 delegated, the subagent prompt **must** include: (a) the path to the prior `findings.md` for that
-scope/domain, (b) an explicit instruction to execute this Part 2 — index prior fingerprints
-first, reuse the prior run's exact `class`/`resource` vocabulary, never renumber existing IDs, and
-preserve prior `status` and `last-checked` stamps for findings it didn't re-observe, and (c) the
-re-run subagent still loads its domain skill first and merges the **current** checklist into the
-plan — same as a first-run pass, per `SKILL.md` step 4. Checklist items with no corresponding prior
-coverage run as first-pass items for that item, and their findings enter the delta as new. A re-run
-diffs **findings**, never freezes the **checklist**. The orchestrator
+scope/domain, (b) an explicit instruction to execute Part 1.5 for every candidate closure that
+requires it and append the required `remediation-reviews.md` record, (c) an explicit instruction to execute this
+Part 2 — index prior fingerprints first, reuse the prior run's exact `class`/`resource` vocabulary,
+never renumber existing IDs, and preserve prior `status` and `last-checked` stamps for findings it
+didn't re-observe, and (d) the re-run subagent still loads its domain skill first and merges the
+**current** checklist into the plan — same as a first-run pass, per `SKILL.md` step 4. Checklist items
+with no corresponding prior coverage run as first-pass items for that item, and their findings enter
+the delta as new. A re-run diffs **findings**, never freezes the **checklist**. The orchestrator
 must reject (and re-dispatch) a returned `findings.md` that renumbered or resequenced existing
-findings — that's the signal the subagent rewrote instead of diffed.
+findings — that's the signal the subagent rewrote instead of diffed. It must also reject a closure
+whose Fix-attempt or changed-code provenance requires Part 1.5 but lacks a matching `cleared`
+remediation review.
 
 ---
 
@@ -176,9 +226,10 @@ applicable pass actually executed.
 
 There's a second, narrower mode: a **targeted verification** pass. It may re-check only the findings
 that carry Fix-attempt lines, re-observing each named finding's fingerprint/resource directly rather
-than running the full domain pass. A finding whose resource was directly re-checked and whose defect
-is no longer observable may flip to `fixed` with a fresh `last-checked` stamp — direct re-observation
-of the resource satisfies the "not seen ≠ fixed" rule for that one finding, even though the full
+than running the full domain pass. It must also execute Part 1.5 for any finding it wants to close. A
+finding whose resource was directly re-checked, whose defect is no longer observable, and whose
+remediation review is `cleared` may flip to `fixed` with a fresh `last-checked` stamp — direct
+re-observation plus the review satisfies the closure rule for that one finding, even though the full
 domain pass didn't run. Everything else not re-checked keeps its existing status and stamp unchanged.
 List these in the delta report using the exact phrase **"verified fixed (targeted)"**, distinct from
 a full pass's plain "fixed", so a reader can tell how much was actually re-run. This is minutes of
@@ -187,13 +238,23 @@ that a specific fix held, without paying for a whole domain re-run.
 
 **Guard: the resource must still exist in recognizable form.** A targeted pass may flip a finding to
 `fixed` **only** when the named resource still exists in recognizable form and the defect class is
-absent *at that resource*. If the resource itself was removed, renamed, or replaced (e.g. `POST
+absent *at that resource*, and any required remediation review is `cleared`. If the resource itself
+was removed, renamed, or replaced (e.g. `POST
 /api/invoices` replaced by a server action carrying the same validation gap), the targeted pass must
 **not** close the finding — it has no way to follow the defect to its new home. Report instead:
 "resource changed since the audit — a scoped domain re-run is needed to follow the defect to its new
 home," and leave the finding's status and `last-checked` stamp untouched. Tracking the defect to
 wherever it moved is the full/domain re-run's job — see "Resource renamed, same defect" under Edge
 cases below.
+
+### Fix-attempt deadlines
+
+At pre-flight and before a new `craft-fix` pick-set, scan every open Fix-attempt and derive its due
+date from the attempt date and finding severity: 🔴 7 calendar days, 🟡 14, 🟢 next release or 30 days.
+Display overdue attempts in the master tracker’s **Verification follow-up** queue. An overdue 🔴
+attempt requires targeted verification before another pick-set starts, unless the user explicitly
+defers it; record the defer reason and date. Overdue 🟡/🟢 attempts remain first in the next targeted
+verification queue. A deadline is a forcing function for verification, never evidence that a fix held.
 
 ---
 
@@ -259,9 +320,10 @@ The whole reason for re-run intelligence is this summary. Write it into `master-
 
 ```
 Delta since last run (<prev date · sha> → <date · sha>):
-- ✅ 3 fixed: apps-web-SEC-001, apps-web-BE-004, packages-ui-UX-003
+- ✅ 3 fixed (remediation reviewed): apps-web-SEC-001, apps-web-BE-004, packages-ui-UX-003
 - ↩ 1 regressed: apps-web-SEC-002 (was fixed 2026-05-01, back this run)
 - ➕ 2 new: apps-web-OBS-005, apps-api-INFRA-002
+- ⏳ 1 remediation review pending: apps-api-DB-003 (finding remains open)
 - ❔ 4 not re-checked (backend pass skipped for apps/admin — stale, not fixed)
 ```
 
@@ -277,6 +339,8 @@ re-checked" and you can drop it.
 | --- | --- |
 | Prior `findings.md` overwritten instead of diffed | Index prior fingerprints first; classify, don't replace |
 | Finding marked `fixed` but its pass never ran this re-run | Keep `open`, old `last-checked`; report "not re-checked" |
+| Finding with a Fix-attempt marked `fixed` from fingerprint absence alone | Review its remediation diff, record a `cleared` result, and check the relevant negative path before closure |
+| Payment/auth/migration/data-integrity remediation reviewed only at its cited line | Trace changed callers and alternate paths; route focused judgment to the relevant domain skills |
 | 20-minute audit redone because the commit moved by one | Scope-aware staleness — diff changed files, keep unchanged scopes |
 | `class`/`resource` rephrased, so fixed findings resurface as "new" | Reuse the prior run's exact vocabulary (`workspace.md`) |
 | Renamed route churns a fixed+new pair | Candidate-match review on `(scope, domain, class)`; carry the ID |

@@ -43,6 +43,7 @@ Do not prescribe Tier 2 to a Tier 1 codebase. Pushing comprehensive coverage, co
 - A handful (think 5–15, not 200) of **integration tests on the Tier A critical path**: signup/login actually authenticates; a logged-in user cannot read another tenant's data; a payment charges the right amount once; the core create/delete mutation persists and is scoped to the owner.
 - **Smoke-test the happy path** of each money/auth flow end-to-end (one Playwright spec that logs in, does the one thing that makes money, asserts the result). One real browser pass per critical flow catches the "entire checkout is broken" class.
 - A test **harness that runs fast and green locally and in CI**, so the next test is cheap to add. If adding a test is painful, none get added.
+- When an audit credits a Tier A invariant as covered, obtain one bounded local fault-injection probe for that invariant: temporarily relax its existing guard, observe the directly relevant behavioral test fail, restore it, and rerun green. This verifies that the test discriminates; it is not an exhaustive mutation-testing programme.
 
 That's it for Tier 1. Resist the urge to backfill unit tests across the whole repo — that spends the budget on Tier C.
 
@@ -99,6 +100,7 @@ Use coverage the right way:
 - **As a discovery tool.** Run a coverage report over the Tier A modules and look at what's *red*. An uncovered branch in an authorization check or a payment path is a finding — go write that test. This is coverage doing its actual job: finding the untested critical path.
 - **Track critical-path coverage, not repo average.** "85% of the auth/billing/mutation modules' branches are covered" is a meaningful number. "73% of the whole repo" is noise dominated by Tier C files. If you gate on coverage at all, scope the gate to the Tier A directories, and prefer **branch** coverage (did both sides of the `if` run?) over line coverage there.
 - **Never set a blanket repo-wide percentage mandate.** It manufactures exactly the tautological tests this whole skill exists to prevent.
+- **Treat missing coverage tooling as missing visibility, not automatic inadequate testing.** Note it during discovery. Make a TEST finding only when available evidence shows a Tier A path or branch is untested; do not manufacture a finding from the absence of a repo-wide number.
 
 If you want a number that actually means "the tests catch bugs," that's mutation testing (Tier 2) on the critical modules — not coverage.
 

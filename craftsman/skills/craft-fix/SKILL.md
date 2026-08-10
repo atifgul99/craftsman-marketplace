@@ -121,7 +121,8 @@ Depth for every step lives in `references/fix-protocol.md` — this is the compa
    Status stays `open` — **never** set it to `fixed` here; only a `craft-audit` re-run's fingerprint
    diff does that ("not seen ≠ fixed"). Do not touch `last-checked` — that field means "last
    re-verified by an audit pass," not "a fixer touched code." Also update the display metadata in
-   `master-tracker.md`'s climb sequence: its Status cell becomes `open · fix-attempted <YYYY-MM-DD>`.
+   `master-tracker.md`'s climb sequence: its Status cell becomes `open · fix-attempted <YYYY-MM-DD> ·
+   verification due <date>` (🔴 7 days, 🟡 14, 🟢 next release or 30 days).
    That row lives at the **canonical owner** — a rolled-up child has no climb-sequence row of its own
    (per `workspace.md`'s Cross-cutting section), so a fix on a rolled-up child still updates only the
    canonical owner's row; both records still get their `Fix-attempt` lines per the rollup-annotation
@@ -139,7 +140,8 @@ Depth for every step lives in `references/fix-protocol.md` — this is the compa
    scoped, not a full re-audit — `craft-audit`'s staleness rules (`references/rerun.md`) only re-run
    the domains whose files actually changed, typically minutes; and its "User-scoped re-runs and fix
    verification" section supports a targeted pass that re-checks just the findings carrying this
-   session's Fix-attempt lines and can flip exactly those to `fixed`. Give the user both options —
+   session's Fix-attempt lines, reviews their remediation diffs, and can flip only cleared findings
+   to `fixed`. Give the user both options —
    minutes, not another full audit. → `references/fix-protocol.md` "Stopping rule"
 
 ## Reference index
@@ -152,4 +154,3 @@ For the finding record format, status vocabulary, and fingerprint identity model
 (and never redefines), load the `craft-audit` skill's `workspace.md`. For the climb sequence and
 severity tiers, load the `craft-audit` skill's `prioritization.md`. For the staleness procedure
 referenced in step 0, load the `craft-audit` skill's `rerun.md`.
-

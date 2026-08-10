@@ -131,6 +131,9 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
       and what "green" means (including e2e strategy); INFRA owns CI pipeline mechanism (when/how
       jobs run, secrets, deploy gates). Missing e2e *suite* → TEST finding; e2e exists but is *not
       wired into CI* → INFRA finding (TEST may note and route) → `references/ci-cd.md`
+- [ ] Trace every required gate's trigger, job/step `if:`, `needs`, matrix, and secret/environment
+      branches in both trusted and restricted PR contexts; flag a gate that is success/skipped while
+      every substantive step was bypassed as vacuously green → `references/ci-cd.md`
 - [ ] Confirm deploys are automated with a documented one-step rollback per path; bad if prod is
       edited manually or no rollback path is written down → `references/ci-cd.md`
 - [ ] Verify the team knows to roll back first and diagnose after, and that a status page exists; bad
@@ -152,4 +155,3 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
       critical API path succeeds, and error rate stays below baseline for 5 minutes after deploy;
       bad if this requires manual checks or the pipeline declares success without confirming the
       deployed service is actually handling traffic → `references/ci-cd.md`
-

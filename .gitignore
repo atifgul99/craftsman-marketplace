@@ -4,6 +4,10 @@ node_modules/
 # .remember/ is local session memory, never shared, never shipped.
 .remember/
 
+# Private feedback inbox. Drop raw reviewer notes, screenshots, and exports here;
+# it is intentionally never committed or published.
+.feedback/
+
 # Field reports and audit output from dogfooding runs. Never publish: they describe real systems.
 .craftsman-field-report.md
 .craftsman/

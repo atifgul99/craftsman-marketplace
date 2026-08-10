@@ -75,6 +75,7 @@ finding violations and building the scanner that blocks them in CI.
 | Canonical AI-tells catalog — **what to flag in reviews**                                                  | `references/anti-patterns.md`            |
 | Redesigning existing UI — Scan → Diagnose → Fix                                                           | `references/redesign-audit.md`           |
 | Code-review **structure** + web-interface compliance checklist (static pass)                              | `references/review-protocol.md`          |
+| Web Interface Guidelines rule list — vendored, SHA-pinned, applied by the compliance pass                 | `references/web-interface-guidelines.md`  |
 | **Live audit** — drive the running app (Playwright / `claude-in-chrome`) for rendered/visual defects      | `references/live-audit.md`               |
 
 ## Standard workflows
@@ -140,7 +141,8 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
 - [ ] Run motion audit protocol — verify `prefers-reduced-motion` is handled, duration/easing tokens
       are used consistently (not magic numbers), no layout-property animations, ARIA live regions on
       dynamic content, and no janky animations on low-end hardware → `references/layer-5-motion.md`
-- [ ] Run the static review with its grep sweep + Web-Interface Compliance fetch — severity model
+- [ ] Run the static review with its grep sweep + Web-Interface Compliance pass against the vendored
+      `references/web-interface-guidelines.md` (no review-time network fetch) — severity model
       (Critical / Important / Opportunities → 🔴 / 🟡 / 🟢) from `references/review-protocol.md`;
       **emission path depends on context:** under `craft-audit` / writing `.craftsman/**/findings.md`,
       emit each finding in the canonical workspace heading format above (not the punch-list tables);
