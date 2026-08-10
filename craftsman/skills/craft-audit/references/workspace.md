@@ -59,13 +59,15 @@ the tracker while the marker is active (user override only after acknowledging r
 .craftsman/
   README.md            # what this folder is, how to read it, when it was generated
   discovery.md         # project shape, stack, frameworks — with file citations (see references/discovery.md)
-  applicability.md     # the 10 domains → applies / partial / N-A, with reasons + a count
+  applicability.md     # the 10 domains → applies / partial / N-A, capability evidence, and a count
+  dedup-map.md         # required synthesis evidence: exact groups, semantic review, distinct totals
   master-tracker.md    # which audits exist, status, last-run stamp, the ordered climb sequence
   audits/
     <scope>/             # workspace-relative path: `root` (single app), `apps/web`, or `packages/ui`
       ux/
         plan.md          # the tailored audit plan for this surface (also surfaced as a todo list)
         findings.md      # findings with stable IDs, fingerprints, severity, status, file:line
+        remediation-reviews.md # append-only review evidence for attempted fixes; created on first review
       backend/
         plan.md
         findings.md
@@ -177,7 +179,8 @@ ran), so a skipped pass can't masquerade as a fix. See `rerun.md` → "not seen 
 
 **Confidence (optional field).** A finding may carry a **`Confidence: verified | inferred |
 unverified-from-repo`** line, appended after `**Last-checked:**` (the canonical optional-label order
-is: `**Last-checked:**`, then optional `**Confidence:**`, then optional `**Fix-attempt:**`). Absent
+is: `**Last-checked:**`, then optional `**Confidence:**`, optional `**Deployment-state:**`, then
+optional `**Fix-attempt:**`). Absent
 means `verified` — every existing `findings.md` stays valid unchanged. The three values:
 
 - `verified` — directly observed at a cited `file:line`.
@@ -200,6 +203,15 @@ on a normal re-run — conflating the two fields would corrupt the "not seen ≠
 An `unverified-from-repo` finding does not gate the readiness grade the way a verified 🔴 does — see
 "Readiness (derived — never hand-set)" below.
 
+**Deployment-state (optional field).** Record this separately from finding lifecycle whenever a
+finding's resolution depends on production activation: `active`, `pending (reason)`,
+`unverified-from-repo`, or `not-applicable`. `pending` covers default-off flags, unapplied
+migrations, staged rollouts, and any code-only change not yet active; it keeps the finding `open`.
+`unverified-from-repo` means source review cannot prove the production state and also keeps the
+finding `open`. Only `active` (with runtime evidence) or `not-applicable` permits a deployment-
+dependent finding to become `fixed`. This field follows optional `Confidence` and precedes every
+`Fix-attempt` line.
+
 **Fix-attempt (optional field).** A finding may carry one or more
 **`Fix-attempt: <YYYY-MM-DD> · <identity> · <one-line what changed>`** lines, appended by the
 `craft-fix` companion (or any session that implements a fix) after the code change + regression
@@ -209,7 +221,19 @@ committing first when the user allows, so the line can carry a real SHA. A findi
 multiple Fix-attempt lines over time — never delete them, they're the repair history. A Fix-attempt is a **claim, not a verification**: status stays `open`, `last-checked` is
 **not** touched by a fixer (it means "last re-verified by an audit pass," not "last edited"), and
 readiness grades / tracker counts treat a finding with Fix-attempts exactly like any other `open`
-finding. The re-run's fingerprint diff is the only verifier — that's what keeps the tracker honest.
+finding. The re-run's fingerprint diff plus its remediation-diff review are the only verifiers —
+that's what keeps the tracker honest. The review is recorded separately in the same domain's
+`remediation-reviews.md`; it is not an optional field on a finding and does not alter the canonical
+finding grammar.
+
+**Verification deadline (derived, not a new lifecycle field).** Every open Fix-attempt carries a
+targeted-verification due date derived from its existing date and severity: 🔴 within **7 calendar
+days**, 🟡 within **14**, 🟢 before the next release or within **30**, whichever comes first. The
+tracker shows `verification due <date>` after the attempt and `verification overdue <date>` after the
+deadline. An overdue 🔴 attempt must be presented for targeted verification before `craft-fix` begins
+another pick-set, unless the user explicitly defers it; record the defer reason in the tracker. An
+overdue 🟡/🟢 attempt remains at the top of the next verification queue. None of this changes status:
+only `rerun.md`’s targeted verification can close the finding.
 On a re-run that re-observes the fingerprint (the fix didn't hold), the audit appends ` · did not
 hold (<YYYY-MM-DD>)` to the end of **the most recent Fix-attempt line that lacks a suffix** — i.e.
 the most recent one that hasn't already been marked with a "did not hold" or other suffix. (A finding
@@ -269,13 +293,13 @@ On a second audit of the same project, match by **fingerprint**, not by ID or li
    - **no fingerprint match** → genuinely new; assign the next sequential ID for that scope/domain.
 3. For each prior `open` finding whose fingerprint is **not** re-observed → set status `fixed`
    **only if the domain pass for its scope actually ran this re-run and specifically re-checked that
-   resource** (don't delete either way — the history is the value). If the domain pass **did not run**
-   this re-run — skipped for budget, deemed unchanged, or failed — the finding stays `open` with its
-   prior `last-checked` stamp untouched. It is *stale-unknown*, not fixed, and it is never silently
-   dropped from `findings.md`. This is the "not seen ≠ fixed" rule; `rerun.md` is authoritative on it
-   and on the full classification table (open/fixed/regressed/wontfix/new), targeted verification, and
-   how it interacts with Fix-attempt lines — load it before executing a re-run rather than relying on
-   this summary.
+   resource, and any applicable remediation-diff review is cleared** (don't delete either way — the
+   history is the value). If the domain pass **did not run** this re-run — skipped for budget, deemed
+   unchanged, or failed — or the required review is incomplete, the finding stays `open` with its prior
+   `last-checked` stamp untouched. It is *stale-unknown* or *remediation-review pending*, not fixed,
+   and it is never silently dropped from `findings.md`. `rerun.md` is authoritative on the full
+   classification table, targeted verification, remediation review, and Fix-attempt handling — load it
+   before executing a re-run rather than relying on this summary.
 4. **Merge/split/rename:** if two prior findings collapse into one (e.g. "no validation anywhere"),
    keep the lowest ID, mark the other `fixed (merged into <ID>)`. If one splits into two, the
    original keeps its ID and the new aspect gets a fresh ID. A renamed file changes no fingerprint, so
@@ -338,9 +362,9 @@ per-resource authz, each with a file citation; "auth installed ≠ authz enforce
 > Generated: <date> · commit <sha> · craft-audit
 > <N> of 10 domains apply.
 
-| Domain | Verdict | Reason |
-| ------ | ------- | ------ |
-| ux | applies / partial / N-A | <one line> |
+| Domain | Verdict | Capability evidence | Compatible / skipped checklist sections | Reason |
+| ------ | ------- | ------------------- | -------------------------------------- | ------ |
+| ux | applies / partial / N-A | <browser-dom-css / native-ui-swiftui / none> | <sections run; incompatible sections + N-A reason> | <one line> |
 | frontend | … | … |
 | backend | … | … |
 | db | … | … |
@@ -352,7 +376,7 @@ per-resource authz, each with a file citation; "auth installed ≠ authz enforce
 | ai | … | … |
 
 <In a monorepo, repeat the table per app — applicability differs between a marketing site and a
-dashboard in the same repo.>
+dashboard in the same repo. `partial` without compatible and skipped sections is invalid.>
 ```
 
 ### `README.md`
@@ -377,6 +401,8 @@ and `audits/<scope>/<domain>/findings.md` for per-domain findings.
 - **`applicability.md`** — which of the 10 craft domains apply here, and why (N of 10 apply).
 - **`audits/<scope>/<domain>/plan.md`** — the tailored audit plan for each applicable surface.
 - **`audits/<scope>/<domain>/findings.md`** — findings with stable IDs, severity, status, and fix links.
+- **`audits/<scope>/<domain>/remediation-reviews.md`** — append-only evidence that a fix attempt's
+  actual diff was reviewed before a finding was closed; absent until the first review.
 
 `<scope>` is `root` for a single-app repo, or the workspace-relative path in a monorepo (e.g.
 `apps/web`, `packages/ui`).
@@ -400,6 +426,38 @@ the full re-run protocol.
 > for identity — it can collide across paths and that's fine. Consistency and rerun-matching are
 > checked **only** by the raw `Scope` column and the `Fingerprint: scope=… · domain=… · class=… ·
 > resource=…` tuple. Treat the label as a human reference, nothing more.
+
+### `dedup-map.md`
+
+Write this during synthesis, before `master-tracker.md`. It is the evidence that exact matching and
+semantic reconciliation both happened; it is not optional when there are findings.
+
+```markdown
+# Deduplication Map
+
+> Generated: <date> · commit <sha> · craft-audit
+> Raw eligible findings: <N> · Exact-key groups: <N> · Semantic candidates reviewed: <N> · Distinct eligible defects: <N>
+
+## Exact-key groups
+| Evidence key (scope · class · resource) | IDs | Decision |
+| --- | --- | --- |
+| <key> | <IDs> | roll up under <canonical ID> / keep separate (<reason>) |
+
+## Semantic reconciliation
+Review candidates based on overlapping cited file:line, route, table, component, environment key,
+or other concrete resource—not only matching fingerprint text.
+
+| Candidate IDs | Evidence compared | Decision | Canonical ID / reason |
+| --- | --- | --- | --- |
+| <ID, ID> | <same route/table/file:line/etc.> | roll up / keep separate | <canonical ID or concrete reason> |
+
+## Attestation
+<Semantic reconciliation completed. If no candidates exist, state the search basis and `0 candidates after review` here.>
+```
+
+`Raw eligible findings` counts open/regressed findings except `Confidence: unverified-from-repo`.
+`Distinct eligible defects` counts every rollup group once. The tracker’s headline and grade-distance
+counts use the distinct eligible total; the domain files retain every original finding and ID.
 
 ### `master-tracker.md`
 
@@ -429,13 +487,16 @@ makes every row unambiguous in a multi-app repo (the ID label is reference-only 
 scopes); always pair the label with its Scope. Filled in at synthesis (step 8) — left empty while
 domain passes are still running.
 
-| # | ID | Scope | Finding (plain language) | Severity | Status |
-| - | -- | ----- | ------------------------ | -------- | ------ |
-| 1 | apps-web-SEC-001 | apps/web | Anyone can open another user's data by changing the URL | 🔴 | open |
-| 2 | packages-ui-UX-003 | packages/ui | ... | 🟡 | open |
+| # | ID | Scope | Finding (plain language) | Severity | Blast radius | Status |
+| - | -- | ----- | ------------------------ | -------- | ------------ | ------ |
+| 1 | apps-web-SEC-001 | apps/web | Anyone can open another user's data by changing the URL | 🔴 | all tenants | open |
+| 2 | packages-ui-UX-003 | packages/ui | ... | 🟡 | one surface | open |
 | 3 | ... | ... | ... | | |
 
 (Single-app repo: scope is `root`, so IDs are `root-SEC-001` — the prefix is never dropped.)
+
+The climb sequence contains only grade-eligible, distinct defects. `unverified-from-repo` items
+belong in **Human verification required**, not in its count or rank.
 
 ## Cross-cutting (one defect, multiple domains)
 One real defect can legitimately appear in two domains' `findings.md` with two different fingerprints
@@ -455,9 +516,10 @@ duplicates exist.)
 The `craft-fix` companion sets a climb-sequence row's **Status** cell to `open · fix-attempted
 <YYYY-MM-DD>` after recording a Fix-attempt on that finding. Like "rolled up under", this is tracker
 **display metadata**, not a lifecycle status — counts and grades still treat the finding as plain
-`open`. The next re-run resolves it per the "not seen ≠ fixed" rule: to `fixed` only if the domain pass ran
-and the fingerprint isn't re-observed, back to plain `open` (fix-attempt annotated "did not hold") if
-it's re-observed, or left `open` with the stamp untouched if the domain pass didn't run this time.
+`open`. The next re-run resolves it per the "not seen ≠ fixed" rule: to `fixed` only if the domain
+pass ran, the fingerprint isn't re-observed, and the remediation review is `cleared`; back to plain
+`open` (fix-attempt annotated "did not hold") if it's re-observed, or left `open` with the stamp
+untouched if the domain pass didn't run or the review is pending.
 
 ## Readiness (derived — never hand-set)
 One honest grade per applicable (scope, domain), **computed mechanically from open findings** so it
@@ -474,26 +536,44 @@ can't drift into theater — it's just a restatement of "do you still have open 
 No numeric scores — they invite false precision and become theater. The grade is the three-state
 severity model already in use, surfaced per surface. **Overall project readiness = the worst grade
 across all applicable scopes/domains** (a project is only as production-ready as its weakest applicable
-surface). Recompute both on every run; never carry a stale grade.
+surface). Recompute both on every run; never carry a stale grade. The companion **distance** is not a
+score: it states the exact number of distinct eligible 🔴 blockers needed to reach 🟡, or eligible 🟡
+risks needed to reach 🟢, and ranks that work by blast radius.
 
 An `unverified-from-repo` finding (see "Stable finding IDs and status" above) does not gate this grade
-the way a verified 🔴 does — it can't be mechanically confirmed from the repo, so counting it toward
-🔴 **Blocked** would be false precision in the other direction. Surface it in the finding list and the
-climb sequence as a flagged human check, but exclude it from the grade computation above.
+or the ordinary distinct-defect count. It belongs in the separate **Human verification required**
+section below, with the repo gap and exact human check needed.
 
 ## Audit status
-| Scope | Domain | Applies | Plan | Findings | Last run | Open 🔴 / 🟡 / 🟢 | Grade |
-| ----- | ------ | ------- | ---- | -------- | -------- | ----------------- | ----- |
-| apps/web   | security | yes | ✅ | 6 | <date> | 2 / 3 / 1 | 🔴 Blocked |
-| apps/web   | ux       | yes | ✅ | 4 | <date> | 0 / 2 / 2 | 🟡 At risk |
-| apps/admin | security | yes | ⏳ | — | — | — | ❔ Unaudited |
-| packages/ui | ux      | partial | ⏳ | — | — | — | ❔ Unaudited |
-| ...        |          |     |    |   |   |   |   |
+| Scope | Domain | Applies | Plan | Eligible findings | Human checks | Last run | Open 🔴 / 🟡 / 🟢 | Grade · distance |
+| ----- | ------ | ------- | ---- | ----------------- | ------------ | -------- | ----------------- | ---------------- |
+| apps/web | security | yes | ✅ | 6 | 1 | <date> | 2 / 3 / 1 | 🔴 Blocked · 2 blockers to 🟡 |
+| apps/web | ux | yes | ✅ | 4 | 0 | <date> | 0 / 2 / 2 | 🟡 At risk · 2 risks to 🟢 |
+| apps/admin | security | yes | ⏳ | — | — | — | — | ❔ Unaudited |
+| packages/ui | ux | partial | ⏳ | — | — | — | — | ❔ Unaudited |
+| ... | | | | | | | | |
 
-**Overall readiness: 🔴 Blocked** — gated by `apps/web` security (2 open 🔴). The weakest applicable
-surface sets the headline; clearing it promotes the project to the next grade.
+**Overall readiness: 🔴 Blocked** — 2 distinct 🔴 blockers remain in `apps/web` security; clearing
+them reaches 🟡 At risk. Show the next threshold even when multiple domains are blocked.
 
 (Single-app repo: one scope `root` — the Scope column still appears, valued `root`.)
+
+## Human verification required
+These are retained durable findings but excluded from ordinary finding totals, the climb sequence,
+and grade computation until a human or runtime system verifies them.
+
+| ID | Scope | Repo gap observed | Human/runtime check required |
+| -- | ----- | ----------------- | ---------------------------- |
+| apps-web-INFRA-004 | apps/web | No repository evidence of preview-to-production DB isolation | Confirm deployment environment bindings and data-source policy |
+
+## Verification follow-up
+Derived from open Fix-attempt dates; not a lifecycle status. List every due/overdue attempt and any
+explicit defer so a repair claim cannot disappear into the ordinary open count.
+
+| ID | Severity | Fix-attempt date | Targeted verification | State |
+| -- | -------- | ---------------- | --------------------- | ----- |
+| apps-web-SEC-001 | 🔴 | 2026-06-25 | due 2026-07-02 | overdue — verify before next pick-set |
+| packages-ui-UX-003 | 🟡 | 2026-06-25 | due 2026-07-09 | queued |
 
 ## Delta since last run
 See `rerun.md` → "The delta report" for the format. Example:
@@ -509,6 +589,12 @@ See `rerun.md` → "The delta report" for the format. Example:
 
 Scope for THIS surface (from discovery): <one line>.
 Surface this list as a live todo so the audit runs in steps and nothing is skipped.
+
+## Discovery contracts for this pass
+
+- [ ] Capability profile: <capabilities evidenced for this surface>; skip <incompatible checklist sections> as N-A with reasons.
+- [ ] Invariant adoption: <each applicable discovery invariant>; inventory every matching call site and record coverage, exclusions, or a finding.
+- [ ] Source-of-truth consistency: for every content/configuration defect, trace the governing contract, fixture, seed, generator, or prompt and verify all generated surfaces before closure.
 
 The steps are **sourced from the domain skill's own `## Audit checklist (for craft-audit)`
 section** — the domain owns its checklist, the orchestrator copies it here and tailors it to what
@@ -537,8 +623,41 @@ in the URL — their private data is exposed.
 **Fix:** Scope the query to the authenticated tenant; deny by default. See craft-security → authz.md.
 **Fingerprint:** `scope=apps/web · domain=security · class=missing-authz · resource=GET /api/invoices/:id`
 **Last-checked:** 2026-06-19 · a1bec8f
+**Deployment-state:** pending (tenant migration not applied to production)
 **Fix-attempt:** 2026-06-25 · b2c9d1e · scoped the query to req.auth.orgId (optional — appended by craft-fix)
 ```
+
+### `audits/<scope>/<domain>/remediation-reviews.md`
+
+Create this append-only file when a re-run reviews its first fix attempt. It is deliberately separate
+from `findings.md`: a remediation review is evidence about a code change, not a new lifecycle field or
+a free-form alteration to the canonical finding grammar. One record is required for every attempted
+fix that a re-run wants to close; retain failed and superseded reviews as repair history.
+
+```markdown
+# Remediation Reviews — <scope> / <domain>
+
+> Generated: <date> · commit <sha> · craft-audit
+
+## <finding-ID> · review <cleared|pending|follow-up-found>
+
+**Fix-attempt:** <verbatim Fix-attempt line being reviewed, or `none — unrecorded remediation`>
+**Diff provenance:** <fix SHA^! plus SHA..HEAD, or working-tree relative to HEAD; state any unavailable range>
+**Invariant:** <the original security, payment, migration, or data-integrity property>
+**Risk triggers:** <none | auth/authz | payment | migration | data integrity; list all that apply>
+**Changed boundaries:** <callers, alternate entry points, jobs, webhooks, schema/data paths reviewed>
+**Evidence checked:** <named tests, migration/backfill/rollback evidence, or why evidence is unavailable>
+**Conclusion:** <why this change is clear, pending, or unsafe>
+**Follow-up findings:** <none | finding IDs emitted by this review>
+```
+
+`cleared` means the original fingerprint is absent **and** the review found no unaddressed regression.
+`pending` keeps the finding open; it is required when provenance, affected boundaries, or relevant
+evidence could not be reviewed. For a closure with no Fix-attempt line but changed code since
+`last-checked`, write `none — unrecorded remediation` and review the available range rather than
+silently treating the missing annotation as proof that no remediation occurred. `follow-up-found`
+also keeps the original finding open until the reviewer records the new/regressed finding IDs; never
+bury a discovered side effect in this file.
 
 (The `apps-web-SEC-001` label is display-only and derived one-way from the fingerprint's
 `scope=apps/web`; matching/uniqueness key on the fingerprint tuple, never on parsing the label.
@@ -573,10 +692,11 @@ Example: `## apps-web-SEC-001 · severity 🔴 · status open`
 4. `**Fingerprint:**` `` `scope=<path> · domain=<domain> · class=<class> · resource=<resource>` ``
 5. `**Last-checked:**` `YYYY-MM-DD · <short-sha>` or `YYYY-MM-DD · none (no git)`
 6. optional `**Confidence:**` `verified | inferred | unverified-from-repo` — absent means `verified`
-7. optional `**Fix-attempt:**` lines — only appended by craft-fix, never invented by the audit pass
+7. optional `**Deployment-state:**` `active | not-applicable | unverified-from-repo | pending (reason)`
+8. optional `**Fix-attempt:**` lines — only appended by craft-fix, never invented by the audit pass
 
 The canonical optional-label order after the required fields is: `**Last-checked:**`, then optional
-`**Confidence:**`, then optional `**Fix-attempt:**`.
+`**Confidence:**`, then optional `**Deployment-state:**`, then optional `**Fix-attempt:**`.
 
 **Forbidden (reject / re-emit):**
 

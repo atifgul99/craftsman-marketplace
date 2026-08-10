@@ -2,16 +2,22 @@
 
 ## What this plugin is (and isn't)
 
-`craftsman` is declarative Markdown (`SKILL.md` + `references/*.md` files) plus a single Node
-script used for CI invariant checks (`scripts/check-invariants.mjs`, no dependencies). It:
+`craftsman` is declarative Markdown (`SKILL.md` + `references/*.md` files) plus local Node scripts
+for invariant checks and maintainer-only vendoring (no dependencies). It:
 
-- makes **no network calls**,
+- makes no network calls while auditing a project,
 - collects **no telemetry**,
 - and does not execute any code on your behalf beyond what your Claude Code (or Codex/Cursor)
   session already does when following the skill's instructions.
 
 The skills read files in the project you point them at and write findings into a local `.craftsman/`
-workspace inside that project. They don't transmit anything off your machine.
+workspace inside that project. They do not transmit project files or findings to Craftsman.
+
+All review guidance is bundled locally, including the UX guideline list. Maintainers may explicitly
+run `scripts/refresh-web-interface-guidelines.mjs` before a release to download a SHA-pinned public
+source for human review; that script never runs during an audit, install, or normal plugin use. The
+repository does not include telemetry, a background process, or a service endpoint that receives
+your project data.
 
 ## Reporting a vulnerability
 

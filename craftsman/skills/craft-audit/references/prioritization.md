@@ -91,6 +91,10 @@ the register up** — auditing a hardened SaaS monorepo as if it had no auth pro
   typically 🟡 "this safeguard has a hole under \<condition\>", not 🔴 "you're missing the safeguard."
 - **But "mature" never means "skip verifying."** Confirm the fundamentals are actually wired (cite the
   files) before downgrading the register — don't *assume* a tested repo got authz right everywhere.
+- **Separate consequence from reach.** Record blast radius for every 🔴/🟡 finding (one user, one
+  tenant, a cohort, all tenants, or system-wide) and use it to order peers. A missing process in a
+  post-Tier-1 codebase is not automatically 🔴: it must create an exploitable, data-loss, money-loss,
+  or unavailable-user path at the evidenced reach.
 - Keep the plain-language voice regardless; a senior team still benefits from consequence-first
   findings. Just stop assuming the reader doesn't have the basics.
 
@@ -144,7 +148,11 @@ the register up** — auditing a hardened SaaS monorepo as if it had no auth pro
      key) are one defect however differently the domains named it; group and roll them up exactly as
      above. Preserve each original fingerprint verbatim and record which one was chosen as canonical.
    - Don't stop after the exact-key pass and call it a clean bill of health — the semantic pass is
-     mandatory, not a fallback for when something looks off.
+     mandatory, not a fallback for when something looks off. Write the review to `dedup-map.md`
+     before the tracker is generated: raw eligible finding count, exact-key groups, semantic candidate
+     pairs/groups, evidence compared, and `roll up` or `keep separate` for every candidate. If there
+     are no semantic rollups, record the candidates reviewed and an explicit `keep separate` decision;
+     zero exact-key groups is never proof that semantic reconciliation was unnecessary.
 
 2c. **Merge cross-scope same-resource findings (one defect in a shared library, seen from multiple
    scopes).** In a monorepo, a shared package (e.g. `packages/shared/src/ai/adapter.ts`) can surface
@@ -164,7 +172,9 @@ the register up** — auditing a hardened SaaS monorepo as if it had no auth pro
 
 3. Sort: 🔴 Tier 1 → 🟡 Tier 1 → 🔴 Tier 2 → 🟡 Tier 2 → 🟢. Within a band, order by blast radius
    (how many users/how much data) and by how cheap the fix is (a one-line deny-by-default beats a
-   week of refactoring — surface quick high-impact wins early).
+   week of refactoring — surface quick high-impact wins early). For each grade, surface the distance
+   to the next grade (`N 🔴 blockers remaining`, then `N 🟡 risks remaining`) so a mature project with
+   several blocked domains has an actionable path rather than identical red labels.
 4. Write the ordered list into `master-tracker.md` with plain-language summaries and IDs.
 
 ---
@@ -192,3 +202,5 @@ curated. Completeness lives in the files; focus lives in the chat.
 | 15 near-identical findings listed separately | Merge; cite the worst + a count |
 | Severity assigned by "feel" not user impact | Re-judge with the breach / data-loss test |
 | A finding with no fix or no citation | Add both — a finding without a next step is noise |
+| Exact-key rollups are empty and no semantic review artifact exists | Stop synthesis; write `dedup-map.md` and reconcile by cited evidence |
+| Every mature domain reads "Blocked" with no next-grade distance | Show blocker/risk counts and rank by blast radius |

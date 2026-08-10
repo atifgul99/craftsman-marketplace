@@ -115,6 +115,21 @@ proposing a fix for something that's already gone.
 
 ---
 
+## Source-of-truth consistency
+
+When a finding changes user-visible content, configuration, generated output, policy text, or a
+prompt, repairing the rendered/source file alone is incomplete. Before editing, trace the governing
+source of truth: design or product contract, fixture, seed, content generator, template, prompt,
+schema default, or build transform. The plan must name it.
+
+After the code/content change, inspect every downstream artifact that the source can regenerate and
+run the narrowest relevant generator/test. A fix is `pending` if the governing source is unknown or
+cannot be checked; do not leave a generator, seed, fixture, or prompt able to reintroduce the defect.
+Record the source and downstream evidence in the Fix-attempt description or the remediation review.
+This rule does not manufacture source-of-truth work for a direct, hand-authored code defect.
+
+---
+
 ## Batching by surface
 
 **Batch by surface, not by severity or by finding order.** A "surface" is the set of files/routes a
@@ -292,9 +307,9 @@ identity from `working-tree` to the new short SHA, or leave it and let a subsequ
 
 **Do not** change the `status open` in the heading, and do not touch `Last-checked:` — see
 `craft-audit` → `references/rerun.md` "not seen ≠ fixed": only a `craft-audit` re-run that
-re-observes the resource and fails to find the defect is allowed to flip status to `fixed`. A fixer
-believing its own fix worked is not evidence the audit accepts — that's exactly the theater the
-fingerprint diff protocol exists to prevent.
+re-observes the resource, fails to find the defect, and clears its remediation-diff review is allowed
+to flip status to `fixed`. A fixer believing its own fix worked is not evidence the audit accepts —
+that's exactly the theater the fingerprint-diff and remediation-review protocol exists to prevent.
 
 ---
 
@@ -307,11 +322,14 @@ approved set is required, not chaining into more. After the approved set lands:
 1. Run the project's existing test/lint gate (whatever `craft-testing`/`craft-lint` already
    established for this repo — don't invent a new one).
 2. Confirm every fixed finding's record has its `Fix-attempt` line appended.
+   Derive and display its targeted-verification deadline (🔴 7 days, 🟡 14 days, 🟢 next release or
+   30 days) in the canonical tracker row.
 3. Summarize: what was fixed, what regression tests were added, what was picked but skipped (and
    why — e.g. dropped at fingerprint re-verification, or the user declined the plan).
 4. Tell the user verification is scoped, not a full re-audit — see `SKILL.md` step 7's cost framing
-   (`craft-audit`'s staleness rules re-run only the changed domains; its targeted re-check flips
-   just this session's Fix-attempt lines) — "minutes, not another full audit."
+   (`craft-audit`'s staleness rules re-run only the changed domains; its targeted re-check reviews
+   just this session's Fix-attempt diffs before flipping a finding) — "minutes, not another full
+   audit."
 5. Prefer committing **before** the Fix-attempt annotation (see "The Fix-attempt annotation" above)
    when the user approves commits or the repo auto-commits — so the line can embed the real short
    SHA. If still uncommitted at stop time, the Fix-attempt identity must be `working-tree`, not a
@@ -340,5 +358,7 @@ Fast checks for reviewing a `craft-fix` session (self-review or a second pass):
 | The climb sequence order was re-ranked before picking ("did the easy one first") | Reject — order is canonical from the tracker; only fingerprint mismatches remove items. |
 | A rolled-up finding was fixed twice (once per surfaced domain) | Reject — fix once at the canonical owner, annotate both records. |
 | A 🔴 auth/migration/data-handling finding skipped the plan-first gate | Reject — get the plan confirmed before any edit, no exceptions for "it's a small change." |
+| Content was edited but its fixture, seed, generator, contract, or prompt was not traced | Reject closure — check the governing source and regenerated surfaces first. |
+| An overdue 🔴 Fix-attempt was ignored while a new pick-set began | Stop for targeted verification or record an explicit user defer reason. |
 | The fixer added scope beyond the described defect ("while I was in there…") | Reject — minimal diff only; open a separate finding/ask for anything else worth doing. |
 | A second pick-set started in the same invocation without being asked to continue | Reject — one approved pick-set per invocation is the stopping rule; finishing every surface-batch inside that set is fine, starting a new set uninvited is not. |

@@ -65,6 +65,21 @@ Additionally, as a required check (not advisory):
 None of these gates runs on a schedule instead of a PR — that is too late. They run on *every push
 to a PR branch*, and the status is required before merge.
 
+### A required check must do substantive work
+
+Required-job names are not evidence that their checks ran. Audit the workflow's trigger filters,
+job-level and step-level `if:` conditions, `needs`, matrix exclusions, `continue-on-error`, and every
+secret/environment-dependent branch. A gate is **vacuously green** when its required check reports
+success or skipped while every substantive lint/typecheck/test/build/scan step was bypassed.
+
+For each required gate, trace both a normal trusted PR and the restricted context it claims to support
+(for example a fork PR without secrets). The gate must either run its substantive command, or execute
+an explicit failing/preflight step that blocks merge and explains the unavailable prerequisite. Never
+guard an entire required job with `if: secrets.X`; separate secret-dependent deploy/integration work
+into a non-gating job, or make the required gate fail closed when its required environment is absent.
+Record the triggering condition and observed execution path; workflow YAML that merely names a command
+is not proof it runs.
+
 ---
 
 ## Gate ordering: fail fast, fail cheap
@@ -369,6 +384,7 @@ The schema that *declares which vars are required* is in `config.md`. This secti
 | CI pipeline only runs on merge/deploy, not on PR branches | Add a PR push trigger; all five gates must run on every PR push |
 | Missing a required gate (no lint, no typecheck, or no prod build job) | Add the missing job and mark it required in branch protection |
 | Gates are advisory (run but do not block merge) | Set branch protection required checks; a non-blocking gate is decorative |
+| Required gate is green/skipped because `if: secrets.*`, event filters, matrix rules, or `needs` bypass every substantive step | Trace trusted and restricted contexts; run the command or fail closed with a visible prerequisite error — never certify a skipped gate as green |
 | Build step used as the only typecheck | Add a standalone `tsc --noEmit` (or equivalent) job — build tools skip or cache type errors |
 | Tests and build run serially after lint/typecheck | Parallelize tests, build, and scan — they are independent of each other |
 | No dependency vulnerability scan in the pipeline | Wire one scanner as a required check (`craft-security` → `supply-chain.md`) |

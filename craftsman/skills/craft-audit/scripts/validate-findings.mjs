@@ -57,9 +57,9 @@ const HEADING_RE = new RegExp(
   "u",
 );
 
-// Finding-shaped heading detector, for rejecting non-canonical shapes (check 3): any `#`-level
-// (or otherwise heading-like) line that looks like it's trying to be a finding heading but isn't
-// column-0 `## ` matching HEADING_RE exactly.
+// Finding-shaped heading detector, for rejecting non-canonical Markdown headings (check 3).
+// A bare ID-shaped line is ordinary prose unless it has Markdown heading structure; rejecting it
+// makes a sentence such as "root-INFRA-002, ..." a false positive.
 const FINDING_SHAPED_RE = new RegExp(
   `severity\\s*[🔴🟡🟢]|status\\s+(open|fixed|regressed|wontfix)|-(${DOMAIN_CODE_ALTERNATION})-\\d{3}\\b`,
   "iu",
@@ -74,8 +74,10 @@ const REQUIRED_LABELS = [
 ];
 
 const CONFIDENCE_LABEL = "**Confidence:**";
+const DEPLOYMENT_STATE_LABEL = "**Deployment-state:**";
 const FIX_ATTEMPT_LABEL = "**Fix-attempt:**";
 const CONFIDENCE_VALUES = new Set(["verified", "inferred", "unverified-from-repo"]);
+const DEPLOYMENT_STATE_RE = /^(active|not-applicable|unverified-from-repo|pending \(.+\))$/;
 
 const FP_RE = /`scope=([^·`]+)\s*·\s*domain=([^·`]+)\s*·\s*class=([^·`]+)\s*·\s*resource=([^`]+)`/;
 const LAST_CHECKED_RE = /^\d{4}-\d{2}-\d{2} · ([0-9a-f]{4,40}|none \(no git\))$/;
@@ -196,15 +198,6 @@ function scanMalformedHeadings(lines) {
       if (FINDING_SHAPED_RE.test(atx[2])) {
         malformed.push({ lineIdx: i, text: line.trimEnd() || unwrapped });
       }
-      continue;
-    }
-
-    const looksLikeIdHeading =
-      new RegExp(`^[A-Za-z0-9][A-Za-z0-9-]*-(${DOMAIN_CODE_ALTERNATION})-\\d{3}\\b`).test(
-        unwrapped,
-      ) && FINDING_SHAPED_RE.test(unwrapped);
-    if (looksLikeIdHeading) {
-      malformed.push({ lineIdx: i, text: line.trimEnd() || unwrapped });
       continue;
     }
 
@@ -367,6 +360,7 @@ function validateBlock(block, content, lines, scope, domain, errors, addError) {
   // Last-checked is an error. Multi-line values are fine — only lines that are themselves label
   // lines (start with a `**...:**` token) are considered here; continuation prose is skipped.
   let confidenceIdx;
+  let deploymentStateIdx;
   let sawFixAttempt = false;
   for (let i = lcLineIdx + 1; i < blockEndIdx; i++) {
     if (!isLabelLine(lines[i])) continue;
@@ -378,10 +372,10 @@ function validateBlock(block, content, lines, scope, domain, errors, addError) {
         ok = false;
         continue;
       }
-      if (sawFixAttempt) {
+      if (deploymentStateIdx !== undefined || sawFixAttempt) {
         addError(
           i,
-          `"${CONFIDENCE_LABEL}" must appear before any "${FIX_ATTEMPT_LABEL}" line`,
+          `"${CONFIDENCE_LABEL}" must appear before "${DEPLOYMENT_STATE_LABEL}" and any "${FIX_ATTEMPT_LABEL}" line`,
         );
         ok = false;
         continue;
@@ -395,13 +389,30 @@ function validateBlock(block, content, lines, scope, domain, errors, addError) {
         );
         ok = false;
       }
+    } else if (lineStartsWithLabel(line, DEPLOYMENT_STATE_LABEL)) {
+      if (deploymentStateIdx !== undefined) {
+        addError(i, `label "${DEPLOYMENT_STATE_LABEL}" appears more than once (want at most 1)`);
+        ok = false;
+        continue;
+      }
+      if (sawFixAttempt) {
+        addError(i, `"${DEPLOYMENT_STATE_LABEL}" must appear before any "${FIX_ATTEMPT_LABEL}" line`);
+        ok = false;
+        continue;
+      }
+      deploymentStateIdx = i;
+      const value = line.replace(/^\s+/, "").replace(DEPLOYMENT_STATE_LABEL, "").trim();
+      if (!DEPLOYMENT_STATE_RE.test(value)) {
+        addError(i, `"${DEPLOYMENT_STATE_LABEL}" must be active, not-applicable, unverified-from-repo, or pending (reason)`);
+        ok = false;
+      }
     } else if (lineStartsWithLabel(line, FIX_ATTEMPT_LABEL)) {
       sawFixAttempt = true;
     } else {
       addError(
         i,
-        `unexpected label after "**Last-checked:**": only "${CONFIDENCE_LABEL}" (at most one) ` +
-          `and "${FIX_ATTEMPT_LABEL}" (repeatable) are permitted there, in that order — found: ${line.trim()}`,
+        `unexpected label after "**Last-checked:**": only "${CONFIDENCE_LABEL}" and "${DEPLOYMENT_STATE_LABEL}" ` +
+          `(at most one each) then "${FIX_ATTEMPT_LABEL}" (repeatable) are permitted — found: ${line.trim()}`,
       );
       ok = false;
     }
