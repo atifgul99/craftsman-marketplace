@@ -194,7 +194,9 @@ try {
 
   if (isExpectedOutcome(err)) {
     // Declined card, invalid input — the system did its job. Count it; don't page on it.
-    logger.info({ ...event, msg: 'payment.charge.declined', err: { ...event.err, stack: undefined } });
+    // `warn` at the catch site (or no line at all if the response already carries the outcome);
+    // the operation's own completion event stays `info`.
+    logger.warn({ ...event, msg: 'payment.charge.declined', err: { ...event.err, stack: undefined } });
   } else if (willRetry) {
     logger.warn(event);   // transient and not final — see the level rules below
   } else {
@@ -204,9 +206,13 @@ try {
 }
 ```
 
-`isExpectedOutcome` is whatever your code already knows: a declined-payment error class, an HTTP 4xx
-from the provider, a validation result. If nothing in the code can tell an expected outcome from a
-system failure, that gap is the finding — fix the classification before tuning the logging.
+`isExpectedOutcome` must match an **explicit allowlist of codes** — `card_declined`,
+`insufficient_funds`, your own validation error class — never a broad "any 4xx from the provider"
+rule. Plenty of 4xx responses are your bug or your outage wearing a client-error status:
+`401`/`403` means the credential expired or was revoked, `429` means you're being rate-limited,
+`400` often means you sent a malformed request. Those are system failures and must keep reaching
+the error tracker. If nothing in the code can tell an expected outcome from a system failure, that
+gap is the finding — fix the classification before tuning the logging.
 
 **Stack traces in production:** whether to include `stack` in production logs is a data-policy
 call, not a technical one. Stack frames may contain file paths that reveal internal structure.
