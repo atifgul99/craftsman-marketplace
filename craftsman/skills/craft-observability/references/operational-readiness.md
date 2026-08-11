@@ -85,8 +85,8 @@ must exist.
    `error` only when the system itself failed, with `err.{type,message,code}`
    (`logging.md § Structured error logging`).
 3. **A counter or histogram** per terminal state, so rate and latency are queryable without a log
-   scan (`logging.md § Logs vs metrics`). On a long-lived worker that is a Prometheus counter; on
-   serverless it is OTLP or the vendor SDK — `serverless-vs-server.md` decides which.
+   scan (`logging.md § Log vs metric vs trace`). On a long-lived worker that is a Prometheus
+   counter; on serverless it is OTLP or the vendor SDK — `serverless-vs-server.md` decides which.
 
 **Two kinds of failure, two destinations.** A run that ends `failed` because the customer uploaded
 an unreadable file, the card was declined, or validation rejected the input is an *expected business

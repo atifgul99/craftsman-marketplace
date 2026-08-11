@@ -154,7 +154,7 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
   ids only and no payload/PII — flag an observability setup that watches only infrastructure while
   the transaction the product exists to perform is invisible; flag a success rate inferred purely
   from a mutable `status` column when the transaction retries →
-  `references/operational-readiness.md § Name the core transaction`
+  `references/operational-readiness.md § Name the core transaction first`
 - [ ] Check expected business failures (bad customer input, declined card, rejected upload) are
   counted but routed away from the error tracker, while system failures (timeouts, unhandled
   exceptions) reach it tagged with the transaction id — flag either direction: customer mistakes
@@ -176,7 +176,7 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
   plausible *business* failure, stuck detection, and one alert delivered down the production
   notification path — with the drill date recorded — flag an alerting setup that has never delivered
   to a human. Acked-by-someone-else applies only where there is a team →
-  `references/operational-readiness.md § Prove the loop`
+  `references/operational-readiness.md § Prove the loop: the acceptance drill`
 - [ ] Where an availability/readiness number is claimed, verify one declared source of truth retains
   history across the SLO window and the calculation is documented (manual weekly is acceptable at
   early stage) — flag "green right now" presented as an SLO, tail-only log sources, a red synthetic
