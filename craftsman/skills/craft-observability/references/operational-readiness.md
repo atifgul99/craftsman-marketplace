@@ -137,21 +137,31 @@ dashboard or a cron check.
 ```sql
 -- docs/ops/sql/audit-run-ops.sql  (Postgres; adapt table/column names to the schema you discovered)
 
--- 1. Where work sits right now, and how much finished in the window.
---    This is triage, not the success-rate SLI — `status` is overwritten, so runs that failed and
---    were retried are already invisible here. The counter from emission 3 owns the rate.
+-- 1a. Backlog: everything not yet finished, regardless of when it started.
+--     No time filter — a run created three days ago and still 'running' is exactly what you want
+--     to see here, and a `created_at` window would hide it.
+SELECT status, count(*) AS runs, min(created_at) AS oldest
+FROM audit_runs
+WHERE status IS NULL OR status NOT IN ('completed', 'failed', 'cancelled')
+GROUP BY status;
+
+-- 1b. Throughput: what finished in the window, keyed on the terminal timestamp, not creation.
+--     Still triage, not the success-rate SLI — `status` is overwritten, so runs that failed and
+--     were retried into success are invisible here. The counter from emission 3 owns the rate.
 SELECT status, count(*) AS runs
 FROM audit_runs
-WHERE created_at > now() - interval '24 hours'
+WHERE finished_at > now() - interval '24 hours'   -- completed_at/failed_at, whatever the schema has
 GROUP BY status;
 
 -- 2. Stuck: non-terminal past the threshold for the state it is in.
 --    Clocks differ — waiting in the queue is not the same as executing — so compare against the
---    timestamp for the current state, not blanket `created_at`. `IS DISTINCT FROM` / the NULL
---    branch matter: `status NOT IN (...)` drops rows where status is NULL, which are exactly the
---    rows a half-written insert leaves behind.
+--    timestamp for the current state, not blanket `created_at`. The NULL branch matters:
+--    `status NOT IN (...)` drops rows where status is NULL, which are exactly the rows a
+--    half-written insert leaves behind. The displayed age uses the same clock as the predicate,
+--    so "why did this match" and "how old is it" never disagree.
 SELECT id, tenant_id, status,
-       now() - coalesce(started_at, queued_at, created_at) AS age_in_state
+       now() - CASE WHEN status = 'running' THEN coalesce(started_at, created_at)
+                    ELSE coalesce(queued_at, created_at) END AS age_in_state
 FROM audit_runs
 WHERE (status IS NULL OR status NOT IN ('completed', 'failed', 'cancelled'))
   AND CASE
@@ -162,33 +172,44 @@ WHERE (status IS NULL OR status NOT IN ('completed', 'failed', 'cancelled'))
 ORDER BY age_in_state DESC;
 
 -- 3. Terminal without artifact — the silent failure.
---    No trailing window: an unresolved violation from last week is still unresolved. The short
---    grace period only avoids flagging a run whose artifact is legitimately still being written.
+--    No trailing window: an unresolved violation from last week is still unresolved. The grace
+--    period only avoids flagging a run whose artifact is legitimately still being written, and
+--    `coalesce` keeps a completed row with a NULL completed_at visible rather than silently
+--    dropping it — that NULL is itself a bug worth seeing.
 SELECT r.id, r.tenant_id, r.completed_at
 FROM audit_runs r
 LEFT JOIN reports rep
        ON rep.audit_run_id = r.id AND rep.status = 'succeeded'
 WHERE r.status = 'completed'
-  AND r.completed_at < now() - interval '10 minutes'
+  AND coalesce(r.completed_at, r.created_at) < now() - interval '10 minutes'
   AND rep.id IS NULL
-ORDER BY r.completed_at DESC;
+ORDER BY r.completed_at DESC NULLS FIRST;
 ```
 
-**Set the threshold per state, and bound it by something real.** A single number across the whole
-transaction hides the difference between "waiting to be picked up" (should be seconds to minutes)
-and "executing" (however long the work honestly takes). For each state, take the higher of:
+**Set the threshold per state.** A single number across the whole transaction hides the difference
+between "waiting to be picked up" (seconds to minutes) and "executing" (however long the work
+honestly takes). For each state, the threshold is the **larger** of two floors — going below either
+one produces alerts on work that is still legitimately running:
 
-- **the observed tail** — p95/p99 duration times a safety factor, once there is enough history to
-  have a real p95 (a handful of runs is not a distribution);
-- **the budget the code already commits to** — the timeout on the step, times the retry count. A
-  stuck threshold below `timeout × attempts` alerts on work that is still legitimately running;
-- and cap it below **the deadline the customer perceives** — if you promise a report within an hour,
-  a ninety-minute threshold detects the breach after the complaint.
+- **the observed tail** — p95/p99 duration times a safety factor, once there is enough history for a
+  real p95 (a handful of runs is not a distribution);
+- **the budget the code already commits to** — for a step with a timeout and retries, that is
+  `timeout × (1 + retries)` plus the total backoff between attempts. Count the first attempt: three
+  retries means four runs of the timeout, and exponential backoff can add more wall-clock than the
+  attempts themselves.
 
-**Pre-launch, with no history:** don't skip the check. Pick a deliberately generous provisional
-threshold (an order of magnitude above the longest run you've seen), write down that it's
-provisional, and tighten it once real durations exist. A loose stuck check catches dead workers;
-no stuck check catches nothing.
+**The customer deadline is a separate signal, not a cap.** If the stuck floor comes out above what
+you promised the customer, lowering the stuck threshold doesn't make the job faster — it just makes
+the alert lie. Keep the stuck threshold honest and add a second, independent check on
+*promise breached*: terminal (or still running) past the promised duration. One tells you the
+machinery is wedged; the other tells you the product is late. They fire at different times and mean
+different things.
+
+**With no history at all** — pre-launch, or a transaction no run has completed yet — the code still
+tells you something: use the `timeout × (1 + retries) + backoff` floor, and if even that is unknown,
+time one manual end-to-end run and take ten times it. Record the number as provisional, in a
+comment, and revisit once real durations exist. A generous stuck check catches a dead worker; no
+stuck check catches nothing.
 
 **Then give the query somewhere to run.** In rough order of cost:
 
@@ -221,7 +242,7 @@ be written down — in the repo, next to the code, not in someone's head:
 
 | Required | Why it's on the list |
 | --- | --- |
-| **Named operator and backup** (actual names, not "the team") | "Someone will see it" means nobody sees it at 2 am |
+| **A named operator** — an actual name, not "the team" — plus a **backup once a second person could respond** | "Someone will see it" means nobody sees it at 2 am. Solo, the name is yours and there is no backup; write that down rather than leaving the row blank |
 | **Alert destination** — where alerts land, and (once more than one person could respond) where a human confirms they're on it | With a team, an unacked alert is indistinguishable from an unseen one. Solo, "acking yourself" is theatre — what matters is that the alert *arrives* somewhere you'll see it off-hours |
 | **Escalation path** with times — who is contacted if no ack in N minutes (team only) | Removes the judgment call from the worst moment to make one |
 | **Console links** — error tracker, dashboard, logs, queue/workflow UI, hosting provider, DB | Hunting for a URL during an incident is pure lost minutes |

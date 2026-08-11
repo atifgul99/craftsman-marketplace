@@ -140,6 +140,12 @@ When catching an error, the log event must carry enough context for an on-call e
 reproduce and diagnose without replaying the request. A plain `logger.error(err.message)` is the
 minimum — and it's not enough.
 
+**`error` is for system failures, not expected outcomes.** The example below is a gateway timeout —
+the system failed. A declined card, a rejected upload, or a validation failure is the system working
+correctly on bad input: log it at `info`/`warn` with the outcome code, count it as a metric, and keep
+it out of the error tracker, or genuine bugs drown in customer mistakes. See
+`operational-readiness.md § Instrument the lifecycle` for the same split applied to background work.
+
 **Required fields on every error log event:**
 
 ```jsonc
@@ -150,9 +156,9 @@ minimum — and it's not enough.
   "msg": "payment.charge.failed",             // event name, not the raw error message
   "err": {
     "type": "PaymentGatewayError",            // err.constructor.name or err.name
-    "message": "Card declined: insufficient funds",
-    "code": "CARD_DECLINED",                  // err.code if present — stable identifier for alerting
-    "stack": "Error: Card declined ...\n  at ..."  // include in non-prod; evaluate data-policy in prod
+    "message": "Gateway timed out after 10000ms",
+    "code": "GATEWAY_TIMEOUT",                // err.code if present — stable identifier for alerting
+    "stack": "Error: Gateway timed out ...\n  at ..."  // include in non-prod; evaluate data-policy in prod
   },
   "userId": "usr_abc123",                     // who — use identifiers, not PII
   "invoiceId": "inv_xyz",                     // what entity
