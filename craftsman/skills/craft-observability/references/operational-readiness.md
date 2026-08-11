@@ -80,12 +80,24 @@ Three emissions cover the transaction. Follow the shape rules in `logging.md`; t
 must exist.
 
 1. **A start event** — `info`, with the transaction id and the tenant/account id.
-2. **A completion event** — `info` on success / `error` on failure, with the same ids,
-   `durationMs`, and the terminal state. `err.{type,message,code}` on the failure path
+2. **A completion event** — with the same ids, `durationMs`, and the terminal state. Level depends
+   on which kind of failure it is (below): `info` for success and for expected business outcomes,
+   `error` only when the system itself failed, with `err.{type,message,code}`
    (`logging.md § Structured error logging`).
 3. **A counter or histogram** per terminal state, so rate and latency are queryable without a log
    scan (`logging.md § Logs vs metrics`). On a long-lived worker that is a Prometheus counter; on
    serverless it is OTLP or the vendor SDK — `serverless-vs-server.md` decides which.
+
+**Two kinds of failure, two destinations.** A run that ends `failed` because the customer uploaded
+an unreadable file, the card was declined, or validation rejected the input is an *expected business
+outcome*: count it, show it on the dashboard, and let a spike in it alert — but do not open an
+incident in the error tracker for each one, or real bugs drown in customer mistakes. A run that ends
+`failed` because a dependency timed out, a null blew up a handler, or the model returned something
+the code couldn't parse is a *system failure*: that one belongs in Sentry, tagged with the
+transaction id, so the "why" (stack, breadcrumbs) sits one click from the "how many" (dashboard).
+This is the same line `craft-backend` → `error-contract.md` draws between a 4xx and a 5xx, applied
+to background work. If the schema can't currently tell the two apart, that's a finding in itself —
+a `failure_reason` or `failure_class` column is the fix.
 
 **Stage-level detail only where a stage can fail independently.** If the report step can fail while
 the analysis step succeeded, the report step needs its own success/failure signal. Otherwise a
@@ -97,15 +109,18 @@ text, prompts, model output, customer names, or file contents. This is the same 
 dashboard during an incident. High-cardinality ids belong in log fields, not metric labels
 (`grafana.md` on label cardinality).
 
-**Wire the transaction failure rate into Sentry too.** A failed run should produce a Sentry event
-tagged with the transaction id, so the "why" (stack, breadcrumbs) sits one click from the "how
-many" (dashboard).
+**Count transitions, don't only read the current row.** A `status` column is overwritten on every
+change, so a table scan tells you where work sits *now*, not how much failed and retried on the way.
+The counter in emission 3 is what makes a success-rate SLI honest; the SQL below is triage and a
+stopgap, not the rate. If the transaction retries, or you need the history later, record terminal
+events in an append-only table (or keep the metric) rather than inferring the past from present
+state.
 
 ---
 
 ## Detect stuck and half-finished work
 
-Two failure classes never appear in an error rate, because nothing errored:
+Two failure classes are easily missed by an error rate, because nothing threw:
 
 - **Stuck:** a row sitting in a non-terminal state past any plausible duration. The process died
   mid-run, the queue lost the message, an external call hung with no timeout
@@ -120,31 +135,60 @@ a doc gets stale; a committed file gets reviewed, reused by the runbook, and can
 dashboard or a cron check.
 
 ```sql
--- docs/ops/sql/audit-run-ops.sql  (adapt table/column names to the schema you discovered)
+-- docs/ops/sql/audit-run-ops.sql  (Postgres; adapt table/column names to the schema you discovered)
 
--- 1. Runs by state, last 24h — the shape of normal
-SELECT status, count(*) FROM audit_runs
-WHERE created_at > now() - interval '24 hours' GROUP BY status;
-
--- 2. Stuck: non-terminal and older than the threshold
-SELECT id, tenant_id, status, created_at, now() - created_at AS age
+-- 1. Where work sits right now, and how much finished in the window.
+--    This is triage, not the success-rate SLI — `status` is overwritten, so runs that failed and
+--    were retried are already invisible here. The counter from emission 3 owns the rate.
+SELECT status, count(*) AS runs
 FROM audit_runs
-WHERE status NOT IN ('completed', 'failed', 'cancelled')
-  AND created_at < now() - interval '2 hours'
-ORDER BY created_at;
+WHERE created_at > now() - interval '24 hours'
+GROUP BY status;
 
--- 3. Terminal without artifact — the silent failure
+-- 2. Stuck: non-terminal past the threshold for the state it is in.
+--    Clocks differ — waiting in the queue is not the same as executing — so compare against the
+--    timestamp for the current state, not blanket `created_at`. `IS DISTINCT FROM` / the NULL
+--    branch matter: `status NOT IN (...)` drops rows where status is NULL, which are exactly the
+--    rows a half-written insert leaves behind.
+SELECT id, tenant_id, status,
+       now() - coalesce(started_at, queued_at, created_at) AS age_in_state
+FROM audit_runs
+WHERE (status IS NULL OR status NOT IN ('completed', 'failed', 'cancelled'))
+  AND CASE
+        WHEN status = 'running'                                          -- execution budget
+          THEN coalesce(started_at, created_at) < now() - interval '90 minutes'
+        ELSE coalesce(queued_at, created_at) < now() - interval '15 minutes'  -- queue budget
+      END
+ORDER BY age_in_state DESC;
+
+-- 3. Terminal without artifact — the silent failure.
+--    No trailing window: an unresolved violation from last week is still unresolved. The short
+--    grace period only avoids flagging a run whose artifact is legitimately still being written.
 SELECT r.id, r.tenant_id, r.completed_at
 FROM audit_runs r
-LEFT JOIN reports rep ON rep.audit_run_id = r.id AND rep.status = 'succeeded'
+LEFT JOIN reports rep
+       ON rep.audit_run_id = r.id AND rep.status = 'succeeded'
 WHERE r.status = 'completed'
-  AND r.completed_at > now() - interval '24 hours'
-  AND rep.id IS NULL;
+  AND r.completed_at < now() - interval '10 minutes'
+  AND rep.id IS NULL
+ORDER BY r.completed_at DESC;
 ```
 
-**Set the threshold from data, not vibes.** Use p95 (or p99) observed duration times a safety
-factor — a two-hour threshold on a job that normally takes four hours alerts on nothing but itself.
-If duration isn't measured yet, that is the first thing to instrument.
+**Set the threshold per state, and bound it by something real.** A single number across the whole
+transaction hides the difference between "waiting to be picked up" (should be seconds to minutes)
+and "executing" (however long the work honestly takes). For each state, take the higher of:
+
+- **the observed tail** — p95/p99 duration times a safety factor, once there is enough history to
+  have a real p95 (a handful of runs is not a distribution);
+- **the budget the code already commits to** — the timeout on the step, times the retry count. A
+  stuck threshold below `timeout × attempts` alerts on work that is still legitimately running;
+- and cap it below **the deadline the customer perceives** — if you promise a report within an hour,
+  a ninety-minute threshold detects the breach after the complaint.
+
+**Pre-launch, with no history:** don't skip the check. Pick a deliberately generous provisional
+threshold (an order of magnitude above the longest run you've seen), write down that it's
+provisional, and tighten it once real durations exist. A loose stuck check catches dead workers;
+no stuck check catches nothing.
 
 **Then give the query somewhere to run.** In rough order of cost:
 
@@ -155,6 +199,15 @@ If duration isn't measured yet, that is the first thing to instrument.
 | Dashboard panel via a SQL-capable datasource | When the datasource is already provisioned (`grafana.md`) |
 
 The gauge is the goal, but a committed query plus a runbook step beats a gauge that nobody built.
+
+**The scheduler is not a detail — and it is `craft-infra`'s to get right.** A check that runs less
+often than the threshold it enforces isn't detection: a two-hour stuck threshold polled once a day
+means up to a day of blind spot, so **poll at or below the threshold you're enforcing**. On
+serverless platforms the scheduler carries its own constraints — function-duration caps that a
+scanning query can exceed, at-least-once or skipped invocations, overlapping runs, and plan-level
+limits on cadence — so the check must be quick, idempotent, and itself monitored. A silent cron that
+stopped firing looks exactly like a healthy system. Hand the scheduling mechanics to **`craft-infra`**
+→ `runtime-health.md` and `scale-resilience.md`; keep the query and its threshold here.
 
 **Cancellation is not failure.** Keep user-cancelled runs out of the failure numerator or the
 success rate lies — the same distinction `slo-alerts.md` draws between client and server errors.
@@ -169,8 +222,8 @@ be written down — in the repo, next to the code, not in someone's head:
 | Required | Why it's on the list |
 | --- | --- |
 | **Named operator and backup** (actual names, not "the team") | "Someone will see it" means nobody sees it at 2 am |
-| **Ack channel** — where alerts land and where a human confirms they're on it | An unacked alert is indistinguishable from an unseen one |
-| **Escalation path** with times — who is contacted if no ack in N minutes | Removes the judgment call from the worst moment to make one |
+| **Alert destination** — where alerts land, and (once more than one person could respond) where a human confirms they're on it | With a team, an unacked alert is indistinguishable from an unseen one. Solo, "acking yourself" is theatre — what matters is that the alert *arrives* somewhere you'll see it off-hours |
+| **Escalation path** with times — who is contacted if no ack in N minutes (team only) | Removes the judgment call from the worst moment to make one |
 | **Console links** — error tracker, dashboard, logs, queue/workflow UI, hosting provider, DB | Hunting for a URL during an incident is pure lost minutes |
 | **An "is it broken?" decision tree** answerable in under 5 minutes | The first question every incident starts with |
 | **The transaction queries** (above) and where their history lives | Turns "customers are complaining" into a number |
@@ -191,9 +244,12 @@ escalation, safe silencing). This file's concern is that the *service-level* fac
 which links, which queries — exist at all, and that the on-call layer is real before the alerts
 that depend on it are written.
 
-**Maturity ladder.** Solo pre-launch: you are the operator, the ack channel is your phone, and the
-escalation path is "there isn't one" — write that line down and move on. With a team or paying
-customers: named backup, a real ack channel, and escalation times.
+**Maturity ladder.** Solo pre-launch: you are the operator, the destination is a channel you'll
+actually notice away from the laptop (phone push, SMS — not an email folder), and there is no ack
+protocol and no escalation path. Write those two lines down and move on; do not invent an
+acknowledgement ritual with yourself. Once a second person could respond — a cofounder, a
+contractor, paying customers with expectations — add the named backup, the ack convention, and the
+escalation times, because now "someone saw it" is a real question.
 
 ---
 
@@ -203,15 +259,16 @@ Observability you haven't watched work isn't done. Configuration looks identical
 notification path is wired — the only way to know is to break something on purpose while you're
 watching.
 
-Run these four before launch and after any change to the alerting path. Each has a pass criterion,
-not a vibe:
+Run these before launch and after any change to the alerting path. Each has a pass criterion, not a
+vibe:
 
 | Drill | How | Pass criterion |
 | --- | --- | --- |
 | **Success path** | Run one real transaction end to end | Start and completion visible in logs + dashboard; the artifact exists |
-| **Controlled failure** | Force a failure (bad input, kill a step, stub a dependency to throw) | Failure visible in the error tracker *and* in the terminal-state counter, with the transaction id attached and no payload leaked |
-| **Stuck detection** | Kill the worker mid-run, or insert a synthetic non-terminal row past the threshold | The stuck query / gauge surfaces it, keyed by id only |
-| **Human notification** | Fire one alert down the real path | A human receives it on the real channel *and* acks it |
+| **System failure** | Break the machinery, not the input — stub a dependency to throw, kill a step mid-run, point a client at a dead host | Failure lands in the error tracker *and* increments the terminal-state counter, with the transaction id attached and no payload leaked |
+| **Expected business failure** | Feed it input a customer could plausibly send (unreadable file, declined card, invalid row) | Counted and visible on the dashboard, and *not* opening an error-tracker incident — if it does, the two failure classes aren't separated yet |
+| **Stuck detection** | Kill the worker mid-run, or insert a synthetic non-terminal row past the threshold | The stuck query / gauge surfaces it within one polling interval, keyed by id only |
+| **Notification** | Fire one alert down the real path | It arrives on the real destination. With a team: someone other than you receives it and acks |
 
 Two rules that decide whether the drill is worth anything:
 
@@ -284,12 +341,20 @@ the incident that lands in it.
 - Transaction states are logged but never counted, so "how many failed today?" needs a log scan
 - No stuck-work detection: a non-terminal row can age indefinitely with nothing firing
 - No terminal-without-artifact check on a transaction that promises an artifact
-- Stuck threshold picked by feel, with no measured duration behind it
+- Stuck threshold picked by feel — no measured duration, no timeout/retry budget behind it — or one
+  blanket threshold covering both queue wait and execution
+- The stuck check is scheduled less often than the threshold it enforces, or the scheduler itself is
+  unmonitored
+- `status NOT IN (...)` used as the non-terminal filter, silently dropping NULL-status rows
+- The artifact check has a trailing window, so an unresolved violation ages out of the report
+- Success rate inferred from a mutable `status` column on a transaction that retries
 - Ops queries live only as prose in a doc — nothing committed, nothing runnable
 - Telemetry carries payload, prompts, or customer content instead of ids
-- Alerts exist with no named recipient, no ack channel, and no escalation path
+- Expected customer-input failures open error-tracker incidents, burying real bugs — or system
+  failures never reach the error tracker at all
+- Alerts exist with no named recipient and no destination anyone sees off-hours
 - The notification path has never been fired end to end to a human
-- No controlled-failure or stuck drill has been run; the loop is assumed, not proven
+- No system-failure, business-failure, or stuck drill has been run; the loop is assumed, not proven
 - Readiness claimed from a green check with no retained history behind it
 - Two competing sources of truth for availability, neither declared canonical
 - Dashboard panels that render "No data" because the metric was never wired

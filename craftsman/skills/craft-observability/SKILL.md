@@ -79,8 +79,8 @@ overrides:
 3. **Implement** against the repo's existing patterns (its env schema, its logger, its CI).
 4. **Verify** — trigger a test error to Sentry, confirm a dashboard renders, fire a test alert.
    Observability you haven't seen work isn't done. For anything with a background job or a core
-   customer transaction, run the four-part drill in `references/operational-readiness.md`: success,
-   controlled failure, stuck detection, human notification acked.
+   customer transaction, run the acceptance drill in `references/operational-readiness.md`: success,
+   system failure, expected business failure, stuck detection, and one alert delivered to a human.
 
 ## Reference index
 
@@ -93,7 +93,7 @@ Read the one matching the current task — they hold the concrete setup, not thi
 - `references/slo-alerts.md` — SLO definition, burn-rate alerts, runbook linking
 - `references/operational-readiness.md` — business-transaction lifecycle instrumentation, stuck /
   terminal-without-artifact detection and committed ops queries, on-call + ack + escalation +
-  "is it broken?" tree, the four-part acceptance drill, history-backed readiness measurement,
+  "is it broken?" tree, the acceptance drill, history-backed readiness measurement,
   honest coverage claims
 - `references/serverless-vs-server.md` — why `prom-client` dies on serverless and what to do instead
 - `references/browser-rum.md` — browser RUM with `@sentry/react`, error boundaries, sourcemap upload for Next.js, session replay sampling, Core Web Vitals as SLIs
@@ -152,21 +152,30 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
 - [ ] Name the project's core business transaction (the run, checkout, send, sync) and confirm its
   lifecycle is observable: start + terminal state emitted as events *and* counted as a metric, with
   ids only and no payload/PII — flag an observability setup that watches only infrastructure while
-  the transaction the product exists to perform is invisible →
+  the transaction the product exists to perform is invisible; flag a success rate inferred purely
+  from a mutable `status` column when the transaction retries →
   `references/operational-readiness.md § Name the core transaction`
+- [ ] Check expected business failures (bad customer input, declined card, rejected upload) are
+  counted but routed away from the error tracker, while system failures (timeouts, unhandled
+  exceptions) reach it tagged with the transaction id — flag either direction: customer mistakes
+  opening incidents, or system failures visible only as a status value →
+  `references/operational-readiness.md § Instrument the lifecycle`
 - [ ] Verify stuck and half-finished work is detectable: a query or gauge for non-terminal rows past
-  a duration-derived threshold, and — where a terminal state promises an artifact (report, invoice,
-  outbound message) — a terminal-without-artifact check; queries committed as a file, not prose in a
-  doc — flag a threshold with no measured duration behind it, and flag either check missing →
+  a per-state threshold, and — where a terminal state promises an artifact (report, invoice,
+  outbound message) — a terminal-without-artifact check with no trailing window that forgets
+  unresolved violations; queries committed as a file, not prose in a doc — flag a threshold with no
+  measured duration or timeout/retry budget behind it, a check polled less often than the threshold
+  it enforces, and either check missing →
   `references/operational-readiness.md § Detect stuck and half-finished work`
-- [ ] Confirm the human loop exists in writing: named operator (+ backup once there's a team), an
-  ack channel, an escalation path with times, console links, and a <5-minute "is it broken?" tree —
-  flag alerts configured with no named recipient. Scale to maturity: a solo pre-launch builder writes
-  "operator: me, channel: phone, no escalation" and that passes →
-  `references/operational-readiness.md § The human loop`
-- [ ] Check the loop has been proven, not assumed: success path, controlled failure, stuck
-  detection, and one alert fired down the *production* notification path and acked — with the drill
-  date recorded — flag an alerting setup that has never delivered to a human →
+- [ ] Confirm the human loop exists in writing: who operates it, where alerts land (a destination
+  seen away from the laptop), console links, and a <5-minute "is it broken?" tree — flag alerts
+  configured with no named recipient. Scale to maturity: solo pre-launch, "operator: me, alerts to
+  my phone, no escalation" passes; named backup, ack convention, and escalation times are required
+  only once a second person could respond → `references/operational-readiness.md § The human loop`
+- [ ] Check the loop has been proven, not assumed: success path, a forced *system* failure, a
+  plausible *business* failure, stuck detection, and one alert delivered down the production
+  notification path — with the drill date recorded — flag an alerting setup that has never delivered
+  to a human. Acked-by-someone-else applies only where there is a team →
   `references/operational-readiness.md § Prove the loop`
 - [ ] Where an availability/readiness number is claimed, verify one declared source of truth retains
   history across the SLO window and the calculation is documented (manual weekly is acceptable at

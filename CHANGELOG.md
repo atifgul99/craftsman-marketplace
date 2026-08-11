@@ -29,10 +29,12 @@ not a synonym for "public."
   covers the layer between "the service is instrumented" and "a human can operate it": naming the
   core business transaction and instrumenting its lifecycle, detecting stuck work and terminal
   states whose promised artifact never appeared, committing ops queries as a file rather than
-  prose, the on-call/ack/escalation contract and a five-minute "is it broken?" tree, a four-part
-  acceptance drill (success, controlled failure, stuck detection, human notification acked), and
-  measuring readiness from a source of truth with verified history instead of a currently-green
-  check. Five matching audit-checklist items, all gated on project maturity so a solo pre-launch
+  prose, separating expected business failures from system failures so customer mistakes don't
+  bury real bugs in the error tracker, the on-call contract and a five-minute "is it broken?" tree,
+  an acceptance drill (success, system failure, business failure, stuck detection, alert delivered),
+  and measuring readiness from a source of truth with verified history instead of a currently-green
+  check. Six matching audit-checklist items, all gated on project maturity — ack conventions and
+  escalation paths are required only once a second person could respond, so a solo pre-launch
   builder is not handed a pager rotation.
 - **Cross-references for the new layer.** `grafana.md` now prefers a deep-link panel over a graph
   known to return no data; `slo-alerts.md` requires retained history behind the SLO window and
