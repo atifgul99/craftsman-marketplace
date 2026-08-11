@@ -63,6 +63,7 @@ infrastructure):
 | **No error tracking** | Sentry | — | craft-observability `sentry.md` |
 | **Secrets in client / raw process.env** | A validated env module (`@t3-oss/env` or hand-rolled) | — | craft-infra `config.md`, craft-security `secrets.md` |
 | **No error/empty/loading states** | (not a tool — a pattern) | — | craft-ux `layer-4-states.md` |
+| **No way to see whether the core transaction finished, or that a job is stuck** | (not a tool — committed ops queries + one tested alert path) | — | craft-observability `operational-readiness.md` |
 
 The last row matters: not every gap is a dependency. "Add an error boundary and a designed empty
 state" is a Tier-1 fix with no package to install.

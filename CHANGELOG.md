@@ -21,7 +21,30 @@ may still land in MINOR while the project settles). `1.0.0` is reserved for the 
 and workflow are considered stable enough to commit to strict SemVer against the trigger surface,
 not a synonym for "public."
 
-## [0.3.2] (unreleased)
+## [0.5.0] (unreleased)
+
+### Added
+
+- **Operational readiness in `craft-observability`.** A new `references/operational-readiness.md`
+  covers the layer between "the service is instrumented" and "a human can operate it": naming the
+  core business transaction and instrumenting its lifecycle, detecting stuck work and terminal
+  states whose promised artifact never appeared, committing ops queries as a file rather than
+  prose, the on-call/ack/escalation contract and a five-minute "is it broken?" tree, a four-part
+  acceptance drill (success, controlled failure, stuck detection, human notification acked), and
+  measuring readiness from a source of truth with verified history instead of a currently-green
+  check. Five matching audit-checklist items, all gated on project maturity so a solo pre-launch
+  builder is not handed a pager rotation.
+- **Cross-references for the new layer.** `grafana.md` now prefers a deep-link panel over a graph
+  known to return no data; `slo-alerts.md` requires retained history behind the SLO window and
+  points service-level on-call facts at one place; craft-audit's `recommended-stack.md` gains a
+  Tier-1 row for "no way to see whether the core transaction finished".
+
+## [0.4.0] (2026-08-10)
+
+Released without a changelog entry at the time; see the release notes for `v0.4.0` and commit
+`2a29f21` (audit workflow hardening, install documentation, craft-ux supply-chain fix).
+
+## [0.3.2] (2026-08-05)
 
 ### Security
 

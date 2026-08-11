@@ -46,6 +46,13 @@ State what you found, then propose the smallest set of additions that closes the
 A service is "observable enough to ship" when an on-call engineer can answer _is it broken?_,
 _since when?_, and _where?_ from these four without SSH-ing into anything.
 
+**Then the fifth thing, which the four pillars don't give you.** The pillars make the *service*
+observable; they say nothing about whether the transaction the product exists to perform actually
+completed, or whether a human is on the other end of an alert. Before calling a service production-
+ready, close that gap: the core business transaction visible end to end, stuck and half-finished
+work detectable, a named person receiving alerts, and the whole loop proven once by breaking it on
+purpose. See `references/operational-readiness.md`.
+
 ## Standing opinions (the non-negotiables)
 
 These are the judgments that make output consistent across repos — apply them unless the user
@@ -59,6 +66,11 @@ overrides:
   runbook is noise — delete it. Every paging alert links a runbook.
 - **No silent degradation.** If a dependency is down, the service says so (health endpoint + log +
   metric), it doesn't fail quietly.
+- **The business transaction is a first-class signal.** Whatever the product exists to do — the run,
+  the checkout, the send — has a visible lifecycle and a detectable stuck state, not just the infra
+  underneath it.
+- **Untested notification paths don't count.** Fire one alert down the real path to a real human
+  before claiming the service is monitored.
 
 ## Workflow
 
@@ -66,7 +78,9 @@ overrides:
 2. **Propose** the closing set, ordered by the four pillars, smallest viable first.
 3. **Implement** against the repo's existing patterns (its env schema, its logger, its CI).
 4. **Verify** — trigger a test error to Sentry, confirm a dashboard renders, fire a test alert.
-   Observability you haven't seen work isn't done.
+   Observability you haven't seen work isn't done. For anything with a background job or a core
+   customer transaction, run the four-part drill in `references/operational-readiness.md`: success,
+   controlled failure, stuck detection, human notification acked.
 
 ## Reference index
 
@@ -77,6 +91,10 @@ Read the one matching the current task — they hold the concrete setup, not thi
 - `references/otel-integration.md` — OTel SDK wiring to Pino/Winston, TracerProvider setup, span instrumentation, W3C traceparent propagation, OTLP/Loki/ELK export, multi-service distributed correlation, async queue context propagation
 - `references/grafana.md` — datasource choice, dashboard-as-code, the panels that matter
 - `references/slo-alerts.md` — SLO definition, burn-rate alerts, runbook linking
+- `references/operational-readiness.md` — business-transaction lifecycle instrumentation, stuck /
+  terminal-without-artifact detection and committed ops queries, on-call + ack + escalation +
+  "is it broken?" tree, the four-part acceptance drill, history-backed readiness measurement,
+  honest coverage claims
 - `references/serverless-vs-server.md` — why `prom-client` dies on serverless and what to do instead
 - `references/browser-rum.md` — browser RUM with `@sentry/react`, error boundaries, sourcemap upload for Next.js, session replay sampling, Core Web Vitals as SLIs
 
@@ -131,6 +149,30 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
   to delete or document (N-A if the project has no pager yet) → `references/slo-alerts.md`
 - [ ] Check for silent degradation: a down dependency surfaces via health endpoint + log + metric —
   flag dependencies that fail quietly with no observable signal → SKILL.md "Standing opinions"
+- [ ] Name the project's core business transaction (the run, checkout, send, sync) and confirm its
+  lifecycle is observable: start + terminal state emitted as events *and* counted as a metric, with
+  ids only and no payload/PII — flag an observability setup that watches only infrastructure while
+  the transaction the product exists to perform is invisible →
+  `references/operational-readiness.md § Name the core transaction`
+- [ ] Verify stuck and half-finished work is detectable: a query or gauge for non-terminal rows past
+  a duration-derived threshold, and — where a terminal state promises an artifact (report, invoice,
+  outbound message) — a terminal-without-artifact check; queries committed as a file, not prose in a
+  doc — flag a threshold with no measured duration behind it, and flag either check missing →
+  `references/operational-readiness.md § Detect stuck and half-finished work`
+- [ ] Confirm the human loop exists in writing: named operator (+ backup once there's a team), an
+  ack channel, an escalation path with times, console links, and a <5-minute "is it broken?" tree —
+  flag alerts configured with no named recipient. Scale to maturity: a solo pre-launch builder writes
+  "operator: me, channel: phone, no escalation" and that passes →
+  `references/operational-readiness.md § The human loop`
+- [ ] Check the loop has been proven, not assumed: success path, controlled failure, stuck
+  detection, and one alert fired down the *production* notification path and acked — with the drill
+  date recorded — flag an alerting setup that has never delivered to a human →
+  `references/operational-readiness.md § Prove the loop`
+- [ ] Where an availability/readiness number is claimed, verify one declared source of truth retains
+  history across the SLO window and the calculation is documented (manual weekly is acceptable at
+  early stage) — flag "green right now" presented as an SLO, tail-only log sources, a red synthetic
+  check that is the sole history source, and competing uncanonical sources →
+  `references/operational-readiness.md § Measure readiness from retained history`
 - [ ] When the service has real traffic / on-call: error-budget policy exists (who is notified at
   50%/25% remaining? deploy freeze gate?). For early MVPs, skip or mark partial with a one-line
   reason — do not invent a full SLO program → `references/slo-alerts.md § Error-budget policy`
