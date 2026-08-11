@@ -33,9 +33,10 @@ not a synonym for "public."
   bury real bugs in the error tracker, the on-call contract and a five-minute "is it broken?" tree,
   an acceptance drill (success, system failure, business failure, stuck detection, alert delivered),
   and measuring readiness from a source of truth with verified history instead of a currently-green
-  check. Six matching audit-checklist items, all gated on project maturity — ack conventions and
-  escalation paths are required only once a second person could respond, so a solo pre-launch
-  builder is not handed a pager rotation.
+  check. Six matching audit-checklist items, maturity-aware rather than one-size-fits-all: the
+  transaction, stuck-work, and delivery checks apply from day one, while team-shaped requirements
+  (a backup operator, an ack convention, an escalation path) are gated on a second person actually
+  being able to respond — so a solo pre-launch builder is not handed a pager rotation.
 - **Cross-references for the new layer.** `grafana.md` now prefers a deep-link panel over a graph
   known to return no data; `slo-alerts.md` requires retained history behind the SLO window and
   points service-level on-call facts at one place; craft-audit's `recommended-stack.md` gains a

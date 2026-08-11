@@ -209,7 +209,8 @@ try {
 `isExpectedOutcome` must match an **explicit allowlist of codes** — `card_declined`,
 `insufficient_funds`, your own validation error class — never a broad "any 4xx from the provider"
 rule. Plenty of 4xx responses are your bug or your outage wearing a client-error status:
-`401`/`403` means the credential expired or was revoked, `429` means you're being rate-limited,
+`401`/`403` means the credential is missing, invalid, expired, revoked, or under-scoped, `429`
+means you're being rate-limited,
 `400` often means you sent a malformed request. Those are system failures and must keep reaching
 the error tracker. If nothing in the code can tell an expected outcome from a system failure, that
 gap is the finding — fix the classification before tuning the logging.

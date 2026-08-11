@@ -95,8 +95,13 @@ incident in the error tracker for each one, or real bugs drown in customer mista
 `failed` because a dependency timed out, a null blew up a handler, or the model returned something
 the code couldn't parse is a *system failure*: that one belongs in Sentry, tagged with the
 transaction id, so the "why" (stack, breadcrumbs) sits one click from the "how many" (dashboard).
-This is the same line `craft-backend` → `error-contract.md` draws between a 4xx and a 5xx, applied
-to background work. If the schema can't currently tell the two apart, that's a finding in itself —
+Draw the line from an **explicit list of expected outcome codes** the code already knows — a
+declined-payment class, a validation result, an unsupported-file-type check — and treat everything
+else as a system failure. Do not infer it from a status class: a provider's `401`, `429`, or
+malformed-request `400` is your outage or your bug wearing a client-error code
+(`logging.md § Structured error logging` has the same warning). This is the typed-outcome
+discipline `craft-backend` → `error-contract.md` applies at the API boundary, applied here to
+background work. If the schema can't currently tell the two apart, that's a finding in itself —
 a `failure_reason` or `failure_class` column is the fix.
 
 **Stage-level detail only where a stage can fail independently.** If the report step can fail while
