@@ -142,8 +142,10 @@ minimum — and it's not enough.
 
 **`error` is for system failures, not expected outcomes.** The example below is a gateway timeout —
 the system failed. A declined card, a rejected upload, or a validation failure is the system working
-correctly on bad input: log it at `info`/`warn` with the outcome code, count it as a metric, and keep
-it out of the error tracker, or genuine bugs drown in customer mistakes. See
+correctly on bad input: record the outcome code, count it as a metric, and keep it out of the error
+tracker, or genuine bugs drown in customer mistakes. Level follows the outcome rules below — `warn`
+at the catch site, or no line at all when the structured response already carries it, and `info` on
+the operation's own completion event. See
 `operational-readiness.md § Instrument the lifecycle` for the same split applied to background work.
 
 **Required fields on every error log event:**
@@ -170,11 +172,13 @@ it out of the error tracker, or genuine bugs drown in customer mistakes. See
 **The pattern:**
 
 ```ts
-// Wrap the error in a typed object — never pass the error directly as the message
+// Wrap the error in a typed object — never pass the error directly as the message.
+// Pick the level from the outcome, not from the fact that something was thrown:
+// a decline is the system working, a retry that hasn't exhausted isn't final yet.
 try {
   await chargeCard(invoice);
 } catch (err) {
-  logger.error({
+  const event = {
     msg: 'payment.charge.failed',
     err: {
       type: err instanceof Error ? err.constructor.name : typeof err,
@@ -186,10 +190,23 @@ try {
     invoiceId,
     attemptNumber,
     durationMs: Date.now() - startTime,
-  });
+  };
+
+  if (isExpectedOutcome(err)) {
+    // Declined card, invalid input — the system did its job. Count it; don't page on it.
+    logger.info({ ...event, msg: 'payment.charge.declined', err: { ...event.err, stack: undefined } });
+  } else if (willRetry) {
+    logger.warn(event);   // transient and not final — see the level rules below
+  } else {
+    logger.error(event);  // system failed and retries are exhausted
+  }
   throw err; // re-throw or convert to your error envelope
 }
 ```
+
+`isExpectedOutcome` is whatever your code already knows: a declined-payment error class, an HTTP 4xx
+from the provider, a validation result. If nothing in the code can tell an expected outcome from a
+system failure, that gap is the finding — fix the classification before tuning the logging.
 
 **Stack traces in production:** whether to include `stack` in production logs is a data-policy
 call, not a technical one. Stack frames may contain file paths that reveal internal structure.

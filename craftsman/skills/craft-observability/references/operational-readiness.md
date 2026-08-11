@@ -148,9 +148,11 @@ GROUP BY status;
 -- 1b. Throughput: what finished in the window, keyed on the terminal timestamp, not creation.
 --     Still triage, not the success-rate SLI — `status` is overwritten, so runs that failed and
 --     were retried into success are invisible here. The counter from emission 3 owns the rate.
+--     If the schema has one timestamp per terminal state instead of a single finished_at, take
+--     whichever applies to the row rather than inventing a column: coalesce them.
 SELECT status, count(*) AS runs
 FROM audit_runs
-WHERE finished_at > now() - interval '24 hours'   -- completed_at/failed_at, whatever the schema has
+WHERE coalesce(completed_at, failed_at, cancelled_at) > now() - interval '24 hours'
 GROUP BY status;
 
 -- 2. Stuck: non-terminal past the threshold for the state it is in.
