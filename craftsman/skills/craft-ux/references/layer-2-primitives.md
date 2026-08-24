@@ -401,8 +401,9 @@ both run through that same main-thread loop in Framer Motion; the second is not 
 Two mitigations when motion must survive a busy main thread:
 
 - For simple, independent `transform`/`opacity` motion, prefer the browser's compositor — a CSS
-  transition/keyframe or the Web Animations API runs off the main thread. (Framer Motion can hand
-  eligible animations to WAAPI automatically.)
+  transition/keyframe or the Web Animations API runs off the main thread. (Whether Framer Motion
+  offloads a given animation has changed across versions — verify against the installed
+  version's docs rather than assuming; see `motion/emil-craft.md` → Framer Motion.)
 - Keep perpetual animations off the React render path (next bullet).
 
 Additional rules:

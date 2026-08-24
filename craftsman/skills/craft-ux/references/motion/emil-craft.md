@@ -5,8 +5,14 @@ tools, high-frequency interactions, and professional UI. **Canonical home** for:
 animate decisions, custom easing curves, spring physics, clip-path tricks, gesture
 interactions, the `scale(0.9)` rule, transform-origin discipline, and the Sonner principles.
 
+> **Source note:** substantial portions adapted from Emil Kowalski's MIT-licensed skill repo
+> ([github.com/emilkowalski/skill](https://github.com/emilkowalski/skill)) and his
+> animations.dev material — full MIT notice in `THIRD_PARTY_NOTICES.md` at the repo root.
+> Not affiliated with or endorsed by Emil Kowalski, Linear, Vercel, or animations.dev.
+
 > **See also**
 >
+> - For momentum projection, rubberbanding, velocity handoff, and gesture-surface physics → `./fluid-gestures.md`
 > - For the motion audit framework (which designer applies, weighting by context) → `../layer-5-motion.md`
 > - For production-polish patterns (subtle enter/exit, shadows, optical alignment) → `./jakub-polish.md`
 > - For experimental CSS (linear(), @property, scroll-driven) → `./jhey-experimental.md`
@@ -464,34 +470,26 @@ element.style.transform = `translateY(${distance}px)`
 
 ### Framer Motion — rAF vs compositor offload
 
-Both `animate={{ x: 100 }}` and `animate={{ transform: 'translateX(100px)' }}` run via
-`requestAnimationFrame` by default — neither is "hardware accelerated" as a binary property.
-Both can stutter when the main thread is blocked.
+"Hardware accelerated" is not a binary property of a prop name, and Motion's internals have
+changed across major versions — **verify against the installed version's docs
+([motion.dev/docs/performance](https://motion.dev/docs/performance)) before asserting either
+way in a review.**
 
-The relevant distinction is **compositor offload via WAAPI**, not the shorthand vs. longhand
-syntax:
+What holds across versions:
 
-- Framer Motion ≥ 10 automatically delegates eligible `transform`/`opacity`-only animations to
-  the Web Animations API (WAAPI), which runs on the compositor thread when the browser supports
-  it.
-- The shorthand props (`x`, `y`, `scale`, `opacity`, `rotate`) use `MotionValue` internally and
-  are the code path through which Framer Motion detects WAAPI eligibility and hands off.
-- The longhand `animate={{ transform: 'translateX(100px)' }}` is a raw CSS string — it bypasses
-  the `MotionValue` pipeline and WAAPI delegation.
+- JS-driven animation computes frames on the main thread via `requestAnimationFrame`, so it can
+  stutter when the main thread is blocked — regardless of which property it targets.
+- Per Motion's current performance guidance, the individual transform props (`x`, `y`, `scale`,
+  `rotate`) are implemented via CSS variables and are **not** compositor-accelerated; when
+  acceleration is crucial, animate the full `transform` string — at the cost of per-axis
+  springs and independent transform control.
+- For simple, independent `transform`/`opacity` motion that must survive a busy main thread,
+  the compositor is the guarantee: a CSS transition/animation or WAAPI directly
+  (`element.animate(...)`) runs off the main thread.
 
-**Rule: prefer the shorthand (`x`, `y`, `scale`, `opacity`, `rotate`) for transform/opacity
-animations.** Not because they are "hardware accelerated" in a blanket sense, but because they
-enable Framer Motion's WAAPI delegation path, which moves the animation off the main thread when
-the browser supports it. Fall back to WAAPI directly (`element.animate(...)`) for simple,
-independent animations where you need the compositor guarantee regardless of main-thread load.
-
-```jsx
-// Preferred — enables WAAPI delegation in Framer Motion ≥ 10
-<motion.div animate={{ x: 100 }} />
-
-// Bypasses MotionValue pipeline — no WAAPI delegation, always rAF
-<motion.div animate={{ transform: "translateX(100px)" }} />
-```
+**Rule: don't fight this inside the library.** Use the individual props for gesture-driven,
+interruptible, per-axis motion (their whole point); use CSS/WAAPI for predetermined motion that
+must stay smooth under load — see `../layer-2-primitives.md` → Animation under Load.
 
 ### WAAPI for programmatic CSS animations
 
@@ -661,6 +659,6 @@ better for gesture testing.
 | Duration > 300 ms on UI element        | Reduce to 150–250 ms                                                                      |
 | Hover animation without media query    | Add `@media (hover: hover) and (pointer: fine)`                                           |
 | Keyframes on rapidly-triggered element | Use CSS transitions for interruptibility                                                  |
-| Framer Motion `x`/`y` under load       | Prefer shorthand (`x`, `y`, `scale`) — enables WAAPI delegation in FM ≥ 10; for guaranteed compositor offload use WAAPI directly (`element.animate(...)`) |
+| Framer Motion `x`/`y` under load       | Predetermined motion that must survive main-thread load → CSS or WAAPI (`element.animate(...)`); keep individual props for gesture-driven per-axis motion. Verify acceleration claims against the installed version's docs |
 | Same enter/exit transition speed       | Make exit faster than enter (e.g. enter 2 s, exit 200 ms)                                 |
 | Elements all appear at once            | Add stagger delay (30–80 ms between items)                                                |

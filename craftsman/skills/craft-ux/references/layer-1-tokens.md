@@ -88,6 +88,9 @@ Scale (rem):
 - Line length: 45–75 characters (use `max-w-prose` or `max-w-2xl`)
 - Maximum 2–3 typefaces per design — one distinctive display font + one refined body font
 - No orphaned words on headings — use `text-wrap: balance`
+- Tracking (letter-spacing) is size-specific, never one value for all sizes: large display text
+  wants *negative* tracking (~`-0.02em` — letters read too far apart as type grows), body stays
+  near `0`. Leading tracks size inversely: tight on large headings, looser on body copy.
 - Text truncation always uses ellipsis with a tooltip or expand mechanism
 - Use `font-variant-numeric: tabular-nums` for any column of numbers
 - Use the ellipsis character `…` not three periods `...`

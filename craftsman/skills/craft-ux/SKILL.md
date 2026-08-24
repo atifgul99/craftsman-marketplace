@@ -68,6 +68,7 @@ finding violations and building the scanner that blocks them in CI.
 | Emil Kowalski — restraint, speed, springs, clip-path, gestures                                            | `references/motion/emil-craft.md`        |
 | Jakub Krehel — production polish, subtle enter/exit, shadows, optical alignment                           | `references/motion/jakub-polish.md`      |
 | Jhey Tompkins — playful CSS, `linear()`, `@property`, scroll-driven, 3D                                   | `references/motion/jhey-experimental.md` |
+| Fluid gesture physics — velocity handoff, momentum projection, rubberbanding, sheets/drag/swipe           | `references/motion/fluid-gestures.md`    |
 | Page/dashboard architecture, landing sections, Bento, design-intensity calibration                        | `references/composition.md`              |
 | Canonical AI-tells catalog — **what to flag in reviews**                                                  | `references/anti-patterns.md`            |
 | Redesigning existing UI — Scan → Diagnose → Fix                                                           | `references/redesign-audit.md`           |

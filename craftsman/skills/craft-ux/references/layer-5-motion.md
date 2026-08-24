@@ -39,6 +39,8 @@ For deep dives on each designer's craft, load:
 - `motion/emil-craft.md` — Emil Kowalski (restraint, speed, productivity tools)
 - `motion/jakub-polish.md` — Jakub Krehel (subtle production polish)
 - `motion/jhey-experimental.md` — Jhey Tompkins (playful CSS experimentation)
+- `motion/fluid-gestures.md` — momentum physics for gesture-driven surfaces (sheets, drag,
+  swipe, carousels): velocity handoff, projection, rubberbanding, interruptible springs
 
 ---
 
@@ -217,6 +219,18 @@ Severity-tagged tables:
 - [ ] `animation-fill-mode: backwards` used for delayed sequences
 - [ ] Elements don't flash before their delayed animation starts
 
+### Tool choice — cheapest that works
+
+Walk down; stop at the first that fits. Don't install a motion library for a fade.
+
+| Need                                                                  | Tool                                    |
+| --------------------------------------------------------------------- | --------------------------------------- |
+| Hover, press, color, a class/attribute-controlled state toggle        | CSS transition                          |
+| Entry animation on mount, no JS state                                 | CSS `@starting-style`                   |
+| Predetermined motion that must stay smooth while the page is busy     | CSS animation (off the main thread)     |
+| Programmatic control with CSS performance, no library                 | WAAPI (`element.animate()`)             |
+| Springs, layout animations, exit animations, gesture-driven values    | Motion (Framer Motion)                  |
+
 ### Easing and timing
 
 - [ ] Appropriate easing for context (not default `ease` everywhere)
@@ -224,6 +238,8 @@ Severity-tagged tables:
 - [ ] Spring animations for interactive elements
 - [ ] Durations appropriate (Emil: < 300 ms; others: whatever serves the design)
 - [ ] Consistent timing values across related animations
+- [ ] Curves and durations live as shared tokens — five hand-typed near-identical
+      cubic-beziers across components is a consolidation finding, not five separate choices
 - [ ] Transform-origin matches the interaction source
 
 ### Performance
@@ -345,6 +361,27 @@ an explicit reduced-motion path:
   cascade.
 - Functional motion (loading spinners, progress indicators, state transitions) must provide an
   instant or opacity-only alternative when reduced motion is active, not just disappear.
+- Under reduced motion, replace slides/springs/parallax with short opacity cross-fades and drop
+  elastic overshoot — reduced means gentler and non-vestibular, not zero feedback.
+- Avoid slow looping oscillations near 0.2 Hz (one cycle per ~5 s) and abrupt brightness jumps —
+  ease dark↔light theme changes where a transition is used at all.
+
+### Related preference media queries
+
+Two siblings of reduced-motion that translucent/high-polish UI must also honor:
+
+- **`prefers-reduced-transparency: reduce`** — make translucent surfaces frostier or solid:
+  raise background opacity, drop the `backdrop-filter` blur.
+- **`prefers-contrast: more`** — near-solid backgrounds with a defined, contrasting border.
+
+```css
+@media (prefers-reduced-transparency: reduce) {
+  .toolbar { background: white; backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  .card { background: var(--surface); border: 1px solid var(--border-strong); }
+}
+```
 
 ### Focus-visible states
 
