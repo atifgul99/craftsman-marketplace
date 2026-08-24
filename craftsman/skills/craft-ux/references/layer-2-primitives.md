@@ -395,8 +395,11 @@ Animate only **compositor-friendly properties — `transform` and `opacity`** (F
 
 But the property isn't the whole story: a **JS-driven** animation computes each frame on the main
 thread via `requestAnimationFrame`, so it can still stutter when the main thread is blocked — no
-matter which property it targets. `animate={{ x: 100 }}` and `animate={{ transform: "translateX(100px)" }}`
-both run through that same main-thread loop in Framer Motion; the second is not magically smoother.
+matter which property it targets. Per Motion's current docs, the independent transform props
+(`x`, `y`, `scale`) are CSS-variable-driven and exist for gesture/per-axis control — not
+compositor-accelerated; animating the direct `transform` string is the accelerated path when
+that's crucial. Verify against the installed version's docs before asserting either way — see
+`motion/emil-craft.md` → Framer Motion.
 
 Two mitigations when motion must survive a busy main thread:
 
