@@ -21,10 +21,36 @@ may still land in MINOR while the project settles). `1.0.0` is reserved for the 
 and workflow are considered stable enough to commit to strict SemVer against the trigger surface,
 not a synonym for "public."
 
-## [0.5.0] (unreleased)
+## [0.5.0] (2026-08-24)
 
 ### Added
 
+- **`craft-ux` copy and decoration anti-slop catalog.** A new "Copy & Decoration Tells" section
+  in `anti-patterns.md`, scoped to landing/portfolio/marketing surfaces: an em-dash ban, an
+  eyebrow-count formula (greppable), ~25 production-tested tells (section-number eyebrows,
+  scroll cues, fake version footers, decorative status dots), and a premium-consumer
+  beige+brass palette tell with grep seeds. `composition.md` gains hero-discipline hard numbers,
+  CTA intent/wrap/contrast rules, and layout rhythm caps (zigzag, marquee, split-header, bento
+  cell count). `layer-5-motion.md` gains a Forbidden Animation Patterns section (the
+  `window.addEventListener('scroll')` ban, GSAP `start: "top top"` pinning). Reference material
+  informed by the current upstream `taste-skill`, re-scoped from its absolute-ban voice into
+  craft-ux's flag-with-override-path disposition.
+- **`craft-ux/references/motion/fluid-gestures.md`** — momentum physics for gesture-driven
+  surfaces (sheets, drag, swipe, carousels): velocity handoff, exponential-decay momentum
+  projection, rubberbanding, interruptible-spring principles (animate from the presentation
+  value, blend velocity on reversal, decompose X/Y springs), Apple-style damping/response
+  values, a gesture feel checklist, and material/vibrancy rules — scoped away from plain
+  dashboards. Portions adapted from `emilkowalski/skill` (MIT; see `THIRD_PARTY_NOTICES.md`),
+  which also prompted a correction to `emil-craft.md`'s Framer Motion hardware-acceleration
+  claim to match current upstream docs.
+- **`craft-ux/references/starter-kits.md`** — 19 vetted Google Fonts pairings (15 by use case +
+  4 SaaS-landing Persuade-mode variants) and 15 palettes in this skill's token roles, every pair
+  WCAG-verified (`scripts/verify-palettes.py`, CI-gateable). A mandatory variation protocol
+  prevents deterministic "always the same pairing" generation: pairings and palettes are
+  independent axes (285 combinations), rotation is required, and brief adjectives override the
+  category default. Font/palette research informed by `ui-ux-pro-max` (MIT; see
+  `THIRD_PARTY_NOTICES.md`); all values independently re-curated against craft-ux's own bans.
+- **`THIRD_PARTY_NOTICES.md`** — MIT notices for the two upstream sources above.
 - **Operational readiness in `craft-observability`.** A new `references/operational-readiness.md`
   covers the layer between "the service is instrumented" and "a human can operate it": naming the
   core business transaction and instrumenting its lifecycle, detecting stuck work and terminal
