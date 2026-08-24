@@ -41,7 +41,8 @@ skill exists to prevent. Rules:
   used Schibsted Grotesk, this one draws a different pairing (the landing variants below, or a
   remix). Same rotation discipline as the serif pool in `layer-1-tokens.md`.
 - **Pairings and palettes are independent axes.** Any pairing may carry any palette whose mood
-  fits the Design Read — 15×15 combinations before anything repeats, not 15. A serif-led
+  fits the Design Read — with 19 pairings × 15 palettes, that's 285 combinations before
+  anything repeats, not 19 or 15. A serif-led
   landing (Spectral, Literata) over the fintech navy palette is a legitimate, distinctive combo.
 - **Let the brief's adjectives override the category.** "Playful SaaS for teachers" reaches for
   the education kit's warmth, not the SaaS kit, regardless of the product being SaaS.
