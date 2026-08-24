@@ -61,7 +61,7 @@ finding violations and building the scanner that blocks them in CI.
 | **Build a design system** from scratch or harden an ad-hoc one — layered architecture, bridge, governance | `references/building-a-design-system.md` |
 | **Audit / enforce design tokens** — find violations, fix by category, build the scanner                   | `references/token-audit.md`              |
 | Spacing, typography, color, radius, shadows, icons, touch targets, motion-timing tokens, breakpoints      | `references/layer-1-tokens.md`           |
-| **Greenfield starter kits** — 15 vetted font pairings + 15 contrast-verified palettes for generation      | `references/starter-kits.md`             |
+| **Greenfield starter kits** — vetted font pairings + contrast-verified palettes + variation protocol      | `references/starter-kits.md`             |
 | Layout primitives; Tailwind, `cn()`, CVA, mobile-first, dark mode, hydration safety, perf building blocks | `references/layer-2-primitives.md`       |
 | Forms, tables, modals, navigation, notifications; component anatomy + variant APIs                        | `references/layer-3-components.md`       |
 | Empty / loading / error / disabled states                                                                 | `references/layer-4-states.md`           |

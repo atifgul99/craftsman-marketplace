@@ -1,7 +1,8 @@
 # Starter Kits — Font Pairings & Palettes for Generation
 
-Concrete, vetted values for greenfield generation: 15 font pairings with paste-ready imports and
-15 contrast-verified starter palettes in this skill's token roles. These are **floors, not
+Concrete, vetted values for greenfield generation: 19 font pairings (15 by use case + 4 SaaS
+landing variants) with paste-ready imports and 15 contrast-verified starter palettes in this
+skill's token roles. These are **floors, not
 ceilings** — a starter kit gets a new project past the AI-default zone in one shot; a brief with
 a real brand voice (or an `impeccable` pass) should still push past them.
 
@@ -20,7 +21,9 @@ a real brand voice (or an `impeccable` pass) should still push past them.
 ## How to use
 
 1. Run the Design Read (`composition.md`) first; pick the kit matching the read, not the
-   product's category label — a developer tool's *landing page* may still want the marketing kit.
+   product's category label — and pick by **surface mode**: an app UI (Operate) and its landing
+   page (Persuade) are different surfaces wanting different kits. "SaaS" alone is not enough
+   information to choose.
 2. Instantiate the palette as **layer-1 token values** (`--background`, `--primary`, …) — never
    paste hexes into components. Reuse layer-1's semantic status tokens (destructive / success /
    warning) unchanged; kits define brand + neutrals only.
@@ -28,6 +31,32 @@ a real brand voice (or an `impeccable` pass) should still push past them.
    sparsely (60-30-10), serif display only where the use case earns it.
 4. Dark mode: derive per `layer-1-tokens.md` → Theming (keep the hue, adjust lightness; no pure
    `#000`). The developer-tool kit ships dark-native as the worked example.
+
+### Variation protocol (mandatory — a kit is a starting point, not a stamp)
+
+A 1:1 category→kit mapping would recreate the exact "every AI site looks the same" failure this
+skill exists to prevent. Rules:
+
+- **Never pick the same kit twice in a row** for the same category. If the last SaaS generation
+  used Schibsted Grotesk, this one draws a different pairing (the landing variants below, or a
+  remix). Same rotation discipline as the serif pool in `layer-1-tokens.md`.
+- **Pairings and palettes are independent axes.** Any pairing may carry any palette whose mood
+  fits the Design Read — 15×15 combinations before anything repeats, not 15. A serif-led
+  landing (Spectral, Literata) over the fintech navy palette is a legitimate, distinctive combo.
+- **Let the brief's adjectives override the category.** "Playful SaaS for teachers" reaches for
+  the education kit's warmth, not the SaaS kit, regardless of the product being SaaS.
+- **State the pick in the Design Read** ("kit: Familjen Grotesk × analytics-navy, because …")
+  so the choice is a decision, not a reflex.
+
+### Awwwards-tier escalation
+
+Starter kits raise the floor; award-tier work is above the ceiling of any lookup table. When the
+brief says distinctive / award-worthy / memorable: keep the kit's *palette discipline* (tokens,
+contrast, one hue), but treat the pairing as provisional — push `DESIGN_VARIANCE` to 8+
+(`composition.md`), choose a display face for *this brand's* voice (rotating past anything used
+recently), design one signature moment the page is remembered by, and run the result through
+`impeccable` rather than shipping the kit as-is. A starter kit shipped unmodified should read as
+"competently designed", never as the ambition's end state.
 
 ---
 
@@ -147,6 +176,44 @@ Tailwind: `heading: ['EB Garamond', 'serif'], body: ['Albert Sans', 'sans-serif'
 
 ---
 
+## SaaS landing & marketing variants (Persuade mode — rotate, don't default)
+
+Kit 1 is an **Operate** kit (app UI). A SaaS *landing or home page* is a Persuade surface and
+gets more expressive display type. Rotate through these (and remixes — e.g. Bricolage Grotesque
+or a serif-led Literata landing over any fitting palette); never let one become "the SaaS look".
+All URLs verified live.
+
+### L1. Scandinavian clean — Familjen Grotesk + Albert Sans
+Warm grotesk with subtle quirks; reads premium without shouting.
+```css
+@import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Albert+Sans:wght@400;500;600&display=swap');
+```
+Tailwind: `heading: ['Familjen Grotesk', 'sans-serif'], body: ['Albert Sans', 'sans-serif']`
+
+### L2. Launch energy — Anybody + Schibsted Grotesk
+Width-axis display (set Expanded for the hero) with real poster presence; calm body.
+```css
+@import url('https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,500;50..150,600;50..150,700&family=Schibsted+Grotesk:wght@400;500&display=swap');
+```
+Tailwind: `heading: ['Anybody', 'sans-serif'], body: ['Schibsted Grotesk', 'sans-serif']`
+
+### L3. Technical-warm — Geologica + Public Sans
+Variable face with an engineered-but-friendly voice; suits dev-adjacent SaaS marketing.
+```css
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&family=Public+Sans:wght@400;500&display=swap');
+```
+Tailwind: `heading: ['Geologica', 'sans-serif'], body: ['Public Sans', 'sans-serif']`
+
+### L4. Editorial SaaS — Spectral (light) + Hanken Grotesk
+Contrarian serif-led landing: light-weight serif display over a neutral sans. Calm confidence;
+pairs well with the fintech or forest palettes.
+```css
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=Hanken+Grotesk:wght@400;500;600&display=swap');
+```
+Tailwind: `heading: ['Spectral', 'serif'], body: ['Hanken Grotesk', 'sans-serif']`
+
+---
+
 ## Starter palettes
 
 Every palette passes automated WCAG checks: foreground/background ≥ 7:1 (AAA body),
@@ -157,6 +224,9 @@ None uses the AI-indigo family or the beige+brass premium-consumer family (`anti
 
 Roles map 1:1 to the layer-1 token set. All palettes are light-mode except the developer tool
 kit (dark-native, the worked dark example).
+
+**Editing this table?** Re-run `python3 scripts/verify-palettes.py` (repo root) — it parses this
+table directly and fails on any WCAG regression. A palette edit without a passing run doesn't ship.
 
 | Kit | primary | on-primary | accent | on-accent | background | foreground | card | muted | muted-fg | border | ring |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
