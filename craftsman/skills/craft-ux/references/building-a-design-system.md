@@ -56,7 +56,8 @@ work that drifts.
 | IBM-style B2B / enterprise analytics     | `@carbon/react` (Carbon)                        |
 | Shopify app surfaces                     | Polaris (required for Shopify admin UI)         |
 | Atlassian / Jira-style product           | `@atlaskit/*` + `@atlaskit/tokens`              |
-| GitHub-style devtool                     | `@primer/css` / `@primer/react-brand`           |
+| GitHub-style devtool (product UI)        | `@primer/react` + `@primer/primitives`          |
+| GitHub-style marketing / brand site      | `@primer/react-brand`                           |
 | UK public-sector service                 | `govuk-frontend` (regulatorily expected)        |
 | US public-sector / trust-first           | `uswds`                                         |
 | Modern accessible React foundation       | `@radix-ui/themes`                              |
