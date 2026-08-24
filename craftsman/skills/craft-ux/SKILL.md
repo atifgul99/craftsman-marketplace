@@ -61,6 +61,7 @@ finding violations and building the scanner that blocks them in CI.
 | **Build a design system** from scratch or harden an ad-hoc one — layered architecture, bridge, governance | `references/building-a-design-system.md` |
 | **Audit / enforce design tokens** — find violations, fix by category, build the scanner                   | `references/token-audit.md`              |
 | Spacing, typography, color, radius, shadows, icons, touch targets, motion-timing tokens, breakpoints      | `references/layer-1-tokens.md`           |
+| **Greenfield starter kits** — 15 vetted font pairings + 15 contrast-verified palettes for generation      | `references/starter-kits.md`             |
 | Layout primitives; Tailwind, `cn()`, CVA, mobile-first, dark mode, hydration safety, perf building blocks | `references/layer-2-primitives.md`       |
 | Forms, tables, modals, navigation, notifications; component anatomy + variant APIs                        | `references/layer-3-components.md`       |
 | Empty / loading / error / disabled states                                                                 | `references/layer-4-states.md`           |
@@ -80,7 +81,7 @@ finding violations and building the scanner that blocks them in CI.
 
 | Workflow                     | Mandatory                                  | Add when needed                                                                                                     |
 | ---------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| **Build a design system**    | `foundations` + `building-a-design-system` | `layer-1` for token values, `layer-2` for primitives, `token-audit` to add the scanner                              |
+| **Build a design system**    | `foundations` + `building-a-design-system` | `layer-1` for token values, `starter-kits` for greenfield fonts/palettes, `layer-2` for primitives, `token-audit` to add the scanner |
 | **Audit / enforce tokens**   | `token-audit`                              | `layer-1` for the canonical values, `building-a-design-system` for where a value belongs, `anti-patterns` for tells |
 | **Build a component**        | `foundations` + `layer-2`                  | `layer-3` for the pattern, `layer-1` for token values, `layer-4` for its states                                     |
 | **Build a page / dashboard** | `foundations` + `layer-2` + `composition`  | `layer-3` for components, `composition` arsenal for a distinctive aesthetic                                         |

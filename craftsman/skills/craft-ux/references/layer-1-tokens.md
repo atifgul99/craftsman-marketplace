@@ -107,15 +107,20 @@ Scale (rem):
 fonts are the default for the same reason black is the default in fashion. Reach for a display
 serif only when the brand brief names one, or the aesthetic is genuinely editorial / luxury /
 publication / heritage *and* you can say why this serif fits this brand. When justified, rotate
-(don't reuse the same serif across consecutive projects) from a pool like: Playfair Display,
-EB Garamond, Cormorant Garamond, Bodoni Moda, DM Serif Display, Newsreader — all on Google
-Fonts. **Never default to Fraunces or Instrument Serif** — the two LLM-favorite display serifs
+(don't reuse the same serif across consecutive projects) from a pool like: EB Garamond,
+Bodoni Moda, Young Serif, Literata, Spectral, Marcellus — all on Google Fonts. (Playfair
+Display, Cormorant, DM Serif, and Newsreader were dropped from this pool: they sit on the
+training-data-default list that `impeccable` flags for expressive surfaces — one step less
+overused than Fraunces, but on the same trajectory.) **Never default to Fraunces or Instrument
+Serif** — the two LLM-favorite display serifs
 are now as recognizable a tell as Inter (see `anti-patterns.md` → Visual AI Tells). For
 in-headline emphasis, use italic or bold of the *same* family — never inject a serif word into a
 sans headline for visual interest.
 
 For the canonical list of fonts to **avoid** (Inter, Roboto, Arial, Fraunces, Instrument Serif —
-overused AI defaults), see `anti-patterns.md` → Visual AI Tells.
+overused AI defaults), see `anti-patterns.md` → Visual AI Tells. For **15 ready-to-paste
+pairings by use case** (verified weights, `@import` lines, Tailwind config), see
+`starter-kits.md` → Font pairings.
 
 ---
 
@@ -156,6 +161,9 @@ All colors through the token system. Never hex, rgb, or palette classes in domai
 
 For canonical AI color tells (purple/blue gradient on white, pure `#000000`, oversaturated
 accents, mixed gray families) and their fixes, see `anti-patterns.md` → Visual AI Tells.
+
+For **15 contrast-verified starter palettes** (per product type, in these token roles, ready to
+instantiate for greenfield work), see `starter-kits.md` → Starter palettes.
 
 Use HSL (or `oklch` for better gradient interpolation) for easy dark-mode manipulation.
 shadcn-style token set:
