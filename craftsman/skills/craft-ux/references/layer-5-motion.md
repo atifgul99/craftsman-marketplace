@@ -21,6 +21,7 @@ Motion is the last layer — get tokens, primitives, components, and states righ
 - [STEP 3 — Context → Perspective Mapping](#step-3--context--perspective-mapping)
 - [STEP 4 — Audit Output Format](#step-4--audit-output-format)
 - [Universal Checklist (Apply Regardless of Designer Weighting)](#universal-checklist-apply-regardless-of-designer-weighting)
+- [Forbidden Animation Patterns](#forbidden-animation-patterns)
 - [Severity Levels](#severity-levels)
 - [Universal Reduced-Motion Pattern](#universal-reduced-motion-pattern)
 - [Accessibility Floor](#accessibility-floor)
@@ -38,6 +39,8 @@ For deep dives on each designer's craft, load:
 - `motion/emil-craft.md` — Emil Kowalski (restraint, speed, productivity tools)
 - `motion/jakub-polish.md` — Jakub Krehel (subtle production polish)
 - `motion/jhey-experimental.md` — Jhey Tompkins (playful CSS experimentation)
+- `motion/fluid-gestures.md` — momentum physics for gesture-driven surfaces (sheets, drag,
+  swipe, carousels): velocity handoff, projection, rubberbanding, interruptible springs
 
 ---
 
@@ -216,6 +219,18 @@ Severity-tagged tables:
 - [ ] `animation-fill-mode: backwards` used for delayed sequences
 - [ ] Elements don't flash before their delayed animation starts
 
+### Tool choice — cheapest that works
+
+Walk down; stop at the first that fits. Don't install a motion library for a fade.
+
+| Need                                                                  | Tool                                    |
+| --------------------------------------------------------------------- | --------------------------------------- |
+| Hover, press, color, a class/attribute-controlled state toggle        | CSS transition                          |
+| Entry animation on mount, no JS state                                 | CSS `@starting-style`                   |
+| Predetermined motion that must stay smooth while the page is busy     | CSS animation (off the main thread)     |
+| Programmatic control with CSS performance, no library                 | WAAPI (`element.animate()`)             |
+| Springs, layout animations, exit animations, gesture-driven values    | Motion (Framer Motion)                  |
+
 ### Easing and timing
 
 - [ ] Appropriate easing for context (not default `ease` everywhere)
@@ -223,6 +238,8 @@ Severity-tagged tables:
 - [ ] Spring animations for interactive elements
 - [ ] Durations appropriate (Emil: < 300 ms; others: whatever serves the design)
 - [ ] Consistent timing values across related animations
+- [ ] Curves and durations live as shared tokens — five hand-typed near-identical
+      cubic-beziers across components is a consolidation finding, not five separate choices
 - [ ] Transform-origin matches the interaction source
 
 ### Performance
@@ -242,6 +259,34 @@ Severity-tagged tables:
 - [ ] Looping animations can be paused
 - [ ] Functional animations have non-motion alternatives
 - [ ] Dynamic content updates announce via `aria-live` or `role="status"` / `role="alert"` (see ARIA live regions section below)
+
+---
+
+## Forbidden Animation Patterns
+
+Hard bans, not preferences — each one has a jank-free replacement.
+
+- **`window.addEventListener("scroll", …)`.** Runs on every scroll frame, no batching,
+  jank-prone. Use Motion's `useScroll()`, GSAP `ScrollTrigger`, `IntersectionObserver`, or CSS
+  scroll-driven animations (`animation-timeline: view()`).
+- **`window.scrollY` (or any scroll progress) in React state.** Re-renders the tree every frame.
+  Same replacement list.
+- **`requestAnimationFrame` loops that touch React state.** Any continuous value driven by user
+  input — mouse position, scroll progress, magnetic hover — goes through motion values
+  (`useMotionValue` + `useTransform`), never `useState`; state-driven versions collapse on mobile.
+- **Missing cleanup.** Every `useEffect` that registers a GSAP context, observer, or listener
+  returns a cleanup function (`ctx.revert()`, `observer.disconnect()`).
+- **Motion claimed but not shown.** Half-built motion that breaks (cut-off ScrollTriggers, jumpy
+  entries, missing cleanups) is worse than none — either ship working motion or ship a clean
+  static page.
+
+**GSAP pinning gotcha (scroll-hijack sections — marketing scrolltelling only).** The common
+failure in sticky-stack and horizontal-pan sections is the trigger firing halfway through
+scroll, so the user sees half a slide before the pin engages. The fix is `start: "top top"`
+(not `"top center"` or `"top 80%"`), `pin: true` on the wrapper, and scrubbing the inner
+track; for horizontal pans, `end: "+=" + distance` where distance is the track's overflow
+width. Isolate in a `'use client'` leaf with cleanup, and collapse to static under
+`prefers-reduced-motion`.
 
 ---
 
@@ -316,6 +361,27 @@ an explicit reduced-motion path:
   cascade.
 - Functional motion (loading spinners, progress indicators, state transitions) must provide an
   instant or opacity-only alternative when reduced motion is active, not just disappear.
+- Under reduced motion, replace slides/springs/parallax with short opacity cross-fades and drop
+  elastic overshoot — reduced means gentler and non-vestibular, not zero feedback.
+- Avoid slow looping oscillations near 0.2 Hz (one cycle per ~5 s) and abrupt brightness jumps —
+  ease dark↔light theme changes where a transition is used at all.
+
+### Related preference media queries
+
+Two siblings of reduced-motion that translucent/high-polish UI must also honor:
+
+- **`prefers-reduced-transparency: reduce`** — make translucent surfaces frostier or solid:
+  raise background opacity, drop the `backdrop-filter` blur.
+- **`prefers-contrast: more`** — near-solid backgrounds with a defined, contrasting border.
+
+```css
+@media (prefers-reduced-transparency: reduce) {
+  .toolbar { background: white; backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  .card { background: var(--surface); border: 1px solid var(--border-strong); }
+}
+```
 
 ### Focus-visible states
 

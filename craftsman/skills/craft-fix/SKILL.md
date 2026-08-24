@@ -2,17 +2,14 @@
 name: craft-fix
 description: >-
   The Craftsman standard for driving fixes against an existing `craft-audit` workspace — "fix the
-  findings", "fix SEC-003", "fix the security findings", "work through the audit", "start the climb".
-  This is an ACTION skill, not a domain: it picks findings off the master tracker's climb sequence,
-  re-verifies each one is still real, gets the user's approval, and executes a batched fix with a
-  regression test — it never re-audits or re-ranks. REQUIRES an existing `.craftsman/` workspace at
-  the project root to fire. Without one: a scoped fix request naming no audit ("fix this bug", "harden
-  this endpoint") goes to the relevant domain craft skill directly (e.g. `craft-security`,
-  `craft-backend`); a whole-project assessment request ("is my app production-ready", "what should I
-  fix before I ship") goes to `craft-audit` first, since there's nothing to fix from without an
-  audit. Trigger even when the user names no finding ID — "start the climb" or "work through the
-  audit" with no argument means the top 5 open items from the master tracker. Also fires on
-  finding-referenced handoffs, e.g. "regression test for finding X" or "work on TEST-004".
+  findings", "fix SEC-003", "work through the audit", "start the climb". An ACTION skill, not a
+  domain: it picks findings off the master tracker's climb sequence, re-verifies each is still real,
+  gets the user's approval, and executes a batched fix with a regression test — it never re-audits
+  or re-ranks. Fires with no finding ID named ("start the climb" means the top 5 open items) and on
+  handoffs like "regression test for finding X" or "work on TEST-004".
+  REQUIRES an existing `.craftsman/` workspace at the project root. Without one, a scoped fix
+  request goes to the relevant domain craft skill and a whole-project assessment goes to
+  `craft-audit` first.
 ---
 
 # Craftsman Fix — driving fixes off an audit
@@ -124,7 +121,7 @@ Depth for every step lives in `references/fix-protocol.md` — this is the compa
    `master-tracker.md`'s climb sequence: its Status cell becomes `open · fix-attempted <YYYY-MM-DD> ·
    verification due <date>` (🔴 7 days, 🟡 14, 🟢 next release or 30 days).
    That row lives at the **canonical owner** — a rolled-up child has no climb-sequence row of its own
-   (per `workspace.md`'s Cross-cutting section), so a fix on a rolled-up child still updates only the
+   (per `craft-audit` → `references/workspace.md`'s Cross-cutting section), so a fix on a rolled-up child still updates only the
    canonical owner's row; both records still get their `Fix-attempt` lines per the rollup-annotation
    rule. This is tracker **display** metadata only — counts and readiness grades are unchanged, and a
    re-run resolves it either way; the spec for this cell lives in `craft-audit` →

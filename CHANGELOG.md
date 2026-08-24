@@ -21,7 +21,89 @@ may still land in MINOR while the project settles). `1.0.0` is reserved for the 
 and workflow are considered stable enough to commit to strict SemVer against the trigger surface,
 not a synonym for "public."
 
-## [0.3.2] (unreleased)
+## [0.5.0] (2026-08-24)
+
+### Added
+
+- **`craft-ux` copy and decoration anti-slop catalog.** A new "Copy & Decoration Tells" section
+  in `anti-patterns.md`, scoped to landing/portfolio/marketing surfaces: an em-dash ban, an
+  eyebrow-count formula (greppable), ~25 production-tested tells (section-number eyebrows,
+  scroll cues, fake version footers, decorative status dots), and a premium-consumer
+  beige+brass palette tell with grep seeds. `composition.md` gains hero-discipline hard numbers,
+  CTA intent/wrap/contrast rules, and layout rhythm caps (zigzag, marquee, split-header, bento
+  cell count). `layer-5-motion.md` gains a Forbidden Animation Patterns section (the
+  `window.addEventListener('scroll')` ban, GSAP `start: "top top"` pinning). Reference material
+  informed by the current upstream `taste-skill`, re-scoped from its absolute-ban voice into
+  craft-ux's flag-with-override-path disposition.
+- **`craft-ux/references/motion/fluid-gestures.md`** — momentum physics for gesture-driven
+  surfaces (sheets, drag, swipe, carousels): velocity handoff, exponential-decay momentum
+  projection, rubberbanding, interruptible-spring principles (animate from the presentation
+  value, blend velocity on reversal, decompose X/Y springs), Apple-style damping/response
+  values, a gesture feel checklist, and material/vibrancy rules — scoped away from plain
+  dashboards. Portions adapted from `emilkowalski/skill` (MIT; see `THIRD_PARTY_NOTICES.md`),
+  which also prompted a correction to `emil-craft.md`'s Framer Motion hardware-acceleration
+  claim to match current upstream docs.
+- **`craft-ux/references/starter-kits.md`** — 19 vetted Google Fonts pairings (15 by use case +
+  4 SaaS-landing Persuade-mode variants) and 15 palettes in this skill's token roles, every pair
+  WCAG-verified (`scripts/verify-palettes.py`, CI-gateable). A mandatory variation protocol
+  prevents deterministic "always the same pairing" generation: pairings and palettes are
+  independent axes (285 combinations), rotation is required, and brief adjectives override the
+  category default. Font/palette research informed by `ui-ux-pro-max` (MIT; see
+  `THIRD_PARTY_NOTICES.md`); all values independently re-curated against craft-ux's own bans.
+- **`THIRD_PARTY_NOTICES.md`** — MIT notices for the two upstream sources above.
+- **Operational readiness in `craft-observability`.** A new `references/operational-readiness.md`
+  covers the layer between "the service is instrumented" and "a human can operate it": naming the
+  core business transaction and instrumenting its lifecycle, detecting stuck work and terminal
+  states whose promised artifact never appeared, committing ops queries as a file rather than
+  prose, separating expected business failures from system failures so customer mistakes don't
+  bury real bugs in the error tracker, the on-call contract and a five-minute "is it broken?" tree,
+  an acceptance drill (success, system failure, business failure, stuck detection, alert delivered),
+  and measuring readiness from a source of truth with verified history instead of a currently-green
+  check. Six matching audit-checklist items, maturity-aware rather than one-size-fits-all: the
+  transaction, stuck-work, and delivery checks apply from day one, while team-shaped requirements
+  (a backup operator, an ack convention, an escalation path) are gated on a second person actually
+  being able to respond — so a solo pre-launch builder is not handed a pager rotation.
+- **Cross-references for the new layer.** `grafana.md` now prefers a deep-link panel over a graph
+  known to return no data; `slo-alerts.md` requires retained history behind the SLO window and
+  points service-level on-call facts at one place; craft-audit's `recommended-stack.md` gains a
+  Tier-1 row for "no way to see whether the core transaction finished".
+- **`craft-audit/references/synthesis.md`** — the full step-7 synthesis protocol: findings-file
+  validation, the by-hand fallback checklist, path binding, the remediation closure check, dedup,
+  and ranking. Extracted from `SKILL.md` rather than newly written.
+- **`craft-audit/references/delegation.md`** — the ≤3/>3 `(scope, domain)` threshold, the context
+  budget split between orchestrator and subagent, subagent prompt requirements, and the
+  write-capability fallback. Also extracted from `SKILL.md`.
+
+### Changed
+
+- **Skill trigger descriptions trimmed 28%** (11,377 → 8,122 characters across the twelve skills).
+  Claude Code's skill listing has a character budget of roughly 1% of the context window, shared
+  with every other skill the user has installed; on overflow it drops descriptions starting with
+  the least-invoked skills, which would strip the trigger keywords from exactly the domain skills
+  that rely on ambient matching. Trigger phrasing is preserved and front-loaded; the cross-domain
+  boundary arbitration that used to live in the descriptions moved into a new `## Scope boundaries`
+  section in the body of `craft-ai`, `craft-backend`, `craft-frontend`, `craft-infra`,
+  `craft-security`, and `craft-testing`.
+- **`craft-audit/SKILL.md` reduced from 3,941 to ~3,000 words**, back under the router-skill
+  ceiling, by extracting the two references above rather than cutting guidance.
+- **`drafts/` moved from `craftsman/drafts/` to the repository root**, so the incubator is no
+  longer part of the installed plugin payload. It was already excluded from skill loading; now it
+  is excluded from what ships.
+
+### Fixed
+
+- **Helper scripts are now addressed through `${CLAUDE_PLUGIN_ROOT}`.** `craft-audit` and
+  `craft-lint` previously told the agent to run their `.mjs` helpers at a literal
+  `/absolute/path/to/craftsman/...` placeholder. Once the plugin is installed it lives outside the
+  audited project, so that path had to be guessed. Four call sites fixed, across both `SKILL.md`
+  files and `craft-audit/references/workspace.md`.
+
+## [0.4.0] (2026-08-10)
+
+Released without a changelog entry at the time; see the release notes for `v0.4.0` and commit
+`2a29f21` (audit workflow hardening, install documentation, craft-ux supply-chain fix).
+
+## [0.3.2] (2026-08-05)
 
 ### Security
 

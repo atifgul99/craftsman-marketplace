@@ -710,10 +710,11 @@ The canonical optional-label order after the required fields is: `**Last-checked
 **Mechanical validation checklist** (orchestrator runs this per `findings.md` before synthesis):
 
 - Prefer the helper script in `scripts/validate-findings.mjs`.
-- Run it from this skill folder against the target repo's workspace:
+- Run it against the target repo's workspace. The plugin is installed outside the project, so always
+  address the script through `${CLAUDE_PLUGIN_ROOT}` rather than a relative or guessed path:
 
   ```bash
-  node /absolute/path/to/craftsman/skills/craft-audit/scripts/validate-findings.mjs /absolute/path/to/target-repo/.craftsman
+  node "${CLAUDE_PLUGIN_ROOT}/skills/craft-audit/scripts/validate-findings.mjs" /absolute/path/to/target-repo/.craftsman
   ```
 
 - If the script isn't available or fails to run, fall back to executing the six checks below by hand

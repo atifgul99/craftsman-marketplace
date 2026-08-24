@@ -68,9 +68,11 @@ craftsman/
 ├── .codex-plugin/plugin.json
 ├── skills/            ← SKILL.md + references/ per skill (source of truth for behavior);
 │                        craft-audit and craft-lint also ship a scripts/ helper
-├── examples/          ← a worked end-to-end .craftsman/ audit
-└── drafts/            ← incubating domains, not loaded
+└── examples/          ← a worked end-to-end .craftsman/ audit
 ```
+
+Incubating domains live in `drafts/` at the repository root, outside this directory — they are
+neither loaded nor shipped.
 
 ## License
 

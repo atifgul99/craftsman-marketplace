@@ -134,6 +134,21 @@ Within the initial viewport, the user must see:
 
 No surprises below the fold — if the value isn't visible in 3 seconds, the visitor bounces.
 
+**Hero discipline (hard numbers — soft prose fails with generators):**
+
+- Headline ≤ 2 lines at desktop; subtext ≤ 20 words *and* ≤ 4 lines. If the value prop needs
+  more than 20 words, the value prop is unclear — not the rule too tight.
+- Plan font scale and asset size *together*: `text-4xl md:text-5xl lg:text-6xl` for most heroes;
+  `text-6xl`+ only for 3–5-word headlines. A 4-line hero headline is a font-size error, never a
+  copy-length error.
+- Max **4 text elements** total: (eyebrow *or* brand strip — zero or one), headline, subtext,
+  CTAs (1 primary + max 1 secondary). Taglines under the CTAs, trust micro-strips, pricing
+  teasers, and feature bullets all move to sections below the hero.
+- Hero top padding caps at ~6 rem (`pt-24`) desktop — more and the content floats halfway down
+  the viewport and reads as a bug. Need breathing room? Scale the type or asset, not the padding.
+- The "Trusted by" logo wall lives in its own section **under** the hero, never inside it.
+- A hero needs a real visual — text + gradient blob is a placeholder, not a hero.
+
 ---
 
 ### CTA Button Design
@@ -147,6 +162,13 @@ For universal button rules (touch target, copy patterns, transitions), see
   two equally-weighted CTAs side by side
 - **Hierarchy:** if a secondary action exists (e.g. "watch demo"), it must look distinctly
   secondary — not just a different color of the same shape
+- **One label per intent:** "Get in touch", "Contact us", and "Let's talk" on one page are the
+  same action wearing three labels — pick one and reuse it in nav, hero, and footer
+- **No wrapping:** a primary CTA label wraps at desktop → shorten it (1–3 words) or widen the
+  button; never constrain a CTA's `max-width`
+- **Contrast check before shipping:** every CTA's text passes WCAG AA against its own background
+  (ghost buttons over photos need a scrim, backdrop, or stroke) — same check for form inputs,
+  placeholders, and focus rings against their section background
 
 ---
 
@@ -196,6 +218,24 @@ Avoid the three default AI-generated landing layouts:
 3. **Three-tower pricing** — highlight the recommended tier with **color + emphasis**, not extra
    height alone
 
+**Rhythm caps** (mechanical versions of "vary the layout"):
+
+- Max 2 consecutive image+text zigzag sections — break the third with a full-width section,
+  bento, marquee, or vertical stack
+- A layout family (3-col cards, full-width quote, split image+text) appears at most once per
+  page; 8 sections need ≥ 4 distinct families
+- Max 1 marquee per page
+- Section headers stack vertically (headline, then body at `max-w-[65ch]`) — the "left big
+  headline + right floating explainer" split-header is a tell unless the right column carries a
+  real visual
+- Bento grids: exactly as many cells as there is content (re-shape rather than pad with a blank
+  tile), and 2–3 cells minimum get real visual variation — an all-white-text-card bento is the
+  boring default
+- Desktop nav: one line, 64–72 px tall (80 px hard cap)
+- **Page-level locks:** one theme (no mid-page light/dark flips), one accent color used
+  identically in every section, one corner-radius system — see `anti-patterns.md` →
+  Composition Anti-Patterns for the flag-side versions
+
 ---
 
 ### Above-the-Fold Performance
@@ -232,6 +272,13 @@ the brief or when redesigning generic interfaces. Always verify library availabi
 ---
 
 ### Design Intensity Calibration
+
+**Declare a one-line Design Read before generating anything:** *"Reading this as: \<page kind>
+for \<audience>, with a \<vibe> language, leaning toward \<design system or aesthetic family>."*
+Most bad AI design output comes from jumping to a default aesthetic instead of reading the brief
+— audience, vibe words, reference URLs, and existing brand assets pick the aesthetic, not your
+taste. If the read genuinely diverges, ask exactly one clarifying question; otherwise declare
+and proceed.
 
 Set these before coding so the rest of the work has a consistent personality:
 

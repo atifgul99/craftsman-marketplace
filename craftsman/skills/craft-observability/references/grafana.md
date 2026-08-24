@@ -219,6 +219,11 @@ offenders:
 The test: for every panel, ask "what would an on-call engineer do differently if this panel showed
 a spike?" If the answer is "nothing", cut it.
 
+**When a signal genuinely lives in another console** — the hosting provider's analytics, a workflow
+UI, a vendor dashboard — add a text panel of deep links pointing there rather than a graph whose
+query you already know returns nothing. A link row is honest and useful; a "No data" panel is a
+coverage claim the dashboard can't back (`operational-readiness.md § Be honest about coverage`).
+
 ---
 
 ## Variables and multi-service dashboards

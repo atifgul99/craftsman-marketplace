@@ -333,8 +333,8 @@ craftsman-marketplace/          ← marketplace (this repo)
       craft-observability/
       craft-testing/
       craft-ai/
-    drafts/                     ← incubator for future domains, NOT loaded; graduate to skills/ when filled
     examples/                   ← illustrative `.craftsman/` output (a worked end-to-end audit), reference, not live state
+  drafts/                       ← incubator for future domains (repo-level, outside the plugin: not loaded, not shipped)
   ROADMAP.md                    ← design notes, phases, parked ideas (repo-level, not shipped in the plugin)
   CONTRIBUTING.md               ← how to propose changes to the skills
 ```

@@ -140,6 +140,14 @@ When catching an error, the log event must carry enough context for an on-call e
 reproduce and diagnose without replaying the request. A plain `logger.error(err.message)` is the
 minimum — and it's not enough.
 
+**`error` is for system failures, not expected outcomes.** The example below is a gateway timeout —
+the system failed. A declined card, a rejected upload, or a validation failure is the system working
+correctly on bad input: record the outcome code, count it as a metric, and keep it out of the error
+tracker, or genuine bugs drown in customer mistakes. Level follows the outcome rules below — `warn`
+at the catch site, or no line at all when the structured response already carries it, and `info` on
+the operation's own completion event. See
+`operational-readiness.md § Instrument the lifecycle` for the same split applied to background work.
+
 **Required fields on every error log event:**
 
 ```jsonc
@@ -150,9 +158,9 @@ minimum — and it's not enough.
   "msg": "payment.charge.failed",             // event name, not the raw error message
   "err": {
     "type": "PaymentGatewayError",            // err.constructor.name or err.name
-    "message": "Card declined: insufficient funds",
-    "code": "CARD_DECLINED",                  // err.code if present — stable identifier for alerting
-    "stack": "Error: Card declined ...\n  at ..."  // include in non-prod; evaluate data-policy in prod
+    "message": "Gateway timed out after 10000ms",
+    "code": "GATEWAY_TIMEOUT",                // err.code if present — stable identifier for alerting
+    "stack": "Error: Gateway timed out ...\n  at ..."  // include in non-prod; evaluate data-policy in prod
   },
   "userId": "usr_abc123",                     // who — use identifiers, not PII
   "invoiceId": "inv_xyz",                     // what entity
@@ -164,11 +172,13 @@ minimum — and it's not enough.
 **The pattern:**
 
 ```ts
-// Wrap the error in a typed object — never pass the error directly as the message
+// Wrap the error in a typed object — never pass the error directly as the message.
+// Pick the level from the outcome, not from the fact that something was thrown:
+// a decline is the system working, a retry that hasn't exhausted isn't final yet.
 try {
   await chargeCard(invoice);
 } catch (err) {
-  logger.error({
+  const event = {
     msg: 'payment.charge.failed',
     err: {
       type: err instanceof Error ? err.constructor.name : typeof err,
@@ -180,10 +190,30 @@ try {
     invoiceId,
     attemptNumber,
     durationMs: Date.now() - startTime,
-  });
+  };
+
+  if (isExpectedOutcome(err)) {
+    // Declined card, invalid input — the system did its job. Count it; don't page on it.
+    // `warn` at the catch site (or no line at all if the response already carries the outcome);
+    // the operation's own completion event stays `info`.
+    logger.warn({ ...event, msg: 'payment.charge.declined', err: { ...event.err, stack: undefined } });
+  } else if (willRetry) {
+    logger.warn(event);   // transient and not final — see the level rules below
+  } else {
+    logger.error(event);  // system failed and retries are exhausted
+  }
   throw err; // re-throw or convert to your error envelope
 }
 ```
+
+`isExpectedOutcome` must match an **explicit allowlist of codes** — `card_declined`,
+`insufficient_funds`, your own validation error class — never a broad "any 4xx from the provider"
+rule. Plenty of 4xx responses are your bug or your outage wearing a client-error status:
+`401`/`403` means the credential is missing, invalid, expired, revoked, or under-scoped, `429`
+means you're being rate-limited,
+`400` often means you sent a malformed request. Those are system failures and must keep reaching
+the error tracker. If nothing in the code can tell an expected outcome from a system failure, that
+gap is the finding — fix the classification before tuning the logging.
 
 **Stack traces in production:** whether to include `stack` in production logs is a data-policy
 call, not a technical one. Stack frames may contain file paths that reveal internal structure.

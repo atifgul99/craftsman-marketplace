@@ -3,12 +3,11 @@ name: craft-infra
 description: >-
   The Craftsman standard for production infrastructure — deployment, env/config, CI/CD, IaC,
   health/readiness, scaling, platform/edge rate limiting, build/release, rollback. Use WHENEVER work
-  touches infra: deploy, CI gates, env vars, IaC, load failures, rate limiting (this skill owns
-  platform/edge capacity; route middleware → craft-backend; login abuse policy → craft-security; LLM
-  spend → craft-ai), pooling runtime constraints (sizing → craft-db), or production runtime. Trigger
-  on "deploy this", "set up CI", "add rate limiting", "configure env vars", or "why did it fall over
-  under load". Observability (Sentry/Grafana/SLOs) → craft-observability. CI handoff: pipeline
-  mechanism here; which suites gate merge → craft-testing. Whole-project readiness → craft-audit.
+  touches infra: deploy, CI gates, env vars, IaC, load failures, platform rate limiting, pooling
+  runtime constraints, or production runtime. Trigger on "deploy this", "set up CI", "add rate
+  limiting", "configure env vars", or "why did it fall over under load". Owns the platform layer —
+  see "Scope boundaries" in the body for handoffs to craft-backend, craft-security, craft-db,
+  craft-testing, and craft-observability.
 ---
 
 # Infra Craft
@@ -83,6 +82,21 @@ overrides:
 3. **Implement** — against the repo's existing pipeline and conventions, not a greenfield ideal.
 4. **Verify** — run the CI pipeline end-to-end, hit the health endpoints, and walk through a
    rollback path. Infrastructure you haven't seen work isn't done.
+
+## Scope boundaries
+
+This skill owns the platform layer: how the app is built, shipped, configured, and kept standing.
+Hand off at these lines:
+
+- **Rate-limit ownership, so the same gap isn't emitted four times:** INFRA owns platform/edge
+  capacity throttling; the route *middleware* mechanism → `craft-backend`; login-abuse *policy* →
+  `craft-security`; LLM spend and token limits → `craft-ai`.
+- **Connection-pool sizing** → `craft-db`. This skill owns the runtime constraints the platform
+  imposes on pooling (serverless concurrency, instance count).
+- **CI split:** the pipeline *mechanism* is owned here; *which suites gate merge* → `craft-testing`.
+  A suite that exists but isn't wired into CI is an INFRA finding; a missing suite is a TEST finding.
+- **Observability** (Sentry, Grafana, SLOs, alerting) → `craft-observability`.
+- **Whole-project readiness** → `craft-audit`.
 
 ## Reference index
 

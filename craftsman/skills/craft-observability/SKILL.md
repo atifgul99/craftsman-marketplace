@@ -3,13 +3,11 @@ name: craft-observability
 description: >-
   The Craftsman standard for production observability — error tracking (Sentry), metrics & dashboards
   (Grafana), structured logging, tracing, SLOs, and alerting. Use this WHENEVER the work touches
-  observability in any form: adding or reviewing Sentry, wiring Grafana/Prometheus/OpenTelemetry,
-  setting up structured logs, defining alerts or SLOs, instrumenting a service, debugging "we have
-  no visibility into X", or making a service observable/production-ready *on the monitoring side*.
-  Trigger even when the user only says "add monitoring", "why can't we see errors", "set up
-  dashboards", or "make this observable" without naming a specific tool. Deploy/runtime/CI
-  production-readiness belongs to craft-infra; a *whole-project* readiness assessment across every
-  surface is craft-audit, which routes here for the observability slice.
+  observability: adding or reviewing Sentry, wiring Grafana/Prometheus/OpenTelemetry, setting up
+  structured logs, defining alerts or SLOs, instrumenting a service, or debugging "we have no
+  visibility into X". Trigger even when the user only says "add monitoring", "why can't we see
+  errors", "set up dashboards", or "make this observable" without naming a tool. Deploy, runtime,
+  and CI production-readiness → craft-infra; whole-project readiness → craft-audit.
 ---
 
 # Observability Craft
@@ -46,6 +44,13 @@ State what you found, then propose the smallest set of additions that closes the
 A service is "observable enough to ship" when an on-call engineer can answer _is it broken?_,
 _since when?_, and _where?_ from these four without SSH-ing into anything.
 
+**Then the fifth thing, which the four pillars don't give you.** The pillars make the *service*
+observable; they say nothing about whether the transaction the product exists to perform actually
+completed, or whether a human is on the other end of an alert. Before calling a service production-
+ready, close that gap: the core business transaction visible end to end, stuck and half-finished
+work detectable, a named person receiving alerts, and the whole loop proven once by breaking it on
+purpose. See `references/operational-readiness.md`.
+
 ## Standing opinions (the non-negotiables)
 
 These are the judgments that make output consistent across repos — apply them unless the user
@@ -59,6 +64,11 @@ overrides:
   runbook is noise — delete it. Every paging alert links a runbook.
 - **No silent degradation.** If a dependency is down, the service says so (health endpoint + log +
   metric), it doesn't fail quietly.
+- **The business transaction is a first-class signal.** Whatever the product exists to do — the run,
+  the checkout, the send — has a visible lifecycle and a detectable stuck state, not just the infra
+  underneath it.
+- **Untested notification paths don't count.** Fire one alert down the real path to a real human
+  before claiming the service is monitored.
 
 ## Workflow
 
@@ -66,7 +76,9 @@ overrides:
 2. **Propose** the closing set, ordered by the four pillars, smallest viable first.
 3. **Implement** against the repo's existing patterns (its env schema, its logger, its CI).
 4. **Verify** — trigger a test error to Sentry, confirm a dashboard renders, fire a test alert.
-   Observability you haven't seen work isn't done.
+   Observability you haven't seen work isn't done. For anything with a background job or a core
+   customer transaction, run the acceptance drill in `references/operational-readiness.md`: success,
+   system failure, expected business failure, stuck detection, and one alert delivered to a human.
 
 ## Reference index
 
@@ -77,6 +89,10 @@ Read the one matching the current task — they hold the concrete setup, not thi
 - `references/otel-integration.md` — OTel SDK wiring to Pino/Winston, TracerProvider setup, span instrumentation, W3C traceparent propagation, OTLP/Loki/ELK export, multi-service distributed correlation, async queue context propagation
 - `references/grafana.md` — datasource choice, dashboard-as-code, the panels that matter
 - `references/slo-alerts.md` — SLO definition, burn-rate alerts, runbook linking
+- `references/operational-readiness.md` — business-transaction lifecycle instrumentation, stuck /
+  terminal-without-artifact detection and committed ops queries, on-call + ack + escalation +
+  "is it broken?" tree, the acceptance drill, history-backed readiness measurement,
+  honest coverage claims
 - `references/serverless-vs-server.md` — why `prom-client` dies on serverless and what to do instead
 - `references/browser-rum.md` — browser RUM with `@sentry/react`, error boundaries, sourcemap upload for Next.js, session replay sampling, Core Web Vitals as SLIs
 
@@ -131,6 +147,39 @@ Forbidden: `###` headings; `## ID · 🔴 · open` shorthand; severity/status as
   to delete or document (N-A if the project has no pager yet) → `references/slo-alerts.md`
 - [ ] Check for silent degradation: a down dependency surfaces via health endpoint + log + metric —
   flag dependencies that fail quietly with no observable signal → SKILL.md "Standing opinions"
+- [ ] Name the project's core business transaction (the run, checkout, send, sync) and confirm its
+  lifecycle is observable: start + terminal state emitted as events *and* counted as a metric, with
+  ids only and no payload/PII — flag an observability setup that watches only infrastructure while
+  the transaction the product exists to perform is invisible; flag a success rate inferred purely
+  from a mutable `status` column when the transaction retries →
+  `references/operational-readiness.md § Name the core transaction first`
+- [ ] Check expected business failures (bad customer input, declined card, rejected upload) are
+  counted but routed away from the error tracker, while system failures (timeouts, unhandled
+  exceptions) reach it tagged with the transaction id — flag either direction: customer mistakes
+  opening incidents, or system failures visible only as a status value →
+  `references/operational-readiness.md § Instrument the lifecycle`
+- [ ] Verify stuck and half-finished work is detectable: a query or gauge for non-terminal rows past
+  a per-state threshold, and — where a terminal state promises an artifact (report, invoice,
+  outbound message) — a terminal-without-artifact check with no trailing window that forgets
+  unresolved violations; queries committed as a file, not prose in a doc — flag a threshold with no
+  measured duration or timeout/retry budget behind it, a check polled less often than the threshold
+  it enforces, and either check missing →
+  `references/operational-readiness.md § Detect stuck and half-finished work`
+- [ ] Confirm the human loop exists in writing: who operates it, where alerts land (a destination
+  seen away from the laptop), console links, and a <5-minute "is it broken?" tree — flag alerts
+  configured with no named recipient. Scale to maturity: solo pre-launch, "operator: me, alerts to
+  my phone, no escalation" passes; named backup, ack convention, and escalation times are required
+  only once a second person could respond → `references/operational-readiness.md § The human loop`
+- [ ] Check the loop has been proven, not assumed: success path, a forced *system* failure, a
+  plausible *business* failure, stuck detection, and one alert delivered down the production
+  notification path — with the drill date recorded — flag an alerting setup that has never delivered
+  to a human. Acked-by-someone-else applies only where there is a team →
+  `references/operational-readiness.md § Prove the loop: the acceptance drill`
+- [ ] Where an availability/readiness number is claimed, verify one declared source of truth retains
+  history across the SLO window and the calculation is documented (manual weekly is acceptable at
+  early stage) — flag "green right now" presented as an SLO, tail-only log sources, a red synthetic
+  check that is the sole history source, and competing uncanonical sources →
+  `references/operational-readiness.md § Measure readiness from retained history`
 - [ ] When the service has real traffic / on-call: error-budget policy exists (who is notified at
   50%/25% remaining? deploy freeze gate?). For early MVPs, skip or mark partial with a one-line
   reason — do not invent a full SLO program → `references/slo-alerts.md § Error-budget policy`

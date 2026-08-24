@@ -10,6 +10,7 @@ Pair this with [review-protocol.md](review-protocol.md) — this is the WHAT-to-
 
 - [Visual AI Tells](#visual-ai-tells) — color, typography, layout, depth
 - [Content Anti-Patterns](#content-anti-patterns) — the "Jane Doe" effect
+- [Copy & Decoration Tells](#copy--decoration-tells-landing--portfolio--marketing) — em-dashes, eyebrows, micro-labels, decoration strips
 - [UX Anti-Patterns](#ux-anti-patterns) — dark patterns, missing states
 - [Technical Anti-Patterns](#technical-anti-patterns) — code-level failures
 - [Mobile Anti-Patterns](#mobile-anti-patterns)
@@ -27,8 +28,20 @@ The most common fingerprints of unedited AI-generated UI.
 - **Purple/blue gradient on white.** Most common AI fingerprint. Banned. Use neutral bases +
   single considered accent.
 - **`Inter` as display font.** The default AI font choice. Banned. Use Geist, Outfit, Cabinet
-  Grotesk, Satoshi, Space Grotesk, Fraunces, or Instrument Serif. Same banlist for Roboto,
-  Arial.
+  Grotesk, Satoshi, or Space Grotesk. Same banlist for Roboto, Arial.
+- **`Fraunces` or `Instrument Serif` as display font.** The 2025 "distinctive" escape hatch that
+  became the tell — these are now the two LLM-favorite display serifs, exactly as recognizable as
+  Inter. Flag them as defaults; acceptable only when the brand brief names them. And question the
+  serif reflex itself: "creative/premium brief = serif" is itself an AI default — a sans display
+  is usually the stronger reach. See `layer-1-tokens.md` → Typography for the rotation rule.
+- **The premium-consumer beige+brass palette.** For cookware / wellness / artisan / luxury / DTC
+  briefs, the AI default is warm cream backgrounds + brass/clay/oxblood accents + espresso
+  near-black text (grep seeds: `#f5f1ea`, `#f7f5f1`, `#efeae0`, `#b08947`, `#b6553a`, `#9a2436`,
+  `#1a1714` — the *families*, not just these exact values). Every AI-built premium-consumer site
+  ships this palette, so the brand becomes invisible. Flag it as a default reach; it's fine only
+  when the brand brief actually names those colors. Alternatives to suggest: cold luxury
+  (silver/chrome/smoke), forest (deep green + bone + amber), black-and-tan, cobalt + cream,
+  terracotta + slate, or monochrome + one saturated pop.
 - **Pure `#000000`.** Use off-black or dark charcoal (`#0a0a0a`, `#121212`, Zinc-950).
 - **Three equal-width card columns as feature row.** Most generic AI layout. Use zig-zag,
   asymmetric grid, or horizontal scroll.
@@ -73,6 +86,86 @@ These tell readers instantly that no one edited the output.
 - **Identical blog post dates** → randomize plausibly
 - **Same avatar image for multiple users** → unique assets per person
 - **Passive voice in errors** → active: "We couldn't save your changes" not "Mistakes were made"
+- **Copy self-audit skipped.** Before calling any UI done, re-read every visible string (headlines,
+  labels, captions, buttons, alt text, errors). Flag anything grammatically broken, with unclear
+  referents, or that reads like an LLM trying to sound thoughtful (forced wordplay, mock-poetic
+  micro-meta, fake-craftsman labels). If a string's meaning is uncertain, replace it with a plain
+  functional sentence — AI-cute copy is worse than boring copy.
+
+---
+
+## Copy & Decoration Tells (Landing / Portfolio / Marketing)
+
+Production-tested signatures of AI-generated marketing pages — sourced from real LLM
+landing-page test rounds. **Scope:** these fire on landing pages, portfolios, marketing sites,
+and top-of-funnel redesigns. On dashboards, admin panels, and dense product UI they are
+advisory at most (a version footer on a devtool page is a fixture, not a tell). Each has an
+override path: if the brief explicitly asks for the pattern, it's a choice, not a tell.
+
+**Em-dashes in user-visible strings.** The single most-violated tell. Flag every `—` (and every
+`–` used as a separator) in headlines, eyebrows, pills, body copy, quotes, attribution, captions,
+button text, and alt text. "Use sparingly" phrasing empirically fails — models ignore it — so
+treat this as near-absolute for audited UI copy: restructure the sentence (period, comma, colon,
+parentheses) or use a plain hyphen for ranges. Greppable: `grep -rn "—\|–" --include="*.tsx"`
+then filter to user-visible strings (the ban is on shipped UI copy, not code comments or docs).
+
+**Eyebrow inflation.** An "eyebrow" is the small uppercase wide-tracking label above a section
+headline (`SELECTED WORK`, `text-[11px] uppercase tracking-[0.18em]`). AI-built pages put one
+above *every* section, producing the same templated rhythm. Mechanical check: count
+`uppercase tracking` micro-labels across section components; more than `ceil(sections / 3)`
+(hero counts as one) is a fail. The fix is usually deletion — the headline alone is enough.
+
+**Micro-label and numbering tells:**
+
+- **Section-number eyebrows** (`001 · Capabilities`, `06 · how it works`, `00 / INDEX`) — name
+  the topic in plain language or drop the label
+- **Pagination labels on images/tiles** (`01 / 4`) — the user can count
+- **Version labels in the hero** (`V0.6`, `BETA`, `EARLY ACCESS`) — only when the brief is
+  actually a launch/preview announcement
+- **Version footers on marketing pages** (`v1.4.2`, `Build 0048`, `last sync 4s ago · main`) —
+  devtool fixtures, not landing-page content
+- **Middle-dot chains** (`foo · bar · baz · qux`) — ration to one `·` per metadata line; prefer
+  line breaks, hairlines, or columns
+- **Decorative status dots** — a colored dot before nav items, list rows, or badges conveys
+  nothing; keep dots only for real semantic state (live server status), sparingly
+- **Generic step labels** (`Step 1 / Step 2 / Step 3`, `Phase 01`) — the verb is the label:
+  "Install", "Configure", "Ship"
+
+**Decoration and caption tells:**
+
+- **Pills/tags overlaid on photos** (`PLATE · BRAND`, `Field notes - journal`) — let the image
+  speak, or caption below it
+- **Photo-credit captions as decoration** (`Field study no. 12 · Ines Caetano`, `Frame XII ·
+  35mm` under stock images) — credit only real photographers; otherwise a one-line functional
+  caption or none
+- **Decoration text strips at hero bottom** (`BRAND. MOTION. SPATIAL.`, `DESIGN · BUILD · SHIP`)
+  — agency-portfolio cliché; only when the strip carries real links or status
+- **Locale / time / weather strips** (`LIS 14:23 · 18°C`, "Lisbon, working with founders") —
+  banned for ~99% of briefs; a contact address in the footer is fine, atmospheric locale
+  decoration is not
+- **Scroll cues** (`Scroll to explore`, animated mouse icons) — the user knows what scroll is
+- **`<br>`-broken italicized headline splits** ("for thirty<br>*years.*") and **vertical rotated
+  text** — reach for these only when the brief is explicitly experimental
+- **Crosshair / hairline grid lines as decoration** — lines must organize real content
+
+**Marketing-copy tells:**
+
+- **"Quietly in use at" / "Quietly trusted by"** — use plain "Trusted by" / "Used at", or let
+  the logos speak
+- **Poetic section labels** ("From the field", "On our desks", "Loose plates") — performative
+  craftsman voice; use functional labels ("Testimonials", "Latest writing") or none
+- **Micro-meta sentences under section headings** ("Each of these is a feature we ship today,
+  not a roadmap promise…") — clutter; eyebrow + headline + body is enough
+- **Fake-precise numbers** (`4.1×`, `5.8 mm`, `48k`) — fine from real data or labeled as mock;
+  banned as invented spec aesthetics
+
+**Fake-visual tells:**
+
+- **Div-based fake screenshots** — a product preview built from styled `<div>` rectangles (fake
+  task lists, fake terminals, fake dashboards) is the #1 LLM design tell. Use a real screenshot,
+  a real embedded component, or editorial imagery — or skip the preview
+- **Logo walls as plain text wordmarks** (`<span>Acme Co</span>` in a row) — and the inverse:
+  logo walls with category labels printed under each logo (`Stripe` + "payments"). Logos only
 
 ---
 
@@ -187,6 +280,29 @@ What AI forgets — these show up as gaps, not as bugs.
 - **Light/dark sun/moon toggle.** Use a 3-state segmented control or system-preference
   detection.
 - **Footer link farm with 4 columns.** Simplify to main paths + legally required links.
+- **Zigzag on repeat.** More than 2 consecutive image+text split sections alternating sides is
+  templated rhythm. Break the third with a full-width section, bento, or vertical stack.
+- **Split-header default.** "Left big headline + right small floating explainer paragraph" as a
+  section header — stack them vertically instead, unless the right column carries a real visual
+  or interactive element.
+- **Same layout family reused across sections.** A landing page with 8 sections needs at least 4
+  different layout families; "Selected work" must not look like "What we do".
+- **Duplicate CTA intent.** "Get in touch" + "Contact us" + "Let's talk" on one page are all the
+  same action wearing three labels. One label per intent, used everywhere (nav, hero, footer).
+- **CTA label wrapping at desktop.** A primary CTA that wraps to 2+ lines is broken — shorten
+  the label (1–3 words) or widen the button.
+- **Two-line navigation or oversized nav bars.** Desktop nav renders on one line, ≤ 80 px tall
+  (64–72 px default). Condense labels or move items to a menu.
+- **Mid-page theme flips.** One theme per page — a warm-light section sandwiched between dark
+  sections reads as a copy-paste accident (the "random dark sections" tell above, generalized).
+  A deliberate full theme switch as a composition device is allowed once, with a strong transition.
+- **Accent drift.** The accent color chosen for the page appears identically in every section —
+  a rose-accented site does not grow a teal badge in the footer. Same lock for corner radius:
+  one radius system per page, or a documented per-element rule followed everywhere.
+- **Bento grids with filler or empty cells.** A grid has exactly as many cells as there is
+  content — re-shape the grid rather than pasting a blank tile. And an all-white-text-card bento
+  is the boring default: at least 2–3 cells need real visual variation (image, tint, pattern).
+- **More than one marquee per page.** A second scrolling text/logo marquee is lazy filler.
 
 ---
 
@@ -238,3 +354,7 @@ structure see [review-protocol.md](review-protocol.md).
 | `space-y-*` on `<ul>` / `<li>`        | `grep -rn '<ul[^>]*space-y-\|<li[^>]*space-y-' --include="*.tsx"`                                                                                           | Structural tests often scope to `<div>` only and miss these. Use `<Stack as='ul'>` |
 | Missing `color-scheme` on `<html>`    | Inspect root layout — should set `style={{ colorScheme: 'light dark' }}` or CSS `color-scheme`                                                              | Without it, native scrollbars/selects/date pickers don't dark-mode                 |
 | Token object passed to `cn()`/`clsx`  | `grep -rnE "cn\(\s*[A-Z_]+\.[A-Za-z]" --include="*.tsx"` then confirm each token resolves to a **string** (not a plain object)                              | Use the leaf string (`TYPOGRAPHY.display.hero`) — a plain object emits its keys, styling silently vanishes |
+| Em/en-dash in UI strings (marketing)  | `grep -rn "—\|–" --include="*.tsx"` then filter to user-visible strings (not comments/docs)                                                                 | Restructure (period, comma, colon, parens); plain hyphen for ranges                |
+| Eyebrow inflation (marketing)         | `grep -rnc "uppercase tracking" --include="*.tsx"` across section components; compare to `ceil(sections / 3)`                                               | Delete eyebrows — the headline alone is enough                                     |
+| Beige+brass premium palette (marketing) | `grep -rni -e "#f5f1ea" -e "#f7f5f1" -e "#fbf8f1" -e "#efeae0" -e "#ece6db" -e "#b08947" -e "#b6553a" -e "#9a2436" -e "#9c6e2a" -e "#1a1714" --include="*.tsx" --include="*.css"` — seeds for the family, not exhaustive | Rotate to a different palette family (see Visual AI Tells) unless the brand names these colors |
+| `window.addEventListener('scroll')`   | `grep -rn "addEventListener(['\"]scroll\|window\.scrollY" --include="*.tsx"`                                                                                | Motion `useScroll()`, ScrollTrigger, IntersectionObserver, or CSS scroll-driven animations — see `layer-5-motion.md` |

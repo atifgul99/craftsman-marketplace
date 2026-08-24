@@ -188,6 +188,13 @@ grep -rnE "\b(text|bg|border(-[trblxyse])?|ring|ring-offset|outline|divide|fill|
 # Performance anti-patterns
 grep -rn "z-\[[0-9]\{4,\}\]" --include="*.tsx"
 grep -rn 'bg-\${' --include="*.tsx"
+grep -rn "addEventListener(['\"]scroll\|window\.scrollY" --include="*.tsx"  # scroll-frame jank — see layer-5-motion.md → Forbidden Animation Patterns
+
+# Copy & decoration tells — MARKETING/LANDING/PORTFOLIO SCOPE ONLY (advisory on product UI).
+# See anti-patterns.md → Copy & Decoration Tells for what each means and its override path.
+grep -rn "—\|–" --include="*.tsx"                    # em/en-dash in UI strings; filter to user-visible copy, not comments
+grep -rnc "uppercase tracking" --include="*.tsx"      # eyebrow count; flag if total > ceil(sections / 3)
+grep -rniE "#(f5f1ea|f7f5f1|fbf8f1|efeae0|ece6db|b08947|b6553a|9a2436|9c6e2a|1a1714)" --include="*.tsx" --include="*.css"  # beige+brass premium-consumer palette seeds
 
 # Layout-primitive bypass (project-specific — adapt per CLAUDE.md)
 grep -rn 'className=.*\\bspace-y-\|className=.*\\bflex items-center gap-' --include="*.tsx"

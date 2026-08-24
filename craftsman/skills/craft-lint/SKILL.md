@@ -3,13 +3,11 @@ name: craft-lint
 description: >-
   The Craftsman standard for linting and static quality gates — ESLint version policy, resolved-rule
   extraction, typed TypeScript linting, React/Next/a11y/security rule hardening, zero-warning CI
-  gates, lint-staged/pre-commit alignment, and migration from weak/default ESLint configs to an
-  enterprise-grade lint setup. Scope is **JS/TS ESLint surfaces**; if the project has no ESLint
-  surface (Python/Ruff, Biome-only, Go, etc.), mark the domain N-A or partial with a one-line reason
-  rather than forcing an ESLint 10 migration. Use this WHENEVER the work touches ESLint, lint rules,
-  lint failures, lint config migration, quality scripts, pre-commit linting, or "standardize linting"
-  across a JS/TS project. For whole-project production readiness, craft-audit routes here for the
-  linting slice when ESLint applies.
+  gates, pre-commit alignment, and migration from weak default configs to an enterprise-grade lint
+  setup. Use this WHENEVER the work touches ESLint, lint rules, lint failures, lint config
+  migration, quality scripts, pre-commit linting, or "standardize linting". Scope is **JS/TS ESLint
+  surfaces** — with no ESLint surface (Python/Ruff, Biome-only, Go), mark the domain N-A rather than
+  forcing a migration. Whole-project readiness → craft-audit.
 ---
 
 # Lint Craft
@@ -46,10 +44,11 @@ actually enforcing.
 
 2. **Extract resolved rules**
    - Prefer the helper script in `scripts/eslint-rule-audit.mjs`.
-   - Run it from this skill folder against the target repo:
+   - Run it against the target repo. The plugin is installed outside the project, so always address
+     the script through `${CLAUDE_PLUGIN_ROOT}` rather than a relative or guessed path:
 
      ```bash
-     node /absolute/path/to/craftsman/skills/craft-lint/scripts/eslint-rule-audit.mjs /absolute/path/to/target-repo
+     node "${CLAUDE_PLUGIN_ROOT}/skills/craft-lint/scripts/eslint-rule-audit.mjs" /absolute/path/to/target-repo
      ```
 
    - The script writes evidence under the target repo:

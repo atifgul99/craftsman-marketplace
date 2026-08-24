@@ -57,6 +57,13 @@ error_budget_per_window = (1 - SLO_target) × total_events_in_window
 
 The error budget is the currency of reliability work. Burning it fast means users are hurting now; burning it slowly is business as usual. The budget remaining at the end of the window informs whether to ship risky changes (budget to spare → ship) or invest in reliability (budget gone → freeze deploys, fix).
 
+**The window needs history behind it.** A ratio over 28 days is only computable if some source
+retains 28 days of per-check or per-request data — verify retention on whichever source you declare
+canonical before quoting a number. A currently-green health check is a status, not an SLI; see
+`operational-readiness.md § Measure readiness from retained history` for source selection and the
+common traps (tail-only logs, a failing synthetic that is also the only history, two disagreeing
+sources).
+
 Rolling windows (28 days is common; 30 also works) are preferred over calendar months — they avoid budget resets giving a false "we're fine" signal at the start of each month.
 
 ---
@@ -155,6 +162,10 @@ A minimal runbook covers:
 3. **Common causes and their fixes** — ordered by likelihood based on past incidents.
 4. **Escalation path** — who to call if the on-call can't resolve within N minutes.
 5. **How to silence safely** — conditions under which silencing is appropriate, and the maximum silence window.
+
+The *service-level* facts every one of these runbooks depends on — who is on call, which channel
+acks, which consoles to open, the "is it broken?" tree, the transaction queries — belong in one
+place rather than being repeated per alert; see `operational-readiness.md § The human loop`.
 
 Store runbooks alongside the service (e.g. `docs/runbooks/`) or in a shared ops wiki, and include the path in the alert annotation. Review runbooks after every incident; a runbook that never gets updated is a liability.
 

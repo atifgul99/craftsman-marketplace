@@ -54,8 +54,9 @@ to load and easy to route.
 
 ## Adding a new domain skill
 
-New domains **incubate in `craftsman/drafts/`**. They are not loaded by the plugin and don't
-affect routing. A draft graduates into `craftsman/skills/` (and starts actually triggering) only
+New domains **incubate in `drafts/` at the repository root**, outside the `craftsman/` plugin
+directory — so they are neither loaded by the plugin nor shipped in the installed payload, and
+don't affect routing. A draft graduates into `craftsman/skills/` (and starts actually triggering) only
 once it has a **full reference set with concrete, adversarially-reviewed guidance**, not stubs.
 
 The reasoning: a skill that auto-triggers on high-risk work (auth, migrations, supply-chain) while

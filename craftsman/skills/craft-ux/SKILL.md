@@ -1,19 +1,16 @@
 ---
 name: craft-ux
 description: >-
-  The Craftsman standard for UI/UX — building and auditing a design system: tokens, the
-  tokens → primitives → components → states → motion layer model, pixel-perfect standards,
-  component patterns, Tailwind/React implementation, motion craft, redesign workflow, an
-  AI-tells anti-pattern catalog, and a two-pass code-review protocol (static review + live
-  browser audit via Playwright/claude-in-chrome).
-  Use this whenever designing, building, reviewing, auditing, redesigning, polishing, or
-  modernizing UI — a component, page, dashboard, landing page, modal, form, or layout; standing
-  up or hardening a design system; auditing or enforcing design tokens; checking spacing,
-  typography, color, motion, or accessibility; or hunting AI-generated "tells". Trigger even on
-  "make this look better", "fix the styling", "audit my design tokens", or "test it in the
-  browser" without naming a tool or framework.
-  App-architecture concerns (state, data fetching, bundles, routing) → craft-frontend.
-  Does NOT fire on non-UX requests (backend, database, CI/CD, infra) or UI-free code-quality asks.
+  The Craftsman standard for UI/UX — design tokens, component patterns, pixel-perfect standards,
+  Tailwind/React implementation, motion craft, an AI-tells anti-pattern catalog, and a two-pass
+  review protocol (static review + live browser audit).
+  Use this whenever designing, building, reviewing, auditing, redesigning, or polishing UI — a
+  component, page, dashboard, landing page, modal, form, or layout; standing up or hardening a
+  design system; checking spacing, typography, color, motion, or accessibility; or hunting
+  AI-generated "tells". Trigger even on "make this look better", "fix the styling", "audit my
+  design tokens", or "test it in the browser" without naming a tool or framework.
+  App architecture (state, data fetching, bundles, routing) → craft-frontend.
+  Does NOT fire on backend, database, CI/CD, or infra requests, or UI-free code-quality asks.
 ---
 
 # UX Craft
@@ -64,6 +61,7 @@ finding violations and building the scanner that blocks them in CI.
 | **Build a design system** from scratch or harden an ad-hoc one — layered architecture, bridge, governance | `references/building-a-design-system.md` |
 | **Audit / enforce design tokens** — find violations, fix by category, build the scanner                   | `references/token-audit.md`              |
 | Spacing, typography, color, radius, shadows, icons, touch targets, motion-timing tokens, breakpoints      | `references/layer-1-tokens.md`           |
+| **Greenfield starter kits** — vetted font pairings + contrast-verified palettes + variation protocol      | `references/starter-kits.md`             |
 | Layout primitives; Tailwind, `cn()`, CVA, mobile-first, dark mode, hydration safety, perf building blocks | `references/layer-2-primitives.md`       |
 | Forms, tables, modals, navigation, notifications; component anatomy + variant APIs                        | `references/layer-3-components.md`       |
 | Empty / loading / error / disabled states                                                                 | `references/layer-4-states.md`           |
@@ -71,6 +69,7 @@ finding violations and building the scanner that blocks them in CI.
 | Emil Kowalski — restraint, speed, springs, clip-path, gestures                                            | `references/motion/emil-craft.md`        |
 | Jakub Krehel — production polish, subtle enter/exit, shadows, optical alignment                           | `references/motion/jakub-polish.md`      |
 | Jhey Tompkins — playful CSS, `linear()`, `@property`, scroll-driven, 3D                                   | `references/motion/jhey-experimental.md` |
+| Fluid gesture physics — velocity handoff, momentum projection, rubberbanding, sheets/drag/swipe           | `references/motion/fluid-gestures.md`    |
 | Page/dashboard architecture, landing sections, Bento, design-intensity calibration                        | `references/composition.md`              |
 | Canonical AI-tells catalog — **what to flag in reviews**                                                  | `references/anti-patterns.md`            |
 | Redesigning existing UI — Scan → Diagnose → Fix                                                           | `references/redesign-audit.md`           |
@@ -82,7 +81,7 @@ finding violations and building the scanner that blocks them in CI.
 
 | Workflow                     | Mandatory                                  | Add when needed                                                                                                     |
 | ---------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| **Build a design system**    | `foundations` + `building-a-design-system` | `layer-1` for token values, `layer-2` for primitives, `token-audit` to add the scanner                              |
+| **Build a design system**    | `foundations` + `building-a-design-system` | `layer-1` for token values, `starter-kits` for greenfield fonts/palettes, `layer-2` for primitives, `token-audit` to add the scanner |
 | **Audit / enforce tokens**   | `token-audit`                              | `layer-1` for the canonical values, `building-a-design-system` for where a value belongs, `anti-patterns` for tells |
 | **Build a component**        | `foundations` + `layer-2`                  | `layer-3` for the pattern, `layer-1` for token values, `layer-4` for its states                                     |
 | **Build a page / dashboard** | `foundations` + `layer-2` + `composition`  | `layer-3` for components, `composition` arsenal for a distinctive aesthetic                                         |

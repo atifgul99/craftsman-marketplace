@@ -88,11 +88,15 @@ High-impact patterns to replace generic ones.
 - **Variable font animation** — interpolate weight or width on scroll/hover
 - **Outlined-to-fill transitions** — text starts as stroke, fills with color on scroll entry
 - **Text mask reveals** — typography as a window to video or animated imagery behind it
-- **Distinctive display + body pairing** — Fraunces + Plus Jakarta Sans, Cabinet Grotesk + IBM Plex,
-  etc. See `layer-1-tokens.md` → Typography for the recommended pairings.
+- **Distinctive display + body pairing** — Space Grotesk + Plus Jakarta Sans, Cabinet Grotesk +
+  IBM Plex, etc. See `layer-1-tokens.md` → Typography for the pool, the serif-discipline rule,
+  and why Fraunces / Instrument Serif are no longer recommended (they became the AI-default
+  serifs — see `anti-patterns.md` → Visual AI Tells).
   <!-- Inter Tight was removed: it is a condensed variant of the Inter family, which anti-patterns.md
        bans as a default AI font tell. Replaced with Plus Jakarta Sans as an equivalent sans-serif
        body pairing that is not in the Inter family. -->
+  <!-- Fraunces was removed as the display example: taste-skill v2 production tests (2026) showed
+       Fraunces + Instrument Serif became the two LLM-default display serifs — the new Inter. -->
 
 ### Layout upgrades
 
