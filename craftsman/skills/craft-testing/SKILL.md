@@ -6,10 +6,8 @@ description: >-
   work touches tests: writing/reviewing tests, strategy, "add tests", "why is this flaky", "what
   should I test", "tests pass but prod breaks", Testing Library / Playwright / Vitest / Jest / Pytest,
   mocks, fixtures, or adequacy. Trigger on "add tests", "write a test", "is this tested enough", or
-  "make the tests reliable". Owns which suites gate merge and what "green" means (incl. e2e); CI
-  pipeline mechanism → craft-infra (missing e2e suite → TEST; e2e not in CI → INFRA). Security
-  correctness → craft-security; visual live audit → craft-ux. Whole-project readiness → craft-audit.
-  Existing findings ("fix TEST-004") → craft-fix.
+  "make the tests reliable". Owns which suites gate merge and what "green" means — see "Scope
+  boundaries" in the body for handoffs to craft-infra, craft-security, and craft-ux.
 ---
 
 # Testing Craft
@@ -120,6 +118,19 @@ the named test, and the expected behavioral failure. If direct evidence cannot b
 example, a strictly read-only audit or an unavailable test environment), report that
 invariant-coverage claim as `unverified`; do not grade it adequate or use it to close a critical-path
 coverage finding.
+
+## Scope boundaries
+
+This skill owns which suites gate merge and what "green" means, including e2e. Hand off at these
+lines:
+
+- **CI pipeline mechanism** (how the pipeline is wired, where jobs run) → `craft-infra`. The split
+  is by defect, not by topic: a *missing* e2e suite is a TEST finding; an e2e suite that exists but
+  isn't wired into CI is an INFRA finding.
+- **Security correctness** of what a test asserts → `craft-security`.
+- **Live visual audit** of rendered UI → `craft-ux`.
+- **Whole-project readiness** → `craft-audit`.
+- **Existing tracked findings** ("fix TEST-004") → `craft-fix`.
 
 ## Reference index
 

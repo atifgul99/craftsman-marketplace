@@ -3,13 +3,11 @@ name: craft-observability
 description: >-
   The Craftsman standard for production observability — error tracking (Sentry), metrics & dashboards
   (Grafana), structured logging, tracing, SLOs, and alerting. Use this WHENEVER the work touches
-  observability in any form: adding or reviewing Sentry, wiring Grafana/Prometheus/OpenTelemetry,
-  setting up structured logs, defining alerts or SLOs, instrumenting a service, debugging "we have
-  no visibility into X", or making a service observable/production-ready *on the monitoring side*.
-  Trigger even when the user only says "add monitoring", "why can't we see errors", "set up
-  dashboards", or "make this observable" without naming a specific tool. Deploy/runtime/CI
-  production-readiness belongs to craft-infra; a *whole-project* readiness assessment across every
-  surface is craft-audit, which routes here for the observability slice.
+  observability: adding or reviewing Sentry, wiring Grafana/Prometheus/OpenTelemetry, setting up
+  structured logs, defining alerts or SLOs, instrumenting a service, or debugging "we have no
+  visibility into X". Trigger even when the user only says "add monitoring", "why can't we see
+  errors", "set up dashboards", or "make this observable" without naming a tool. Deploy, runtime,
+  and CI production-readiness → craft-infra; whole-project readiness → craft-audit.
 ---
 
 # Observability Craft

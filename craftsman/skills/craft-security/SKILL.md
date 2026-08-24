@@ -3,13 +3,11 @@ name: craft-security
 description: >-
   The Craftsman standard for defensive security hardening — authorization policy (per-resource authZ,
   IDOR/tenant scoping), input validation & injection prevention, secrets, security headers, CORS,
-  dependency vulnerabilities, XSS/CSRF, and data exposure. (AuthN boundary → craft-backend; this skill
-  owns authZ and security review of auth flows.) Also owns abuse-defense rate-limit *policy* — login
-  throttling, brute-force, credential stuffing, lockout (middleware → craft-backend; edge capacity →
-  craft-infra; LLM spend → craft-ai). Use WHENEVER work touches security: harden an endpoint, review
-  auth, handle secrets, lock down headers, audit dependencies, or production-harden a service.
-  Trigger on "is this secure", "harden this", "review for vulnerabilities", or "handle secrets
-  properly". Whole-project readiness → craft-audit. Existing findings ("fix SEC-003") → craft-fix.
+  dependency vulnerabilities, XSS/CSRF, and data exposure. Use WHENEVER work touches security:
+  harden an endpoint, review auth, handle secrets, lock down headers, audit dependencies, or
+  production-harden a service. Trigger on "is this secure", "harden this", "review for
+  vulnerabilities", or "handle secrets properly". Owns authZ, abuse-defense policy, and security
+  review of auth flows — see "Scope boundaries" in the body for handoffs.
 ---
 
 # Security Craft
@@ -90,6 +88,20 @@ threat-modelling exercise when doing a full security review; that's a different 
 4. **Verify** — test that authorization denials fire correctly, confirm headers are present in
    responses, run a dependency scan and confirm it passes. Security you haven't seen enforce isn't
    done.
+
+## Scope boundaries
+
+This skill owns authorization *policy* and the security review of auth flows. Hand off at these
+lines:
+
+- **The authentication boundary itself** (how a request is authenticated, where the principal is
+  resolved) → `craft-backend`. This skill owns authZ and reviews the authN flow for weaknesses.
+- **Rate-limit ownership, so the same gap isn't emitted four times:** SEC owns abuse-defense
+  *policy* — login throttling, brute-force, credential stuffing, lockout; the route *middleware*
+  mechanism → `craft-backend`; platform/edge capacity → `craft-infra`; LLM spend and token limits →
+  `craft-ai`.
+- **Whole-project readiness** → `craft-audit`.
+- **Existing tracked findings** ("fix SEC-003") → `craft-fix`.
 
 ## Reference index
 

@@ -1,8 +1,8 @@
 # Drafts: incubator for future domains
 
-This directory is where a **new** domain skill incubates before it goes live. It is intentionally
-**outside `craftsman/skills/`**, so the plugin (`skills: ["./skills"]`) does **not** load anything
-here.
+This directory is where a **new** domain skill incubates before it goes live. It sits at the
+**repository root, outside the `craftsman/` plugin directory entirely**, so it is neither loaded by
+the plugin nor shipped as part of the installed payload.
 
 All ten active domains (`craft-ux`, `craft-frontend`, `craft-backend`, `craft-db`,
 `craft-security`, `craft-infra`, `craft-observability`, `craft-testing`, `craft-lint`, and
@@ -25,7 +25,7 @@ The agent silently falls back to generic model knowledge while *appearing* gover
 1. Fill its `references/*.md` with concrete, opinionated guidance for the advertised areas.
 2. Sanity-check the trigger description still matches the (now real) content.
 3. Get it reviewed (every active domain was built with adversarial verify + an external sign-off pass).
-4. `git mv craftsman/drafts/<skill-name> craftsman/skills/<skill-name>`.
+4. `git mv drafts/<skill-name> craftsman/skills/<skill-name>`.
 5. Update `README.md` (the structure + active list) and the plugin/marketplace descriptions.
 6. Wire into craft-audit (discovery applicability row, domain code, load list, HEADING_RE) and
    `scripts/check-invariants.mjs` (`DOMAIN_CODES` + `SKILL_DOMAIN_CODES`).

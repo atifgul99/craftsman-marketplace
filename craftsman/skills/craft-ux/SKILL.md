@@ -1,19 +1,16 @@
 ---
 name: craft-ux
 description: >-
-  The Craftsman standard for UI/UX — building and auditing a design system: tokens, the
-  tokens → primitives → components → states → motion layer model, pixel-perfect standards,
-  component patterns, Tailwind/React implementation, motion craft, redesign workflow, an
-  AI-tells anti-pattern catalog, and a two-pass code-review protocol (static review + live
-  browser audit via Playwright/claude-in-chrome).
-  Use this whenever designing, building, reviewing, auditing, redesigning, polishing, or
-  modernizing UI — a component, page, dashboard, landing page, modal, form, or layout; standing
-  up or hardening a design system; auditing or enforcing design tokens; checking spacing,
-  typography, color, motion, or accessibility; or hunting AI-generated "tells". Trigger even on
-  "make this look better", "fix the styling", "audit my design tokens", or "test it in the
-  browser" without naming a tool or framework.
-  App-architecture concerns (state, data fetching, bundles, routing) → craft-frontend.
-  Does NOT fire on non-UX requests (backend, database, CI/CD, infra) or UI-free code-quality asks.
+  The Craftsman standard for UI/UX — design tokens, component patterns, pixel-perfect standards,
+  Tailwind/React implementation, motion craft, an AI-tells anti-pattern catalog, and a two-pass
+  review protocol (static review + live browser audit).
+  Use this whenever designing, building, reviewing, auditing, redesigning, or polishing UI — a
+  component, page, dashboard, landing page, modal, form, or layout; standing up or hardening a
+  design system; checking spacing, typography, color, motion, or accessibility; or hunting
+  AI-generated "tells". Trigger even on "make this look better", "fix the styling", "audit my
+  design tokens", or "test it in the browser" without naming a tool or framework.
+  App architecture (state, data fetching, bundles, routing) → craft-frontend.
+  Does NOT fire on backend, database, CI/CD, or infra requests, or UI-free code-quality asks.
 ---
 
 # UX Craft

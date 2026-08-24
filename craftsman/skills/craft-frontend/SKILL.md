@@ -3,15 +3,11 @@ name: craft-frontend
 description: >-
   The Craftsman standard for frontend application architecture — components, state management, data
   fetching, forms, routing, client/server boundaries, performance, error boundaries, and bundle
-  size. Use this WHENEVER the work touches the application layer of a frontend: building or
-  reviewing components, wiring up API calls, deciding where state lives, handling loading/error/
-  empty states, managing form validation, splitting bundles, or diagnosing slow pages. Trigger even
-  when the user only says "wire up the API", "this page is slow", "manage this state", or "build
-  the form" without naming a framework. NOTE: this skill covers the application-architecture layer
-  (data, state, performance) — visual polish, design-system tokens, and layout decisions belong to
-  craft-ux; the server/API implementation, authentication, and DB belong to craft-backend,
-  craft-security, and craft-db (this skill owns the client side of the contract). Cross-reference
-  those whenever both concerns appear in the same task.
+  size. Use this WHENEVER the work touches the application layer of a frontend: building components,
+  wiring up API calls, deciding where state lives, handling loading/error/empty states, managing
+  form validation, splitting bundles, or diagnosing slow pages. Trigger even when the user only says
+  "wire up the API", "this page is slow", "manage this state", or "build the form" without naming a
+  framework. Visual polish and design tokens → craft-ux; further handoffs in "Scope boundaries".
 ---
 
 # Frontend Craft
@@ -90,6 +86,18 @@ visualizer`), and React DevTools profiler are the sources of truth. Gut feeling 
    its form library, its routing approach.
 4. **Verify** — run the app, exercise the happy path, the error path, and the empty path. A
    component you haven't seen render in all three states is not done.
+
+## Scope boundaries
+
+This skill covers the application-architecture layer — data, state, performance — and owns the
+client side of the contract. Hand off at these lines:
+
+- **Visual polish, design-system tokens, and layout decisions** → `craft-ux`.
+- **Server/API implementation and authentication** → `craft-backend`.
+- **Authorization policy and client-exposed secrets** → `craft-security`.
+- **Schema and query specifics behind the API** → `craft-db`.
+
+Cross-reference the neighbour skill whenever both concerns appear in the same task.
 
 ## Reference index
 

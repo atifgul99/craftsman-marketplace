@@ -2,18 +2,11 @@
 name: craft-ai
 description: >-
   The Craftsman standard for LLM-powered features — prompt-injection surface, key and spend
-  protection, PII flowing to model APIs, and reliability/eval discipline. Use whenever the work
-  touches an LLM integration: wiring a chatbot or agent, adding an AI feature, building a RAG
-  pipeline, calling an LLM API from a route or job, handling tool/function-calling, or reviewing
-  prompts and completions. Trigger even when the user only says "add an AI feature", "is my
-  chatbot secure", "my OpenAI bill exploded", or "why did the model call the wrong tool" without
-  naming a provider or framework. Generic route auth belongs to craft-backend; secret *storage*
-  mechanics belong to craft-security — this skill owns the LLM-specific layer: what reaches the
-  prompt, what the model can do, what leaves the building, and whether it's reliable. Provider
-  billing alerts as infra config belong to craft-infra; this skill owns application-level
-  spend-safety design (rate limits, token caps, loop bounds on model-calling routes — BE may still
-  supply the middleware mechanism; SEC owns login abuse policy; INFRA owns edge capacity). For
-  whole-project readiness, craft-audit routes here for the AI slice.
+  protection, PII reaching model APIs, and reliability/eval discipline. Use whenever work touches an
+  LLM integration: a chatbot or agent, a RAG pipeline, an LLM call from a route or job,
+  tool/function-calling, or reviewing prompts and completions. Trigger even on "add an AI feature",
+  "is my chatbot secure", "my OpenAI bill exploded", or "why did the model call the wrong tool"
+  without naming a provider or framework. Handoffs: see "Scope boundaries" in the body.
 ---
 
 # AI Craft
@@ -96,6 +89,21 @@ overrides:
 4. **Verify** — confirm keys aren't reachable from the client, rate limits/token caps actually
    fire, an injected instruction in test content doesn't expand tool access, and the eval suite
    passes before a prompt change ships.
+
+## Scope boundaries
+
+This skill owns the LLM-specific layer: what reaches the prompt, what the model can do, what leaves
+the building, and whether it's reliable. Hand off at these lines:
+
+- **Generic route authentication** → `craft-backend`. This skill does not re-audit the auth boundary.
+- **Secret *storage* mechanics** (where keys live, how they rotate) → `craft-security`. This skill
+  covers key *exposure through the model path* — client-reachable keys, keys in prompts or logs.
+- **Provider billing alerts as infra config** → `craft-infra`. This skill owns application-level
+  spend-safety *design*: rate limits, token caps, and loop bounds on model-calling routes.
+- **Rate-limit ownership, so the same gap isn't emitted four times:** BE supplies the route
+  middleware mechanism; SEC owns login-abuse policy; INFRA owns edge capacity; AI owns LLM
+  cost/token limits.
+- **Whole-project readiness** → `craft-audit`, which routes here for the AI slice.
 
 ## Reference index
 

@@ -41,6 +41,36 @@ not a synonym for "public."
   known to return no data; `slo-alerts.md` requires retained history behind the SLO window and
   points service-level on-call facts at one place; craft-audit's `recommended-stack.md` gains a
   Tier-1 row for "no way to see whether the core transaction finished".
+- **`craft-audit/references/synthesis.md`** — the full step-7 synthesis protocol: findings-file
+  validation, the by-hand fallback checklist, path binding, the remediation closure check, dedup,
+  and ranking. Extracted from `SKILL.md` rather than newly written.
+- **`craft-audit/references/delegation.md`** — the ≤3/>3 `(scope, domain)` threshold, the context
+  budget split between orchestrator and subagent, subagent prompt requirements, and the
+  write-capability fallback. Also extracted from `SKILL.md`.
+
+### Changed
+
+- **Skill trigger descriptions trimmed 28%** (11,377 → 8,122 characters across the twelve skills).
+  Claude Code's skill listing has a character budget of roughly 1% of the context window, shared
+  with every other skill the user has installed; on overflow it drops descriptions starting with
+  the least-invoked skills, which would strip the trigger keywords from exactly the domain skills
+  that rely on ambient matching. Trigger phrasing is preserved and front-loaded; the cross-domain
+  boundary arbitration that used to live in the descriptions moved into a new `## Scope boundaries`
+  section in the body of `craft-ai`, `craft-backend`, `craft-frontend`, `craft-infra`,
+  `craft-security`, and `craft-testing`.
+- **`craft-audit/SKILL.md` reduced from 3,941 to ~3,000 words**, back under the router-skill
+  ceiling, by extracting the two references above rather than cutting guidance.
+- **`drafts/` moved from `craftsman/drafts/` to the repository root**, so the incubator is no
+  longer part of the installed plugin payload. It was already excluded from skill loading; now it
+  is excluded from what ships.
+
+### Fixed
+
+- **Helper scripts are now addressed through `${CLAUDE_PLUGIN_ROOT}`.** `craft-audit` and
+  `craft-lint` previously told the agent to run their `.mjs` helpers at a literal
+  `/absolute/path/to/craftsman/...` placeholder. Once the plugin is installed it lives outside the
+  audited project, so that path had to be guessed. Four call sites fixed, across both `SKILL.md`
+  files and `craft-audit/references/workspace.md`.
 
 ## [0.4.0] (2026-08-10)
 

@@ -1,18 +1,13 @@
 ---
 name: craft-backend
 description: >-
-  The Craftsman standard for building and reviewing backend code — API routes/endpoints,
-  rate-limiting middleware on routes, request validation, the authentication boundary,
-  service/business logic, error handling, third-party integrations, and background jobs. Use this
-  WHENEVER the work touches the server side in any form: adding or reviewing a route, validating
-  input, authenticating a request, tracing a 500, writing a service layer, wiring an integration, or
-  enqueueing or handling a job (job scheduling configuration → see craft-infra). Trigger even when
-  the user only says "add an endpoint", "validate this input", "why is this returning 500", or
-  "secure this route" without naming a framework. Owns in-app route rate-limit *middleware* (mount
-  order, keying, 429); abuse-defense *policy* (login/brute-force) → craft-security; platform/edge
-  capacity throttling → craft-infra; LLM spend/token limits on model routes → craft-ai. Authorization
-  *policy* (per-resource authZ, IDOR/tenant scoping) and secrets belong to craft-security; DB schema
-  and query specifics belong to craft-db — cross-reference them when the work crosses those boundaries.
+  The Craftsman standard for building and reviewing backend code — API routes, request validation,
+  the authentication boundary, service/business logic, error handling, route rate-limit middleware,
+  third-party integrations, and background jobs. Use this WHENEVER the work touches the server side:
+  adding or reviewing a route, validating input, authenticating a request, tracing a 500, writing a
+  service layer, wiring an integration, or handling a job. Trigger even when the user only says "add
+  an endpoint", "validate this input", "why is this returning 500", or "secure this route" without
+  naming a framework. Handoffs: see "Scope boundaries" in the body.
 ---
 
 # Backend Craft
@@ -96,6 +91,24 @@ overrides:
 4. **Verify** — hit the endpoint: happy path returns the right shape; invalid input returns the
    correct error code and message; unauthenticated or wrong-tenant requests are rejected before any
    data is touched.
+
+## Scope boundaries
+
+This skill owns the server side of the contract: the request lifecycle from edge to service layer.
+Hand off at these lines:
+
+- **Authorization *policy*** (per-resource authZ, IDOR/tenant scoping) and **secrets** →
+  `craft-security`. This skill owns the *authentication* boundary; authZ is a mandatory-load gate,
+  not a re-audit here.
+- **DB schema, migrations, and query specifics** → `craft-db`.
+- **Job *scheduling* configuration** (cron wiring, platform schedulers) → `craft-infra`. This skill
+  owns enqueueing and handling.
+- **Rate-limit ownership, so the same gap isn't emitted four times:** BE owns in-app route
+  *middleware* (mount order, keying, 429); abuse-defense *policy* (login/brute-force/credential
+  stuffing) → `craft-security`; platform/edge capacity throttling → `craft-infra`; LLM spend and
+  token limits on model-calling routes → `craft-ai`.
+
+Cross-reference the neighbour skill when a task genuinely straddles one of these lines.
 
 ## Reference index
 
