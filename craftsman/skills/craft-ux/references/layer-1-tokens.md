@@ -96,12 +96,23 @@ Scale (rem):
 
 **Distinctive font suggestions** (when not bound by a project system):
 
-- Display: Fraunces, Instrument Serif, Playfair Display, Space Grotesk, Clash Display, Cabinet
-  Grotesk, Satoshi
+- Display (sans — the default reach): Space Grotesk, Clash Display, Cabinet Grotesk, Satoshi,
+  Geist, Outfit, Bricolage Grotesque
 - Body: Source Serif Pro, IBM Plex Sans, Libre Franklin, Work Sans, Plus Jakarta Sans
 
-For the canonical list of fonts to **avoid** (Inter, Roboto, Arial — overused AI defaults), see
-`anti-patterns.md` → Visual AI Tells.
+**Serif discipline.** "Creative / premium brief = serif" is itself an AI default — sans display
+fonts are the default for the same reason black is the default in fashion. Reach for a display
+serif only when the brand brief names one, or the aesthetic is genuinely editorial / luxury /
+publication / heritage *and* you can say why this serif fits this brand. When justified, rotate
+(don't reuse the same serif across consecutive projects) from a pool like: Playfair Display,
+EB Garamond, Cormorant Garamond, Bodoni Moda, DM Serif Display, Newsreader — all on Google
+Fonts. **Never default to Fraunces or Instrument Serif** — the two LLM-favorite display serifs
+are now as recognizable a tell as Inter (see `anti-patterns.md` → Visual AI Tells). For
+in-headline emphasis, use italic or bold of the *same* family — never inject a serif word into a
+sans headline for visual interest.
+
+For the canonical list of fonts to **avoid** (Inter, Roboto, Arial, Fraunces, Instrument Serif —
+overused AI defaults), see `anti-patterns.md` → Visual AI Tells.
 
 ---
 

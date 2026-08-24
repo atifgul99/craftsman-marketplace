@@ -21,6 +21,7 @@ Motion is the last layer — get tokens, primitives, components, and states righ
 - [STEP 3 — Context → Perspective Mapping](#step-3--context--perspective-mapping)
 - [STEP 4 — Audit Output Format](#step-4--audit-output-format)
 - [Universal Checklist (Apply Regardless of Designer Weighting)](#universal-checklist-apply-regardless-of-designer-weighting)
+- [Forbidden Animation Patterns](#forbidden-animation-patterns)
 - [Severity Levels](#severity-levels)
 - [Universal Reduced-Motion Pattern](#universal-reduced-motion-pattern)
 - [Accessibility Floor](#accessibility-floor)
@@ -242,6 +243,34 @@ Severity-tagged tables:
 - [ ] Looping animations can be paused
 - [ ] Functional animations have non-motion alternatives
 - [ ] Dynamic content updates announce via `aria-live` or `role="status"` / `role="alert"` (see ARIA live regions section below)
+
+---
+
+## Forbidden Animation Patterns
+
+Hard bans, not preferences — each one has a jank-free replacement.
+
+- **`window.addEventListener("scroll", …)`.** Runs on every scroll frame, no batching,
+  jank-prone. Use Motion's `useScroll()`, GSAP `ScrollTrigger`, `IntersectionObserver`, or CSS
+  scroll-driven animations (`animation-timeline: view()`).
+- **`window.scrollY` (or any scroll progress) in React state.** Re-renders the tree every frame.
+  Same replacement list.
+- **`requestAnimationFrame` loops that touch React state.** Any continuous value driven by user
+  input — mouse position, scroll progress, magnetic hover — goes through motion values
+  (`useMotionValue` + `useTransform`), never `useState`; state-driven versions collapse on mobile.
+- **Missing cleanup.** Every `useEffect` that registers a GSAP context, observer, or listener
+  returns a cleanup function (`ctx.revert()`, `observer.disconnect()`).
+- **Motion claimed but not shown.** Half-built motion that breaks (cut-off ScrollTriggers, jumpy
+  entries, missing cleanups) is worse than none — either ship working motion or ship a clean
+  static page.
+
+**GSAP pinning gotcha (scroll-hijack sections — marketing scrolltelling only).** The common
+failure in sticky-stack and horizontal-pan sections is the trigger firing halfway through
+scroll, so the user sees half a slide before the pin engages. The fix is `start: "top top"`
+(not `"top center"` or `"top 80%"`), `pin: true` on the wrapper, and scrubbing the inner
+track; for horizontal pans, `end: "+=" + distance` where distance is the track's overflow
+width. Isolate in a `'use client'` leaf with cleanup, and collapse to static under
+`prefers-reduced-motion`.
 
 ---
 

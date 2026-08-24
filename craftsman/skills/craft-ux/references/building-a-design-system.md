@@ -39,6 +39,43 @@ This mirrors the `foundations.md` principle: **discover before you build.**
 
 ---
 
+## When an official design system beats a hand-rolled one
+
+**Scope:** this table applies when starting greenfield or replacing a failed ad-hoc system. In
+an audit of a project with an established working system, honor what exists — never demand a
+migration to one of these because the table says so.
+
+Some briefs read as an existing, official design system. Reaching for the official package gets
+mature tokens, accessibility, and density patterns for free; hand-recreating its CSS is wasted
+work that drifts.
+
+| Brief reads as…                          | Reach for                                       |
+| ---------------------------------------- | ----------------------------------------------- |
+| Microsoft-style enterprise SaaS          | `@fluentui/react-components` (Fluent UI)        |
+| Material-flavored product                | `@material/web` + Material 3 tokens             |
+| IBM-style B2B / enterprise analytics     | `@carbon/react` (Carbon)                        |
+| Shopify app surfaces                     | Polaris (required for Shopify admin UI)         |
+| Atlassian / Jira-style product           | `@atlaskit/*` + `@atlaskit/tokens`              |
+| GitHub-style devtool                     | `@primer/css` / `@primer/react-brand`           |
+| UK public-sector service                 | `govuk-frontend` (regulatorily expected)        |
+| US public-sector / trust-first           | `uswds`                                         |
+| Modern accessible React foundation       | `@radix-ui/themes`                              |
+| Modern SaaS where you own the components | shadcn/ui — never shipped in default state      |
+| Tailwind-based indie / small-team build  | Tailwind v4 utilities + `dark:` variant         |
+
+**Honesty rules:**
+
+- If the brief maps to a system above, use the **official** package — don't recreate its CSS by
+  hand, and don't import its tokens only to override 90% of them.
+- **One system per project.** No Fluent + Carbon in the same tree, no shadcn components inside a
+  Material app.
+- When the brief is an *aesthetic* (glassmorphism, bento, brutalism, editorial), no official
+  package exists — build it with native CSS/Tailwind and say so honestly, rather than dressing a
+  trend up as a system. (Apple's "Liquid Glass" in particular is Apple-platform-only; any web
+  version is a labeled `backdrop-filter` approximation.)
+
+---
+
 ## The layered architecture
 
 Three layers plus a bridge pattern. Each layer has a single responsibility. Data flows down — never
