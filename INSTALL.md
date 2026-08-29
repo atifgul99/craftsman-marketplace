@@ -7,7 +7,7 @@ from a repository URL, start here or in the README's **Install** section.
 
 | Type | Exact value | Do not confuse it with… |
 | --- | --- | --- |
-| Marketplace source | `atifgul99/craftsman-marketplace` | The marketplace name |
+| Marketplace source | `GulLabs/craftsman-marketplace` | The marketplace name |
 | Marketplace name | `craftsman-marketplace` | The plugin name |
 | Plugin name | `craftsman` | The `craft-audit` skill |
 | Main entry skill | `craft-audit` | An installable plugin |
@@ -22,7 +22,7 @@ craftsman@craftsman-marketplace
 only after the `craftsman` plugin is installed.
 
 For a local clone instead of GitHub, pass its absolute path wherever this guide uses
-`atifgul99/craftsman-marketplace` as the marketplace source.
+`GulLabs/craftsman-marketplace` as the marketplace source.
 
 ## Claude Code
 
@@ -31,7 +31,7 @@ For a local clone instead of GitHub, pass its absolute path wherever this guide 
 Enter these in the Claude Code chat, in order:
 
 ```text
-/plugin marketplace add atifgul99/craftsman-marketplace
+/plugin marketplace add GulLabs/craftsman-marketplace
 /plugin install craftsman@craftsman-marketplace
 ```
 
@@ -42,7 +42,7 @@ run `/reload-plugins` if Claude Code asks you to reload.
 ### Terminal / headless Claude Code
 
 ```bash
-claude plugin marketplace add atifgul99/craftsman-marketplace
+claude plugin marketplace add GulLabs/craftsman-marketplace
 claude plugin install craftsman@craftsman-marketplace --scope user
 claude plugin list --json
 ```
@@ -78,7 +78,7 @@ Removing the marketplace is optional if you intend to keep it for future updates
 Run these in a terminal:
 
 ```bash
-codex plugin marketplace add atifgul99/craftsman-marketplace
+codex plugin marketplace add GulLabs/craftsman-marketplace
 codex plugin add craftsman@craftsman-marketplace
 codex plugin marketplace list --json
 codex plugin list --marketplace craftsman-marketplace --json
@@ -135,14 +135,14 @@ alone is not enough; `craftsman` must be installed and you must use a fresh host
 Copy this prompt together with the URL:
 
 ```text
-Install Craftsman from https://github.com/atifgul99/craftsman-marketplace.
+Install Craftsman from https://github.com/GulLabs/craftsman-marketplace.
 
 Determine whether you are operating Claude Code or Codex. Before making changes, read README.md,
 INSTALL.md, .claude-plugin/marketplace.json, and the host-specific plugin manifest under
 craftsman/.claude-plugin/ or craftsman/.codex-plugin/.
 
 Use these identities exactly:
-- marketplace source: atifgul99/craftsman-marketplace
+- marketplace source: GulLabs/craftsman-marketplace
 - marketplace: craftsman-marketplace
 - plugin to install: craftsman
 - entry skill after installation: craft-audit

@@ -23,7 +23,7 @@ your project data.
 
 If you find a security issue in this repo (for example, a skill instruction that could lead an
 agent to do something unsafe, or an issue with `scripts/check-invariants.mjs`), open a
-[GitHub security advisory](https://github.com/atifgul99/craftsman-marketplace/security/advisories/new)
+[GitHub security advisory](https://github.com/GulLabs/craftsman-marketplace/security/advisories/new)
 on this repository.
 
 Please don't open a public issue for anything you believe is a security concern until it's been

@@ -44,7 +44,7 @@ that look similar but have different jobs:
 
 | This is a… | Exact name | Use it for… |
 | --- | --- | --- |
-| Repository / marketplace source | `atifgul99/craftsman-marketplace` | Adding the marketplace |
+| Repository / marketplace source | `GulLabs/craftsman-marketplace` | Adding the marketplace |
 | Marketplace | `craftsman-marketplace` | Selecting the marketplace |
 | Plugin | `craftsman` | Installing the plugin |
 | Main entry skill | `craft-audit` | Starting an audit after installation |
@@ -58,7 +58,7 @@ You need Claude Code installed first: see [code.claude.com/docs](https://code.cl
 Type these into Claude Code's chat box, not a terminal:
 
 ```
-/plugin marketplace add atifgul99/craftsman-marketplace
+/plugin marketplace add GulLabs/craftsman-marketplace
 /plugin install craftsman@craftsman-marketplace
 ```
 
@@ -69,7 +69,7 @@ If you're working headlessly (running Claude Code without the interactive chat w
 script), use the terminal equivalents instead:
 
 ```bash
-claude plugin marketplace add atifgul99/craftsman-marketplace
+claude plugin marketplace add GulLabs/craftsman-marketplace
 claude plugin install craftsman@craftsman-marketplace
 claude plugin list --json
 ```
@@ -79,7 +79,7 @@ claude plugin list --json
 Install from the same marketplace in Codex:
 
 ```bash
-codex plugin marketplace add atifgul99/craftsman-marketplace
+codex plugin marketplace add GulLabs/craftsman-marketplace
 codex plugin add craftsman@craftsman-marketplace
 codex plugin list --marketplace craftsman-marketplace --json
 ```
@@ -104,10 +104,10 @@ In the project you want to assess, say:
 When you give an LLM only this repository URL, give it this instruction too:
 
 ```text
-Install Craftsman from https://github.com/atifgul99/craftsman-marketplace.
+Install Craftsman from https://github.com/GulLabs/craftsman-marketplace.
 
 First identify the host: Claude Code or Codex. Read this README and INSTALL.md before acting.
-The source is atifgul99/craftsman-marketplace; the marketplace is craftsman-marketplace; the plugin
+The source is GulLabs/craftsman-marketplace; the marketplace is craftsman-marketplace; the plugin
 to install is craftsman; craft-audit is the first skill to invoke after installation, not a plugin.
 Use the host-native marketplace commands, verify that craftsman is installed and enabled, then start
 a new chat/session. Do not run an audit or modify the project until I ask.
