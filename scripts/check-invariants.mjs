@@ -12,6 +12,11 @@
 //       (f1) every craftsman/examples/**/findings.md matches the canonical heading/body grammar
 //       (f2) every domain skill restates "Canonical findings.md emission format" + its DOMAINCODE
 //       (f3) soft: craft-audit/SKILL.md contains path-binding language ("Path binding")
+//   (g) vendored third-party content stays inert data:
+//       (g1) web-interface-guidelines.md keeps its provenance rows (pinned commit + source hash)
+//       (g2) its rule list carries no URL, prompt-template marker, or code fence, and no
+//            soft-flagged tool/network verb
+//       (g3) review-protocol.md still carries the do-not-fetch-at-review-time prohibition
 //
 // Run: node scripts/check-invariants.mjs
 
@@ -1009,6 +1014,137 @@ function checkFindingsGrammar() {
 }
 
 // ---------------------------------------------------------------------------
+// (g) vendored third-party content stays inert data
+// ---------------------------------------------------------------------------
+//
+// craft-ux vendors Vercel's Web Interface Guidelines rather than fetching them at review time,
+// because upstream is a slash-command prompt on a mutable branch: fetching it would make a
+// third-party repo an instruction channel into every craftsman user's codebase. That decision is
+// only as durable as the checks around it, so the guarantees are asserted here rather than left
+// to prose in the refresh script and the vendored file's own header.
+
+const VENDORED_GUIDELINES = join(
+  ROOT,
+  "craftsman/skills/craft-ux/references/web-interface-guidelines.md",
+);
+const REVIEW_PROTOCOL = join(
+  ROOT,
+  "craftsman/skills/craft-ux/references/review-protocol.md",
+);
+const RULES_HEADING = "## Rules";
+const NO_FETCH_CANARY = "Do not fetch the rules over the network at review time.";
+
+// Rows that must survive every refresh: without them the payload is no longer pinned or
+// attributable, and a reviewer cannot tell which upstream commit produced it.
+const PROVENANCE_ROWS = [
+  { label: "Upstream", re: /^\|\s*Upstream\s*\|\s*`https:\/\/github\.com\/\S+`\s*\|$/m },
+  { label: "Commit", re: /^\|\s*Commit\s*\|\s*`[0-9a-f]{40}`\s*\|$/m },
+  { label: "License", re: /^\|\s*License\s*\|\s*\S[^|]*\|$/m },
+  {
+    label: "SHA-256 of fetched source",
+    re: /^\|\s*SHA-256 of fetched source\s*\|\s*`[0-9a-f]{64}`\s*\|$/m,
+  },
+];
+
+// Structural signals: none of these can occur in a legitimate rule list, so their presence means
+// the vendored payload has stopped being inert data. Hard failures.
+const INSTRUCTION_SIGNALS = [
+  { name: "URL", re: /https?:\/\//i },
+  { name: "prompt-template marker", re: /\$ARGUMENTS|\{\{/ },
+  { name: "fenced code block", re: /^\s*```/ },
+];
+
+// Softer signal: a rule could legitimately use one of these words, but a refresh that introduces
+// one deserves a human read of the diff before it ships.
+const TOOL_VERB_RE = /\b(fetch|curl|wget|WebFetch|npm install|pip install|download|execute)\b/i;
+
+function checkVendoredGuidelines() {
+  let text;
+  try {
+    text = readFileSync(VENDORED_GUIDELINES, "utf8");
+  } catch {
+    fail(
+      "craft-ux/references/web-interface-guidelines.md: vendored rule list missing — " +
+        "craft-ux must never fall back to fetching upstream at review time",
+    );
+    return;
+  }
+
+  const rulesIdx = text.indexOf(`\n${RULES_HEADING}`);
+  if (rulesIdx === -1) {
+    fail(
+      `web-interface-guidelines.md: no "${RULES_HEADING}" heading — cannot separate the ` +
+        "provenance header from the vendored rules",
+    );
+    return;
+  }
+
+  // rulesIdx points at the newline *before* the heading, so slicing past it puts "## Rules" on
+  // line 0 of `rules`, and the line count of everything before it is that heading's 1-based
+  // file line number.
+  const provenance = text.slice(0, rulesIdx + 1);
+  const rules = text.slice(rulesIdx + 1);
+  const rulesLineOffset = provenance.split("\n").length;
+
+  // (g1) provenance intact
+  for (const row of PROVENANCE_ROWS) {
+    if (row.re.test(provenance)) {
+      ok(`web-interface-guidelines.md: provenance row "${row.label}" present and well-formed`);
+    } else {
+      fail(
+        `web-interface-guidelines.md: provenance row "${row.label}" missing or malformed — ` +
+          "vendored content must stay pinned to an upstream commit and attributed",
+      );
+    }
+  }
+
+  // (g2) the rules themselves stayed inert
+  const lines = rules.split("\n");
+  let structural = 0;
+  let verbs = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const lineNo = rulesLineOffset + i;
+    for (const sig of INSTRUCTION_SIGNALS) {
+      if (sig.re.test(lines[i])) {
+        structural++;
+        fail(
+          `web-interface-guidelines.md:${lineNo}: ${sig.name} in the vendored rule list — ` +
+            "the rules are data, not instructions; strip it or reject the refresh",
+        );
+      }
+    }
+    if (TOOL_VERB_RE.test(lines[i])) {
+      verbs++;
+      warn(
+        `web-interface-guidelines.md:${lineNo}: tool/network verb in the vendored rule list — ` +
+          "read this refresh diff before shipping it",
+      );
+    }
+  }
+  if (structural === 0) {
+    ok("web-interface-guidelines.md: rule list carries no URL, template marker, or code fence");
+  }
+  if (verbs === 0) {
+    ok("web-interface-guidelines.md: rule list carries no tool/network verbs");
+  }
+
+  // (g3) the prohibition that keeps review time offline
+  try {
+    const protocol = readFileSync(REVIEW_PROTOCOL, "utf8");
+    if (protocol.includes(NO_FETCH_CANARY)) {
+      ok("review-protocol.md: retains the do-not-fetch-at-review-time prohibition");
+    } else {
+      fail(
+        `review-protocol.md: missing the prohibition "${NO_FETCH_CANARY}" — without it a ` +
+          "review pass may fetch upstream rules over the network",
+      );
+    }
+  } catch {
+    fail("review-protocol.md: unreadable, cannot verify the do-not-fetch prohibition");
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Run all checks
 // ---------------------------------------------------------------------------
 checkJsonManifests();
@@ -1018,6 +1154,7 @@ checkAuditChecklistHeading();
 checkDescriptionLength();
 checkNoAbsoluteVolumesPaths();
 checkFindingsGrammar();
+checkVendoredGuidelines();
 
 console.log("");
 console.log(`${failures} failure(s), ${warnings} warning(s).`);
