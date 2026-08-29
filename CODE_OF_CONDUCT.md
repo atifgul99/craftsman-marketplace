@@ -44,7 +44,7 @@ representing the project in public spaces.
 ## Enforcement
 
 Report unacceptable behavior privately through the repository's
-[security advisory form](https://github.com/GulLabs/craftsman-marketplace/security/advisories/new).
+[security advisory form](https://github.com/gul-labs/craftsman-marketplace/security/advisories/new).
 Reports will be reviewed promptly and fairly. The maintainer will respect the privacy and
 security of the reporter to the extent possible.
 

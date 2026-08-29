@@ -19,7 +19,7 @@ You need Claude Code installed first: see
 Type these into Claude Code's chat box, not a terminal:
 
 ```
-/plugin marketplace add GulLabs/craftsman-marketplace
+/plugin marketplace add gul-labs/craftsman-marketplace
 /plugin install craftsman@craftsman-marketplace
 ```
 
@@ -27,7 +27,7 @@ If you're working headlessly (running Claude Code without the interactive chat w
 script), use the terminal equivalents instead:
 
 ```bash
-claude plugin marketplace add GulLabs/craftsman-marketplace
+claude plugin marketplace add gul-labs/craftsman-marketplace
 claude plugin install craftsman@craftsman-marketplace
 ```
 
@@ -40,11 +40,11 @@ Codex loads the same skills through the included `.codex-plugin/plugin.json` man
 marketplace, then install the plugin:
 
 ```bash
-codex plugin marketplace add GulLabs/craftsman-marketplace
+codex plugin marketplace add gul-labs/craftsman-marketplace
 codex plugin add craftsman@craftsman-marketplace
 ```
 
-From a local clone, replace `GulLabs/craftsman-marketplace` with the absolute path to the clone.
+From a local clone, replace `gul-labs/craftsman-marketplace` with the absolute path to the clone.
 If your Codex build predates marketplace support, use the direct-skill fallback instead:
 
 ```bash
