@@ -1,0 +1,88 @@
+name: Vendored upstream drift
+
+# craft-ux vendors Vercel's Web Interface Guidelines instead of fetching them at review time.
+# That keeps the runtime offline, but it also means the copy silently goes stale when upstream
+# moves. This job watches for that drift.
+#
+# Deliberately NOT part of CI: `--check` reaches the network, so running it per-PR would make
+# every build depend on GitHub's API and would fail unrelated PRs whenever upstream pushes.
+# A weekly job files an issue instead, and a human decides when to refresh.
+
+on:
+  schedule:
+    # Mondays, 07:23 UTC — off the hour to avoid GitHub's scheduling pileup.
+    - cron: "23 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Pinned full SHAs keep a changed action tag from changing CI behavior silently.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "20"
+
+      - name: Check vendored guidelines against upstream
+        id: check
+        run: |
+          if output=$(node scripts/refresh-web-interface-guidelines.mjs --check 2>&1); then
+            echo "drifted=false" >> "$GITHUB_OUTPUT"
+            echo "vendored copy matches upstream"
+          else
+            echo "drifted=true" >> "$GITHUB_OUTPUT"
+            {
+              echo 'report<<DRIFT_EOF'
+              echo "$output"
+              echo 'DRIFT_EOF'
+            } >> "$GITHUB_OUTPUT"
+            echo "$output"
+          fi
+
+      - name: File or update the drift issue
+        if: steps.check.outputs.drifted == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT: ${{ steps.check.outputs.report }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          TITLE="Vendored Web Interface Guidelines have drifted from upstream"
+
+          body=$(cat <<'INTRO'
+          The weekly drift check found that `craft-ux/references/web-interface-guidelines.md` no
+          longer matches its pinned upstream commit.
+
+          **Do not auto-merge a refresh.** Upstream is a slash-command prompt, so new rules are new
+          agent instructions. Refresh, then read the diff:
+
+          ```bash
+          node scripts/refresh-web-interface-guidelines.mjs
+          git diff craftsman/skills/craft-ux/references/web-interface-guidelines.md
+          ```
+
+          Reject anything imperative — directions to run a tool, fetch a URL, or change how findings
+          are reported. `check-invariants.mjs` (check `g`) fails the build on URLs, template markers,
+          and code fences, and warns on tool/network verbs, but a human still reads the diff.
+
+          <details><summary>Checker output</summary>
+
+          INTRO
+          )
+          body="${body}"$'\n```\n'"${REPORT}"$'\n```\n\n</details>\n\nRun: '"${RUN_URL}"
+
+          existing=$(gh issue list --state open --search "$TITLE in:title" \
+            --json number --jq '.[0].number // empty')
+
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+            echo "commented on existing issue #${existing}"
+          else
+            gh issue create --title "$TITLE" --body "$body"
+          fi
