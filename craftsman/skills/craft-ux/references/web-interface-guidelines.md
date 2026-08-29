@@ -8,12 +8,12 @@
 
 | | |
 | --- | --- |
-| Upstream | `https://github.com/vercel-labs/web-interface-guidelines/blob/d0a657bfe87e86dd3a4753d7ec28c7e7dd7a88fe/command.md` |
-| Commit | `d0a657bfe87e86dd3a4753d7ec28c7e7dd7a88fe` |
-| Upstream commit date | 2026-04-06T22:03:00Z |
+| Upstream | `https://github.com/vercel-labs/web-interface-guidelines/blob/e3d624baaf29dc1fc645aff3e38f03e564d2d6b1/command.md` |
+| Commit | `e3d624baaf29dc1fc645aff3e38f03e564d2d6b1` |
+| Upstream commit date | 2026-08-18T00:21:06Z |
 | License | MIT (© Vercel Labs contributors) |
 | Vendored by | `scripts/refresh-web-interface-guidelines.mjs` |
-| SHA-256 of fetched source | `eea73cb6dd46fee9faec9973e8e7fe198b5f07ec326f14d276a56e50287e1cab` |
+| SHA-256 of fetched source | `5a775e6411f790f518dbc9c1fa7c50a89e6873502d9a3530a6eb223a590bcfe8` |
 
 Upstream's command frontmatter, `$ARGUMENTS` scaffolding, and output-format section are stripped
 on vendoring. Only the rule list is kept. To resync, run the script above and read the diff before
@@ -35,6 +35,8 @@ committing — new rules are new agent instructions.
 - Use semantic HTML (`<button>`, `<a>`, `<label>`, `<table>`) before ARIA
 - Headings hierarchical `<h1>`–`<h6>`; include skip link for main content
 - `scroll-margin-top` on heading anchors
+- Meaningful media needs captions, transcripts, or descriptions as applicable
+- Media controls need keyboard support; decorative media needs assistive-tech hiding
 
 ### Focus States
 
@@ -42,6 +44,7 @@ committing — new rules are new agent instructions.
 - Never `outline-none` / `outline: none` without focus replacement
 - Use `:focus-visible` over `:focus` (avoid focus ring on click)
 - Group focus with `:focus-within` for compound controls
+- Sticky headers/footers/overlays must not cover the focused element
 
 ### Forms
 
@@ -65,11 +68,13 @@ committing — new rules are new agent instructions.
 - Set correct `transform-origin`
 - SVG: transforms on `<g>` wrapper with `transform-box: fill-box; transform-origin: center`
 - Animations interruptible—respond to user input mid-animation
+- Autoplay motion >5 seconds alongside other content needs pause, stop, or hide controls
+- Muted decorative loops must stop under `prefers-reduced-motion`
 
 ### Typography
 
 - `…` not `...`
-- Curly quotes `"` `"` not straight `"`
+- Curly quotes `“` `”` not straight `"`
 - Non-breaking spaces: `10&nbsp;MB`, `⌘&nbsp;K`, brand names
 - Loading states end with `…`: `"Loading…"`, `"Saving…"`
 - `font-variant-numeric: tabular-nums` for number columns/comparisons
@@ -96,6 +101,8 @@ committing — new rules are new agent instructions.
 - Prefer uncontrolled inputs; controlled inputs must be cheap per keystroke
 - Add `<link rel="preconnect">` for CDN/asset domains
 - Critical fonts: `<link rel="preload" as="font">` with `font-display: swap`
+- Prefer `<video autoplay muted loop playsinline>` over animated GIF; provide a still alternative
+- Short non-essential loops: Safari H.264 MP4 `<picture>` source, `prefers-reduced-motion` media condition, and still fallback
 
 ### Navigation & State
 
@@ -110,6 +117,7 @@ committing — new rules are new agent instructions.
 - `-webkit-tap-highlight-color` set intentionally
 - `overscroll-behavior: contain` in modals/drawers/sheets
 - During drag: disable text selection, `inert` on dragged elements
+- Drag/swipe/pinch/path gestures need tap/click and keyboard alternatives unless essential
 - `autoFocus` sparingly—desktop only, single primary input; avoid on mobile
 
 ### Safe Areas & Layout
@@ -166,3 +174,5 @@ committing — new rules are new agent instructions.
 - Icon buttons without `aria-label`
 - Hardcoded date/number formats (use `Intl.*`)
 - `autoFocus` without clear justification
+- Animated GIF when compressed video is suitable
+- Gesture-only action without tap/click and keyboard alternative
