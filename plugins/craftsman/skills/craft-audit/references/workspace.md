@@ -11,7 +11,7 @@ stamping rules, and how re-runs behave.
 >
 > **Worked example:** a complete, illustrative `.craftsman/` tree — discovery → applicability →
 > per-domain plans/findings → master tracker with grades, climb sequence, and rollup — lives in the
-> plugin at `craftsman/examples/craftsman-output/`. Read it to see how these templates compose into a
+> plugin at `plugins/craftsman/examples/craftsman-output/`. Read it to see how these templates compose into a
 > coherent whole (it's a reference artifact, not live state).
 
 ---

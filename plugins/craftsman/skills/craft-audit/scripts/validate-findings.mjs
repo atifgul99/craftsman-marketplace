@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Mechanical validator for craftsman `.craftsman/audits/<scope>/<domain>/findings.md` files.
 //
-// Authoritative spec: craftsman/skills/craft-audit/references/workspace.md —
+// Authoritative spec: plugins/craftsman/skills/craft-audit/references/workspace.md —
 //   - "Canonical findings.md emission format (mandatory)" (heading grammar, required labels,
 //     optional Confidence/Fix-attempt trailing labels, forbidden shapes)
 //   - "Mechanical validation checklist" (the six checks this script implements)

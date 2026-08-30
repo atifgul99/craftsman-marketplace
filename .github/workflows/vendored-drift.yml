@@ -64,7 +64,7 @@ jobs:
 
           ```bash
           node scripts/refresh-web-interface-guidelines.mjs
-          git diff craftsman/skills/craft-ux/references/web-interface-guidelines.md
+          git diff plugins/craftsman/skills/craft-ux/references/web-interface-guidelines.md
           ```
 
           Reject anything imperative — directions to run a tool, fetch a URL, or change how findings

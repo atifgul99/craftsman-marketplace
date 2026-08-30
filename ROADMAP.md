@@ -57,7 +57,7 @@ demand a rewrite of a working stack).
       `plan.md` from discovery context, and each subagent merges the domain checklist as its first
       act before auditing. Ownership of the checklist lives with the domain that knows the surface.
 - [x] Worked end-to-end example: a complete illustrative `.craftsman/` tree (fictional "Invoicely" SaaS,
-      scope `root`, now 9 of 10 domains audited) committed at `craftsman/examples/craftsman-output/`.
+      scope `root`, now 9 of 10 domains audited) committed at `plugins/craftsman/examples/craftsman-output/`.
       Synthetic by design, a portable teaching artifact that doesn't bake another repo's real holes
       into this one.
 - [x] Per-domain readiness grade in the master tracker: a derived 🔴 Blocked / 🟡 At risk / 🟢 Solid /
@@ -139,7 +139,7 @@ demand a rewrite of a working stack).
 
 - **`craft-ai` graduated 2026-07-15.** LLM-integration domain (prompt injection surface, key/spend
   safety, PII-to-model-API exposure, reliability/evals) moved from `drafts/` into
-  `craftsman/skills/craft-ai/`, wired into craft-audit (discovery applicability, domain code `AI`,
+  `plugins/craftsman/skills/craft-ai/`, wired into craft-audit (discovery applicability, domain code `AI`,
   emission grammar), and counted as the 10th domain skill.
 
 ## Resolved (2026-06-24)
@@ -149,7 +149,7 @@ demand a rewrite of a working stack).
   determinism, AAA, factories), `flake.md` (full flake taxonomy + diagnosis + quarantine policy),
   `frontend-testing.md` (query-by-role, MSW, async UI, component vs e2e split), and
   `backend-data-testing.md` (Testcontainers, per-test isolation, factories, IDOR regressions, contract
-  testing). Graduated into `craftsman/skills/`; `drafts/` is now empty.
+  testing). Graduated into `plugins/craftsman/skills/`; `drafts/` is now empty.
 
 - **Repo renamed `ag-plugins` → `craftsman-marketplace`.** GitHub repo renamed via `gh repo rename`,
   local folder renamed accordingly. Updated: `marketplace.json` (name + URLs), `plugin.json` (URLs),

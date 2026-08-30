@@ -22,7 +22,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const TARGET = join(
   ROOT,
-  "craftsman/skills/craft-ux/references/web-interface-guidelines.md",
+  "plugins/craftsman/skills/craft-ux/references/web-interface-guidelines.md",
 );
 
 const REPO = "vercel-labs/web-interface-guidelines";
