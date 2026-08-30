@@ -2,6 +2,12 @@
 
 Extract Schedule K-1 (Form 1065 or 1120-S) fields from a PDF into the `parsing.md` `K-1-1065` / `K-1-1120S` JSON schema.
 
+> **Paths below are written from this tool's own directory.** The skill installs as a
+> plugin outside your workspace, so a bare `python3 k1_parser.py` will not resolve from
+> where you are standing. Set `TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"` once and
+> address the script as `"$TAX_SKILL/tools/k1-parser/k1_parser.py"`. Arguments are the other way
+> round: they are workspace paths, resolved against the current directory.
+
 ## Purpose
 
 Every K-1 received by an entity or individual flows into the enclosing scope's `tax-summary.md`. This tool extracts the structured fields (partner/issuer identity, boxes 1–20, capital account, liabilities, §199A codes) so the intake workflow can diff filed amounts against expected amounts and update workpapers without hand-typing.

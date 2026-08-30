@@ -13,6 +13,12 @@ Feeds on the output of `chase-statement-parser` (or any CSV with at least
 No LLM in the loop. Unmatched rows surface in the summary so a human (or a
 follow-up LLM call) can finish the job.
 
+> **Paths below are written from this tool's own directory.** The skill installs as a
+> plugin outside your workspace, so a bare `python3 coa_categorizer.py` will not resolve from
+> where you are standing. Set `TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"` once and
+> address the script as `"$TAX_SKILL/tools/coa-categorizer/coa_categorizer.py"`. Arguments are the other way
+> round: they are workspace paths, resolved against the current directory.
+
 ## CLI
 
 ```bash

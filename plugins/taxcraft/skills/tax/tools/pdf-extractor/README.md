@@ -2,6 +2,12 @@
 
 Auto-fallback PDF reader for the tax skill. Tries text extraction first (fast, perfect for e-filed returns, bank statements, K-1s from software-generated PDFs) and falls back to rasterized PNG output that Claude's vision can read (for scanned IRS letters, image-based forms, check scans).
 
+> **Paths below are written from this tool's own directory.** The skill installs as a
+> plugin outside your workspace, so a bare `python3 pdf_extract.py` will not resolve from
+> where you are standing. Set `TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"` once and
+> address the script as `"$TAX_SKILL/tools/pdf-extractor/pdf_extract.py"`. Arguments are the other way
+> round: they are workspace paths, resolved against the current directory.
+
 ## Why this exists
 
 The skill's PDF discipline is:

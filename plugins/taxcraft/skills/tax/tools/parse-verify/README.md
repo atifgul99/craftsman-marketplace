@@ -18,6 +18,12 @@ python3 test_verify.py                              # self-test
 Exit 0 = nothing at or above `--min-severity` (default MEDIUM); 1 = findings;
 2 = usage/IO error. Never modifies anything.
 
+> **Paths below are written from this tool's own directory.** The skill installs as a
+> plugin outside your workspace, so a bare `python3 verify.py` will not resolve from
+> where you are standing. Set `TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"` once and
+> address the script as `"$TAX_SKILL/tools/parse-verify/verify.py"`. Arguments are the other way
+> round: they are workspace paths, resolved against the current directory.
+
 ## Checks
 
 **Per K-1**
