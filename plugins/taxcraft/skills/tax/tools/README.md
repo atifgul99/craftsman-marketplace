@@ -31,9 +31,18 @@ conflicts, and the caches are noise in every other workspace too.
 second line of defense; `workspace-doctor` (below) flags any that slip
 through.
 
+The skill is installed as a plugin, so these paths are not relative to your
+workspace. Resolve them through the plugin root once, then address every tool
+through it — a bare `python3 -B k1_parser.py` only works if you happen to be
+standing in the tool's own directory, which you are not:
+
 ```bash
-python3 -B k1_parser.py "path/to/k1.pdf"
+TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"
+python3 -B "$TAX_SKILL/tools/k1-parser/k1_parser.py" "path/to/k1.pdf"
 ```
+
+Tool *arguments* work the other way: they are workspace paths, resolved against
+the current directory. Run tools from the workspace, address them by plugin path.
 
 ## Design principles
 

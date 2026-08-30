@@ -47,7 +47,7 @@ _intake/
 **Flow (one file at a time, interactive):**
 
 1. Glob `_intake/**` excluding `_processed.log` and `_unresolved/`.
-2. For each file, run `tools/pdf-extractor/pdf_extract.py` (text → image fallback).
+2. For each file, run `$TAX_SKILL/tools/pdf-extractor/pdf_extract.py` (text → image fallback).
 3. From parsed content extract: doc type, recipient/payer name, TIN, tax year.
 4. Resolve TIN → scope via `workspace-profile/slugs.md`.
    - If TIN not in slugs → **pause**: "I see a document for TIN `XX-XXXXXXX` (`<payer>`). Is this for [individual / entity slug]? Want me to add it to slugs.md?"
@@ -124,12 +124,12 @@ Route by doc type to the dedicated parser — do not run everything through manu
 
 | Doc type | Parser | Invocation |
 |---|---|---|
-| K-1 (1065 / 1120-S), incl. multi-K-1 packages | `tools/k1-parser/` | `python3 k1_parser.py "<path>" [--multi] [--json] [--write]` |
-| Filed return (1065 / 1120 / 1120-S) | `tools/return-parser/` | `python3 return_parser.py "<path>" [--json] [--no-confirm]` |
-| IRS transcript (Account / Return / Wage & Income / Record / Non-Filing) | `tools/transcript-parser/` | `python3 transcript_parser.py "<path>" [--json]` |
-| IBKR statement CSV | `tools/ibkr-parser/` | `python3 ibkr_parser.py <statement.csv> [--pdf <statement.pdf>] [--no-confirm]` |
+| K-1 (1065 / 1120-S), incl. multi-K-1 packages | `tools/k1-parser/` | `python3 -B "$TAX_SKILL/tools/k1-parser/k1_parser.py" "<path>" [--multi] [--json] [--write]` |
+| Filed return (1065 / 1120 / 1120-S) | `tools/return-parser/` | `python3 -B "$TAX_SKILL/tools/return-parser/return_parser.py" "<path>" [--json] [--no-confirm]` |
+| IRS transcript (Account / Return / Wage & Income / Record / Non-Filing) | `tools/transcript-parser/` | `python3 -B "$TAX_SKILL/tools/transcript-parser/transcript_parser.py" "<path>" [--json]` |
+| IBKR statement CSV | `tools/ibkr-parser/` | `python3 -B "$TAX_SKILL/tools/ibkr-parser/ibkr_parser.py" <statement.csv> [--pdf <statement.pdf>] [--no-confirm]` |
 | Chase bank / credit-card statement or CSV | `tools/chase-statement-parser/` | library-only — invoke via the entity's `books/transaction-ledgers/regenerate.py` driver calling `build_ledgers()` (see tool README) |
-| Everything else (W-2, 1099s, 1098, receipts, scans, letters) | `tools/pdf-extractor/` | `python3 pdf_extract.py "<path>" [--force-image] [--pages N-M]` |
+| Everything else (W-2, 1099s, 1098, receipts, scans, letters) | `tools/pdf-extractor/` | `python3 -B "$TAX_SKILL/tools/pdf-extractor/pdf_extract.py" "<path>" [--force-image] [--pages N-M]` |
 
 Then per `parsing.md` (PDF discipline, empty-output fallback, per-doctype schemas). Never use the built-in Read tool on structured PDFs. Never silently skip a load-bearing doc.
 

@@ -29,6 +29,28 @@ Cite Code sections, Regs, and forms by number. Show math. Be precise.
 
 > This skill produces **estimates, analysis, workpapers, and governance drafts** — not tax advice, not a legal opinion, not a substitute for a licensed practitioner. Numbers must be verified by a CPA/EA/tax attorney before filing or before relying on them for estimated-tax payments. Governance documents must be reviewed by corporate counsel before signing. Aggressive strategies carry audit risk. No CPA-client or attorney-client privilege is created.
 
+## Where the tools live (read before running any of them)
+
+This skill is installed as a plugin, outside the user's workspace. The working
+directory is *their* tax workspace, so every `tools/…` and `evals/…` path in this
+skill is relative to the skill, not to where you are standing. Run one bare and it
+fails with "No such file or directory"; guess at a path and you may run something
+else. Address them through the plugin root, and set it once per session:
+
+```bash
+TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"
+python3 -B "$TAX_SKILL/tools/pdf-extractor/pdf_extract.py" "path/to/doc.pdf"
+```
+
+If `CLAUDE_PLUGIN_ROOT` is unset (a non-plugin install, or a runtime that does not
+export it), locate the skill once — `ls ~/.claude/plugins/cache/*/taxcraft/*/skills/tax`
+or ask the user — and use that absolute path. Do not fall back to a relative path.
+
+The reverse holds for the tools' *arguments*: those are workspace paths, and the
+tools resolve them against the current directory. `workspace-doctor` defaults its
+root to `$TAX_WORKSPACE`, else the current directory — so run it from the
+workspace, and never assume it inferred the right tree from its own location.
+
 ## First-run tooling check
 
 The `tools/` scripts are standard-library only and need nothing installed. The
@@ -148,7 +170,7 @@ Or describe what you need.
 | `states/wy/README.md` | WY: no income tax, annual report only |
 | `calendar.md` | Compliance calendar — read-only deadline projection over `entity.md` + tax-summary + rules; dashboards, overdue/upcoming |
 | `tools/README.md` | 9 shipped tools (pdf-extractor, chase-statement-parser, ibkr-parser, k1-parser, return-parser, transcript-parser, coa-categorizer, parse-verify, workspace-doctor) — see `tools/README.md` |
-| `tools/workspace-doctor/` | Report-only lint: runs `python3 tools/workspace-doctor/doctor.py`; reports missing canonical files (e.g. `workspace-profile/slugs.md`), naming violations, empty parse caches, sync-conflict duplicates, unprocessed corporate docs — never modifies anything |
+| `tools/workspace-doctor/` | Report-only lint: runs `python3 -B "$TAX_SKILL/tools/workspace-doctor/doctor.py"` from the workspace root; reports missing canonical files (e.g. `workspace-profile/slugs.md`), naming violations, empty parse caches, sync-conflict duplicates, unprocessed corporate docs — never modifies anything |
 
 Read sub-skill files via Read tool as needed. Never load all upfront.
 

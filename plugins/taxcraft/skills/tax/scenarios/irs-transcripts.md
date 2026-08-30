@@ -89,7 +89,7 @@ For entity transcripts: request wage-and-income on the entity's EIN. For individ
 
 Where `<Type>` ∈ {`Account`, `Return`, `Record of Account`, `Wage and Income`, `Verification of Non-Filing`}.
 
-Parse via `tools/transcript-parser/transcript_parser.py` (text PDFs parse cleanly — uses `pdftotext -layout` internally). Run it interactively and confirm the y/n prompt to write; on confirmation it writes `<input>.parsed.json` next to the source PDF (not into a `.parsed/` subdirectory) matching the schema in `parsing.md`. It captures all TC transactions (with cycle + date + amount), flags exam / freeze / lien indicators, and extracts Wage & Income line items into `wage_income_items` for CP2000 reconciliation.
+Parse via `$TAX_SKILL/tools/transcript-parser/transcript_parser.py` (text PDFs parse cleanly — uses `pdftotext -layout` internally). Run it interactively and confirm the y/n prompt to write; on confirmation it writes `<input>.parsed.json` next to the source PDF (not into a `.parsed/` subdirectory) matching the schema in `parsing.md`. It captures all TC transactions (with cycle + date + amount), flags exam / freeze / lien indicators, and extracts Wage & Income line items into `wage_income_items` for CP2000 reconciliation.
 
 Re-pull: IRS updates transcripts weekly. Overwrite the same canonical filename on re-pull; `.parsed/_index.json` TTL class is `manual` so re-parse is explicit.
 

@@ -16,12 +16,14 @@ All printed paths are relative to the workspace root, not absolute.
 ## Usage
 
 ```bash
-# Default root: the workspace root that contains workspace-profile/, entities/,
-# individual/, etc. — computed as 4 levels up from this script's directory.
-python3 -B doctor.py
+# Run it from the workspace root — the directory holding workspace-profile/,
+# entities/, individual/. That is the default root ($TAX_WORKSPACE overrides it).
+# The skill ships as an installed plugin, so the tree around this script is the
+# plugin cache, not your workspace; the root is never inferred from it.
+python3 -B /path/to/plugin/skills/tax/tools/workspace-doctor/doctor.py
 
-# Explicit root (e.g. running from a copy of the skill, or a different workspace)
-python3 -B doctor.py --root /path/to/workspace
+# Explicit root (diagnosing a workspace other than the current directory)
+python3 -B /path/to/plugin/skills/tax/tools/workspace-doctor/doctor.py --root /path/to/workspace
 ```
 
 ## Checks performed

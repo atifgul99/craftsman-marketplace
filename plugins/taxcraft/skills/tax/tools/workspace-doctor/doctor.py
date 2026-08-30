@@ -7,9 +7,9 @@ report, not a gate) and prints paths only — never file contents — to avoid
 leaking PII into logs or terminal scrollback.
 
 CLI:
-    python3 doctor.py                # default root: 4 levels up from this
-                                      # script's directory (the workspace root
-                                      # that contains workspace-profile/, etc.)
+    python3 doctor.py                # default root: $TAX_WORKSPACE, else the
+                                      # current directory — run it from the
+                                      # workspace that holds workspace-profile/
     python3 doctor.py --root /path/to/workspace
 
 Checks performed (see README.md for detail on each):
@@ -21,7 +21,7 @@ Checks performed (see README.md for detail on each):
   - Sync-conflict litter (duplicate downloads, double extensions, wrong-case
     extensions)
   - Loose K-1/tax PDFs at workspace root or individual/ root
-  - __pycache__ dirs in the skill tree
+  - __pycache__ dirs in the workspace
   - poppler (pdftotext) presence
 
 Privacy: any path with a segment containing "privileged" (case-insensitive)
@@ -31,6 +31,7 @@ check_privileged_excluded / _is_privileged below.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import shutil
 import subprocess
@@ -61,10 +62,15 @@ WRONG_CASE_EXT_RE = re.compile(r"\.(Pdf|PDF|pDF|pdF|PDf|PdF)$")
 
 
 def _default_root() -> Path:
-    """4 levels up from this script's directory: tools/workspace-doctor ->
-    tools -> tax -> skills -> .claude -> <workspace root>."""
-    here = Path(__file__).resolve().parent
-    return (here / ".." / ".." / ".." / ".." / "..").resolve()
+    """The workspace being diagnosed: $TAX_WORKSPACE, else the current directory.
+
+    Deliberately not derived from this script's location. The skill ships as an
+    installed plugin, so the tree above it is the plugin cache, not anyone's tax
+    workspace — walking up from here produced a confident report about the wrong
+    directory, which is worse than failing. The workspace is where the user is.
+    """
+    env = os.environ.get("TAX_WORKSPACE")
+    return Path(env).expanduser().resolve() if env else Path.cwd()
 
 
 def _is_privileged(path: Path) -> bool:
@@ -242,11 +248,15 @@ def check_loose_tax_pdfs(root: Path) -> Finding:
 
 
 def check_pycache_dirs(root: Path) -> Finding:
-    f = Finding("__pycache__ dirs in the skill tree")
-    skill_dir = root / ".claude" / "skills" / "tax"
-    if not skill_dir.is_dir():
-        return f
-    for p in skill_dir.rglob("__pycache__"):
+    """Bytecode caches anywhere in the workspace.
+
+    This used to look only under `<root>/.claude/skills/tax`, the location the skill
+    occupied before it shipped as a plugin. That directory no longer exists in a
+    workspace, so the check silently passed on every run. Scan the workspace itself —
+    which is what the sync-conflict rationale in tools/README.md was ever about.
+    """
+    f = Finding("__pycache__ dirs in the workspace")
+    for p in root.rglob("__pycache__"):
         if p.is_dir() and not _is_privileged(p):
             f.add(_rel(root, p))
     return f
@@ -400,7 +410,7 @@ def run(root: Path) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Report-only health check for the tax workspace layout.")
-    ap.add_argument("--root", default=None, help="Workspace root (default: 4 levels up from this script)")
+    ap.add_argument("--root", default=None, help="Workspace root (default: $TAX_WORKSPACE, else the current directory)")
     args = ap.parse_args()
 
     root = Path(args.root).expanduser().resolve() if args.root else _default_root()
