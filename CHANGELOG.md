@@ -25,6 +25,15 @@ not a synonym for "public."
 
 Metadata only — no version bump. Fold into whatever ships next.
 
+### Added
+
+- **`craftsman` symlink at the repository root**, pointing at `plugins/craftsman`. This is a
+  compatibility shim, not part of the plugin layout. A directory-submission made on 2026-08-04 is
+  still pending review, and it may have recorded `craftsman` as its "path within repository" —
+  which the move to `plugins/craftsman` would have invalidated. The symlink makes both the old and
+  new coordinates resolve, so the pending submission stays viable regardless of what was recorded.
+  Remove it once that submission is resolved.
+
 ### Changed
 
 - **Rewrote the three manifest descriptions.** Dropped the "Written by a software engineer of 25
