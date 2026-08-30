@@ -23,9 +23,37 @@ not a synonym for "public."
 
 ## [Unreleased]
 
-Metadata only — no version bump. Fold into whatever ships next.
+Nothing yet.
+
+## [0.6.0] (2026-08-29)
+
+The release that makes this marketplace a two-plugin repository. The marketplace version moves to
+`0.6.0`; the plugins version independently from here on, and `craftsman` stays at `0.5.0` because
+nothing in it changed. `taxcraft` ships its first release at `0.1.0`.
 
 ### Added
+
+- **A dependency preflight for `taxcraft`, and one place that documents it.** The skill needs
+  poppler (every PDF is read through `pdftotext`, never by eye) and two Python packages for the
+  `evals/` validators. Claude Code installs a plugin's Node dependencies automatically and has no
+  pip equivalent, so a fresh install is normally missing all three — and the skill documented the
+  fix in three places that could drift apart. `skills/tax/dependencies.md` is now the SSOT: a
+  per-layer detection and repair matrix covering plugin-install integrity, the runtime, poppler,
+  the validator packages, and the optional fallback rungs (`ocrmypdf`, `bean-check`, `pdfplumber`).
+  `skills/tax/tools/dep-check/dep_check.py` is the one-shot preflight that checks every layer and
+  prints the platform-correct fix command; it exits 1 on a missing required dependency and never
+  installs anything itself. `SKILL.md`, `parsing.md`, and the plugin README now defer to it instead
+  of carrying their own copies of the install commands.
+
+  The rule the preflight exists to enforce: propose, never install silently — and **if the user
+  declines, stop the task that needed it.** `evals/validate_rules.py` exits 2 on expired tax data,
+  so a gate that could not run is not a gate that passed, and stale rules produce confidently wrong
+  numbers. No lower-fidelity substitute is permitted either; in particular there is no
+  `Read`-on-PDF fallback when poppler is absent.
+- **`evals/test_no_skill_writes.py`** — runs the whole eval suite a second time against a read-only
+  copy of the skill. An installed plugin is read-only for most users, so anything that writes into
+  its own skill directory is a latent failure that only shows up after distribution.
+
 
 - **`taxcraft` (v0.1.0), a second plugin in this marketplace** — US tax and accounting workpapers,
   unrelated to auditing code. One skill (`tax`) covering 1040 / 1065 / 1120-S / 1120, disregarded
@@ -55,6 +83,22 @@ Metadata only — no version bump. Fold into whatever ships next.
 
 ### Changed
 
+- **The tools layer no longer assumes the skill lives inside the tax workspace.** `workspace-doctor`
+  and the surrounding tooling resolved paths against the skill's own location, which is wrong once
+  the skill is installed under `~/.claude/plugins/`. Workspace paths now key off `$TAX_WORKSPACE`,
+  falling back to the working directory; skill-owned files resolve through `CLAUDE_PLUGIN_ROOT`.
+- **`scripts/check-invariants.mjs` now covers `taxcraft`** — both manifests parse, the three
+  version fields agree, every marketplace `source` path exists, the `tax` description fits the
+  length budget, and all 38 concrete router-table paths in `SKILL.md` resolve.
+- **The reference-pointer checker is scoped by markdown block, not by a character window.** The old
+  heuristic measured proximity in characters, which produced false negatives when a pointer sat
+  near an unrelated skill's name. Pointers must now be syntactically attached to the skill that
+  qualifies them. Three specific gaps closed, each pinned by a fixture — the checker self-tests
+  against 11 fixtures before it validates anything.
+- **`validate_corporate_records.py` is back in CI.** Its fixture loop needed `entities/test-corp/**`
+  files that no clean checkout has. It now builds a `TemporaryDirectory`, points `WORKSPACE` at it,
+  and materializes every file the artifact cites — the pattern
+  `run_generic_specialist_fixtures()` already used.
 - **Rewrote the three manifest descriptions.** Dropped the "Written by a software engineer of 25
   years, including at Microsoft and Amazon" sentence. It was authority-by-assertion in a product
   whose own non-negotiables are "plain-language findings, consequence before jargon" and "evidence
