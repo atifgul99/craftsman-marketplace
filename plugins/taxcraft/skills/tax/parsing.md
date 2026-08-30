@@ -131,7 +131,7 @@ Neither layer decides anything. Both produce leads:
 - **Cross-reference against independent data** — bank/brokerage transactions, the prior year's workpapers, or the issuer's own summary page. A figure that reconciles to nothing is unverified, whatever the extractor reported.
 - **On K-1s, confirm these fields individually** rather than trusting a whole-form read: Box 1 (ordinary), Box 2 (rental RE), Box 4a/4c (guaranteed payments — services vs capital), Box 19 (distributions), and the liabilities block (nonrecourse / QNR / recourse).
 
-  Boxes 4a/4c and 19 are the classic confusion pair: **guaranteed payments are not distributions**. So are liabilities and income — a liabilities figure misread as income silently inflates the return. Both misreads have occurred in this workspace.
+  Boxes 4a/4c and 19 are the classic confusion pair: **guaranteed payments are not distributions**. So are liabilities and income — a liabilities figure misread as income silently inflates the return. Both misreads are common enough in practice to check for by name rather than trusting a clean-looking extraction.
 - Any figure that cannot be reconciled → `open-questions.md`, not the workpaper.
 
 ## Parsed-cache index

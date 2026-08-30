@@ -17,6 +17,9 @@
 //       (g2) its rule list carries no URL, prompt-template marker, or code fence, and no
 //            soft-flagged tool/network verb
 //       (g3) review-protocol.md still carries the do-not-fetch-at-review-time prohibition
+//   (h) every unqualified `references/x.md` pointer resolves inside its own skill
+//   (i) taxcraft parity: manifests parse and agree on version, every marketplace source
+//       path exists, the tax description fits, and every concrete router-table path exists
 //
 // Run: node scripts/check-invariants.mjs
 
@@ -1145,6 +1148,116 @@ function checkVendoredGuidelines() {
 }
 
 // ---------------------------------------------------------------------------
+// (h) unqualified `references/x.md` pointers resolve inside their own skill.
+//
+// checkCrossSkillPointers only sees pointers that name the owning skill. A bare
+// `references/x.md` that resolves nowhere in its own skill is the dangerous form:
+// a reader follows it into their own skill's references/ dir, finds nothing, and
+// either guesses or drops the guidance. Prose that names another craft skill
+// nearby is exempt — that pointer is already covered by the cross-skill check.
+// ---------------------------------------------------------------------------
+function checkUnqualifiedReferencePointers() {
+  const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
+  let dangling = 0;
+  for (const file of findAllSkillMdFiles()) {
+    const relPath = relative(ROOT, file);
+    const ownSkill = relative(skillsRoot, file).split("/")[0];
+    const text = readFileSync(file, "utf8");
+
+    for (const m of text.matchAll(/references\/([a-z0-9-]+\.md)/g)) {
+      const fileTok = m[1];
+      if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
+      // A craft-* token in the same clause qualifies the pointer. The window is short
+      // on purpose: a skill name three clauses back does not tell a reader which skill
+      // *this* pointer belongs to, which is exactly the ambiguity being caught.
+      const lookback = text.slice(Math.max(0, m.index - 60), m.index);
+      if (/craft-[a-z0-9-]+/.test(lookback)) continue;
+      fail(
+        `${relPath}: unqualified pointer "references/${fileTok}" does not exist in ${ownSkill}'s ` +
+          "own references/ — name the owning skill (\"`craft-x` → `references/…`\") or fix the path",
+      );
+      dangling++;
+    }
+  }
+  if (dangling === 0) {
+    ok("unqualified references/ pointers all resolve inside their own skill");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// (i) taxcraft parity: the tax plugin ships alongside craftsman and gets the same
+// manifest, description, and router-integrity guarantees. Its SKILL.md is a router
+// whose sub-skill table is the load-bearing index — a row naming a file that does
+// not exist sends the model looking for guidance that was never shipped.
+// ---------------------------------------------------------------------------
+function checkTaxcraft() {
+  const manifests = [
+    ".claude-plugin/marketplace.json",
+    "plugins/taxcraft/.claude-plugin/plugin.json",
+    "plugins/taxcraft/.codex-plugin/plugin.json",
+  ];
+  const parsed = new Map();
+  for (const rel of manifests) {
+    try {
+      parsed.set(rel, JSON.parse(readFileSync(join(ROOT, rel), "utf8")));
+      if (rel.startsWith("plugins/")) ok(`${rel} parses as valid JSON`);
+    } catch (err) {
+      fail(`${rel} failed to parse: ${err.message}`);
+    }
+  }
+
+  const versions = [
+    parsed.get(".claude-plugin/marketplace.json")?.plugins?.find((p) => p.name === "taxcraft")?.version,
+    parsed.get("plugins/taxcraft/.claude-plugin/plugin.json")?.version,
+    parsed.get("plugins/taxcraft/.codex-plugin/plugin.json")?.version,
+  ];
+  if (versions.every(Boolean) && new Set(versions).size === 1) {
+    ok(`all taxcraft manifests declare version ${versions[0]}`);
+  } else {
+    fail(`taxcraft manifest versions disagree: ${versions.map((v) => v || "missing").join(", ")}`);
+  }
+
+  // every marketplace entry's source directory exists
+  for (const plugin of parsed.get(".claude-plugin/marketplace.json")?.plugins ?? []) {
+    const src = join(ROOT, plugin.source.replace(/^\.\//, ""));
+    if (existsSync(src)) {
+      ok(`marketplace entry "${plugin.name}" source ${plugin.source} exists`);
+    } else {
+      fail(`marketplace entry "${plugin.name}" source ${plugin.source} does not exist`);
+    }
+  }
+
+  const skillPath = join(ROOT, "plugins/taxcraft/skills/tax/SKILL.md");
+  const text = readFileSync(skillPath, "utf8");
+
+  const desc = /^description:\s*(.*)$/m.exec(text)?.[1] ?? "";
+  if (desc.length > 0 && desc.length <= 1200) {
+    ok(`tax: description is ${desc.length} chars (<= 1200)`);
+  } else {
+    fail(`tax: description is ${desc.length} chars (must be 1-1200)`);
+  }
+
+  // Sub-skill table rows: first cell is a backticked path. Rows using a
+  // `<placeholder>` glob (e.g. `individual/<domain>.md`) name a family, not a file.
+  const taxRoot = join(ROOT, "plugins/taxcraft/skills/tax");
+  const table = /^## Sub-skill files \(loaded on demand\)\n([\s\S]*?)(?=\n## )/m.exec(text)?.[1];
+  if (!table) {
+    fail("tax/SKILL.md: missing the \"## Sub-skill files (loaded on demand)\" router table");
+    return;
+  }
+  let bad = 0;
+  for (const m of table.matchAll(/^\| `([^`]+)` \|/gm)) {
+    const target = m[1];
+    if (target.includes("<") || target.includes("*")) continue; // family, not a file
+    if (!existsSync(join(taxRoot, target))) {
+      fail(`tax/SKILL.md: router table names \`${target}\`, which does not exist`);
+      bad++;
+    }
+  }
+  if (bad === 0) ok("tax/SKILL.md: every concrete router-table path exists");
+}
+
+// ---------------------------------------------------------------------------
 // Run all checks
 // ---------------------------------------------------------------------------
 checkJsonManifests();
@@ -1155,6 +1268,8 @@ checkDescriptionLength();
 checkNoAbsoluteVolumesPaths();
 checkFindingsGrammar();
 checkVendoredGuidelines();
+checkUnqualifiedReferencePointers();
+checkTaxcraft();
 
 console.log("");
 console.log(`${failures} failure(s), ${warnings} warning(s).`);

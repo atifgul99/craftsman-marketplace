@@ -7,8 +7,8 @@ them. Read that file first if any term here (`fingerprint`, `status`, `last-chec
 is unfamiliar.
 
 > **Pairs with:** `craft-audit` → `references/workspace.md` (finding record format, fingerprint,
-> status vocabulary), `references/prioritization.md` (climb sequence, severity tiers), and
-> `references/rerun.md` (staleness detection, the "not seen ≠ fixed" rule this skill's step 6 exists
+> status vocabulary), `craft-audit` → `references/prioritization.md` (climb sequence, severity
+> tiers), and `craft-audit` → `references/rerun.md` (staleness detection, the "not seen ≠ fixed" rule this skill's step 6 exists
 > to protect).
 
 ---

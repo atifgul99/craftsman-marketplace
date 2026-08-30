@@ -138,7 +138,7 @@ Or describe what you need.
 | `governance.md` | State-law drafting patterns, minutes/consents/resolutions, corporate-document intake, state filings, and veil discipline |
 | `scenarios/<topic>.md` | Rental, K-1 (VC/PE, O&G), equity comp, SDIRA, multi-state, audit response, C-corp reduction, entity trading, **corporate-records** (C-corporation record-set lifecycle, authority chronology, completeness invariants, annual governance, standing/licenses, subsidiaries), **accountable-plan** (§62(c)/Reg §1.62-2 eligibility, audit, drafting, adoption, operations, payroll), **stock-issuance** (canonical authority → consideration → §351/§83/§1202/§1244 → securities → closing → ledger/accounting orchestrator), amend-partnership (BBA AAR / 1065-X / 1040-X cascade), penalty-abatement (Rev. Proc. 84-35 / FTA / reasonable cause / Form 843), irs-transcripts (pull + read + TC codes), tiered-partnership-se (GP-interest SE pass-through, *Soroban*), turbotax-business (`.tax20XX` file handling), qsbs-1202 (§1202 dual regimes pre/post-OBBBA), section-1244 (§1244 ordinary loss on small-business stock; bare-contribution basis trap), contested-k1 (disputed/withdrawn K-1, Form 8082, protective filings), aca-medicaid-magi (PTC/Medicaid MAGI management, Form 8962), meals-substantiation (§274(d)), home-office-280a (§280A(c)(1) three prongs, business %, accountable-plan vs. rent-to-employer, §121 exposure on separate structures) |
 | `rules/federal-<year>.json` | Curated annual inputs; never self-authenticating—apply `authority.md` at point of use |
-| `rules/manifest.json` + `rules/schema-v1.json` | Rules inventory, shape migrations, provenance metadata, and validation schema |
+| `rules/manifest.json` + `rules/schema-v{1,2}.json` | Rules inventory, shape migrations, provenance metadata, and validation schema. New rules files validate against **v2** (v1 is frozen for external consumers; v2 is a strict superset that adds the freshness fields) — see `authority.md` |
 | `templates/*` | Skeletons for every file the skill creates |
 | `accounting-101.md` | Primer on three-timeline accounting (account / books / tax-year) + AICPA permanent-vs-current file framing — read when the folder structure feels arbitrary |
 | `states/README.md` | State tax router — entity → state map, which file to load |
@@ -147,7 +147,7 @@ Or describe what you need.
 | `states/wa/property-other.md` | WA Personal Property Tax (King County) + Unclaimed Property |
 | `states/wy/README.md` | WY: no income tax, annual report only |
 | `calendar.md` | Compliance calendar — read-only deadline projection over `entity.md` + tax-summary + rules; dashboards, overdue/upcoming |
-| `tools/README.md` | 7 shipped tools (pdf-extractor, chase-statement-parser, ibkr-parser, k1-parser, return-parser, transcript-parser, coa-categorizer) + `workspace-doctor` — see `tools/README.md` |
+| `tools/README.md` | 9 shipped tools (pdf-extractor, chase-statement-parser, ibkr-parser, k1-parser, return-parser, transcript-parser, coa-categorizer, parse-verify, workspace-doctor) — see `tools/README.md` |
 | `tools/workspace-doctor/` | Report-only lint: runs `python3 tools/workspace-doctor/doctor.py`; reports missing canonical files (e.g. `workspace-profile/slugs.md`), naming violations, empty parse caches, sync-conflict duplicates, unprocessed corporate docs — never modifies anything |
 
 Read sub-skill files via Read tool as needed. Never load all upfront.
@@ -183,6 +183,9 @@ Read sub-skill files via Read tool as needed. Never load all upfront.
 
 These produce confident, plausible, wrong answers more often than anything else
 on the individual side. Route first — do not answer from general knowledge. **If
+any of these facts appear, load the module before computing anything.** The full
+list, with the reasoning behind each route, is in `individual/README.md`
+§ "High-risk routes".
 
 - Any **IRA/Roth basis, conversion, rollover, RMD, or inherited-IRA** question
   routes to `individual/retirement.md`. Never answer a backdoor-Roth question

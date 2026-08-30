@@ -15,6 +15,7 @@ Tools live here when they're general-purpose (work for multiple entities across 
 | [transcript-parser](transcript-parser/) | Parse IRS Account / Tax Return / Wage & Income / Record of Account transcripts. Extracts TC codes + cycle dates, flags exam/freeze/lien indicators. TC code lookup in `tc_codes.json`. | `transcript_parser.py` (CLI + library) |
 | [ibkr-parser](ibkr-parser/) | Parse Interactive Brokers monthly statement CSVs into a unified transaction ledger + summary. Uses the matching PDF for cross-validation; flags non-USD amounts. | `ibkr_parser.py` (CLI + library) |
 | [coa-categorizer](coa-categorizer/) | Rule-based GL-bucket classifier for raw transaction rows (Chase checking/CC output). Produces enriched CSV with `gl_account`, `gl_code`, `confidence`, `needs_review` columns + a review summary. Seed rules in `default_rules.json`; override per entity. | `coa_categorizer.py` (CLI + library) |
+| [parse-verify](parse-verify/) | Arithmetic and tax-law invariants over parsed tax JSON — Layer B of the extraction-confidence system in `parsing.md`. Catches issuer errors that survive any amount of extraction consensus. | `verify.py` (CLI + library) |
 | [workspace-doctor](workspace-doctor/) | Report-only health check for workspace layout — missing workspace-profile files, non-kebab-case entity dirs, corporate-intake folders (entities/*/corporate/**) with PDFs but no `_processed.log`, empty `.parsed/` caches, sync-conflict litter, loose K-1/tax PDFs, stray `__pycache__`, poppler presence, per-entity `bean-check`, `xledger-check`, ledger-vs-CSV staleness. Never modifies anything; always exits 0. | `doctor.py` (CLI) |
 
 ## Running tools
@@ -76,7 +77,7 @@ Prioritized against actual document volume seen in this workspace (individual `F
 | **P0** | 1099-R parser | Retirement-distribution forms — gross, taxable, withholding, box 7 distribution code. Affects taxable income + AGI. | Schema needed in `parsing.md` |
 | **P0** | 1098 mortgage parser | Mortgage interest (box 1), property tax escrow (box 10), points, outstanding principal. Multi-property scope common. | Schema needed |
 | **P1** | 1099-INT / 1099-DIV standalone | FirstTech / PenFed single-form statements — different layout from Composites. | Schema defined for Composite (reuse subsections) |
-| **P1** | 1099-K parser | Payment-platform reporting (Zillow, Stripe, Venmo Business). Recently surfaced on IRS Wage & Income transcripts for this workspace. | Schema needed |
+| **P1** | 1099-K parser | Payment-platform reporting (Zillow, Stripe, Venmo Business). Increasingly shows up on IRS Wage & Income transcripts. | Schema needed |
 | **P1** | 5498 / 5498-SA parser | IRA/HSA contribution + FMV reports. Needed for Form 8606 basis tracking and HSA deduction. | Schema named in `parsing.md` "Other types"; needs expansion |
 | **P1** | 1099-NEC / 1099-MISC parser (issued and received) | Simple 3-box layout. Issuer-side feeds Form 1096 summary; recipient-side goes to Schedule C / Schedule E. | Schema in `parsing.md` §"Other types" placeholder |
 | **P2** | SSA-1099 parser | Social-security benefit statements — box 5 net benefits, box 6 voluntary withholding. | Schema needed |
