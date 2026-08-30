@@ -19,6 +19,9 @@ source for human review; that script never runs during an audit, install, or nor
 repository does not include telemetry, a background process, or a service endpoint that receives
 your project data.
 
+For how the plugin handles your data, stated as a standalone policy, see
+[PRIVACY.md](./PRIVACY.md).
+
 ## Reporting a vulnerability
 
 If you find a security issue in this repo (for example, a skill instruction that could lead an
