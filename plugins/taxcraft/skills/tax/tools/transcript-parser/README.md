@@ -4,6 +4,12 @@ Parses the four transcript types available from the IRS Online Account portal
 into a consistent JSON schema. Integrates with `tc_codes.json` (36 TC codes
 with descriptions and significance notes).
 
+> **Paths below are written from this tool's own directory.** The skill installs as a
+> plugin outside your workspace, so a bare `python3 transcript_parser.py` will not resolve from
+> where you are standing. Set `TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"` once and
+> address the script as `"$TAX_SKILL/tools/transcript-parser/transcript_parser.py"`. Arguments are the other way
+> round: they are workspace paths, resolved against the current directory.
+
 ## Supported transcript types
 
 | IRS title | `doc_type` value |

@@ -5,6 +5,12 @@ Parse Interactive Brokers **Activity Statement** CSVs into a normalized
 the matching PDF is supplied we cross-check a handful of summary totals and
 flag any mismatch.
 
+> **Paths below are written from this tool's own directory.** The skill installs as a
+> plugin outside your workspace, so a bare `python3 ibkr_parser.py` will not resolve from
+> where you are standing. Set `TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"` once and
+> address the script as `"$TAX_SKILL/tools/ibkr-parser/ibkr_parser.py"`. Arguments are the other way
+> round: they are workspace paths, resolved against the current directory.
+
 ## Install / layout
 
 ```

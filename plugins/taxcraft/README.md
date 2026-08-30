@@ -111,11 +111,20 @@ tax documents. See the repo [PRIVACY.md](../../PRIVACY.md).
 
 ## Verifying a change
 
-The skill ships its own release evals. Run them from a workspace root:
+The skill ships its own release evals — the same set CI gates on. Run them from this
+directory (`plugins/taxcraft/`), not from a tax workspace: these paths are relative to
+the plugin, and the skill's own files are what they check.
 
 ```bash
-for f in skills/tax/evals/validate_*.py; do python3 -B "$f"; done
+for f in skills/tax/evals/[a-z]*.py skills/tax/tools/parse-verify/test_verify.py; do
+  echo "--- $f"; python3 -B "$f" || echo "FAILED: $f"
+done
 ```
+
+Ten checks: seven artifact and structural validators, the markdown block-scoping unit
+tests, `test_no_skill_writes.py` (runs the whole suite again against a read-only copy of
+the skill, since an installed plugin is read-only for most users), and the parse-verify
+self-test. They need `jsonschema` and `markdown-it-py`; nothing else, and no network.
 
 ## License
 

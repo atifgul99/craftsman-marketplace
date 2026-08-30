@@ -9,6 +9,12 @@ rows, and raw STMT-page text blocks.
 Built on top of the shared `pdf-extractor/pdf_extract.py` (pdftotext -layout);
 does **not** do its own PDF parsing.
 
+> **Paths below are written from this tool's own directory.** The skill installs as a
+> plugin outside your workspace, so a bare `python3 return_parser.py` will not resolve from
+> where you are standing. Set `TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"` once and
+> address the script as `"$TAX_SKILL/tools/return-parser/return_parser.py"`. Arguments are the other way
+> round: they are workspace paths, resolved against the current directory.
+
 ## Library use
 
 ```python
