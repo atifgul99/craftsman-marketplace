@@ -247,7 +247,11 @@ function checkCrossSkillPointers() {
     const relPath = relative(ROOT, file);
     // The skill this file itself belongs to, e.g. "plugins/craftsman/skills/craft-backend/..." -> "craft-backend"
     const ownSkill = relative(skillsRoot, file).split("/")[0];
-    const text = readFileSync(file, "utf8");
+    // Soft-wrap the prose before matching. These docs wrap at ~100 cols, so a pointer
+    // and the skill token that qualifies it routinely land on different lines; the
+    // patterns below deliberately cannot span a newline, which would leave every
+    // wrapped pointer validated by nothing. Paragraph breaks are preserved.
+    const text = readFileSync(file, "utf8").replace(/([^\n])\n(?!\n)/g, "$1 ");
 
     const seen = new Set(); // dedupe identical (skill, file) pairs per source file
     for (const pattern of CROSS_SKILL_PATTERNS) {
@@ -1246,15 +1250,30 @@ function checkTaxcraft() {
     return;
   }
   let bad = 0;
-  for (const m of table.matchAll(/^\| `([^`]+)` \|/gm)) {
-    const target = m[1];
-    if (target.includes("<") || target.includes("*")) continue; // family, not a file
-    if (!existsSync(join(taxRoot, target))) {
-      fail(`tax/SKILL.md: router table names \`${target}\`, which does not exist`);
-      bad++;
+  let checked = 0;
+  for (const row of table.matchAll(/^\|([^|\n]+)\|/gm)) {
+    // A first cell can name more than one path, e.g. "`rules/manifest.json` +
+    // `rules/schema-v{1,2}.json`". Check every backticked token in it, not just the
+    // first — a row-shape assumption is how an unchecked path hides behind a green line.
+    for (const tok of row[1].matchAll(/`([^`]+)`/g)) {
+      const target = tok[1];
+      if (!/\.[a-z0-9]+$/i.test(target) && !target.endsWith("/")) continue; // not a path
+      if (/[<>*]/.test(target)) continue; // family placeholder, not a file
+      // Brace alternation names a set: `schema-v{1,2}.json` -> schema-v1.json, schema-v2.json
+      const expanded = /\{([^}]+)\}/.test(target)
+        ? target.match(/\{([^}]+)\}/)[1].split(",").map((alt) => target.replace(/\{[^}]+\}/, alt.trim()))
+        : [target];
+      for (const path of expanded) {
+        checked++;
+        if (!existsSync(join(taxRoot, path))) {
+          fail(`tax/SKILL.md: router table names \`${path}\`, which does not exist`);
+          bad++;
+        }
+      }
     }
   }
-  if (bad === 0) ok("tax/SKILL.md: every concrete router-table path exists");
+  if (checked === 0) fail("tax/SKILL.md: router table parsed but yielded no checkable paths");
+  if (bad === 0) ok(`tax/SKILL.md: all ${checked} concrete router-table paths exist`);
 }
 
 // ---------------------------------------------------------------------------

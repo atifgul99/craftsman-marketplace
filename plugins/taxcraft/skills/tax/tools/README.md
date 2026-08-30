@@ -24,8 +24,9 @@ All tools require **Python 3.9+** (standard library only — no `pip install`
 needed for any tool in this directory unless its own README says otherwise).
 
 Invoke tools with `python3 -B` (or set `PYTHONDONTWRITEBYTECODE=1`) so Python
-doesn't write `__pycache__/` bytecode caches into the tree — this workspace
-lives on OneDrive, and `.pyc` churn there causes needless sync conflicts.
+doesn't write `__pycache__/` bytecode caches into the tree — a workspace kept in
+a synced folder (OneDrive, Dropbox, iCloud Drive) turns `.pyc` churn into sync
+conflicts, and the caches are noise in every other workspace too.
 `__pycache__/` and `*.pyc` are also covered by the skill's `.gitignore` as a
 second line of defense; `workspace-doctor` (below) flags any that slip
 through.
@@ -68,7 +69,7 @@ python3 -B k1_parser.py "path/to/k1.pdf"
 
 ## Not yet built
 
-Prioritized against actual document volume seen in this workspace (individual `FY2023` / `FY2024` / `FY2025` docs/). P0 = blocks annual close or intake; P1 = reduces manual effort materially; P2 = nice-to-have.
+Prioritized by how often the document type shows up in a typical multi-year individual `docs/` folder, not by how interesting the parser would be to write. P0 = blocks annual close or intake; P1 = reduces manual effort materially; P2 = nice-to-have.
 
 | Priority | Tool | What it does | Blocked on |
 |---|---|---|---|

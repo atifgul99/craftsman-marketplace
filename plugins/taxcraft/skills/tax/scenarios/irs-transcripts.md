@@ -23,7 +23,10 @@ Transcripts are the authoritative record of what the IRS thinks happened. Pull t
 | **Form 4506** (paid, $30/return) | Anyone with authorization | 60-75 days | **Actual copies** of filed returns, not transcripts — use only when transcript isn't sufficient (e.g., attachments matter) |
 | **IRS Practitioner Priority Service (PPS)** phone | Practitioner with POA | Immediate for guidance; faxed transcripts same day sometimes | Emergency pulls when exam/notice deadline is tight |
 
-For this workspace, the user is self-prepared — no CAF / no CPA POA on file. Options:
+Check `workspace-profile/` for a CPA/EA with a Form 2848 POA on file before
+routing. Where the taxpayer is self-prepared — no CAF number, no POA — which is
+the common case for this skill, the practitioner rows above are unavailable and
+the options are:
 1. **IRS Online Account** for the individual's 1040 transcripts — fastest.
 2. **IRS Business Tax Account** for entity transcripts, if the taxpayer is registered as responsible officer.
 3. **Form 4506-T** mailed for what the online accounts don't cover — multi-week turnaround; plan for it.
