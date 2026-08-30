@@ -17,7 +17,8 @@
 //       (g2) its rule list carries no URL, prompt-template marker, or code fence, and no
 //            soft-flagged tool/network verb
 //       (g3) review-protocol.md still carries the do-not-fetch-at-review-time prohibition
-//   (h) every unqualified `references/x.md` pointer resolves inside its own skill
+//   (h) every `references/x.md` pointer resolves in its own skill, or in the
+//       block-scoped skill that qualifies it
 //   (i) taxcraft parity: manifests parse and agree on version, every marketplace source
 //       path exists, the tax description fits, and every concrete router-table path exists
 //
@@ -247,11 +248,7 @@ function checkCrossSkillPointers() {
     const relPath = relative(ROOT, file);
     // The skill this file itself belongs to, e.g. "plugins/craftsman/skills/craft-backend/..." -> "craft-backend"
     const ownSkill = relative(skillsRoot, file).split("/")[0];
-    // Soft-wrap the prose before matching. These docs wrap at ~100 cols, so a pointer
-    // and the skill token that qualifies it routinely land on different lines; the
-    // patterns below deliberately cannot span a newline, which would leave every
-    // wrapped pointer validated by nothing. Paragraph breaks are preserved.
-    const text = readFileSync(file, "utf8").replace(/([^\n])\n(?!\n)/g, "$1 ");
+    const text = readFileSync(file, "utf8");
 
     const seen = new Set(); // dedupe identical (skill, file) pairs per source file
     for (const pattern of CROSS_SKILL_PATTERNS) {
@@ -1152,39 +1149,88 @@ function checkVendoredGuidelines() {
 }
 
 // ---------------------------------------------------------------------------
-// (h) unqualified `references/x.md` pointers resolve inside their own skill.
+// (h) every `references/x.md` pointer resolves — in its own skill, or in the skill
+// that qualifies it.
 //
-// checkCrossSkillPointers only sees pointers that name the owning skill. A bare
-// `references/x.md` that resolves nowhere in its own skill is the dangerous form:
-// a reader follows it into their own skill's references/ dir, finds nothing, and
-// either guesses or drops the guidance. Prose that names another craft skill
-// nearby is exempt — that pointer is already covered by the cross-skill check.
+// checkCrossSkillPointers only sees pointers whose qualifying skill token sits on the
+// same line, and these docs wrap at ~100 cols. A bare `references/x.md` that resolves
+// nowhere is the dangerous form: a reader follows it into their own skill's references/
+// dir, finds nothing, and either guesses or drops the guidance.
+//
+// Scoping is by Markdown block, not by a character window. A skill named in the
+// *previous* list item does not qualify a pointer in this one — that was the exact
+// ambiguity being caught — and a skill named in the previous *paragraph* does not
+// either, which a raw character lookback would have silently exempted.
 // ---------------------------------------------------------------------------
-function checkUnqualifiedReferencePointers() {
+
+// A block ends at a blank line, a heading, a new list item, or a table row. Indented
+// continuation lines stay with the item that opened the block.
+function splitIntoBlocks(text) {
+  const blocks = [];
+  let current = [];
+  for (const line of text.split("\n")) {
+    const opensBlock =
+      line.trim() === "" ||
+      /^#{1,6}\s/.test(line) ||
+      /^\s*([-*+]|\d+\.)\s/.test(line) ||
+      /^\s*\|/.test(line);
+    if (opensBlock && current.length) {
+      blocks.push(current.join(" "));
+      current = [];
+    }
+    if (line.trim() !== "") current.push(line);
+  }
+  if (current.length) blocks.push(current.join(" "));
+  return blocks;
+}
+
+function checkReferencePointersResolve() {
   const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
   let dangling = 0;
+  let checked = 0;
   for (const file of findAllSkillMdFiles()) {
     const relPath = relative(ROOT, file);
     const ownSkill = relative(skillsRoot, file).split("/")[0];
-    const text = readFileSync(file, "utf8");
 
-    for (const m of text.matchAll(/references\/([a-z0-9-]+\.md)/g)) {
-      const fileTok = m[1];
-      if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
-      // A craft-* token in the same clause qualifies the pointer. The window is short
-      // on purpose: a skill name three clauses back does not tell a reader which skill
-      // *this* pointer belongs to, which is exactly the ambiguity being caught.
-      const lookback = text.slice(Math.max(0, m.index - 60), m.index);
-      if (/craft-[a-z0-9-]+/.test(lookback)) continue;
-      fail(
-        `${relPath}: unqualified pointer "references/${fileTok}" does not exist in ${ownSkill}'s ` +
-          "own references/ — name the owning skill (\"`craft-x` → `references/…`\") or fix the path",
-      );
-      dangling++;
+    for (const block of splitIntoBlocks(readFileSync(file, "utf8"))) {
+      for (const m of block.matchAll(/references\/([a-z0-9-]+\.md)/g)) {
+        const fileTok = m[1];
+        checked++;
+        // The nearest craft-* token earlier in the same block, if any, owns this pointer.
+        const before = block.slice(0, m.index);
+        const tokens = [...before.matchAll(/craft-[a-z0-9-]+/g)];
+        const qualifier = tokens.length ? tokens[tokens.length - 1][0] : null;
+
+        // Unqualified, or self-qualified: must live in this skill.
+        if (!qualifier || qualifier === ownSkill) {
+          if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
+          if (!qualifier) {
+            fail(
+              `${relPath}: unqualified pointer "references/${fileTok}" does not exist in ` +
+                `${ownSkill}'s own references/ — name the owning skill ` +
+                '("`craft-x` → `references/…`") or fix the path',
+            );
+          } else {
+            fail(`${relPath}: pointer "references/${fileTok}" does not exist in ${ownSkill}/references/`);
+          }
+          dangling++;
+          continue;
+        }
+
+        // Qualified by another skill. An aside can name a neighbouring skill while the
+        // file is still this skill's own (see checkCrossSkillPointers) — accept either.
+        if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
+        if (existsSync(join(skillsRoot, qualifier, "references", fileTok))) continue;
+        fail(
+          `${relPath}: pointer "${qualifier} … references/${fileTok}" resolves in neither ` +
+            `${qualifier}/references/ nor ${ownSkill}/references/`,
+        );
+        dangling++;
+      }
     }
   }
   if (dangling === 0) {
-    ok("unqualified references/ pointers all resolve inside their own skill");
+    ok(`all ${checked} references/ pointers resolve in their own or their qualifying skill`);
   }
 }
 
@@ -1272,7 +1318,10 @@ function checkTaxcraft() {
       }
     }
   }
-  if (checked === 0) fail("tax/SKILL.md: router table parsed but yielded no checkable paths");
+  if (checked === 0) {
+    fail("tax/SKILL.md: router table parsed but yielded no checkable paths");
+    return;
+  }
   if (bad === 0) ok(`tax/SKILL.md: all ${checked} concrete router-table paths exist`);
 }
 
@@ -1287,7 +1336,7 @@ checkDescriptionLength();
 checkNoAbsoluteVolumesPaths();
 checkFindingsGrammar();
 checkVendoredGuidelines();
-checkUnqualifiedReferencePointers();
+checkReferencePointersResolve();
 checkTaxcraft();
 
 console.log("");
