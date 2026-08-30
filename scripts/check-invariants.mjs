@@ -1171,18 +1171,19 @@ function checkVendoredGuidelines() {
 function splitIntoBlocks(text) {
   const blocks = [];
   let current = [];
-  let inFence = false;
+  let fence = null; // the opening marker, so an inner ``` inside a ```` block cannot close it
   const flush = () => {
     if (current.length) blocks.push(current.join(" "));
     current = [];
   };
   for (let line of text.split("\n")) {
-    if (/^\s*(```|~~~)/.test(line)) {
-      inFence = !inFence;
+    const marker = /^\s*(`{3,}|~{3,})/.exec(line)?.[1];
+    if (marker && (fence === null || (marker[0] === fence[0] && marker.length >= fence.length))) {
+      fence = fence === null ? marker : null;
       flush();
       continue;
     }
-    if (inFence) continue;
+    if (fence !== null) continue;
     line = line.replace(/^(\s*)>\s?/, "$1");
     const opensBlock =
       line.trim() === "" ||
@@ -1198,12 +1199,77 @@ function splitIntoBlocks(text) {
 
 // A skill token only owns a pointer when it is syntactically attached to it: nothing
 // between them but decoration, whitespace (these docs wrap mid-pointer), and a connector
-// (`→`, `->`, `'s`, `:`, `/`, an opening paren). Merely being the nearest earlier token is
+// (`→`, `->`, `'s` straight or curly, `:`, `/`, an opening bracket or paren). Merely being the nearest earlier token is
 // not enough — "route to craft-infra (pipeline mechanism) → `references/strategy.md`"
 // points at the *current* skill's file, and reading the aside as the qualifier would send
 // the check hunting for it in craft-infra. Any word or other punctuation between the two
 // breaks the attachment, which is the same judgment a reader makes.
-const ATTACHED_QUALIFIER = /^[\s`*'"]*(?:(?:→|->|'s|:|\/|\()[\s`*'"]*){0,3}$/;
+const ATTACHED_QUALIFIER = /^[\s`*'’"\[\]]*(?:(?:→|->|['’]s|:|\/|\(|\[)[\s`*'’"\[\]]*){0,3}$/;
+
+// Every references/x.md occurrence in `text`, with the skill that owns it: the
+// attached qualifier, or null meaning "the file's own skill". Pure, so the self-test
+// below can exercise the scoping and attachment rules without touching the repo.
+function findPointers(text, ownSkill) {
+  const found = [];
+  for (const block of splitIntoBlocks(text)) {
+    for (const m of block.matchAll(/references\/([a-z0-9-]+\.md)/g)) {
+      const before = block.slice(0, m.index);
+      const tokens = [...before.matchAll(/craft-[a-z0-9-]+/g)];
+      const last = tokens.length ? tokens[tokens.length - 1] : null;
+      const attached =
+        last && ATTACHED_QUALIFIER.test(before.slice(last.index + last[0].length));
+      found.push({
+        file: m[1],
+        qualifier: attached && last[0] !== ownSkill ? last[0] : null,
+      });
+    }
+  }
+  return found;
+}
+
+// Known limits, confirmed absent from current prose and left unhandled rather than
+// guessed at: a four-space indented code block containing literal backticks reads as a
+// fence, and the reference-style link form ("[craft-infra][infra] → [references/x.md][y]")
+// parses as unqualified. If either appears, extend findPointers rather than the fixtures.
+//
+// This guard shipped wrong three times — a character-window lookback, then a
+// soft-unwrap that bled across list items, then an own-skill fallback that masked
+// wrong cross-skill claims. Each case below is one of those regressions.
+const POINTER_FIXTURES = [
+  // [name, markdown, expected [file, qualifier] pairs]
+  ["unqualified after a paragraph break",
+    "craft-infra owns this.\n\n`references/x.md` has it.", [["x.md", null]]],
+  ["qualifier in the previous list item does not carry",
+    "- routed to `craft-security` for policy\n- detail in `references/x.md`", [["x.md", null]]],
+  ["aside naming another skill mid-clause does not qualify",
+    "- pooling constraints → craft-infra) → `references/x.md`", [["x.md", null]]],
+  ["attached across a soft line wrap",
+    "See `craft-infra` →\n`references/x.md` for ordering.", [["x.md", "craft-infra"]]],
+  ["attached inside a blockquote",
+    "> prose → craft-infra\n> `references/x.md`", [["x.md", "craft-infra"]]],
+  ["blockquote bullets scope separately",
+    "> - see craft-infra\n> - detail in `references/x.md`", [["x.md", null]]],
+  ["direct-path form qualifies", "see `craft-lint/references/x.md`.", [["x.md", "craft-lint"]]],
+  ["possessive qualifies, straight and curly",
+    "craft-infra's `references/x.md`; craft-infra’s `references/y.md`",
+    [["x.md", "craft-infra"], ["y.md", "craft-infra"]]],
+  ["bracket decoration qualifies", "`craft-infra` → [references/x.md]", [["x.md", "craft-infra"]]],
+  ["fenced code is not navigation", "```\ncraft-infra -> references/x.md\n```", []],
+  ["an inner fence does not close an outer one",
+    "````\n```\ncraft-infra -> references/x.md\n```\n````", []],
+];
+
+function checkPointerScopingSelfTest() {
+  let bad = 0;
+  for (const [name, markdown, expected] of POINTER_FIXTURES) {
+    const got = findPointers(markdown, "craft-backend").map((p) => [p.file, p.qualifier]);
+    if (JSON.stringify(got) !== JSON.stringify(expected)) {
+      fail(`pointer scoping self-test "${name}": expected ${JSON.stringify(expected)}, got ${JSON.stringify(got)}`);
+      bad++;
+    }
+  }
+  if (bad === 0) ok(`pointer scoping self-test: ${POINTER_FIXTURES.length} fixture(s) passed`);
+}
 
 function checkReferencePointersResolve() {
   const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
@@ -1213,38 +1279,28 @@ function checkReferencePointersResolve() {
     const relPath = relative(ROOT, file);
     const ownSkill = relative(skillsRoot, file).split("/")[0];
 
-    for (const block of splitIntoBlocks(readFileSync(file, "utf8"))) {
-      for (const m of block.matchAll(/references\/([a-z0-9-]+\.md)/g)) {
-        const fileTok = m[1];
-        checked++;
+    for (const { file: fileTok, qualifier } of findPointers(readFileSync(file, "utf8"), ownSkill)) {
+      checked++;
 
-        const before = block.slice(0, m.index);
-        const tokens = [...before.matchAll(/craft-[a-z0-9-]+/g)];
-        const last = tokens.length ? tokens[tokens.length - 1] : null;
-        const attached =
-          last && ATTACHED_QUALIFIER.test(before.slice(last.index + last[0].length));
-        const qualifier = attached && last[0] !== ownSkill ? last[0] : null;
-
-        // No attached qualifier (or it names this skill): the file must be this skill's own.
-        if (!qualifier) {
-          if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
-          fail(
-            `${relPath}: pointer "references/${fileTok}" does not exist in ${ownSkill}'s own ` +
-              'references/ — name the owning skill ("`craft-x` → `references/…`") or fix the path',
-          );
-          dangling++;
-          continue;
-        }
-
-        // Attached to another skill: it must exist there. No own-skill fallback — the
-        // pointer said whose file it is, so that is the claim being checked.
-        if (existsSync(join(skillsRoot, qualifier, "references", fileTok))) continue;
+      // No attached qualifier (or it names this skill): the file must be this skill's own.
+      if (!qualifier) {
+        if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
         fail(
-          `${relPath}: pointer "${qualifier} → references/${fileTok}" does not exist in ` +
-            `${qualifier}/references/`,
+          `${relPath}: pointer "references/${fileTok}" does not exist in ${ownSkill}'s own ` +
+            'references/ — name the owning skill ("`craft-x` → `references/…`") or fix the path',
         );
         dangling++;
+        continue;
       }
+
+      // Attached to another skill: it must exist there. No own-skill fallback — the
+      // pointer said whose file it is, so that is the claim being checked.
+      if (existsSync(join(skillsRoot, qualifier, "references", fileTok))) continue;
+      fail(
+        `${relPath}: pointer "${qualifier} → references/${fileTok}" does not exist in ` +
+          `${qualifier}/references/`,
+      );
+      dangling++;
     }
   }
   if (dangling === 0) {
@@ -1354,6 +1410,7 @@ checkDescriptionLength();
 checkNoAbsoluteVolumesPaths();
 checkFindingsGrammar();
 checkVendoredGuidelines();
+checkPointerScopingSelfTest();
 checkReferencePointersResolve();
 checkTaxcraft();
 
