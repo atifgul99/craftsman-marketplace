@@ -11,19 +11,19 @@
   "repository": "https://github.com/gul-labs/craftsman-marketplace",
   "license": "MIT",
   "keywords": [
-    "engineering-standards",
-    "audit",
     "production-readiness",
-    "ux",
-    "frontend",
-    "backend",
-    "database",
+    "code-audit",
+    "engineering-standards",
+    "vibe-coding",
+    "lovable",
+    "replit",
+    "bolt",
+    "v0",
+    "ai-generated-code",
+    "llm-integration",
+    "prompt-injection",
     "security",
-    "infra",
-    "observability",
-    "testing",
-    "lint",
-    "eslint",
-    "ai"
+    "multi-tenant",
+    "observability"
   ]
 }
