@@ -21,7 +21,7 @@ watching what breaks when these standards get skipped.
 ## In short
 
 It's free and MIT licensed. It runs inside your own Claude Code or Codex session and collects no
-telemetry (see [SECURITY.md](./SECURITY.md)). The plugin does not send your project files or audit
+telemetry (see [SECURITY.md](./SECURITY.md) and [PRIVACY.md](./PRIVACY.md)). The plugin does not send your project files or audit
 findings to Craftsman. Its review guidance is bundled locally; `craft-audit` only reads your code.
 The writes it makes are a new local folder, `.craftsman/`, holding its notes, and a line in your
 project's `.gitignore` (the file that tells git which files to skip) so that folder stays out

@@ -27,6 +27,11 @@ Metadata only — no version bump. Fold into whatever ships next.
 
 ### Added
 
+- **`PRIVACY.md`** — the data-handling facts that were only in `SECURITY.md`, restated as a
+  standalone policy so the plugin-directory submission has a real Privacy policy URL to point at.
+  Adds one thing `SECURITY.md` left implicit: Craftsman transmits nothing, but the agent it runs
+  inside sends your code to its own provider regardless, so "Craftsman transmits nothing" is not a
+  claim that your code stays on your machine. Linked from `README.md` and `SECURITY.md`.
 - **`craftsman` symlink at the repository root**, pointing at `plugins/craftsman`. This is a
   compatibility shim, not part of the plugin layout. A directory-submission made on 2026-08-04 is
   still pending review, and it may have recorded `craftsman` as its "path within repository" —
