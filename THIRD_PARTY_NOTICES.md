@@ -5,7 +5,7 @@ This file carries the required license notices.
 
 ## nextlevelbuilder/ui-ux-pro-max-skill
 
-`craftsman/skills/craft-ux/references/starter-kits.md` draws on font weight/axis research and
+`plugins/craftsman/skills/craft-ux/references/starter-kits.md` draws on font weight/axis research and
 the palette industry mapping from
 [github.com/nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill);
 all font selections and palette values were independently re-curated. Not affiliated with or
@@ -37,8 +37,8 @@ SOFTWARE.
 
 ## emilkowalski/skill
 
-`craftsman/skills/craft-ux/references/motion/emil-craft.md` and
-`craftsman/skills/craft-ux/references/motion/fluid-gestures.md` include portions adapted from
+`plugins/craftsman/skills/craft-ux/references/motion/emil-craft.md` and
+`plugins/craftsman/skills/craft-ux/references/motion/fluid-gestures.md` include portions adapted from
 [github.com/emilkowalski/skill](https://github.com/emilkowalski/skill).
 Some concepts in `fluid-gestures.md` originate from Apple's WWDC design talks (chiefly
 *Designing Fluid Interfaces*, WWDC 2018), as translated for the web in that repository —

@@ -8,7 +8,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const helper = join(ROOT, "craftsman", "skills", "craft-lint", "scripts", "eslint-rule-audit.mjs");
+const helper = join(ROOT, "plugins", "craftsman", "skills", "craft-lint", "scripts", "eslint-rule-audit.mjs");
 const testRoot = mkdtempSync(join(tmpdir(), "craftsman-lint-audit-"));
 let failures = 0;
 

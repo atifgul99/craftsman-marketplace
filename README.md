@@ -1,6 +1,6 @@
 # craftsman
 
-![Craftsman inspecting a software system for production risks](./craftsman/assets/craftsman-github-hero.png)
+![Craftsman inspecting a software system for production risks](./plugins/craftsman/assets/craftsman-github-hero.png)
 
 **The engineering review you'd get from the technical co-founder you don't have.**
 
@@ -118,7 +118,7 @@ For updates, stale-install recovery, uninstallation, and host-specific troublesh
 
 ## What you get
 
-![Sample Craftsman audit workspace](./craftsman/assets/craftsman-workspace-preview.svg)
+![Sample Craftsman audit workspace](./plugins/craftsman/assets/craftsman-workspace-preview.svg)
 
 The report is plain Markdown in a local `.craftsman/` folder, so you can inspect every conclusion,
 resume safely, and keep the history in your own project. The preview above is a faithful schematic
@@ -138,7 +138,7 @@ Here's the kind of thing an audit like this turns up:
   emails you, not before.
 
 These are adapted from a worked example shipped in this repo: see
-[`craftsman/examples/craftsman-output/`](./craftsman/examples/craftsman-output/) for the real
+[`plugins/craftsman/examples/craftsman-output/`](./plugins/craftsman/examples/craftsman-output/) for the real
 findings, unedited.
 
 None of this means your app is bad. It means nobody who knew what to check has looked yet. That's
@@ -215,7 +215,7 @@ shipment. Clearing SEC-001 + DB-001 promotes both surfaces toward 🟡 At risk.
 This is from a complete, synthetic end-to-end audit of a fictional "Invoicely" SaaS app, audited
 across nine of the ten applicable domains. The full worked example, including per-domain findings
 and the audit status table, is committed at
-[`craftsman/examples/craftsman-output/`](./craftsman/examples/craftsman-output/). It's a teaching
+[`plugins/craftsman/examples/craftsman-output/`](./plugins/craftsman/examples/craftsman-output/). It's a teaching
 artifact showing the full shape of a `.craftsman/` workspace: discovery, applicability, the master
 tracker with readiness grades, and per-domain findings.
 
@@ -240,7 +240,7 @@ vibe-coder default stack.
 | `craft-ai` | If your app calls an AI model: whether someone could trick it into doing something it shouldn't, whether your bill could spike without warning, and whether private user data reaches the model unnecessarily. | "is my chatbot secure" |
 | `craft-fix` | Once you have a list of what to fix, this does the fixing: re-checks each item is still real, asks you to approve before touching anything, and can never mark its own work done. Only a fresh audit confirms something is actually fixed. | "fix the findings" / "fix SEC-003" |
 
-See each skill's `SKILL.md` under `craftsman/skills/<name>/` for its full trigger description and
+See each skill's `SKILL.md` under `plugins/craftsman/skills/<name>/` for its full trigger description and
 `references/` for the method behind it.
 
 ## Compatibility
@@ -317,23 +317,24 @@ review") rather than build-time knowledge. Knowledge folds into a domain; gates 
 ```
 craftsman-marketplace/          ← marketplace (this repo)
   .claude-plugin/marketplace.json
-  craftsman/                    ← the plugin
-    .claude-plugin/plugin.json
-    skills/                     ← ACTIVE (all loaded): SKILL.md + references/ each
-      craft-audit/          ← the front-door orchestrator: discovery, applicability, planning, tracking
-                                 + scripts/validate-findings.mjs (mechanical findings-format check)
-      craft-fix/            ← the action companion: drives fixes off an existing .craftsman/ audit
-      craft-ux/                 ← + references/motion/ and scanner-fixtures/
-      craft-frontend/
-      craft-backend/
-      craft-db/
-      craft-security/
-      craft-infra/
-      craft-lint/                ← + scripts/eslint-rule-audit.mjs
-      craft-observability/
-      craft-testing/
-      craft-ai/
-    examples/                   ← illustrative `.craftsman/` output (a worked end-to-end audit), reference, not live state
+  plugins/                      ← one dir per plugin; each is submitted to the directory separately
+    craftsman/                  ← the plugin (submission path: plugins/craftsman)
+      .claude-plugin/plugin.json
+      skills/                   ← ACTIVE (all loaded): SKILL.md + references/ each
+        craft-audit/            ← front-door orchestrator: discovery, applicability, planning, tracking
+                                  + scripts/validate-findings.mjs (mechanical findings-format check)
+        craft-fix/              ← action companion: drives fixes off an existing .craftsman/ audit
+        craft-ux/               ← + references/motion/ and scanner-fixtures/
+        craft-frontend/
+        craft-backend/
+        craft-db/
+        craft-security/
+        craft-infra/
+        craft-lint/             ← + scripts/eslint-rule-audit.mjs
+        craft-observability/
+        craft-testing/
+        craft-ai/
+      examples/                 ← illustrative `.craftsman/` output (a worked end-to-end audit), not live state
   drafts/                       ← incubator for future domains (repo-level, outside the plugin: not loaded, not shipped)
   ROADMAP.md                    ← design notes, phases, parked ideas (repo-level, not shipped in the plugin)
   CONTRIBUTING.md               ← how to propose changes to the skills

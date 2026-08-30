@@ -139,7 +139,7 @@ Install Craftsman from https://github.com/gul-labs/craftsman-marketplace.
 
 Determine whether you are operating Claude Code or Codex. Before making changes, read README.md,
 INSTALL.md, .claude-plugin/marketplace.json, and the host-specific plugin manifest under
-craftsman/.claude-plugin/ or craftsman/.codex-plugin/.
+plugins/craftsman/.claude-plugin/ or plugins/craftsman/.codex-plugin/.
 
 Use these identities exactly:
 - marketplace source: gul-labs/craftsman-marketplace

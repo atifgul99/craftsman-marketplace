@@ -56,7 +56,7 @@ to load and easy to route.
 
 New domains **incubate in `drafts/` at the repository root**, outside the `craftsman/` plugin
 directory — so they are neither loaded by the plugin nor shipped in the installed payload, and
-don't affect routing. A draft graduates into `craftsman/skills/` (and starts actually triggering) only
+don't affect routing. A draft graduates into `plugins/craftsman/skills/` (and starts actually triggering) only
 once it has a **full reference set with concrete, adversarially-reviewed guidance**, not stubs.
 
 The reasoning: a skill that auto-triggers on high-risk work (auth, migrations, supply-chain) while
@@ -85,7 +85,7 @@ node scripts/check-invariants.mjs
 
 ## Vendored third-party rules
 
-`craftsman/skills/craft-ux/references/web-interface-guidelines.md` is the Vercel Web Interface
+`plugins/craftsman/skills/craft-ux/references/web-interface-guidelines.md` is the Vercel Web Interface
 Guidelines rule list (MIT), vendored at publish time and pinned to an upstream commit SHA. Skills
 must **never** fetch instructions from a mutable external branch at review time: the audit runs with
 write access to the user's codebase, so a third-party repo that can change its own `main` would be

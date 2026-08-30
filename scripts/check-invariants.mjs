@@ -3,13 +3,13 @@
 //
 // Checks:
 //   (a) all 3 plugin/marketplace JSON files parse
-//   (b) every craftsman/skills/*/references/*.md file is mentioned in its skill's SKILL.md,
+//   (b) every plugins/craftsman/skills/*/references/*.md file is mentioned in its skill's SKILL.md,
 //       and every reference mentioned in a SKILL.md reference-index section exists on disk
 //   (c) every SKILL.md contains the exact heading "## Audit checklist (for craft-audit)"
 //   (d) every SKILL.md frontmatter description is <=1200 chars
 //   (e) no tracked .md file contains the literal string "/Volumes/"
 //   (f) findings emission contract:
-//       (f1) every craftsman/examples/**/findings.md matches the canonical heading/body grammar
+//       (f1) every plugins/craftsman/examples/**/findings.md matches the canonical heading/body grammar
 //       (f2) every domain skill restates "Canonical findings.md emission format" + its DOMAINCODE
 //       (f3) soft: craft-audit/SKILL.md contains path-binding language ("Path binding")
 //   (g) vendored third-party content stays inert data:
@@ -51,8 +51,8 @@ function ok(msg) {
 function checkJsonManifests() {
   const manifests = [
     ".claude-plugin/marketplace.json",
-    "craftsman/.claude-plugin/plugin.json",
-    "craftsman/.codex-plugin/plugin.json",
+    "plugins/craftsman/.claude-plugin/plugin.json",
+    "plugins/craftsman/.codex-plugin/plugin.json",
   ];
   const parsed = new Map();
   for (const rel of manifests) {
@@ -68,8 +68,8 @@ function checkJsonManifests() {
 
   const versions = [
     parsed.get(".claude-plugin/marketplace.json")?.plugins?.find((plugin) => plugin.name === "craftsman")?.version,
-    parsed.get("craftsman/.claude-plugin/plugin.json")?.version,
-    parsed.get("craftsman/.codex-plugin/plugin.json")?.version,
+    parsed.get("plugins/craftsman/.claude-plugin/plugin.json")?.version,
+    parsed.get("plugins/craftsman/.codex-plugin/plugin.json")?.version,
   ];
   if (versions.every(Boolean) && new Set(versions).size === 1) {
     ok(`all plugin manifests declare version ${versions[0]}`);
@@ -77,18 +77,18 @@ function checkJsonManifests() {
     fail(`plugin manifest versions disagree: ${versions.map((version) => version || "missing").join(", ")}`);
   }
 
-  const codexInterface = parsed.get("craftsman/.codex-plugin/plugin.json")?.interface;
+  const codexInterface = parsed.get("plugins/craftsman/.codex-plugin/plugin.json")?.interface;
   for (const key of ["composerIcon", "logo"]) {
     const asset = codexInterface?.[key];
     if (typeof asset !== "string" || !asset.startsWith("./")) {
-      fail(`craftsman/.codex-plugin/plugin.json: interface.${key} must be a relative asset path`);
+      fail(`plugins/craftsman/.codex-plugin/plugin.json: interface.${key} must be a relative asset path`);
       continue;
     }
-    const assetPath = join(ROOT, "craftsman", asset.slice(2));
+    const assetPath = join(ROOT, "plugins", "craftsman", asset.slice(2));
     if (!existsSync(assetPath)) {
-      fail(`craftsman/.codex-plugin/plugin.json: interface.${key} points to missing asset ${asset}`);
+      fail(`plugins/craftsman/.codex-plugin/plugin.json: interface.${key} points to missing asset ${asset}`);
     } else {
-      ok(`craftsman/.codex-plugin/plugin.json: interface.${key} asset exists`);
+      ok(`plugins/craftsman/.codex-plugin/plugin.json: interface.${key} asset exists`);
     }
   }
 }
@@ -97,7 +97,7 @@ function checkJsonManifests() {
 // Helpers for skill discovery
 // ---------------------------------------------------------------------------
 function getSkillDirs() {
-  const skillsRoot = join(ROOT, "craftsman", "skills");
+  const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
   return readdirSync(skillsRoot)
     .filter((name) => statSync(join(skillsRoot, name)).isDirectory())
     .map((name) => join(skillsRoot, name));
@@ -154,7 +154,7 @@ function extractReferenceIndexSection(skillMd, skillName) {
 
 function checkReferenceCrossLinking() {
   for (const skillDir of getSkillDirs()) {
-    const skillName = relative(join(ROOT, "craftsman", "skills"), skillDir);
+    const skillName = relative(join(ROOT, "plugins", "craftsman", "skills"), skillDir);
     const skillMdPath = join(skillDir, "SKILL.md");
     let skillMd;
     try {
@@ -206,10 +206,10 @@ function checkReferenceCrossLinking() {
 // (b2) cross-skill pointer validation
 // ---------------------------------------------------------------------------
 
-// Generic recursive .md finder, rooted at craftsman/skills — covers SKILL.md and
+// Generic recursive .md finder, rooted at plugins/craftsman/skills — covers SKILL.md and
 // every references/*.md (including nested dirs, e.g. craft-ux's motion/ subfolder).
 function findAllSkillMdFiles() {
-  const skillsRoot = join(ROOT, "craftsman", "skills");
+  const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
   const results = [];
   const walk = (dir) => {
     for (const entry of readdirSync(dir)) {
@@ -239,10 +239,10 @@ const CROSS_SKILL_PATTERNS = [
 ];
 
 function checkCrossSkillPointers() {
-  const skillsRoot = join(ROOT, "craftsman", "skills");
+  const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
   for (const file of findAllSkillMdFiles()) {
     const relPath = relative(ROOT, file);
-    // The skill this file itself belongs to, e.g. "craftsman/skills/craft-backend/..." -> "craft-backend"
+    // The skill this file itself belongs to, e.g. "plugins/craftsman/skills/craft-backend/..." -> "craft-backend"
     const ownSkill = relative(skillsRoot, file).split("/")[0];
     const text = readFileSync(file, "utf8");
 
@@ -266,7 +266,7 @@ function checkCrossSkillPointers() {
         const target = join(skillsRoot, skillTok, "references", fileTok);
         if (!existsSync(target)) {
           fail(
-            `${relPath}: cross-skill pointer "${skillTok}...${fileTok}" but craftsman/skills/${skillTok}/references/${fileTok} does not exist`
+            `${relPath}: cross-skill pointer "${skillTok}...${fileTok}" but plugins/craftsman/skills/${skillTok}/references/${fileTok} does not exist`
           );
         }
       }
@@ -284,7 +284,7 @@ function checkAuditChecklistHeading() {
   // craft-audit produces, so it has no domain checklist for the orchestrator to source.
   const EXEMPT_SKILLS = new Set(["craft-fix"]);
   for (const skillDir of getSkillDirs()) {
-    const skillName = relative(join(ROOT, "craftsman", "skills"), skillDir);
+    const skillName = relative(join(ROOT, "plugins", "craftsman", "skills"), skillDir);
     if (EXEMPT_SKILLS.has(skillName)) {
       ok(`${skillName}: exempt from "${HEADING}" heading requirement (action skill, not an audit domain)`);
       continue;
@@ -310,7 +310,7 @@ function checkAuditChecklistHeading() {
 function checkDescriptionLength() {
   const MAX = 1200;
   for (const skillDir of getSkillDirs()) {
-    const skillName = relative(join(ROOT, "craftsman", "skills"), skillDir);
+    const skillName = relative(join(ROOT, "plugins", "craftsman", "skills"), skillDir);
     const skillMdPath = join(skillDir, "SKILL.md");
     let skillMd;
     try {
@@ -427,7 +427,7 @@ const REQUIRED_LABELS = [
 ];
 
 function findExampleFindingsFiles() {
-  const examplesRoot = join(ROOT, "craftsman", "examples");
+  const examplesRoot = join(ROOT, "plugins", "craftsman", "examples");
   const results = [];
   if (!existsSync(examplesRoot)) return results;
   const walk = (dir) => {
@@ -936,7 +936,7 @@ function checkFindingsGrammar() {
   // (f1) Worked-example findings.md grammar
   const files = findExampleFindingsFiles();
   if (files.length === 0) {
-    fail("no craftsman/examples/**/findings.md files found to validate");
+    fail("no plugins/craftsman/examples/**/findings.md files found to validate");
   } else {
     const failuresBefore = failures;
     let total = 0;
@@ -965,7 +965,7 @@ function checkFindingsGrammar() {
   };
   const EXEMPT = new Set(["craft-audit", "craft-fix"]);
   for (const skillDir of getSkillDirs()) {
-    const skillName = relative(join(ROOT, "craftsman", "skills"), skillDir);
+    const skillName = relative(join(ROOT, "plugins", "craftsman", "skills"), skillDir);
     if (EXEMPT.has(skillName)) continue;
     const code = SKILL_DOMAIN_CODES[skillName];
     if (!code) {
@@ -1000,7 +1000,7 @@ function checkFindingsGrammar() {
   }
 
   // (f3) Optional soft check — craft-audit path binding language
-  const auditSkill = join(ROOT, "craftsman", "skills", "craft-audit", "SKILL.md");
+  const auditSkill = join(ROOT, "plugins", "craftsman", "skills", "craft-audit", "SKILL.md");
   try {
     const text = readFileSync(auditSkill, "utf8");
     if (text.includes("Path binding")) {
@@ -1025,11 +1025,11 @@ function checkFindingsGrammar() {
 
 const VENDORED_GUIDELINES = join(
   ROOT,
-  "craftsman/skills/craft-ux/references/web-interface-guidelines.md",
+  "plugins/craftsman/skills/craft-ux/references/web-interface-guidelines.md",
 );
 const REVIEW_PROTOCOL = join(
   ROOT,
-  "craftsman/skills/craft-ux/references/review-protocol.md",
+  "plugins/craftsman/skills/craft-ux/references/review-protocol.md",
 );
 const RULES_HEADING = "## Rules";
 const NO_FETCH_CANARY = "Do not fetch the rules over the network at review time.";
