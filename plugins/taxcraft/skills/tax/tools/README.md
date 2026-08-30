@@ -16,12 +16,16 @@ Tools live here when they're general-purpose (work for multiple entities across 
 | [ibkr-parser](ibkr-parser/) | Parse Interactive Brokers monthly statement CSVs into a unified transaction ledger + summary. Uses the matching PDF for cross-validation; flags non-USD amounts. | `ibkr_parser.py` (CLI + library) |
 | [coa-categorizer](coa-categorizer/) | Rule-based GL-bucket classifier for raw transaction rows (Chase checking/CC output). Produces enriched CSV with `gl_account`, `gl_code`, `confidence`, `needs_review` columns + a review summary. Seed rules in `default_rules.json`; override per entity. | `coa_categorizer.py` (CLI + library) |
 | [parse-verify](parse-verify/) | Arithmetic and tax-law invariants over parsed tax JSON — Layer B of the extraction-confidence system in `parsing.md`. Catches issuer errors that survive any amount of extraction consensus. | `verify.py` (CLI + library) |
+| [dep-check](dep-check/) | Report-only dependency preflight for the **skill itself** (not the workspace) — install integrity, Python version, poppler, the `evals/` packages, optional fallback rungs. Prints the platform-correct fix command for anything missing; never installs. Exits 1 when a required dependency is absent. | `dep_check.py` (CLI, `--json`) |
 | [workspace-doctor](workspace-doctor/) | Report-only health check for workspace layout — missing workspace-profile files, non-kebab-case entity dirs, corporate-intake folders (entities/*/corporate/**) with PDFs but no `_processed.log`, empty `.parsed/` caches, sync-conflict litter, loose K-1/tax PDFs, stray `__pycache__`, poppler presence, per-entity `bean-check`, `xledger-check`, ledger-vs-CSV staleness. Never modifies anything; always exits 0. | `doctor.py` (CLI) |
 
 ## Running tools
 
 All tools require **Python 3.9+** (standard library only — no `pip install`
 needed for any tool in this directory unless its own README says otherwise).
+The PDF-reading tools additionally need **poppler** on the PATH, and the
+validators under `evals/` need two pip packages. `dep-check` verifies all of it
+in one call; `dependencies.md` is the SSOT for install and repair.
 
 Invoke tools with `python3 -B` (or set `PYTHONDONTWRITEBYTECODE=1`) so Python
 doesn't write `__pycache__/` bytecode caches into the tree — a workspace kept in
@@ -52,9 +56,15 @@ the current directory. Run tools from the workspace, address them by plugin path
 
 3. **Deterministic + idempotent.** Re-running a tool with the same inputs produces the same outputs. Tools overwrite prior runs rather than appending.
 
-4. **Source of truth is never overwritten.** Tools read from `tax/<year>/source/`, `accounts/`, etc., and write derived artifacts elsewhere. Raw source PDFs / CSVs are never modified.
+4. **Never write inside the skill.** Output goes to the user's workspace; scratch
+   goes to `tempfile.TemporaryDirectory()` with no `dir=` argument. An installed
+   plugin is read-only for most users, so a write here is a PermissionError for
+   them and a silent success for you — `evals/test_no_skill_writes.py` runs the
+   whole suite against a read-only copy so that asymmetry cannot survive a PR.
 
-5. **Reproducibility.** Each tool has its own README and a documented invocation pattern so future runs (or future people) can repeat the work without reverse-engineering.
+5. **Source of truth is never overwritten.** Tools read from `tax/<year>/source/`, `accounts/`, etc., and write derived artifacts elsewhere. Raw source PDFs / CSVs are never modified.
+
+6. **Reproducibility.** Each tool has its own README and a documented invocation pattern so future runs (or future people) can repeat the work without reverse-engineering.
 
 ## When to add a tool here vs. entity-local
 

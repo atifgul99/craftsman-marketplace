@@ -708,9 +708,9 @@ def run_generic_specialist_fixtures(fixtures: list[dict]) -> None:
     try:
         for fixture in fixtures:
             with tempfile.TemporaryDirectory(
-                prefix=".corporate-specialist-eval-", dir=ROOT / "evals"
+                prefix="corporate-specialist-eval-"
             ) as temp_dir:
-                WORKSPACE = Path(temp_dir)
+                WORKSPACE = Path(temp_dir).resolve()
                 specialist_dir = WORKSPACE / "entities/test-corp/corporate/accountable-plan"
                 specialist_dir.mkdir(parents=True)
                 source_path = specialist_dir / "executed-plan.pdf"
@@ -2037,7 +2037,13 @@ def validate_artifact_fixtures(template: dict, schema: dict, fixtures: list[dict
     # "scope path does not exist", which is why this validator sat outside CI.
     global WORKSPACE
     original_workspace = WORKSPACE
-    sandbox = tempfile.TemporaryDirectory(prefix=".corporate-records-eval-", dir=ROOT / "evals")
+# Sandboxes go in the system temp dir, not inside the skill. An installed plugin's
+# directory is frequently read-only, and creating the fixture workspace under
+# ROOT/evals made these validators die on PermissionError there — an unhandled
+# traceback where the whole point of the gate is that a check which could not run
+# is not a check that passed. Paths are resolved so the no-symlink assertion in
+# assert_safe_artifact_path still holds on macOS, where TMPDIR sits under /var.
+    sandbox = tempfile.TemporaryDirectory(prefix="corporate-records-eval-")
     try:
         WORKSPACE = Path(sandbox.name).resolve()
         _materialize_fixture_workspace(clean, WORKSPACE)

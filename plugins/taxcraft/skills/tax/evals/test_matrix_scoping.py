@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -251,9 +252,30 @@ END_TO_END: list[tuple[str, str]] = [
 
 
 def run_end_to_end() -> int:
-    """Write each construct into a real owner file and run `check()` on it."""
+    """Write each construct into a real owner file and run `check()` on it.
+
+    The owner file goes in a temp tree with matrix.ROOT retargeted at it, never in
+    the skill. Writing into the skill directory fails outright on the read-only
+    plugin install most users have, and a crash between write and unlink would
+    leave a stray markdown file inside the shipped skill — which the sibling
+    structural validator counts.
+    """
     failures = 0
-    owner = matrix.ROOT / "individual" / "_check_regression_tmp.md"
+    with tempfile.TemporaryDirectory(prefix="matrix-scoping-eval-") as temp_dir:
+        root = Path(temp_dir).resolve()
+        (root / "individual").mkdir(parents=True)
+        original_root = matrix.ROOT
+        matrix.ROOT = root
+        try:
+            failures = _run_end_to_end_cases(root)
+        finally:
+            matrix.ROOT = original_root
+    return failures
+
+
+def _run_end_to_end_cases(root: Path) -> int:
+    failures = 0
+    owner = root / "individual" / "_check_regression_tmp.md"
     for name, body in END_TO_END:
         text = f"# Temp owner\n\n{body}"
         owner.write_text(text, encoding="utf-8")
