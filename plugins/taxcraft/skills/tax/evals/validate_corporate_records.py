@@ -1946,6 +1946,55 @@ def validate_claimed_artifact(
                 )
 
 
+def _materialize_fixture_workspace(audit: dict, workspace: Path) -> None:
+    """Write every file the clean artifact cites into `workspace`, then restamp the
+    artifact's declared hashes to match what was written.
+
+    The fixture evidence hashes are synthetic tokens from stable_evidence(); no file
+    can be made to hash to them. So the sandbox writes deterministic placeholder bytes
+    and the baseline adopts their real digests — the same move
+    run_generic_specialist_fixtures() already makes. The hash check stays honest
+    because the fixtures that exercise it declare a deliberately wrong digest on top
+    of this baseline, and a restamped baseline is the only way those assertions can
+    isolate the mismatch they are testing.
+    """
+    for searched in audit["scope"]["paths_searched"]:
+        (workspace / searched).mkdir(parents=True, exist_ok=True)
+    # "existing evidence hash mismatch" cites a workspace-root file by name.
+    (workspace / "CLAUDE.md").write_text("fixture workspace\n", encoding="utf-8")
+
+    def restamp(evidence: dict) -> None:
+        source = evidence.get("source_path")
+        if not source or evidence.get("sha256") is None:
+            return
+        if urlparse(source).scheme:  # agency-record URLs are not local files
+            return
+        path = workspace / source
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # Deterministic per path, so two records citing one document agree on its hash.
+        path.write_bytes(f"fixture evidence: {source}\n".encode())
+        evidence["sha256"] = sha256(path.read_bytes()).hexdigest()
+
+    def walk(node: object) -> None:
+        """Restamp every evidence record anywhere in the artifact.
+
+        Evidence hangs off requirements, R-01's record_subcontrols, and
+        formation_chronology, and enumerating those by hand missed two of the three.
+        Matching on shape instead means a new evidence-bearing field is covered the
+        day it is added rather than the day someone notices the fixture drifted.
+        """
+        if isinstance(node, dict):
+            if "source_path" in node and "sha256" in node:
+                restamp(node)
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(audit)
+
+
 def validate_artifact_fixtures(template: dict, schema: dict, fixtures: list[dict]) -> None:
     clean = make_clean_artifact(template)
     names = {fixture["name"] for fixture in fixtures}
@@ -1983,6 +2032,22 @@ def validate_artifact_fixtures(template: dict, schema: dict, fixtures: list[dict
     }
     assert names == required, "artifact fixture set drifted"
 
+    # Fixtures with verify_files touch the filesystem, and they resolve against
+    # WORKSPACE. Give them a sandbox: without one they fail on a clean checkout with
+    # "scope path does not exist", which is why this validator sat outside CI.
+    global WORKSPACE
+    original_workspace = WORKSPACE
+    sandbox = tempfile.TemporaryDirectory(prefix=".corporate-records-eval-", dir=ROOT / "evals")
+    try:
+        WORKSPACE = Path(sandbox.name).resolve()
+        _materialize_fixture_workspace(clean, WORKSPACE)
+        _run_artifact_fixtures(clean, schema, fixtures)
+    finally:
+        WORKSPACE = original_workspace
+        sandbox.cleanup()
+
+
+def _run_artifact_fixtures(clean: dict, schema: dict, fixtures: list[dict]) -> None:
     for fixture in fixtures:
         audit = apply_fixture(clean, fixture)
         schema_failures = schema_errors(audit, schema)
@@ -2005,6 +2070,31 @@ def validate_artifact_fixtures(template: dict, schema: dict, fixtures: list[dict
                     f"{fixture['name']}: expected cross-field error containing "
                     f"{fixture['expected_error_contains']!r}; got {cross_failures[:5]}"
                 )
+                if fixture.get("verify_files"):
+                    # The sandbox makes everything the clean baseline cites real, so the
+                    # only complaint should be the defect this fixture plants. Tolerating
+                    # extra errors is how a sandbox that materialized nothing still passed.
+                    #
+                    # The one expected companion: verify_files marks the audit as
+                    # instantiated, and instantiated audits must carry run-specific
+                    # authority IDs while the fixture baseline uses AUTH-* — which the
+                    # "instantiated audit rejects fixture authority IDs" fixture exists to
+                    # assert. Every other error means the workspace is incomplete.
+                    # Errors naming a row the fixture edited are consequences of the
+                    # planted defect (a bad specialist path is both missing and outside
+                    # its controller-specific location). Anything naming an untouched
+                    # row means the sandbox failed to materialize something.
+                    touched = tuple(f"{row_id}:" for row_id in (fixture.get("row_updates") or {}))
+                    stray = [
+                        error for error in cross_failures
+                        if fixture["expected_error_contains"] not in error
+                        and "require run-specific authority IDs" not in error
+                        and not error.startswith(touched)
+                    ]
+                    assert not stray, (
+                        f"{fixture['name']}: unrelated errors alongside the planted defect "
+                        f"— the fixture workspace is incomplete: {stray[:5]}"
+                    )
             continue
         assert not cross_failures, f"{fixture['name']}: cross-field errors: {cross_failures[:5]}"
         actual = derive_overall(audit)

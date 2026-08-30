@@ -42,13 +42,10 @@ jobs:
         run: pip install --disable-pip-version-check jsonschema markdown-it-py
       - name: Run taxcraft evals
         working-directory: plugins/taxcraft/skills/tax
-        # validate_corporate_records.py is deliberately absent. Its
-        # validate_artifact_fixtures() resolves evidence paths against the ambient tax
-        # workspace (TAX_WORKSPACE or cwd) rather than a sandbox, so its fixtures need
-        # entities/test-corp/** files that do not exist in a clean checkout. Its sibling
-        # run_generic_specialist_fixtures() shows the fix: build a TemporaryDirectory,
-        # point WORKSPACE at it, materialize the fixture files. Add it back once that
-        # lands - it is the validator with the widest coverage.
+        # validate_corporate_records.py runs here too now. Its fixture loop builds a
+        # TemporaryDirectory, points WORKSPACE at it and materializes every file the
+        # clean artifact cites, the way run_generic_specialist_fixtures() already did;
+        # before that it needed entities/test-corp/** files no clean checkout has.
         # Accumulate exit codes explicitly rather than relying on `set -e`, which does
         # not reliably abort from inside a loop body. This also runs every script
         # instead of stopping at the first failure, so one PR shows every break.
@@ -58,6 +55,7 @@ jobs:
             evals/rules_freshness.py \
             evals/test_matrix_scoping.py \
             evals/validate_close_estimate.py \
+            evals/validate_corporate_records.py \
             evals/validate_individual_matrix.py \
             evals/validate_individual_structure.py \
             evals/validate_rules.py \
