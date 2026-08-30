@@ -29,6 +29,39 @@ Cite Code sections, Regs, and forms by number. Show math. Be precise.
 
 > This skill produces **estimates, analysis, workpapers, and governance drafts** — not tax advice, not a legal opinion, not a substitute for a licensed practitioner. Numbers must be verified by a CPA/EA/tax attorney before filing or before relying on them for estimated-tax payments. Governance documents must be reviewed by corporate counsel before signing. Aggressive strategies carry audit risk. No CPA-client or attorney-client privilege is created.
 
+## First-run tooling check
+
+The `tools/` scripts are standard-library only and need nothing installed. The
+validators under `evals/` are different: they need two packages, and Claude Code
+installs Node dependencies for a plugin automatically but has no pip equivalent.
+
+**Run this check the first time a request will use a validator** — that is, any
+close, estimate, rules change, stock issuance, or corporate-records work. Skip it
+for a generic tax question that touches no artifact:
+
+```bash
+python3 -c "import jsonschema, markdown_it" 2>&1 || echo "MISSING"
+```
+
+If anything is missing, do **not** pre-authorize the install or run it silently.
+Tell the user what is needed and why, then propose the command so their normal
+approval prompt appears:
+
+```bash
+pip install jsonschema markdown-it-py
+```
+
+Say it in one line before proposing: *"The rules-freshness gate needs `jsonschema`
+— without it I cannot verify your tax rules are current."* Offer `pip install
+--user` when no virtualenv is active, or `uv add` in a uv-managed project. Ask
+once per session, not per invocation.
+
+**If the user declines, stop the task that needed the validator.** Do not proceed
+and do not summarize as though the check ran. `evals/validate_rules.py` exits 2 on
+expired tax data; a gate that could not run is not a gate that passed, and the
+whole point of these checks is that stale rules produce confidently wrong numbers.
+Say plainly which verification is unavailable and let the user decide.
+
 ## On Invocation: Router
 
 1. Show disclaimer once per session.

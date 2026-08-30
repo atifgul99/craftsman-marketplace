@@ -194,7 +194,9 @@ block, so a visible occurrence elsewhere in the file cannot vouch for a hidden
 one — but the **prohibition**, not the oracle, is what closes the hidden-content
 class; the oracle alone is not sufficient against it.
 
-Requires `markdown-it-py` (as `validate_rules.py` requires `jsonschema`). Block
+Requires `markdown-it-py` (as `validate_rules.py` requires `jsonschema`); both are
+guarded by `evals/_deps.py`, which exits non-zero naming the package rather than
+raising ImportError. See SKILL.md "First-run tooling check" for the install flow. Block
 structure is parsed, not pattern-matched: five successive hand-rolled scanners
 were each defeated by a construct they did not model — blockquoted ordered
 lists, nested fences, sibling subtrees, setext headings, indented code, hard

@@ -15,6 +15,14 @@ import re
 import tempfile
 from urllib.parse import parse_qs, urlparse
 
+from _deps import require
+
+require(
+    "jsonschema",
+    "schema-checking corporate-records audit artifacts",
+    "a corporate-records audit is not validated against its contract",
+)
+
 import jsonschema
 
 

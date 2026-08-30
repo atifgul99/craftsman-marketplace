@@ -12,6 +12,14 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from _deps import require
+
+require(
+    "jsonschema",
+    "validating every rules file against its schema",
+    "expired or malformed tax rules are not detected - this script is the freshness gate that exits 2 on expired data",
+)
+
 from jsonschema import Draft202012Validator, FormatChecker
 
 

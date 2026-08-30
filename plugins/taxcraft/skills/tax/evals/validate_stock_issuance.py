@@ -9,6 +9,14 @@ import json
 import re
 import tempfile
 
+from _deps import require
+
+require(
+    "jsonschema",
+    "schema-checking stock-issuance audit artifacts",
+    "a stock-issuance audit is not validated against its contract",
+)
+
 import jsonschema
 
 import validate_corporate_records as corporate_validator

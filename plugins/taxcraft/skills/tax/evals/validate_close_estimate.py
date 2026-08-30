@@ -17,6 +17,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from rules_freshness import load_rules
 from urllib.parse import urlparse
 
+from _deps import require
+
+require(
+    "jsonschema",
+    "schema-checking close/estimate artifacts",
+    "an estimate artifact is not validated against its contract",
+)
+
 from jsonschema import Draft202012Validator, FormatChecker
 
 
