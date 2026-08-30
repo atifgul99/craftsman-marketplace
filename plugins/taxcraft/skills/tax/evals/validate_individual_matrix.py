@@ -34,15 +34,16 @@ WARN = "⚠"
 # hand-rolled scanners were each broken by a construct they did not model
 # (blockquoted ordered lists, nested fences, sibling subtrees, quote-vs-indent
 # flattening, setext headings, indented code, hard tabs). Parsing is the fix.
-try:
-    from markdown_it import MarkdownIt
-except ModuleNotFoundError:  # fail closed — never silently fall back to a weaker scanner
-    print(
-        "FAIL: markdown-it-py is required for block scoping.\n"
-        "      pip install markdown-it-py",
-        file=sys.stderr,
-    )
-    raise SystemExit(2)
+# Fail closed — never silently fall back to a weaker scanner.
+from _deps import require
+
+require(
+    "markdown_it",
+    "scoping markdown blocks in the individual regression matrix",
+    "the individual-module regression matrix is not verified",
+)
+
+from markdown_it import MarkdownIt  # noqa: E402  (guarded above)
 
 MD = MarkdownIt("commonmark").enable("table")
 

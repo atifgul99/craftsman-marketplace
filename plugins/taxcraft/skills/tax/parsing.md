@@ -16,11 +16,12 @@ This chain requires **poppler** (`pdftotext`, `pdftoppm`). Everything else below
 
 ```bash
 command -v pdftotext pdftoppm    # both must resolve
-# macOS: brew install poppler | Debian/Ubuntu: apt install poppler-utils
-# Fedora: dnf install poppler-utils | Windows: choco install poppler
 ```
 
-If poppler is missing, say so and stop — do not fall back to `Read`-on-PDF.
+If poppler is missing, say so and stop — do not fall back to `Read`-on-PDF. The
+per-platform install commands and the propose-don't-install rule live in
+`dependencies.md`; the session-level preflight that catches this before an intake
+starts is `tools/dep-check/dep_check.py`.
 
 ### The fallback ladder (always try in this order)
 
@@ -102,8 +103,8 @@ every extractor would reproduce identically, including the issuer's own.
 disagree about, narrowing a whole document to the few worth checking by eye:
 
 ```bash
-python3 tools/pdf-extractor/compare.py "<file>.pdf"          # exit 1 if engines disagree
-python3 tools/pdf-extractor/compare.py "<file>.pdf" --pngs   # + page images for a vision pass
+python3 -B "$TAX_SKILL/tools/pdf-extractor/compare.py" "<file>.pdf"          # exit 1 if engines disagree
+python3 -B "$TAX_SKILL/tools/pdf-extractor/compare.py" "<file>.pdf" --pngs   # + page images for a vision pass
 ```
 
 Two extractors agreeing does **not** mean the figure is right. If the issuer printed a wrong
@@ -116,8 +117,8 @@ Schedule L balance, M-2 rollforward and its tie to Schedule L, and cross-documen
 issued K-1 to Schedule K:
 
 ```bash
-python3 tools/parse-verify/verify.py <scope>/FY<YYYY>/.parsed/    # exit 1 if findings
-python3 tools/parse-verify/verify.py <file>.json --min-severity HIGH
+python3 -B "$TAX_SKILL/tools/parse-verify/verify.py" <scope>/FY<YYYY>/.parsed/    # exit 1 if findings
+python3 -B "$TAX_SKILL/tools/parse-verify/verify.py" <file>.json --min-severity HIGH
 ```
 
 **Run Layer B before a parse is treated as final**, and again after any workpaper edit that
@@ -126,12 +127,10 @@ write it into a workpaper until it is resolved or explicitly accepted in `open-q
 
 Neither layer decides anything. Both produce leads:
 
-
-
 - **Cross-reference against independent data** — bank/brokerage transactions, the prior year's workpapers, or the issuer's own summary page. A figure that reconciles to nothing is unverified, whatever the extractor reported.
 - **On K-1s, confirm these fields individually** rather than trusting a whole-form read: Box 1 (ordinary), Box 2 (rental RE), Box 4a/4c (guaranteed payments — services vs capital), Box 19 (distributions), and the liabilities block (nonrecourse / QNR / recourse).
 
-  Boxes 4a/4c and 19 are the classic confusion pair: **guaranteed payments are not distributions**. So are liabilities and income — a liabilities figure misread as income silently inflates the return. Both misreads have occurred in this workspace.
+  Boxes 4a/4c and 19 are the classic confusion pair: **guaranteed payments are not distributions**. So are liabilities and income — a liabilities figure misread as income silently inflates the return. Both misreads are common enough in practice to check for by name rather than trusting a clean-looking extraction.
 - Any figure that cannot be reconciled → `open-questions.md`, not the workpaper.
 
 ## Parsed-cache index

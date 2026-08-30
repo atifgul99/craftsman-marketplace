@@ -9,6 +9,14 @@ import json
 import re
 import tempfile
 
+from _deps import require
+
+require(
+    "jsonschema",
+    "schema-checking stock-issuance audit artifacts",
+    "a stock-issuance audit is not validated against its contract",
+)
+
 import jsonschema
 
 import validate_corporate_records as corporate_validator
@@ -231,10 +239,9 @@ def run_artifact_fixtures(fixtures: list[dict]) -> None:
     try:
         for fixture in fixtures:
             with tempfile.TemporaryDirectory(
-                prefix=".stock-issuance-eval-",
-                dir=ROOT / "evals",
+                prefix="stock-issuance-eval-",
             ) as temp_dir:
-                workspace = Path(temp_dir)
+                workspace = Path(temp_dir).resolve()
                 corporate_validator.WORKSPACE = workspace
                 result, manifest, manifest_path, artifact_paths = build_clean_closing(workspace)
                 manifest_changed = False

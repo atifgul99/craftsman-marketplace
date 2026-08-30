@@ -38,11 +38,15 @@ Write a thin per-entity driver script that configures accounts and calls `build_
 
 ```python
 #!/usr/bin/env python3
+import os
 import sys
 from pathlib import Path
 
-WORKSPACE = Path(__file__).resolve().parents[4]  # adjust depth to point at workspace root
-sys.path.insert(0, str(WORKSPACE / ".claude" / "skills" / "tax" / "tools" / "chase-statement-parser"))
+# This driver lives in your workspace; the skill is installed elsewhere as a plugin.
+# Point TAX_SKILL at the installed skill (echo "$CLAUDE_PLUGIN_ROOT/skills/tax" from a
+# Claude Code session, or `ls ~/.claude/plugins/cache/*/taxcraft/*/skills/tax`).
+TAX_SKILL = Path(os.environ["TAX_SKILL"])  # e.g. ~/.claude/plugins/cache/<mkt>/taxcraft/<ver>/skills/tax
+sys.path.insert(0, str(TAX_SKILL / "tools" / "chase-statement-parser"))
 
 from chase_parser import build_ledgers
 

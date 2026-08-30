@@ -243,6 +243,10 @@ without correct taxpayer, form, period, and amount is not reconciled.
 
 ## 9. Release checks
 
+These validators need `jsonschema` (see SKILL.md "First-run tooling check"). If it
+is missing they exit non-zero with the install command rather than a stack trace —
+treat that as "not verified", never as a pass.
+
 After changing this workflow run:
 
 ```bash

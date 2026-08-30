@@ -347,7 +347,11 @@ formation-state capacity formula on a class-by-class basis against hashed
 charter authority. That authority must be typed JSON in the subject's canonical
 `corporate/formation/` folder, identify `ARTICLES_OR_AMENDMENT`, hash the
 underlying source document, state the extracted class and authorized-share
-number, and bind that number exactly to the capitalization rollforward. A
+number, and bind that number exactly to the capitalization rollforward.
+Instantiate `templates/stock-issuance-charter-class-authority.json.template` for
+it rather than composing the shape by hand — the tranche's
+`charter_class_authority_path` and `charter_class_authority_sha256` are checked
+against this file, and a mismatch fails the artifact. A
 ledger or closing artifact cannot substitute for charter authority. The
 validator requires board approval for issuance and exact-matches typed approval,
 consideration-clearance, issuance, delivery, journal-posting, tax, and

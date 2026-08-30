@@ -29,6 +29,66 @@ Cite Code sections, Regs, and forms by number. Show math. Be precise.
 
 > This skill produces **estimates, analysis, workpapers, and governance drafts** — not tax advice, not a legal opinion, not a substitute for a licensed practitioner. Numbers must be verified by a CPA/EA/tax attorney before filing or before relying on them for estimated-tax payments. Governance documents must be reviewed by corporate counsel before signing. Aggressive strategies carry audit risk. No CPA-client or attorney-client privilege is created.
 
+## Where the tools live (read before running any of them)
+
+This skill is installed as a plugin, outside the user's workspace. The working
+directory is *their* tax workspace, so every `tools/…` and `evals/…` path in this
+skill is relative to the skill, not to where you are standing. Run one bare and it
+fails with "No such file or directory"; guess at a path and you may run something
+else. Address them through the plugin root, and set it once per session:
+
+```bash
+TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"
+python3 -B "$TAX_SKILL/tools/pdf-extractor/pdf_extract.py" "path/to/doc.pdf"
+```
+
+If `CLAUDE_PLUGIN_ROOT` is unset (a non-plugin install, or a runtime that does not
+export it), locate the skill once — `ls ~/.claude/plugins/cache/*/taxcraft/*/skills/tax`
+or ask the user — and use that absolute path. Do not fall back to a relative path.
+
+The reverse holds for the tools' *arguments*: those are workspace paths, and the
+tools resolve them against the current directory. `workspace-doctor` defaults its
+root to `$TAX_WORKSPACE`, else the current directory — so run it from the
+workspace, and never assume it inferred the right tree from its own location.
+
+## First-run dependency check
+
+This skill needs things the plugin installer does not provide: **poppler** for
+every PDF path, and **`jsonschema` + `markdown-it-py`** for every validator under
+`evals/`. Claude Code installs a plugin's Node dependencies automatically and has
+no pip equivalent, so a fresh install is normally missing them. The `tools/`
+scripts themselves are standard-library only and need nothing.
+
+**Run this once per session**, the first time a request will read a PDF or use a
+validator — any intake, close, estimate, rules change, stock issuance, or
+corporate-records work. Skip it for a generic tax question that touches no
+document and no artifact:
+
+```bash
+python3 -B "${CLAUDE_PLUGIN_ROOT}/skills/tax/tools/dep-check/dep_check.py"
+```
+
+It verifies the skill's own install, the runtime, poppler, the validator
+packages, and the optional fallback rungs, and prints the exact fix command for
+this platform for anything missing. Exit 0 = all required present.
+
+If something is missing, do **not** pre-authorize the install or run it silently.
+Say in one line what it is for and what goes unchecked without it, then propose
+the printed command so the user's normal approval prompt appears — e.g. *"The
+rules-freshness gate needs `jsonschema`; without it I cannot verify your tax
+rules are current."*
+
+**If the user declines, stop the task that needed it.** A gate that could not run
+is not a gate that passed — `evals/validate_rules.py` exits 2 on expired tax
+data, and stale rules produce confidently wrong numbers. Never substitute a
+lower-fidelity path (no `Read`-on-PDF when poppler is absent). Name the
+verification that is unavailable, then continue with whatever genuinely does not
+depend on it.
+
+Full detection/repair matrix per layer — plugin install, poppler, validator
+packages, optional rungs — is in `dependencies.md`. Do not restate install
+commands from memory; that file is the SSOT.
+
 ## On Invocation: Router
 
 1. Show disclaimer once per session.
@@ -78,6 +138,7 @@ Or describe what you need.
 
 | File | Purpose |
 |---|---|
+| `dependencies.md` | Install / verify / fix SSOT: plugin-install integrity, poppler, validator packages, optional fallback rungs; the never-install-silently and declined-install rules |
 | `init.md` | First-time workspace setup: scan, draft profile + entity roster, seed folders |
 | `migrate.md` | Convert legacy workspace to canonical layout (folders + filenames) |
 | `layout.md` | Target workspace tree; regarded vs. disregarded placement rules |
@@ -105,7 +166,7 @@ Or describe what you need.
 | `governance.md` | State-law drafting patterns, minutes/consents/resolutions, corporate-document intake, state filings, and veil discipline |
 | `scenarios/<topic>.md` | Rental, K-1 (VC/PE, O&G), equity comp, SDIRA, multi-state, audit response, C-corp reduction, entity trading, **corporate-records** (C-corporation record-set lifecycle, authority chronology, completeness invariants, annual governance, standing/licenses, subsidiaries), **accountable-plan** (§62(c)/Reg §1.62-2 eligibility, audit, drafting, adoption, operations, payroll), **stock-issuance** (canonical authority → consideration → §351/§83/§1202/§1244 → securities → closing → ledger/accounting orchestrator), amend-partnership (BBA AAR / 1065-X / 1040-X cascade), penalty-abatement (Rev. Proc. 84-35 / FTA / reasonable cause / Form 843), irs-transcripts (pull + read + TC codes), tiered-partnership-se (GP-interest SE pass-through, *Soroban*), turbotax-business (`.tax20XX` file handling), qsbs-1202 (§1202 dual regimes pre/post-OBBBA), section-1244 (§1244 ordinary loss on small-business stock; bare-contribution basis trap), contested-k1 (disputed/withdrawn K-1, Form 8082, protective filings), aca-medicaid-magi (PTC/Medicaid MAGI management, Form 8962), meals-substantiation (§274(d)), home-office-280a (§280A(c)(1) three prongs, business %, accountable-plan vs. rent-to-employer, §121 exposure on separate structures) |
 | `rules/federal-<year>.json` | Curated annual inputs; never self-authenticating—apply `authority.md` at point of use |
-| `rules/manifest.json` + `rules/schema-v1.json` | Rules inventory, shape migrations, provenance metadata, and validation schema |
+| `rules/manifest.json` + `rules/schema-v{1,2}.json` | Rules inventory, shape migrations, provenance metadata, and validation schema. New rules files validate against **v2** (v1 is frozen for external consumers; v2 is a strict superset that adds the freshness fields) — see `authority.md` |
 | `templates/*` | Skeletons for every file the skill creates |
 | `accounting-101.md` | Primer on three-timeline accounting (account / books / tax-year) + AICPA permanent-vs-current file framing — read when the folder structure feels arbitrary |
 | `states/README.md` | State tax router — entity → state map, which file to load |
@@ -114,8 +175,9 @@ Or describe what you need.
 | `states/wa/property-other.md` | WA Personal Property Tax (King County) + Unclaimed Property |
 | `states/wy/README.md` | WY: no income tax, annual report only |
 | `calendar.md` | Compliance calendar — read-only deadline projection over `entity.md` + tax-summary + rules; dashboards, overdue/upcoming |
-| `tools/README.md` | 7 shipped tools (pdf-extractor, chase-statement-parser, ibkr-parser, k1-parser, return-parser, transcript-parser, coa-categorizer) + `workspace-doctor` — see `tools/README.md` |
-| `tools/workspace-doctor/` | Report-only lint: runs `python3 tools/workspace-doctor/doctor.py`; reports missing canonical files (e.g. `workspace-profile/slugs.md`), naming violations, empty parse caches, sync-conflict duplicates, unprocessed corporate docs — never modifies anything |
+| `tools/dep-check/` | One-shot dependency preflight: `python3 -B "$TAX_SKILL/tools/dep-check/dep_check.py"` — checks install integrity, poppler, validator packages, optional rungs; prints the platform-correct fix command; exits 1 when a required dependency is missing. Never installs anything |
+| `tools/README.md` | 10 shipped tools (pdf-extractor, chase-statement-parser, ibkr-parser, k1-parser, return-parser, transcript-parser, coa-categorizer, parse-verify, workspace-doctor, dep-check) — see `tools/README.md` |
+| `tools/workspace-doctor/` | Report-only lint: runs `python3 -B "$TAX_SKILL/tools/workspace-doctor/doctor.py"` from the workspace root; reports missing canonical files (e.g. `workspace-profile/slugs.md`), naming violations, empty parse caches, sync-conflict duplicates, unprocessed corporate docs — never modifies anything |
 
 Read sub-skill files via Read tool as needed. Never load all upfront.
 
@@ -150,6 +212,9 @@ Read sub-skill files via Read tool as needed. Never load all upfront.
 
 These produce confident, plausible, wrong answers more often than anything else
 on the individual side. Route first — do not answer from general knowledge. **If
+any of these facts appear, load the module before computing anything.** The full
+list, with the reasoning behind each route, is in `individual/README.md`
+§ "High-risk routes".
 
 - Any **IRA/Roth basis, conversion, rollover, RMD, or inherited-IRA** question
   routes to `individual/retirement.md`. Never answer a backdoor-Roth question

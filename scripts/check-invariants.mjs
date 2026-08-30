@@ -17,6 +17,10 @@
 //       (g2) its rule list carries no URL, prompt-template marker, or code fence, and no
 //            soft-flagged tool/network verb
 //       (g3) review-protocol.md still carries the do-not-fetch-at-review-time prohibition
+//   (h) every `references/x.md` pointer resolves in its own skill, or in the
+//       block-scoped skill that qualifies it
+//   (i) taxcraft parity: manifests parse and agree on version, every marketplace source
+//       path exists, the tax description fits, and every concrete router-table path exists
 //
 // Run: node scripts/check-invariants.mjs
 
@@ -1145,6 +1149,257 @@ function checkVendoredGuidelines() {
 }
 
 // ---------------------------------------------------------------------------
+// (h) every `references/x.md` pointer resolves — in its own skill, or in the skill
+// that qualifies it.
+//
+// checkCrossSkillPointers only sees pointers whose qualifying skill token sits on the
+// same line, and these docs wrap at ~100 cols. A bare `references/x.md` that resolves
+// nowhere is the dangerous form: a reader follows it into their own skill's references/
+// dir, finds nothing, and either guesses or drops the guidance.
+//
+// Scoping is by Markdown block, not by a character window. A skill named in the
+// *previous* list item does not qualify a pointer in this one — that was the exact
+// ambiguity being caught — and a skill named in the previous *paragraph* does not
+// either, which a raw character lookback would have silently exempted.
+// ---------------------------------------------------------------------------
+
+// A block ends at a blank line, a heading, a list item, or a table row. Indented
+// continuation lines stay with the item that opened the block. A leading "> " is
+// stripped first, so a blockquote scopes by the same rules as the prose it quotes —
+// its wrapped lines stay together, its bullets still split. Fenced code is dropped:
+// an example path inside a fence is illustration, not navigation.
+function splitIntoBlocks(text) {
+  const blocks = [];
+  let current = [];
+  let fence = null; // the opening marker, so an inner ``` inside a ```` block cannot close it
+  const flush = () => {
+    if (current.length) blocks.push(current.join(" "));
+    current = [];
+  };
+  for (let line of text.split("\n")) {
+    const marker = /^\s*(`{3,}|~{3,})/.exec(line)?.[1];
+    if (marker && (fence === null || (marker[0] === fence[0] && marker.length >= fence.length))) {
+      fence = fence === null ? marker : null;
+      flush();
+      continue;
+    }
+    if (fence !== null) continue;
+    line = line.replace(/^(\s*)>\s?/, "$1");
+    const opensBlock =
+      line.trim() === "" ||
+      /^#{1,6}\s/.test(line) ||
+      /^\s*([-*+]|\d+\.)\s/.test(line) ||
+      /^\s*\|/.test(line);
+    if (opensBlock) flush();
+    if (line.trim() !== "") current.push(line);
+  }
+  flush();
+  return blocks;
+}
+
+// A skill token only owns a pointer when it is syntactically attached to it: nothing
+// between them but decoration, whitespace (these docs wrap mid-pointer), and a connector
+// (`→`, `->`, `'s` straight or curly, `:`, `/`, an opening bracket or paren). Merely being the nearest earlier token is
+// not enough — "route to craft-infra (pipeline mechanism) → `references/strategy.md`"
+// points at the *current* skill's file, and reading the aside as the qualifier would send
+// the check hunting for it in craft-infra. Any word or other punctuation between the two
+// breaks the attachment, which is the same judgment a reader makes.
+const ATTACHED_QUALIFIER = /^[\s`*'’"\[\]]*(?:(?:→|->|['’]s|:|\/|\(|\[)[\s`*'’"\[\]]*){0,3}$/;
+
+// Every references/x.md occurrence in `text`, with the skill that owns it: the
+// attached qualifier, or null meaning "the file's own skill". Pure, so the self-test
+// below can exercise the scoping and attachment rules without touching the repo.
+function findPointers(text, ownSkill) {
+  const found = [];
+  for (const block of splitIntoBlocks(text)) {
+    for (const m of block.matchAll(/references\/([a-z0-9-]+\.md)/g)) {
+      const before = block.slice(0, m.index);
+      const tokens = [...before.matchAll(/craft-[a-z0-9-]+/g)];
+      const last = tokens.length ? tokens[tokens.length - 1] : null;
+      const attached =
+        last && ATTACHED_QUALIFIER.test(before.slice(last.index + last[0].length));
+      found.push({
+        file: m[1],
+        qualifier: attached && last[0] !== ownSkill ? last[0] : null,
+      });
+    }
+  }
+  return found;
+}
+
+// Known limits, confirmed absent from current prose and left unhandled rather than
+// guessed at: a four-space indented code block containing literal backticks reads as a
+// fence, and the reference-style link form ("[craft-infra][infra] → [references/x.md][y]")
+// parses as unqualified. If either appears, extend findPointers rather than the fixtures.
+//
+// This guard shipped wrong three times — a character-window lookback, then a
+// soft-unwrap that bled across list items, then an own-skill fallback that masked
+// wrong cross-skill claims. Each case below is one of those regressions.
+const POINTER_FIXTURES = [
+  // [name, markdown, expected [file, qualifier] pairs]
+  ["unqualified after a paragraph break",
+    "craft-infra owns this.\n\n`references/x.md` has it.", [["x.md", null]]],
+  ["qualifier in the previous list item does not carry",
+    "- routed to `craft-security` for policy\n- detail in `references/x.md`", [["x.md", null]]],
+  ["aside naming another skill mid-clause does not qualify",
+    "- pooling constraints → craft-infra) → `references/x.md`", [["x.md", null]]],
+  ["attached across a soft line wrap",
+    "See `craft-infra` →\n`references/x.md` for ordering.", [["x.md", "craft-infra"]]],
+  ["attached inside a blockquote",
+    "> prose → craft-infra\n> `references/x.md`", [["x.md", "craft-infra"]]],
+  ["blockquote bullets scope separately",
+    "> - see craft-infra\n> - detail in `references/x.md`", [["x.md", null]]],
+  ["direct-path form qualifies", "see `craft-lint/references/x.md`.", [["x.md", "craft-lint"]]],
+  ["possessive qualifies, straight and curly",
+    "craft-infra's `references/x.md`; craft-infra’s `references/y.md`",
+    [["x.md", "craft-infra"], ["y.md", "craft-infra"]]],
+  ["bracket decoration qualifies", "`craft-infra` → [references/x.md]", [["x.md", "craft-infra"]]],
+  ["fenced code is not navigation", "```\ncraft-infra -> references/x.md\n```", []],
+  ["an inner fence does not close an outer one",
+    "````\n```\ncraft-infra -> references/x.md\n```\n````", []],
+];
+
+function checkPointerScopingSelfTest() {
+  let bad = 0;
+  for (const [name, markdown, expected] of POINTER_FIXTURES) {
+    const got = findPointers(markdown, "craft-backend").map((p) => [p.file, p.qualifier]);
+    if (JSON.stringify(got) !== JSON.stringify(expected)) {
+      fail(`pointer scoping self-test "${name}": expected ${JSON.stringify(expected)}, got ${JSON.stringify(got)}`);
+      bad++;
+    }
+  }
+  if (bad === 0) ok(`pointer scoping self-test: ${POINTER_FIXTURES.length} fixture(s) passed`);
+}
+
+function checkReferencePointersResolve() {
+  const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
+  let dangling = 0;
+  let checked = 0;
+  for (const file of findAllSkillMdFiles()) {
+    const relPath = relative(ROOT, file);
+    const ownSkill = relative(skillsRoot, file).split("/")[0];
+
+    for (const { file: fileTok, qualifier } of findPointers(readFileSync(file, "utf8"), ownSkill)) {
+      checked++;
+
+      // No attached qualifier (or it names this skill): the file must be this skill's own.
+      if (!qualifier) {
+        if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
+        fail(
+          `${relPath}: pointer "references/${fileTok}" does not exist in ${ownSkill}'s own ` +
+            'references/ — name the owning skill ("`craft-x` → `references/…`") or fix the path',
+        );
+        dangling++;
+        continue;
+      }
+
+      // Attached to another skill: it must exist there. No own-skill fallback — the
+      // pointer said whose file it is, so that is the claim being checked.
+      if (existsSync(join(skillsRoot, qualifier, "references", fileTok))) continue;
+      fail(
+        `${relPath}: pointer "${qualifier} → references/${fileTok}" does not exist in ` +
+          `${qualifier}/references/`,
+      );
+      dangling++;
+    }
+  }
+  if (dangling === 0) {
+    ok(`all ${checked} references/ pointers resolve in their own or their qualifying skill`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// (i) taxcraft parity: the tax plugin ships alongside craftsman and gets the same
+// manifest, description, and router-integrity guarantees. Its SKILL.md is a router
+// whose sub-skill table is the load-bearing index — a row naming a file that does
+// not exist sends the model looking for guidance that was never shipped.
+// ---------------------------------------------------------------------------
+function checkTaxcraft() {
+  const manifests = [
+    ".claude-plugin/marketplace.json",
+    "plugins/taxcraft/.claude-plugin/plugin.json",
+    "plugins/taxcraft/.codex-plugin/plugin.json",
+  ];
+  const parsed = new Map();
+  for (const rel of manifests) {
+    try {
+      parsed.set(rel, JSON.parse(readFileSync(join(ROOT, rel), "utf8")));
+      if (rel.startsWith("plugins/")) ok(`${rel} parses as valid JSON`);
+    } catch (err) {
+      fail(`${rel} failed to parse: ${err.message}`);
+    }
+  }
+
+  const versions = [
+    parsed.get(".claude-plugin/marketplace.json")?.plugins?.find((p) => p.name === "taxcraft")?.version,
+    parsed.get("plugins/taxcraft/.claude-plugin/plugin.json")?.version,
+    parsed.get("plugins/taxcraft/.codex-plugin/plugin.json")?.version,
+  ];
+  if (versions.every(Boolean) && new Set(versions).size === 1) {
+    ok(`all taxcraft manifests declare version ${versions[0]}`);
+  } else {
+    fail(`taxcraft manifest versions disagree: ${versions.map((v) => v || "missing").join(", ")}`);
+  }
+
+  // every marketplace entry's source directory exists
+  for (const plugin of parsed.get(".claude-plugin/marketplace.json")?.plugins ?? []) {
+    const src = join(ROOT, plugin.source.replace(/^\.\//, ""));
+    if (existsSync(src)) {
+      ok(`marketplace entry "${plugin.name}" source ${plugin.source} exists`);
+    } else {
+      fail(`marketplace entry "${plugin.name}" source ${plugin.source} does not exist`);
+    }
+  }
+
+  const skillPath = join(ROOT, "plugins/taxcraft/skills/tax/SKILL.md");
+  const text = readFileSync(skillPath, "utf8");
+
+  const desc = /^description:\s*(.*)$/m.exec(text)?.[1] ?? "";
+  if (desc.length > 0 && desc.length <= 1200) {
+    ok(`tax: description is ${desc.length} chars (<= 1200)`);
+  } else {
+    fail(`tax: description is ${desc.length} chars (must be 1-1200)`);
+  }
+
+  // Sub-skill table rows: first cell is a backticked path. Rows using a
+  // `<placeholder>` glob (e.g. `individual/<domain>.md`) name a family, not a file.
+  const taxRoot = join(ROOT, "plugins/taxcraft/skills/tax");
+  const table = /^## Sub-skill files \(loaded on demand\)\n([\s\S]*?)(?=\n## )/m.exec(text)?.[1];
+  if (!table) {
+    fail("tax/SKILL.md: missing the \"## Sub-skill files (loaded on demand)\" router table");
+    return;
+  }
+  let bad = 0;
+  let checked = 0;
+  for (const row of table.matchAll(/^\|([^|\n]+)\|/gm)) {
+    // A first cell can name more than one path, e.g. "`rules/manifest.json` +
+    // `rules/schema-v{1,2}.json`". Check every backticked token in it, not just the
+    // first — a row-shape assumption is how an unchecked path hides behind a green line.
+    for (const tok of row[1].matchAll(/`([^`]+)`/g)) {
+      const target = tok[1];
+      if (!/\.[a-z0-9]+$/i.test(target) && !target.endsWith("/")) continue; // not a path
+      if (/[<>*]/.test(target)) continue; // family placeholder, not a file
+      // Brace alternation names a set: `schema-v{1,2}.json` -> schema-v1.json, schema-v2.json
+      const expanded = /\{([^}]+)\}/.test(target)
+        ? target.match(/\{([^}]+)\}/)[1].split(",").map((alt) => target.replace(/\{[^}]+\}/, alt.trim()))
+        : [target];
+      for (const path of expanded) {
+        checked++;
+        if (!existsSync(join(taxRoot, path))) {
+          fail(`tax/SKILL.md: router table names \`${path}\`, which does not exist`);
+          bad++;
+        }
+      }
+    }
+  }
+  if (checked === 0) {
+    fail("tax/SKILL.md: router table parsed but yielded no checkable paths");
+    return;
+  }
+  if (bad === 0) ok(`tax/SKILL.md: all ${checked} concrete router-table paths exist`);
+}
+
+// ---------------------------------------------------------------------------
 // Run all checks
 // ---------------------------------------------------------------------------
 checkJsonManifests();
@@ -1155,6 +1410,9 @@ checkDescriptionLength();
 checkNoAbsoluteVolumesPaths();
 checkFindingsGrammar();
 checkVendoredGuidelines();
+checkPointerScopingSelfTest();
+checkReferencePointersResolve();
+checkTaxcraft();
 
 console.log("");
 console.log(`${failures} failure(s), ${warnings} warning(s).`);

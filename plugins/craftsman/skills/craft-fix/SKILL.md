@@ -134,7 +134,7 @@ Depth for every step lives in `references/fix-protocol.md` — this is the compa
    surface-batch to completion; do not start a new pick-set uninvited. (Commits already preferred in
    step 5 when approved — if a batch still has uncommitted work, ask once more here; never force.)
    Then hand off with the real cost framing, not a bare "re-run the audit": a verification pass is
-   scoped, not a full re-audit — `craft-audit`'s staleness rules (`references/rerun.md`) only re-run
+   scoped, not a full re-audit — the staleness rules in `craft-audit` → `references/rerun.md` only re-run
    the domains whose files actually changed, typically minutes; and its "User-scoped re-runs and fix
    verification" section supports a targeted pass that re-checks just the findings carrying this
    session's Fix-attempt lines, reviews their remediation diffs, and can flip only cleared findings

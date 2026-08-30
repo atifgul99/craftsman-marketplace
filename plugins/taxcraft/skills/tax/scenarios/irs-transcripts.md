@@ -23,7 +23,10 @@ Transcripts are the authoritative record of what the IRS thinks happened. Pull t
 | **Form 4506** (paid, $30/return) | Anyone with authorization | 60-75 days | **Actual copies** of filed returns, not transcripts — use only when transcript isn't sufficient (e.g., attachments matter) |
 | **IRS Practitioner Priority Service (PPS)** phone | Practitioner with POA | Immediate for guidance; faxed transcripts same day sometimes | Emergency pulls when exam/notice deadline is tight |
 
-For this workspace, the user is self-prepared — no CAF / no CPA POA on file. Options:
+Check `workspace-profile/` for a CPA/EA with a Form 2848 POA on file before
+routing. Where the taxpayer is self-prepared — no CAF number, no POA — which is
+the common case for this skill, the practitioner rows above are unavailable and
+the options are:
 1. **IRS Online Account** for the individual's 1040 transcripts — fastest.
 2. **IRS Business Tax Account** for entity transcripts, if the taxpayer is registered as responsible officer.
 3. **Form 4506-T** mailed for what the online accounts don't cover — multi-week turnaround; plan for it.
@@ -86,7 +89,7 @@ For entity transcripts: request wage-and-income on the entity's EIN. For individ
 
 Where `<Type>` ∈ {`Account`, `Return`, `Record of Account`, `Wage and Income`, `Verification of Non-Filing`}.
 
-Parse via `tools/transcript-parser/transcript_parser.py` (text PDFs parse cleanly — uses `pdftotext -layout` internally). Run it interactively and confirm the y/n prompt to write; on confirmation it writes `<input>.parsed.json` next to the source PDF (not into a `.parsed/` subdirectory) matching the schema in `parsing.md`. It captures all TC transactions (with cycle + date + amount), flags exam / freeze / lien indicators, and extracts Wage & Income line items into `wage_income_items` for CP2000 reconciliation.
+Parse via `$TAX_SKILL/tools/transcript-parser/transcript_parser.py` (text PDFs parse cleanly — uses `pdftotext -layout` internally). Run it interactively and confirm the y/n prompt to write; on confirmation it writes `<input>.parsed.json` next to the source PDF (not into a `.parsed/` subdirectory) matching the schema in `parsing.md`. It captures all TC transactions (with cycle + date + amount), flags exam / freeze / lien indicators, and extracts Wage & Income line items into `wage_income_items` for CP2000 reconciliation.
 
 Re-pull: IRS updates transcripts weekly. Overwrite the same canonical filename on re-pull; `.parsed/_index.json` TTL class is `manual` so re-parse is explicit.
 

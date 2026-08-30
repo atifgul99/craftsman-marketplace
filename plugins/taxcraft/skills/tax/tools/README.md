@@ -15,23 +15,38 @@ Tools live here when they're general-purpose (work for multiple entities across 
 | [transcript-parser](transcript-parser/) | Parse IRS Account / Tax Return / Wage & Income / Record of Account transcripts. Extracts TC codes + cycle dates, flags exam/freeze/lien indicators. TC code lookup in `tc_codes.json`. | `transcript_parser.py` (CLI + library) |
 | [ibkr-parser](ibkr-parser/) | Parse Interactive Brokers monthly statement CSVs into a unified transaction ledger + summary. Uses the matching PDF for cross-validation; flags non-USD amounts. | `ibkr_parser.py` (CLI + library) |
 | [coa-categorizer](coa-categorizer/) | Rule-based GL-bucket classifier for raw transaction rows (Chase checking/CC output). Produces enriched CSV with `gl_account`, `gl_code`, `confidence`, `needs_review` columns + a review summary. Seed rules in `default_rules.json`; override per entity. | `coa_categorizer.py` (CLI + library) |
+| [parse-verify](parse-verify/) | Arithmetic and tax-law invariants over parsed tax JSON — Layer B of the extraction-confidence system in `parsing.md`. Catches issuer errors that survive any amount of extraction consensus. | `verify.py` (CLI + library) |
+| [dep-check](dep-check/) | Report-only dependency preflight for the **skill itself** (not the workspace) — install integrity, Python version, poppler, the `evals/` packages, optional fallback rungs. Prints the platform-correct fix command for anything missing; never installs. Exits 1 when a required dependency is absent. | `dep_check.py` (CLI, `--json`) |
 | [workspace-doctor](workspace-doctor/) | Report-only health check for workspace layout — missing workspace-profile files, non-kebab-case entity dirs, corporate-intake folders (entities/*/corporate/**) with PDFs but no `_processed.log`, empty `.parsed/` caches, sync-conflict litter, loose K-1/tax PDFs, stray `__pycache__`, poppler presence, per-entity `bean-check`, `xledger-check`, ledger-vs-CSV staleness. Never modifies anything; always exits 0. | `doctor.py` (CLI) |
 
 ## Running tools
 
 All tools require **Python 3.9+** (standard library only — no `pip install`
 needed for any tool in this directory unless its own README says otherwise).
+The PDF-reading tools additionally need **poppler** on the PATH, and the
+validators under `evals/` need two pip packages. `dep-check` verifies all of it
+in one call; `dependencies.md` is the SSOT for install and repair.
 
 Invoke tools with `python3 -B` (or set `PYTHONDONTWRITEBYTECODE=1`) so Python
-doesn't write `__pycache__/` bytecode caches into the tree — this workspace
-lives on OneDrive, and `.pyc` churn there causes needless sync conflicts.
+doesn't write `__pycache__/` bytecode caches into the tree — a workspace kept in
+a synced folder (OneDrive, Dropbox, iCloud Drive) turns `.pyc` churn into sync
+conflicts, and the caches are noise in every other workspace too.
 `__pycache__/` and `*.pyc` are also covered by the skill's `.gitignore` as a
 second line of defense; `workspace-doctor` (below) flags any that slip
 through.
 
+The skill is installed as a plugin, so these paths are not relative to your
+workspace. Resolve them through the plugin root once, then address every tool
+through it — a bare `python3 -B k1_parser.py` only works if you happen to be
+standing in the tool's own directory, which you are not:
+
 ```bash
-python3 -B k1_parser.py "path/to/k1.pdf"
+TAX_SKILL="${CLAUDE_PLUGIN_ROOT}/skills/tax"
+python3 -B "$TAX_SKILL/tools/k1-parser/k1_parser.py" "path/to/k1.pdf"
 ```
+
+Tool *arguments* work the other way: they are workspace paths, resolved against
+the current directory. Run tools from the workspace, address them by plugin path.
 
 ## Design principles
 
@@ -41,9 +56,15 @@ python3 -B k1_parser.py "path/to/k1.pdf"
 
 3. **Deterministic + idempotent.** Re-running a tool with the same inputs produces the same outputs. Tools overwrite prior runs rather than appending.
 
-4. **Source of truth is never overwritten.** Tools read from `tax/<year>/source/`, `accounts/`, etc., and write derived artifacts elsewhere. Raw source PDFs / CSVs are never modified.
+4. **Never write inside the skill.** Output goes to the user's workspace; scratch
+   goes to `tempfile.TemporaryDirectory()` with no `dir=` argument. An installed
+   plugin is read-only for most users, so a write here is a PermissionError for
+   them and a silent success for you — `evals/test_no_skill_writes.py` runs the
+   whole suite against a read-only copy so that asymmetry cannot survive a PR.
 
-5. **Reproducibility.** Each tool has its own README and a documented invocation pattern so future runs (or future people) can repeat the work without reverse-engineering.
+5. **Source of truth is never overwritten.** Tools read from `tax/<year>/source/`, `accounts/`, etc., and write derived artifacts elsewhere. Raw source PDFs / CSVs are never modified.
+
+6. **Reproducibility.** Each tool has its own README and a documented invocation pattern so future runs (or future people) can repeat the work without reverse-engineering.
 
 ## When to add a tool here vs. entity-local
 
@@ -67,7 +88,7 @@ python3 -B k1_parser.py "path/to/k1.pdf"
 
 ## Not yet built
 
-Prioritized against actual document volume seen in this workspace (individual `FY2023` / `FY2024` / `FY2025` docs/). P0 = blocks annual close or intake; P1 = reduces manual effort materially; P2 = nice-to-have.
+Prioritized by how often the document type shows up in a typical multi-year individual `docs/` folder, not by how interesting the parser would be to write. P0 = blocks annual close or intake; P1 = reduces manual effort materially; P2 = nice-to-have.
 
 | Priority | Tool | What it does | Blocked on |
 |---|---|---|---|
@@ -76,7 +97,7 @@ Prioritized against actual document volume seen in this workspace (individual `F
 | **P0** | 1099-R parser | Retirement-distribution forms — gross, taxable, withholding, box 7 distribution code. Affects taxable income + AGI. | Schema needed in `parsing.md` |
 | **P0** | 1098 mortgage parser | Mortgage interest (box 1), property tax escrow (box 10), points, outstanding principal. Multi-property scope common. | Schema needed |
 | **P1** | 1099-INT / 1099-DIV standalone | FirstTech / PenFed single-form statements — different layout from Composites. | Schema defined for Composite (reuse subsections) |
-| **P1** | 1099-K parser | Payment-platform reporting (Zillow, Stripe, Venmo Business). Recently surfaced on IRS Wage & Income transcripts for this workspace. | Schema needed |
+| **P1** | 1099-K parser | Payment-platform reporting (Zillow, Stripe, Venmo Business). Increasingly shows up on IRS Wage & Income transcripts. | Schema needed |
 | **P1** | 5498 / 5498-SA parser | IRA/HSA contribution + FMV reports. Needed for Form 8606 basis tracking and HSA deduction. | Schema named in `parsing.md` "Other types"; needs expansion |
 | **P1** | 1099-NEC / 1099-MISC parser (issued and received) | Simple 3-box layout. Issuer-side feeds Form 1096 summary; recipient-side goes to Schedule C / Schedule E. | Schema in `parsing.md` §"Other types" placeholder |
 | **P2** | SSA-1099 parser | Social-security benefit statements — box 5 net benefits, box 6 voluntary withholding. | Schema needed |
