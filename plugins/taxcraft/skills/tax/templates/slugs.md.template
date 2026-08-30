@@ -1,0 +1,46 @@
+# Slug Registry
+
+Canonical kebab-case slug for every party referenced in filenames, parsed JSON, and workpaper rows. Adding a new party anywhere **requires** registering it here first. See the tax skill's `naming.md`.
+
+## Employers (W-2 issuers)
+
+| Slug | Display name | EIN | Notes |
+|---|---|---|---|
+| `<slug>` | <legal name> | XX-XXXXXXX | |
+
+## Payers (1099 issuers — NEC, MISC, INT, DIV, R, etc.)
+
+| Slug | Display name | EIN | Form(s) | Notes |
+|---|---|---|---|---|
+
+## Brokers / custodians (1099-Composite, 1099-B, 5498)
+
+| Slug | Display name | Account last4(s) | Scope owning account |
+|---|---|---|---|
+
+## K-1 sponsors (1065 / 1120-S / 1041 issuers)
+
+| Slug | Display name | EIN | Type | Partner-type on K-1 (GP/LP/LLC/SH) |
+|---|---|---|---|---|
+
+## Lenders (1098)
+
+| Slug | Display name | EIN | Property slug(s) |
+|---|---|---|---|
+
+## Vendors (W-9, paid by our entities)
+
+| Slug | Display name | EIN/SSN | Paying entity | Notes |
+|---|---|---|---|---|
+
+## Recipients (downstream of our issued 1099/K-1/W-2)
+
+| Slug | Display name | TIN | Issuing entity | Form(s) |
+|---|---|---|---|---|
+
+## Slug rules
+
+- Kebab-case. Lowercase. No trailing entity suffix (drop Inc/LLC/LP/Corp/Trust).
+- Stable across rebrands (legal-name change → update display name, keep slug).
+- Disambiguate collisions by appending a short qualifier (`acme-holdings-wa` vs. `acme-holdings-de`), not a number.
+- Never invent a slug on the fly — add the row here first.

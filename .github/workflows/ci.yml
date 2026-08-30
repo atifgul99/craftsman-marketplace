@@ -23,3 +23,51 @@ jobs:
         run: node scripts/check-invariants.mjs
       - name: Run lint-audit CLI checks
         run: node scripts/check-eslint-rule-audit.mjs
+
+  taxcraft-evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Pinned full SHAs keep a changed action tag from changing CI behavior silently.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      # Despite living in evals/, these are deterministic offline tests: JSON Schema
+      # validation, structural markdown checks, and fixture assertions. No model is
+      # invoked and nothing reaches the network, so this job costs runner minutes only.
+      # The whole suite runs in ~3s. jsonschema and markdown-it-py are the only
+      # third-party imports, and only evals/ uses them - tools/ stays stdlib-only.
+      - name: Install eval dependencies
+        run: pip install --disable-pip-version-check jsonschema markdown-it-py
+      - name: Run taxcraft evals
+        working-directory: plugins/taxcraft/skills/tax
+        # validate_corporate_records.py is deliberately absent. Its
+        # validate_artifact_fixtures() resolves evidence paths against the ambient tax
+        # workspace (TAX_WORKSPACE or cwd) rather than a sandbox, so its fixtures need
+        # entities/test-corp/** files that do not exist in a clean checkout. Its sibling
+        # run_generic_specialist_fixtures() shows the fix: build a TemporaryDirectory,
+        # point WORKSPACE at it, materialize the fixture files. Add it back once that
+        # lands - it is the validator with the widest coverage.
+        # Accumulate exit codes explicitly rather than relying on `set -e`, which does
+        # not reliably abort from inside a loop body. This also runs every script
+        # instead of stopping at the first failure, so one PR shows every break.
+        run: |
+          failed=0
+          for f in \
+            evals/rules_freshness.py \
+            evals/test_matrix_scoping.py \
+            evals/validate_close_estimate.py \
+            evals/validate_individual_matrix.py \
+            evals/validate_individual_structure.py \
+            evals/validate_rules.py \
+            evals/validate_stock_issuance.py \
+            tools/parse-verify/test_verify.py \
+          ; do
+            echo "--- $f"
+            if ! python3 -B "$f"; then
+              echo "::error file=plugins/taxcraft/skills/tax/$f::eval failed"
+              failed=1
+            fi
+          done
+          exit "$failed"

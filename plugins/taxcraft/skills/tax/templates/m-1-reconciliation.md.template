@@ -1,0 +1,56 @@
+# Schedule M-1 Reconciliation — <ENTITY NAME> — FY<YYYY>
+
+**Status**: draft | in-review | final
+**Generated**: YYYY-MM-DD
+
+Book-to-tax reconciliation workpaper. See entity-specific sub-skill (`entities/partnership.md`, `entities/s-corp.md`, or `entities/c-corp.md`) for the Schedule M-1 line structure that applies to this entity's return.
+
+## 1. Book Income (starting point)
+
+| | Amount |
+|---|---|
+| Net income (loss) per books | $ |
+
+## 2. M-1 Adjustments
+
+### Additions (book income lower than taxable income)
+
+| Item | Amount | Permanent / Timing | Authority / Note |
+|---|---|---|---|
+| Federal income tax expense (C-corp, per books) | $ | Permanent | not deductible |
+| Excess of capital losses over capital gains (book) | $ | Timing | limited on return |
+| Income recorded on tax return, not on books | $ | Timing | |
+| Expenses recorded on books, not deducted on return (e.g., 50% meals, penalties, life insurance premiums where entity is beneficiary) | $ | Permanent | §274, §162(f) |
+| Depreciation — book < tax (bonus/§179 acceleration) | $ | Timing | |
+| **Total additions** | $ | | |
+
+### Subtractions (book income higher than taxable income)
+
+| Item | Amount | Permanent / Timing | Authority / Note |
+|---|---|---|---|
+| Income recorded on books, not on return (e.g., tax-exempt interest) | $ | Permanent | §103 |
+| Deductions on return, not on books | $ | Timing | |
+| Depreciation — tax < book (rare; AMT/ADS convention) | $ | Timing | |
+| **Total subtractions** | $ | | |
+
+## 3. Taxable Income (ending point)
+
+| | Amount |
+|---|---|
+| Book income (line 1) | $ |
+| + Total additions | $ |
+| − Total subtractions | ($) |
+| **Taxable income (loss) per return** | $ |
+
+## 4. Permanent vs. Timing Summary
+
+- Permanent differences (never reverse): list and total — these drive the entity's effective rate away from statutory.
+- Timing differences (reverse in future years): list and total — these become next year's beginning M-1 adjustments or deferred tax items.
+
+## Check
+
+- Ending taxable income ties to Form 1120/1065/1120-S taxable income line: yes / **DISCREPANCY** (investigate)
+- All timing differences have an offsetting entry logged for the year they reverse: yes / no
+- Schedule M-2 (retained earnings / AAA rollforward) ties to this M-1: yes / no / n/a
+
+Feeds annual close alongside `balance-sheet.md`, `pnl.md`, and (for partnerships/S-corps) `capital-accounts.md`.

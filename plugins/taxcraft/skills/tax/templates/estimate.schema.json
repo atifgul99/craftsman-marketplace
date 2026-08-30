@@ -1,0 +1,573 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tax-estimate-artifact-schema-v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "mode",
+    "scope",
+    "tax_year",
+    "tax_period",
+    "period",
+    "as_of",
+    "status",
+    "supersedes_run_id",
+    "superseded_by_run_id",
+    "status_axes",
+    "aggregate_component_result",
+    "components",
+    "authority_dependencies",
+    "inputs",
+    "lines",
+    "methods",
+    "recommendation",
+    "withholding_records",
+    "payment_records",
+    "payment_execution_authorized"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "mode": {"enum": ["READINESS", "CLOSE", "ESTIMATE", "CLOSE_AND_ESTIMATE", "PAYMENT_RECONCILIATION"]},
+    "scope": {"type": "string", "minLength": 1},
+    "tax_year": {"type": "integer", "minimum": 1913},
+    "tax_period": {
+      "type": "object",
+      "required": ["type", "convention", "start", "end", "week_ending_method", "elected_ending_month", "elected_ending_weekday", "basis_status", "books_basis_status", "evidence_refs"],
+      "properties": {
+        "type": {"enum": ["CALENDAR", "FISCAL", "SHORT"]},
+        "convention": {"enum": ["CALENDAR", "MONTHLY", "WEEK_52_53", "SHORT"]},
+        "start": {"type": "string", "format": "date"},
+        "end": {"type": "string", "format": "date"},
+        "week_ending_method": {"enum": ["NEAREST_MONTH_END", "LAST_WEEKDAY_IN_MONTH", "NOT_APPLICABLE"]},
+        "elected_ending_month": {"type": ["integer", "null"], "minimum": 1, "maximum": 12},
+        "elected_ending_weekday": {"enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY", null]},
+        "basis_status": {"enum": ["UNVERIFIED", "VERIFIED_DEFAULT_CALENDAR", "VERIFIED_EXISTING_PERIOD", "VERIFIED_ORIGINAL_ADOPTION", "VERIFIED_APPROVED_CHANGE", "VERIFIED_SHORT_PERIOD_CAUSE"]},
+        "books_basis_status": {"enum": ["NOT_APPLICABLE", "UNVERIFIED", "VERIFIED_REGULAR_52_53_BOOKS"]},
+        "evidence_refs": {
+          "type": "object",
+          "required": ["type", "convention", "start", "end", "week_ending_method", "elected_ending_month", "elected_ending_weekday", "basis_status", "books_basis_status"],
+          "properties": {
+            "type": {"type": "string", "minLength": 1},
+            "convention": {"type": "string", "minLength": 1},
+            "start": {"type": "string", "minLength": 1},
+            "end": {"type": "string", "minLength": 1},
+            "week_ending_method": {"type": "string", "minLength": 1},
+            "elected_ending_month": {"type": "string", "minLength": 1},
+            "elected_ending_weekday": {"type": "string", "minLength": 1},
+            "basis_status": {"type": "string", "minLength": 1},
+            "books_basis_status": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "period": {
+      "type": "object",
+      "required": ["start", "end", "installment"],
+      "properties": {
+        "start": {"type": "string", "format": "date"},
+        "end": {"type": "string", "format": "date"},
+        "installment": {"type": ["integer", "null"], "minimum": 1, "maximum": 4}
+      },
+      "additionalProperties": false
+    },
+    "as_of": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["NOT_RUN", "ESTIMATE_HOLD", "PROVISIONAL", "DRAFT_VERIFIED_INPUTS", "READY_FOR_PRACTITIONER_REVIEW", "SUPERSEDED"]},
+    "supersedes_run_id": {"type": ["string", "null"]},
+    "superseded_by_run_id": {"type": ["string", "null"]},
+    "status_axes": {
+      "type": "object",
+      "required": ["authority", "evidence", "close", "estimate", "payment"],
+      "properties": {
+        "authority": {"enum": ["VERIFIED_FOR_USED_RULES", "PARTIALLY_VERIFIED_UNUSED_GAPS", "AUTHORITY_HOLD"]},
+        "evidence": {"enum": ["INPUTS_VERIFIED", "MATERIAL_PROJECTIONS", "INPUTS_INCOMPLETE"]},
+        "close": {"enum": ["NOT_RUN", "RECONCILIATION_HOLD", "DRAFT_OPEN_ITEMS", "CLOSE_RECONCILED"]},
+        "estimate": {"enum": ["NOT_RUN", "ESTIMATE_HOLD", "PROVISIONAL", "DRAFT_VERIFIED_INPUTS", "READY_FOR_PRACTITIONER_REVIEW", "SUPERSEDED"]},
+        "payment": {"enum": ["NO_PAYMENT_EVIDENCE", "USER_REPORTED_PAYMENT", "PAYMENT_EVIDENCED", "PAYMENT_RECONCILED"]}
+      },
+      "additionalProperties": false
+    },
+    "aggregate_component_result": {"enum": ["COMPLETE_COMPONENT_RESULT", "PARTIAL_COMPONENT_RESULT", "ALL_COMPONENTS_HELD"]},
+    "components": {
+      "type": "object",
+      "required": ["federal", "state"],
+      "properties": {
+        "federal": {"$ref": "#/$defs/component"},
+        "state": {"type": "array", "items": {"$ref": "#/$defs/stateComponent"}}
+      }
+    },
+    "authority_dependencies": {"type": "array", "items": {"$ref": "#/$defs/authorityDependency"}},
+    "inputs": {"type": "array", "items": {"$ref": "#/$defs/input"}},
+    "lines": {"type": "object", "additionalProperties": {"$ref": "#/$defs/line"}},
+    "methods": {"type": "array", "items": {"$ref": "#/$defs/method"}},
+    "recommendation": {
+      "type": "object",
+      "required": ["component", "method", "amount", "due_date", "status"],
+      "properties": {
+        "component": {"type": ["string", "null"]},
+        "method": {"type": ["string", "null"]},
+        "amount": {"type": ["number", "null"]},
+        "due_date": {"type": ["string", "null"]},
+        "status": {"enum": ["BLOCKED", "PROVISIONAL", "READY_FOR_PRACTITIONER_REVIEW"]}
+      },
+      "additionalProperties": false
+    },
+    "withholding_records": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/withholdingRecord"}},
+    "payment_records": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/paymentRecord"}},
+    "payment_execution_authorized": {"const": false}
+  },
+  "$defs": {
+    "component": {
+      "type": "object",
+      "required": ["authority_status", "evidence_status", "estimate_status", "method_status", "amount", "blockers"],
+      "properties": {
+        "authority_status": {"enum": ["VERIFIED_FOR_USED_RULES", "PARTIALLY_VERIFIED_UNUSED_GAPS", "AUTHORITY_HOLD"]},
+        "evidence_status": {"enum": ["INPUTS_VERIFIED", "MATERIAL_PROJECTIONS", "INPUTS_INCOMPLETE"]},
+        "estimate_status": {"enum": ["NOT_RUN", "ESTIMATE_HOLD", "PROVISIONAL", "DRAFT_VERIFIED_INPUTS", "READY_FOR_PRACTITIONER_REVIEW", "SUPERSEDED"]},
+        "method_status": {"enum": ["AVAILABLE_VERIFIED", "AVAILABLE_PROVISIONAL", "INELIGIBLE", "BLOCKED_MISSING_INPUT", "BLOCKED_RULE_UNVERIFIED"]},
+        "amount": {"type": ["number", "null"]},
+        "blockers": {"type": "array"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"authority_status": {"const": "AUTHORITY_HOLD"}}, "required": ["authority_status"]},
+          "then": {
+            "properties": {
+              "estimate_status": {"const": "ESTIMATE_HOLD"},
+              "method_status": {"const": "BLOCKED_RULE_UNVERIFIED"},
+              "amount": {"type": "null"},
+              "blockers": {"minItems": 1}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"estimate_status": {"const": "PROVISIONAL"}}, "required": ["estimate_status"]},
+          "then": {
+            "properties": {
+              "authority_status": {"enum": ["VERIFIED_FOR_USED_RULES", "PARTIALLY_VERIFIED_UNUSED_GAPS"]},
+              "evidence_status": {"const": "MATERIAL_PROJECTIONS"},
+              "method_status": {"const": "AVAILABLE_PROVISIONAL"},
+              "amount": {"type": "number"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"estimate_status": {"enum": ["DRAFT_VERIFIED_INPUTS", "READY_FOR_PRACTITIONER_REVIEW"]}}, "required": ["estimate_status"]},
+          "then": {
+            "properties": {
+              "authority_status": {"enum": ["VERIFIED_FOR_USED_RULES", "PARTIALLY_VERIFIED_UNUSED_GAPS"]},
+              "evidence_status": {"const": "INPUTS_VERIFIED"},
+              "method_status": {"const": "AVAILABLE_VERIFIED"},
+              "amount": {"type": "number"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"estimate_status": {"const": "ESTIMATE_HOLD"}}, "required": ["estimate_status"]},
+          "then": {
+            "properties": {
+              "method_status": {"enum": ["INELIGIBLE", "BLOCKED_MISSING_INPUT", "BLOCKED_RULE_UNVERIFIED"]},
+              "amount": {"type": "null"},
+              "blockers": {"minItems": 1}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"estimate_status": {"enum": ["NOT_RUN", "SUPERSEDED"]}}, "required": ["estimate_status"]},
+          "then": {"properties": {"method_status": {"const": "INELIGIBLE"}, "amount": {"type": "null"}}}
+        }
+      ]
+    },
+    "stateComponent": {
+      "allOf": [
+        {"$ref": "#/$defs/component"},
+        {
+          "type": "object",
+          "required": ["jurisdiction"],
+          "properties": {"jurisdiction": {"type": "string", "minLength": 2}}
+        }
+      ]
+    },
+    "authorityDependency": {
+      "type": "object",
+      "required": ["dependency_id", "component", "rule_origin", "rule_path", "jurisdiction", "rule_date", "effective_start", "effective_end", "authority_ids", "source_url", "value_used", "status", "checked_at"],
+      "properties": {
+        "dependency_id": {"type": "string", "minLength": 1},
+        "component": {"type": "string", "minLength": 1},
+        "rule_origin": {"enum": ["BUNDLED_RULES", "RUN_SPECIFIC"]},
+        "rule_path": {"type": "string", "minLength": 1},
+        "jurisdiction": {"type": "string", "minLength": 1},
+        "rule_date": {"type": "string", "format": "date"},
+        "effective_start": {"type": ["string", "null"], "format": "date"},
+        "effective_end": {"type": ["string", "null"], "format": "date"},
+        "authority_ids": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+        "source_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "value_used": {},
+        "status": {"enum": ["VERIFIED", "UNVERIFIED", "SUPERSEDED"]},
+        "checked_at": {"type": "string", "format": "date"}
+      }
+    },
+    "input": {
+      "type": "object",
+      "required": ["input_id", "logical_document_id", "document_version", "active_status", "supersedes_input_id", "source_path", "source_sha256", "source_state", "document_metadata", "parser_name", "parser_version", "parser_contract_status", "fields_consumed"],
+      "properties": {
+        "input_id": {"type": "string", "minLength": 1},
+        "logical_document_id": {"type": "string", "minLength": 1},
+        "document_version": {"type": "integer", "minimum": 1},
+        "active_status": {"enum": ["ACTIVE", "SUPERSEDED", "CONTRADICTED"]},
+        "supersedes_input_id": {"type": ["string", "null"]},
+        "source_path": {"type": "string", "minLength": 1},
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_state": {"enum": ["FINAL", "PROJECTED", "USER_PROVIDED", "SUPERSEDED", "CONTRADICTED", "LEGACY_UNVERIFIED"]},
+        "document_metadata": {"$ref": "#/$defs/documentMetadata"},
+        "parser_name": {"type": "string", "minLength": 1},
+        "parser_version": {"type": "string", "minLength": 1},
+        "parser_contract_status": {"enum": ["FIELD_STATE_V1", "LEGACY_REVIEWED", "MANUAL_SOURCE"]},
+        "validation_report": {"type": ["string", "null"]},
+        "fields_consumed": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/consumedField"}}
+      }
+    },
+    "documentMetadata": {
+      "type": "object",
+      "required": ["subject_id", "document_type", "tax_year", "period_start", "period_end", "document_status", "evidence_refs"],
+      "properties": {
+        "subject_id": {"type": "string", "minLength": 1},
+        "document_type": {"enum": ["TAX_RETURN", "TAX_TRANSCRIPT", "FORM_OUTPUT_WORKPAPER", "PAYMENT_EVIDENCE", "WITHHOLDING_EVIDENCE", "ACCOUNTING_PERIOD_EVIDENCE", "OTHER_VERIFIED_SOURCE"]},
+        "form_identity": {"type": ["string", "null"]},
+        "tax_year": {"type": ["integer", "null"]},
+        "period_start": {"type": ["string", "null"], "format": "date"},
+        "period_end": {"type": ["string", "null"], "format": "date"},
+        "document_status": {"enum": ["FILED_ORIGINAL", "FILED_AMENDED", "TRANSCRIPT_VERIFIED", "FINAL_SOURCE", "DRAFT", "PROJECTED"]},
+        "filed_or_effective_date": {"type": ["string", "null"], "format": "date"},
+        "evidence_refs": {
+          "type": "object",
+          "required": ["subject_id", "document_type", "tax_year", "period_start", "period_end", "document_status"],
+          "properties": {
+            "subject_id": {"type": "string", "minLength": 1},
+            "document_type": {"type": "string", "minLength": 1},
+            "form_identity": {"type": "string", "minLength": 1},
+            "tax_year": {"type": "string", "minLength": 1},
+            "period_start": {"type": "string", "minLength": 1},
+            "period_end": {"type": "string", "minLength": 1},
+            "document_status": {"type": "string", "minLength": 1},
+            "filed_or_effective_date": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "consumedField": {
+      "type": "object",
+      "required": ["field_id", "parser_value", "state", "source_anchor", "reviewer", "reviewed_at", "validation_status"],
+      "properties": {
+        "field_id": {"type": "string", "minLength": 1},
+        "parser_value": {"type": ["number", "string", "boolean", "null"]},
+        "state": {"enum": ["OBSERVED_VALUE", "OBSERVED_ZERO", "NOT_PRESENT", "UNREADABLE", "NOT_APPLICABLE", "DERIVED", "MANUAL_OVERRIDE"]},
+        "source_anchor": {
+          "type": "object",
+          "required": ["page", "line_or_box"],
+          "properties": {
+            "page": {"type": ["integer", "null"]},
+            "line_or_box": {"type": ["string", "null"]}
+          },
+          "anyOf": [
+            {"properties": {"page": {"type": "integer"}}},
+            {"properties": {"line_or_box": {"type": "string", "minLength": 1}}}
+          ]
+        },
+        "reviewer": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "format": "date-time"},
+        "validation_status": {"enum": ["INDEPENDENTLY_VERIFIED", "BLOCKED"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"state": {"const": "OBSERVED_ZERO"}}, "required": ["state"]},
+          "then": {"properties": {"parser_value": {"const": 0}, "validation_status": {"const": "INDEPENDENTLY_VERIFIED"}}}
+        },
+        {
+          "if": {"properties": {"state": {"const": "OBSERVED_VALUE"}}, "required": ["state"]},
+          "then": {"properties": {"parser_value": {"not": {"type": "null"}}, "validation_status": {"const": "INDEPENDENTLY_VERIFIED"}}}
+        },
+        {
+          "if": {"properties": {"state": {"enum": ["NOT_PRESENT", "UNREADABLE", "NOT_APPLICABLE"]}}, "required": ["state"]},
+          "then": {"properties": {"parser_value": {"type": "null"}}}
+        }
+      ]
+    },
+    "line": {
+      "type": "object",
+      "required": ["value", "state", "source_refs", "formula"],
+      "properties": {
+        "value": {"type": ["number", "null"]},
+        "state": {"enum": ["OBSERVED_VALUE", "OBSERVED_ZERO", "NOT_PRESENT", "UNREADABLE", "NOT_APPLICABLE", "DERIVED", "MANUAL_OVERRIDE"]},
+        "source_refs": {"type": "array"},
+        "formula": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"state": {"enum": ["NOT_PRESENT", "UNREADABLE", "NOT_APPLICABLE"]}}, "required": ["state"]},
+          "then": {"properties": {"value": {"type": "null"}}}
+        },
+        {
+          "if": {"properties": {"state": {"const": "OBSERVED_ZERO"}}, "required": ["state"]},
+          "then": {"properties": {"value": {"const": 0}, "source_refs": {"minItems": 1}}}
+        },
+        {
+          "if": {"properties": {"state": {"enum": ["OBSERVED_VALUE", "DERIVED", "MANUAL_OVERRIDE"]}}, "required": ["state"]},
+          "then": {"properties": {"value": {"type": "number"}, "source_refs": {"minItems": 1}}}
+        }
+      ]
+    },
+    "method": {
+      "type": "object",
+      "required": ["name", "component", "status", "calculation_profile", "form_method_type", "form_method_authority_dependency_ref", "form_8842_deadline_authority_dependency_ref", "eligibility", "annual_base_type", "annual_base_line_ref", "prior_annual_base_line_ref", "annual_percentage", "annual_percentage_authority_dependency_ref", "required_annual_line_ref", "required_installment_line_ref", "cumulative_required_line_ref", "withholding_credit_line_ref", "withholding_election_evidence_ref", "prior_payment_line_ref", "installment_cutoff_date", "due_date_authority_dependency_ref", "required_annual_payment", "required_installment", "cumulative_required_through_installment", "withholding_and_refundable_credits_applied", "prior_installment_payments_applied", "withholding_timing_method", "payment_application_method", "amount_due", "formula", "source_line_refs", "authority_dependency_refs", "blockers"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "component": {"type": "string", "minLength": 1},
+        "status": {"enum": ["AVAILABLE_VERIFIED", "AVAILABLE_PROVISIONAL", "INELIGIBLE", "BLOCKED_MISSING_INPUT", "BLOCKED_RULE_UNVERIFIED"]},
+        "calculation_profile": {"enum": ["INDIVIDUAL_REGULAR_EQUAL_INSTALLMENTS", "CORPORATE_REGULAR_NON_LARGE_EQUAL_INSTALLMENTS", "CORPORATE_LARGE_REGULAR_RECAPTURE", "VERIFIED_FORM_OUTPUT", "STATE_SPECIFIC_VERIFIED_OUTPUT"]},
+        "form_method_type": {"enum": ["NONE", "FORM_2210_ANNUALIZED", "FORM_2220_ANNUALIZED_STANDARD", "FORM_2220_ANNUALIZED_OPTION_1", "FORM_2220_ANNUALIZED_OPTION_2", "FORM_2220_ADJUSTED_SEASONAL", "FORM_2220_LARGE_CORPORATION_REGULAR", "STATE_FORM_OUTPUT"]},
+        "form_method_authority_dependency_ref": {"type": ["string", "null"]},
+        "form_8842_deadline_authority_dependency_ref": {"type": ["string", "null"]},
+        "eligibility": {"$ref": "#/$defs/eligibility"},
+        "annual_base_type": {"enum": ["PRIOR_YEAR_TAX", "CURRENT_YEAR_TAX", "VERIFIED_FORM_OUTPUT"]},
+        "annual_base_line_ref": {"type": ["string", "null"]},
+        "prior_annual_base_line_ref": {"type": ["string", "null"]},
+        "annual_percentage": {"type": ["number", "null"]},
+        "annual_percentage_authority_dependency_ref": {"type": ["string", "null"]},
+        "required_annual_line_ref": {"type": ["string", "null"]},
+        "required_installment_line_ref": {"type": ["string", "null"]},
+        "cumulative_required_line_ref": {"type": ["string", "null"]},
+        "withholding_credit_line_ref": {"type": ["string", "null"]},
+        "withholding_election_evidence_ref": {"type": ["string", "null"]},
+        "prior_payment_line_ref": {"type": ["string", "null"]},
+        "installment_cutoff_date": {"type": ["string", "null"], "format": "date"},
+        "due_date_authority_dependency_ref": {"type": ["string", "null"]},
+        "required_annual_payment": {"type": ["number", "null"]},
+        "required_installment": {"type": ["number", "null"]},
+        "cumulative_required_through_installment": {"type": ["number", "null"]},
+        "withholding_and_refundable_credits_applied": {"type": ["number", "null"]},
+        "prior_installment_payments_applied": {"type": ["number", "null"]},
+        "withholding_timing_method": {"enum": ["RATABLE_WITHHOLDING", "ACTUAL_WITHHOLDING_DATES", "NONE"]},
+        "payment_application_method": {"enum": ["RECONCILED_PAYMENT_DATES", "NONE"]},
+        "amount_due": {"type": ["number", "null"]},
+        "formula": {"type": "string", "minLength": 1},
+        "source_line_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "authority_dependency_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "blockers": {"type": "array"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"enum": ["AVAILABLE_VERIFIED", "AVAILABLE_PROVISIONAL"]}}, "required": ["status"]},
+          "then": {"properties": {"required_annual_payment": {"type": "number"}, "required_installment": {"type": "number"}, "cumulative_required_through_installment": {"type": "number"}, "withholding_and_refundable_credits_applied": {"type": "number"}, "prior_installment_payments_applied": {"type": "number"}, "amount_due": {"type": "number"}, "source_line_refs": {"minItems": 1}, "authority_dependency_refs": {"minItems": 1}, "blockers": {"maxItems": 0}}}
+        }
+      ]
+    },
+    "eligibility": {
+      "type": "object",
+      "required": ["entity_type", "entity_type_evidence_ref", "filing_status", "filing_status_evidence_ref", "filer_category", "filer_category_evidence_ref", "prior_year_tax_year", "prior_return_status", "prior_year_full_12_months", "prior_year_tax_positive", "prior_return_input_ref", "prior_year_agi_line_ref", "high_agi_threshold_authority_dependency_ref", "large_corporation", "large_corporation_test_line_refs", "large_corporation_threshold_authority_dependency_ref", "large_corporation_years_in_existence", "large_corporation_years_in_existence_evidence_ref", "large_corporation_modified_taxable_income_basis_confirmed", "large_corporation_modified_taxable_income_basis_evidence_ref", "large_corporation_predecessor_history_complete", "large_corporation_predecessor_history_evidence_ref", "large_corporation_controlled_group_status", "large_corporation_controlled_group_evidence_ref", "large_corporation_allocated_threshold", "large_corporation_allocated_threshold_evidence_ref", "form_output_input_ref", "form_8842_status", "form_8842_input_ref", "form_8842_filed_date", "form_8842_option", "form_8842_option_evidence_ref"],
+      "properties": {
+        "entity_type": {"enum": ["INDIVIDUAL", "C_CORPORATION", "S_CORPORATION", "PARTNERSHIP", "DISREGARDED", "OTHER"]},
+        "entity_type_evidence_ref": {"type": "string", "minLength": 1},
+        "filing_status": {"enum": ["SINGLE", "MFJ", "MFS", "HOH", "QSS", "NOT_APPLICABLE"]},
+        "filing_status_evidence_ref": {"type": "string", "minLength": 1},
+        "filer_category": {"enum": ["INDIVIDUAL", "TAXABLE_CORPORATION", "S_CORPORATION", "TAX_EXEMPT_OR_PRIVATE_FOUNDATION", "OTHER"]},
+        "filer_category_evidence_ref": {"type": "string", "minLength": 1},
+        "prior_year_tax_year": {"type": ["integer", "null"]},
+        "prior_return_status": {"enum": ["FILED", "TRANSCRIPT_VERIFIED", "NOT_APPLICABLE", "DRAFT", "UNKNOWN"]},
+        "prior_year_full_12_months": {"type": ["boolean", "null"]},
+        "prior_year_tax_positive": {"type": ["boolean", "null"]},
+        "prior_return_input_ref": {"type": ["string", "null"]},
+        "prior_year_agi_line_ref": {"type": ["string", "null"]},
+        "high_agi_threshold_authority_dependency_ref": {"type": ["string", "null"]},
+        "large_corporation": {"type": ["boolean", "null"]},
+        "large_corporation_test_line_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "large_corporation_threshold_authority_dependency_ref": {"type": ["string", "null"]},
+        "large_corporation_years_in_existence": {"type": ["integer", "null"], "minimum": 0, "description": "Completed preceding tax years available for the three-year test; zero is valid for a first-year corporation."},
+        "large_corporation_years_in_existence_evidence_ref": {"type": ["string", "null"]},
+        "large_corporation_modified_taxable_income_basis_confirmed": {"type": ["boolean", "null"]},
+        "large_corporation_modified_taxable_income_basis_evidence_ref": {"type": ["string", "null"]},
+        "large_corporation_predecessor_history_complete": {"type": ["boolean", "null"]},
+        "large_corporation_predecessor_history_evidence_ref": {"type": ["string", "null"]},
+        "large_corporation_controlled_group_status": {"enum": ["NOT_MEMBER", "ALLOCATED", "NOT_APPLICABLE"]},
+        "large_corporation_controlled_group_evidence_ref": {"type": ["string", "null"]},
+        "large_corporation_allocated_threshold": {"type": ["number", "null"]},
+        "large_corporation_allocated_threshold_evidence_ref": {"type": ["string", "null"]},
+        "form_output_input_ref": {"type": ["string", "null"]},
+        "form_8842_status": {"enum": ["FILED", "NOT_FILED", "NOT_APPLICABLE", "UNKNOWN"]},
+        "form_8842_input_ref": {"type": ["string", "null"]},
+        "form_8842_filed_date": {"type": ["string", "null"], "format": "date"},
+        "form_8842_option": {"enum": ["STANDARD", "OPTION_1", "OPTION_2", "NOT_APPLICABLE"]},
+        "form_8842_option_evidence_ref": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "withholdingRecord": {
+      "type": "object",
+      "required": ["record_id", "amount", "withholding_date", "target_tax_year", "evidence_refs", "taxpayer_id_match", "form_match", "correct_tax_year", "reviewer", "reviewed_at"],
+      "properties": {
+        "record_id": {"type": "string", "minLength": 1},
+        "amount": {"type": "number", "exclusiveMinimum": 0},
+        "withholding_date": {"type": "string", "format": "date"},
+        "target_tax_year": {"type": "integer"},
+        "evidence_refs": {"$ref": "#/$defs/withholdingEvidenceRefs"},
+        "taxpayer_id_match": {"const": true},
+        "form_match": {"const": true},
+        "correct_tax_year": {"const": true},
+        "reviewer": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "withholdingEvidenceRefs": {
+      "type": "object",
+      "required": ["amount", "withholding_date", "target_tax_year", "taxpayer_id_match", "form_match"],
+      "properties": {
+        "amount": {"type": "string", "minLength": 1},
+        "withholding_date": {"type": "string", "minLength": 1},
+        "target_tax_year": {"type": "string", "minLength": 1},
+        "taxpayer_id_match": {"type": "string", "minLength": 1},
+        "form_match": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "paymentRecord": {
+      "type": "object",
+      "required": ["record_id", "status", "amount", "payment_date", "settlement_date", "application_date", "target_tax_year", "target_installment", "confirmation_ref", "bank_settlement_ref", "evidence_refs", "taxpayer_id_match", "form_match", "period_match", "amount_match", "correct_tax_year", "reviewer", "reviewed_at"],
+      "properties": {
+        "record_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["USER_REPORTED_PAYMENT", "PAYMENT_EVIDENCED", "PAYMENT_RECONCILED"]},
+        "amount": {"type": "number", "exclusiveMinimum": 0},
+        "payment_date": {"type": ["string", "null"], "format": "date"},
+        "settlement_date": {"type": ["string", "null"], "format": "date"},
+        "application_date": {"type": ["string", "null"], "format": "date"},
+        "target_tax_year": {"type": ["integer", "null"]},
+        "target_installment": {"type": ["integer", "null"], "minimum": 1, "maximum": 4},
+        "confirmation_ref": {"type": ["string", "null"]},
+        "bank_settlement_ref": {"type": ["string", "null"]},
+        "evidence_refs": {"$ref": "#/$defs/paymentEvidenceRefs"},
+        "taxpayer_id_match": {"type": "boolean"},
+        "form_match": {"type": "boolean"},
+        "period_match": {"type": "boolean"},
+        "amount_match": {"type": "boolean"},
+        "correct_tax_year": {"type": "boolean"},
+        "reviewer": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "format": "date-time"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "PAYMENT_RECONCILED"}}, "required": ["status"]},
+          "then": {"properties": {"payment_date": {"type": "string", "format": "date"}, "settlement_date": {"type": "string", "format": "date"}, "application_date": {"type": "string", "format": "date"}, "target_tax_year": {"type": "integer"}, "target_installment": {"type": "integer"}}}
+        }
+      ]
+    },
+    "paymentEvidenceRefs": {
+      "type": "object",
+      "required": ["amount", "confirmation_amount", "bank_settlement_amount", "payment_date", "settlement_date", "application_date", "target_tax_year", "target_installment", "confirmation", "bank_settlement", "taxpayer_id_match", "form_match", "period_match", "correct_tax_year"],
+      "properties": {
+        "amount": {"type": ["string", "null"]},
+        "confirmation_amount": {"type": ["string", "null"]},
+        "bank_settlement_amount": {"type": ["string", "null"]},
+        "payment_date": {"type": ["string", "null"]},
+        "settlement_date": {"type": ["string", "null"]},
+        "application_date": {"type": ["string", "null"]},
+        "target_tax_year": {"type": ["string", "null"]},
+        "target_installment": {"type": ["string", "null"]},
+        "confirmation": {"type": ["string", "null"]},
+        "bank_settlement": {"type": ["string", "null"]},
+        "taxpayer_id_match": {"type": ["string", "null"]},
+        "form_match": {"type": ["string", "null"]},
+        "period_match": {"type": ["string", "null"]},
+        "correct_tax_year": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ESTIMATE_HOLD"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "status_axes": {"properties": {"estimate": {"const": "ESTIMATE_HOLD"}}},
+          "recommendation": {"properties": {"status": {"const": "BLOCKED"}, "component": {"type": "null"}, "method": {"type": "null"}, "amount": {"type": "null"}, "due_date": {"type": "null"}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "PROVISIONAL"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "status_axes": {"properties": {"estimate": {"const": "PROVISIONAL"}}},
+          "authority_dependencies": {"minItems": 1},
+          "inputs": {"minItems": 1},
+          "methods": {"minItems": 1},
+          "recommendation": {"properties": {"status": {"const": "PROVISIONAL"}, "component": {"type": "string", "minLength": 1}, "method": {"type": "string", "minLength": 1}, "amount": {"type": "number"}, "due_date": {"type": "string", "format": "date"}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "READY_FOR_PRACTITIONER_REVIEW"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "status_axes": {
+            "properties": {
+              "estimate": {"const": "READY_FOR_PRACTITIONER_REVIEW"}
+            }
+          },
+          "authority_dependencies": {"minItems": 1},
+          "inputs": {"minItems": 1},
+          "methods": {"minItems": 1},
+          "recommendation": {"properties": {"status": {"const": "READY_FOR_PRACTITIONER_REVIEW"}, "component": {"type": "string", "minLength": 1}, "method": {"type": "string", "minLength": 1}, "amount": {"type": "number"}, "due_date": {"type": "string", "format": "date"}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["NOT_RUN", "DRAFT_VERIFIED_INPUTS", "SUPERSEDED"]}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "status_axes": {"properties": {"estimate": {"enum": ["NOT_RUN", "DRAFT_VERIFIED_INPUTS", "SUPERSEDED"]}}},
+          "recommendation": {"properties": {"status": {"const": "BLOCKED"}, "component": {"type": "null"}, "method": {"type": "null"}, "amount": {"type": "null"}, "due_date": {"type": "null"}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"mode": {"const": "CLOSE_AND_ESTIMATE"}, "status": {"const": "READY_FOR_PRACTITIONER_REVIEW"}}, "required": ["mode", "status"]},
+      "then": {"properties": {"status_axes": {"properties": {"close": {"const": "CLOSE_RECONCILED"}}}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "NOT_RUN"}}, "required": ["status"]},
+      "then": {"properties": {"status_axes": {"properties": {"estimate": {"const": "NOT_RUN"}}}, "superseded_by_run_id": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "DRAFT_VERIFIED_INPUTS"}}, "required": ["status"]},
+      "then": {"properties": {"status_axes": {"properties": {"estimate": {"const": "DRAFT_VERIFIED_INPUTS"}}}, "superseded_by_run_id": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "SUPERSEDED"}}, "required": ["status"]},
+      "then": {"properties": {"status_axes": {"properties": {"estimate": {"const": "SUPERSEDED"}}}, "superseded_by_run_id": {"type": "string", "minLength": 1}}}
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["ESTIMATE_HOLD", "PROVISIONAL", "READY_FOR_PRACTITIONER_REVIEW"]}}, "required": ["status"]},
+      "then": {"properties": {"superseded_by_run_id": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status_axes": {"properties": {"payment": {"const": "NO_PAYMENT_EVIDENCE"}}, "required": ["payment"]}}, "required": ["status_axes"]},
+      "then": {"properties": {"payment_records": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"status_axes": {"properties": {"payment": {"const": "USER_REPORTED_PAYMENT"}}, "required": ["payment"]}}, "required": ["status_axes"]},
+      "then": {"properties": {"payment_records": {"minItems": 1, "contains": {"properties": {"status": {"const": "USER_REPORTED_PAYMENT"}}, "required": ["status"]}}}}
+    },
+    {
+      "if": {"properties": {"status_axes": {"properties": {"payment": {"const": "PAYMENT_EVIDENCED"}}, "required": ["payment"]}}, "required": ["status_axes"]},
+      "then": {"properties": {"payment_records": {"minItems": 1, "contains": {"properties": {"status": {"enum": ["PAYMENT_EVIDENCED", "PAYMENT_RECONCILED"]}, "confirmation_ref": {"type": "string", "minLength": 1}}, "required": ["status", "confirmation_ref"]}}}}
+    },
+    {
+      "if": {"properties": {"status_axes": {"properties": {"payment": {"const": "PAYMENT_RECONCILED"}}, "required": ["payment"]}}, "required": ["status_axes"]},
+      "then": {"properties": {"payment_records": {"minItems": 1, "contains": {"properties": {"status": {"const": "PAYMENT_RECONCILED"}, "confirmation_ref": {"type": "string", "minLength": 1}, "bank_settlement_ref": {"type": "string", "minLength": 1}, "taxpayer_id_match": {"const": true}, "form_match": {"const": true}, "period_match": {"const": true}, "amount_match": {"const": true}, "correct_tax_year": {"const": true}}, "required": ["status", "confirmation_ref", "bank_settlement_ref", "taxpayer_id_match", "form_match", "period_match", "amount_match", "correct_tax_year"]}}}}
+    }
+  ]
+}

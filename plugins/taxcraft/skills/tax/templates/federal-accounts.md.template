@@ -1,0 +1,112 @@
+# Federal & State Account Registry
+
+**Last updated**: YYYY-MM-DD
+
+Cross-entity index of IRS, SSA, and state registration accounts. **Credentials live in the password manager, never here.** Track what exists; point to where passwords are stored.
+
+Legend: ✅ enrolled · 🔶 not enrolled (consider) · ❌ not applicable · ❓ unknown, verify
+
+---
+
+## IRS Federal Accounts
+
+### EIN (Employer Identification Number)
+
+| Entity | EIN | CP-575 letter location |
+|---|---|---|
+| `<entity>` | `<EIN>` | `entities/<slug>/corporate/formation/` |
+
+### IRS Business Tax Account (irs.gov/businesses/online-account)
+Per-EIN online portal: balance, payment history, notices, transcripts.
+
+| Entity | Enrolled? | Enrollment date | Password mgr entry | Responsible officer |
+|---|---|---|---|---|
+
+### EFTPS (eftps.gov)
+Federal business-tax payment rail. Required for any entity paying 1120 (incl. §6655 quarterly estimates) / 941 / 940 / 1099 withholding.
+
+| Entity | Enrolled? | Enrollment date | PIN location | Internet password location |
+|---|---|---|---|---|
+
+### IRS IRIS TCC (Transmitter Control Code)
+Required to e-file 1099s / 1042-S directly. Alternative: third-party transmitter (tax1099.com, Track1099).
+
+| Entity | TCC | Active since | Purpose |
+|---|---|---|---|
+
+### SSA BSO (Business Services Online)
+Required to e-file W-2s. Only relevant once an entity has W-2 employees.
+
+| Entity | Enrolled? | Notes |
+|---|---|---|
+
+### FinCEN BOIR
+
+| Entity | Filed? | Date | Report location |
+|---|---|---|---|
+
+### Individual-level
+
+| Account | Status | Notes |
+|---|---|---|
+| IRS Individual Online Account (irs.gov/account) | ❓ | For 1040 balance, estimated-tax history, transcripts |
+| ID.me (id.me) | — | Gateway to IRS/SSA online services |
+
+---
+
+## State Accounts
+
+### <State> Department of Revenue
+
+| Entity | Registered? | Account # / UBI | Filing frequency |
+|---|---|---|---|
+
+### <State> Secretary of State
+
+| Entity | Registered? | Account # / UBI | Last annual report |
+|---|---|---|---|
+
+### <State> L&I / ESD (labor / unemployment)
+Only if employees.
+
+---
+
+## Minimum Viable Setup Checklist (per regarded entity)
+
+- [ ] EIN
+- [ ] IRS Business Tax Account enrolled
+- [ ] EFTPS enrolled
+- [ ] State DOR registered (home state + any foreign qualification)
+- [ ] State SOS in good standing
+- [ ] FinCEN BOI applicability verified under current official authority:
+      U.S.-created entities are currently exempt under the final rule effective
+      August 14, 2026; foreign-law entities registered in the United States
+      require a separate current-rule filing/exemption analysis
+- [ ] IRS IRIS TCC (only if issuing 1099s directly; otherwise use a transmitter)
+
+Individual:
+- [ ] ID.me verified
+- [ ] IRS Individual Online Account
+
+---
+
+## Enrollment quick reference
+
+| Account | URL | Time to activate |
+|---|---|---|
+| EIN | irs.gov/ein (SS-4 online) | Immediate |
+| IRS Business Tax Account | irs.gov/businesses/online-account | Same-day after ID.me |
+| EFTPS | eftps.gov → Enrollment | 7–10 business days (PIN mailed) |
+| IRS IRIS TCC | irs.gov/e-file-providers/iris-application-for-tcc | 2–4 weeks |
+| SSA BSO | ssa.gov/bso | Same-day after ID.me |
+| ID.me | id.me | 15–30 min |
+| State DOR | state DOR portal | Same-day to a few days |
+| State SOS | state SOS filing portal | Same-day after formation |
+
+---
+
+## Notes
+
+- Never put credentials in this file. Last-4 only if referencing account numbers.
+- `bank-accounts.md` indexes financial accounts; this file is registration accounts. Two separate registries.
+- Anti-duplication: detail lives here; each entity's `entity.md` has a one-line "see `workspace-profile/federal-accounts.md`."

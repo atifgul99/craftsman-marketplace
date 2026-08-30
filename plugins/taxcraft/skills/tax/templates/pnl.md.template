@@ -1,0 +1,46 @@
+
+# P&L — <ENTITY NAME> — <PERIOD>
+
+**Period**: `<Q1 | Q2 | Q3 | Q4 | Annual>` FY<YYYY> (`<YYYY-MM-DD>` to `<YYYY-MM-DD>`)
+**YTD through**: `<YYYY-MM-DD>`
+**Status**: draft | in-review | final
+**Generated**: YYYY-MM-DD
+**Basis**: tax | book
+
+> Tax-basis P&L structured to match the entity's filing form (Form 1120 / 1065 / 1120-S). Book-basis differences reconciled in `m-1-reconciliation.md` at annual close.
+
+## Summary
+
+|  | Period | YTD | Prior-year YTD |
+|---|---|---|---|
+| Gross receipts | $ | $ | $ |
+| Total expenses | $ | $ | $ |
+| **Net income (tax basis)** | $ | $ | $ |
+
+## Consolidation (if nested disregarded SMLLCs)
+
+| | <Parent> | <SMLLC A> | <SMLLC B> | Eliminations | Consolidated |
+|---|---|---|---|---|---|
+| Revenue | | | | | |
+| Expenses | | | | | |
+| Net | | | | | |
+
+## Full P&L (period + YTD)
+
+Use the Form 1120 / 1065 / 1120-S structure per `entities/c-corp.md`, `entities/partnership.md`, or `entities/s-corp.md`.
+
+```
+<See entity-specific sub-skill for the detailed line-by-line structure>
+
+Line 1a Gross receipts                    $         $
+Line 1b Returns & allowances              $         $
+...
+Line 30 Taxable income / ord income       $         $
+```
+
+## Notes & Quarantines
+
+- Quarantined transactions (unclassifiable, personal expense on biz card, round-dollar cash): count + list pointer
+- Reconciliation status: bank ending balance matches ledger? yes / no
+- Outstanding accruals posted?
+- Open questions feeding `open-questions.md`

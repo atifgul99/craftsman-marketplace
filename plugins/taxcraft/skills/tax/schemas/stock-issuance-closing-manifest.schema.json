@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.example/tax/stock-issuance-closing-manifest.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "subject_entity_slug", "tranche_id", "issuance_date", "class", "holder_slug", "shares", "price_per_share", "total_consideration", "closing_facts", "artifacts", "exceptions", "signoff"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "subject_entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "tranche_id": {"type": "string", "pattern": "^ISS-[0-9]{4}-[0-9]{3}$"},
+    "issuance_date": {"type": "string", "format": "date"},
+    "class": {"type": "string", "minLength": 1},
+    "holder_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "shares": {"type": "integer", "minimum": 1},
+    "price_per_share": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2,6}$"},
+    "total_consideration": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2}$"},
+    "closing_facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_body", "approval_method", "approval_date", "approval_signed_at", "approving_actor", "consideration_type", "substantially_nonvested", "payer_slug", "payee_entity_slug", "amount_received", "received_at", "clearance_status", "consideration_legal_timing", "issued_at", "certificate_or_notice_id", "notice_delivered_at", "journal_entry_id", "journal_posted_at", "federal_securities_route", "state_securities_routes"],
+      "properties": {
+        "approval_body": {"enum": ["BOARD", "BOARD_AND_SHAREHOLDERS"]},
+        "approval_method": {"enum": ["MEETING", "WRITTEN_CONSENT"]},
+        "approval_date": {"type": "string", "format": "date"},
+        "approval_signed_at": {"type": "string", "format": "date-time"},
+        "approving_actor": {"type": "string", "minLength": 1},
+        "consideration_type": {"enum": ["CASH", "PROPERTY", "SERVICES", "DEBT_CONVERSION", "SAFE_NOTE_CONVERSION", "MIXED"]},
+        "substantially_nonvested": {"type": "boolean"},
+        "payer_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "payee_entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "amount_received": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2}$"},
+        "received_at": {"type": "string", "format": "date-time"},
+        "clearance_status": {"const": "CLEARED_OR_TRANSFER_VERIFIED"},
+        "consideration_legal_timing": {"enum": ["RECEIVED_BEFORE_OR_AT_ISSUANCE", "DEFERRED_COUNSEL_VALIDATED"]},
+        "issued_at": {"type": "string", "format": "date-time"},
+        "certificate_or_notice_id": {"type": "string", "minLength": 1},
+        "notice_delivered_at": {"type": "string", "format": "date-time"},
+        "journal_entry_id": {"type": "string", "minLength": 1},
+        "journal_posted_at": {"type": "string", "format": "date-time"},
+        "federal_securities_route": {"enum": ["SECTION_4_A_2", "RULE_506_B", "RULE_506_C", "REGULATION_CF", "REGULATION_A", "RULE_701"]},
+        "state_securities_routes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["jurisdiction", "substantive_route", "notice_requirement_status", "deadline", "filed_or_resolved_at"],
+            "properties": {
+              "jurisdiction": {"type": "string", "minLength": 1},
+              "substantive_route": {"enum": ["WA_REGISTRATION", "WA_EXEMPTION"]},
+              "notice_requirement_status": {"enum": ["NOT_REQUIRED_COUNSEL_VERIFIED", "REQUIRED_FILED_ACCEPTED"]},
+              "deadline": {"type": ["string", "null"], "format": "date"},
+              "filed_or_resolved_at": {"type": "string", "format": "date-time"}
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path", "sha256", "document_date", "observed_at", "evidence_subject_slug", "tranche_id", "verification_status", "locator", "proves", "professional_review_role", "extracted_facts"],
+        "properties": {
+          "kind": {"enum": ["BOARD_APPROVAL", "PURCHASE_OR_SUBSCRIPTION_AGREEMENT", "CONSIDERATION_PROOF", "CERTIFICATE_OR_NOTICE", "STOCK_LEDGER", "CAP_TABLE", "TAX_MEMO", "SECURITIES_MEMO"]},
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "document_date": {"type": "string", "format": "date"},
+          "observed_at": {"type": "string", "format": "date-time"},
+          "evidence_subject_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "tranche_id": {"type": "string", "pattern": "^ISS-[0-9]{4}-[0-9]{3}$"},
+          "verification_status": {"const": "VERIFIED"},
+          "locator": {"type": "string", "minLength": 1},
+          "proves": {"type": "string", "minLength": 1},
+          "professional_review_role": {"enum": ["NOT_APPLICABLE", "CORPORATE_COUNSEL", "SECURITIES_COUNSEL", "TAX_COUNSEL", "CPA_EA"]},
+          "extracted_facts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["class", "holder_slug", "shares", "price_per_share", "total_consideration"],
+            "properties": {
+              "class": {"type": "string", "minLength": 1},
+              "holder_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+              "shares": {"type": "integer", "minimum": 1},
+              "price_per_share": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2,6}$"},
+              "total_consideration": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2}$"}
+            }
+          }
+        }
+      }
+    },
+    "exceptions": {"type": "array", "maxItems": 0},
+    "signoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role", "signed_at", "signature_method", "signer_identity", "document_integrity"],
+      "properties": {
+        "actor": {"type": "string", "minLength": 1},
+        "role": {"enum": ["CORPORATE_COUNSEL", "AUTHORIZED_CORPORATE_RECORDS_OFFICER"]},
+        "signed_at": {"type": "string", "format": "date-time"},
+        "signature_method": {"enum": ["HANDWRITTEN_OR_IMAGE_OBSERVED", "CRYPTOGRAPHIC_VALIDATED"]},
+        "signer_identity": {"const": "VERIFIED"},
+        "document_integrity": {"const": "VERIFIED"}
+      }
+    }
+  }
+}

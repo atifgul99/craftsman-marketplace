@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "subject_entity_slug": "replace-me",
+  "fiscal_or_tax_period": "FY2000",
+  "as_of": "2000-01-01",
+  "source_cutoff": "2000-01-01T00:00:00Z",
+  "overall_status": "CLOSING_PENDING",
+  "tranches": [
+    {
+      "tranche_id": "ISS-2000-001",
+      "issuance_date": "2000-01-01",
+      "status": "CLOSING_PENDING",
+      "class": "Common",
+      "holder_slug": "replace-holder",
+      "shares": 1,
+      "price_per_share": "1.00",
+      "total_consideration": "1.00",
+      "capitalization": {
+        "scope": "CLASS",
+        "class": "Common",
+        "charter_class_authority_path": "entities/replace-me/corporate/formation/Common-class-authority.json",
+        "charter_class_authority_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "authorized_before": 1,
+        "issued_before": 0,
+        "outstanding_before": 0,
+        "treasury_before": 0,
+        "reserved_before": 0,
+        "legally_available_before": 1,
+        "authorized_after": 1,
+        "issued_after": 1,
+        "outstanding_after": 1,
+        "treasury_after": 0,
+        "reserved_after": 0,
+        "legally_available_after": 0,
+        "formation_state_capacity_rule": "WA_REACQUIRED_AUTHORIZED_UNISSUED",
+        "capacity_authority_url": "https://app.leg.wa.gov/RCW/default.aspx?cite=23B.06.310",
+        "capacity_authority_verified_at": "2000-01-01T00:00:00Z"
+      },
+      "gates": {
+        "formation_authority": "UNVERIFIED",
+        "authorized_capacity": "UNVERIFIED",
+        "board_approval": "UNVERIFIED",
+        "terms": "UNVERIFIED",
+        "consideration": "UNVERIFIED",
+        "valuation": "UNVERIFIED",
+        "vesting_restrictions": "UNVERIFIED",
+        "securities": "UNVERIFIED",
+        "tax": "UNVERIFIED",
+        "certificate_notice": "UNVERIFIED",
+        "ledger_cap_table": "UNVERIFIED",
+        "books": "UNVERIFIED",
+        "closing_manifest_signoff": "UNVERIFIED"
+      },
+      "transaction_jurisdiction_facts": {
+        "issuer_formation_jurisdiction": "REPLACE-STATE",
+        "holder_residence_jurisdiction": "REPLACE-STATE",
+        "offer_jurisdictions": ["REPLACE-STATE"],
+        "sale_jurisdiction": "REPLACE-STATE",
+        "solicitation_jurisdictions": [],
+        "evidence_path": "entities/replace-me/corporate/stock-issuances/ISS-2000-001-jurisdiction-facts.pdf",
+        "evidence_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "applicable_securities_jurisdictions": ["United States", "REPLACE-STATE"],
+      "securities_authorities": [
+        {
+          "authority_id": "run-replace-federal-securities",
+          "jurisdiction": "United States",
+          "source_url": "https://www.sec.gov/replace",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "route": "SECTION_4_A_2",
+          "status": "VERIFIED"
+        },
+        {
+          "authority_id": "run-replace-state-securities",
+          "jurisdiction": "REPLACE-STATE",
+          "source_url": "https://example.gov/replace",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "route": "WA_NOTICE",
+          "status": "VERIFIED"
+        }
+      ],
+      "tax_positions": {
+        "section_83": "NOT_APPLICABLE",
+        "section_351": "ISSUANCE_PRONGS_VERIFIED",
+        "section_1202": "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL",
+        "section_1244": "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL"
+      },
+      "tax_fact_flags": {
+        "substantially_nonvested": false,
+        "property_transfer": true,
+        "liabilities_assumed": false,
+        "integrated_transfer_plan": false,
+        "section_351_control_percent_after": 100,
+        "section_351_control_test_status": "SATISFIED",
+        "section_83_b": {
+          "decision": "NOT_APPLICABLE",
+          "property_transfer_date": null,
+          "filing_deadline": null,
+          "election_signed_at": null,
+          "irs_delivery_at": null,
+          "service_recipient_copy_at": null,
+          "holding_period_result": "NOT_APPLICABLE",
+          "evidence_path": null,
+          "evidence_sha256": null
+        }
+      },
+      "tax_authorities": [
+        {"doctrine":"section_83","rule":"SECTION_83_CODE","authority_id":"run-replace-83","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section83","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_351","rule":"SECTION_351_CODE","authority_id":"run-replace-351","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section351","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_351","rule":"REG_1_351_1","authority_id":"run-replace-reg-351","source_url":"https://www.ecfr.gov/current/title-26/section-1.351-1","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_351","rule":"SECTION_358_CODE","authority_id":"run-replace-358","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section358","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_351","rule":"SECTION_362_CODE","authority_id":"run-replace-362","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section362","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_351","rule":"SECTION_368_C_CODE","authority_id":"run-replace-368c","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section368","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_351","rule":"REG_1_351_3","authority_id":"run-replace-reg-351-3","source_url":"https://www.ecfr.gov/current/title-26/section-1.351-3","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_351","rule":"REG_1_358_2","authority_id":"run-replace-reg-358-2","source_url":"https://www.ecfr.gov/current/title-26/section-1.358-2","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_1202","rule":"SECTION_1202_CODE","authority_id":"run-replace-1202","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section1202","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
+        {"doctrine":"section_1244","rule":"SECTION_1244_CODE","authority_id":"run-replace-1244","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section1244","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"}
+      ],
+      "closing_manifest_path": "entities/replace-me/corporate/stock-issuances/ISS-2000-001-closing-manifest.json",
+      "closing_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

@@ -1,0 +1,679 @@
+{
+ "_meta": {
+  "schema_version": 1,
+  "jurisdiction": "US-federal",
+  "tax_year": 2026,
+  "status": "SOURCE_MAPPED",
+  "checked_at": "2026-08-29",
+  "stale_after": "2027-02-28",
+  "stale_after_rationale": "6 months: the year is current or still being filed, so retroactive legislation and late guidance are live risks",
+  "legislation_checked_through": "2026-08-29",
+  "legislation_checked_note": "Elapsed time is a proxy; this is the real question. Records the date through which enacted legislation was reviewed for retroactive effect on this tax year. A statute checklist would overpromise completeness, so this is a date, not a list.",
+  "declared_repeats": [],
+  "authorities": [
+   {
+    "id": "rev-proc-2025-32",
+    "title": "Rev. Proc. 2025-32, 2026 inflation adjustments",
+    "url": "https://www.irs.gov/irb/2025-45_IRB",
+    "source_type": "revenue-procedure",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31"
+   },
+   {
+    "id": "notice-2025-67",
+    "title": "Notice 2025-67, 2026 retirement plan limitations",
+    "url": "https://www.irs.gov/irb/2025-49_IRB",
+    "source_type": "notice",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31"
+   },
+   {
+    "id": "rev-proc-2025-19",
+    "title": "Rev. Proc. 2025-19, 2026 HSA limits",
+    "url": "https://www.irs.gov/irb/2025-21_IRB",
+    "source_type": "revenue-procedure",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31"
+   },
+   {
+    "id": "pub-505-2026",
+    "title": "Publication 505 (2026), Tax Withholding and Estimated Tax",
+    "url": "https://www.irs.gov/publications/p505",
+    "source_type": "official-publication",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31"
+   },
+   {
+    "id": "pl-119-21",
+    "title": "Public Law 119-21",
+    "url": "https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf",
+    "source_type": "statute",
+    "effective_from": null,
+    "effective_to": null
+   },
+   {
+    "id": "notice-2026-10-ann-2026-11",
+    "title": "Notice 2026-10 and Announcement 2026-11, 2026 mileage rates",
+    "url": "https://www.irs.gov/irb/2026-29_IRB",
+    "source_type": "notice-and-announcement",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31"
+   },
+   {
+    "id": "irc-current",
+    "title": "Internal Revenue Code, current preliminary edition",
+    "url": "https://uscode.house.gov/view.xhtml?path=/prelim@title26&edition=prelim",
+    "source_type": "statute",
+    "effective_from": null,
+    "effective_to": null
+   },
+   {
+    "id": "ssa-contribution-base",
+    "title": "Social Security contribution and benefit base",
+    "url": "https://www.ssa.gov/oact/cola/cbb.html",
+    "source_type": "official-agency-table",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-12-31"
+   }
+  ],
+  "coverage": [
+   {
+    "paths": [
+     "brackets_ordinary",
+     "brackets_ltcg",
+     "standard_deduction",
+     "amt",
+     "qbi",
+     "salt_cap",
+     "section_179_cap",
+     "section_179_phaseout_start",
+     "excess_business_loss_threshold",
+     "foreign_earned_income_exclusion",
+     "adoption_credit",
+     "fsa_contribution_limit",
+     "fsa_carryover_max",
+     "qualified_transportation_fringe_monthly"
+    ],
+    "authority_ids": [
+     "rev-proc-2025-32",
+     "pl-119-21"
+    ],
+    "status": "POINT_OF_USE"
+   },
+   {
+    "paths": [
+     "retirement_limits.401k_elective",
+     "retirement_limits.401k_catchup_50",
+     "retirement_limits.401k_catchup_60_63_secure2",
+     "retirement_limits.ira_trad_roth",
+     "retirement_limits.ira_catchup_50",
+     "retirement_limits.simple_elective",
+     "retirement_limits.simple_catchup_50",
+     "retirement_limits.simple_catchup_60_63",
+     "retirement_limits.simple_eligible_plan_elective",
+     "retirement_limits.simple_eligible_plan_catchup_50",
+     "retirement_limits.sep_max_comp",
+     "retirement_limits.overall_dc_415c"
+    ],
+    "authority_ids": [
+     "notice-2025-67"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "retirement_limits.hsa_self",
+     "retirement_limits.hsa_family",
+     "retirement_limits.hsa_self_deductible_min",
+     "retirement_limits.hsa_family_deductible_min",
+     "retirement_limits.hsa_self_oop_max",
+     "retirement_limits.hsa_family_oop_max"
+    ],
+    "authority_ids": [
+     "rev-proc-2025-19"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "retirement_limits.hsa_catchup_55"
+    ],
+    "authority_ids": [
+     "irc-current"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "retirement_limits"
+    ],
+    "authority_ids": [
+     "notice-2025-67",
+     "rev-proc-2025-19",
+     "irc-current"
+    ],
+    "status": "POINT_OF_USE"
+   },
+   {
+    "paths": [
+     "safe_harbor_prior_year_pct_high_agi",
+     "safe_harbor_prior_year_pct_low_agi",
+     "safe_harbor_high_agi_threshold_non_mfs",
+     "safe_harbor_high_agi_threshold_mfs",
+     "safe_harbor_current_year_pct",
+     "estimated_tax_due_dates"
+    ],
+    "authority_ids": [
+     "pub-505-2026"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "obbba_deductions",
+     "bonus_depreciation",
+     "info_return_threshold_6041_6041a",
+     "estate_exemption"
+    ],
+    "authority_ids": [
+     "pl-119-21",
+     "rev-proc-2025-32"
+    ],
+    "status": "POINT_OF_USE"
+   },
+   {
+    "paths": [
+     "mileage_rates",
+     "mileage_allowance_effective_date_logic"
+    ],
+    "authority_ids": [
+     "notice-2026-10-ann-2026-11"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "niit",
+     "addl_medicare",
+     "ss_rate_ee",
+     "medicare_rate_ee",
+     "se_tax_rate_combined",
+     "se_multiplier"
+    ],
+    "authority_ids": [
+     "irc-current"
+    ],
+    "status": "POINT_OF_USE"
+   },
+   {
+    "paths": [
+     "ss_wage_base"
+    ],
+    "authority_ids": [
+     "ssa-contribution-base"
+    ],
+    "status": "POINT_OF_USE"
+   },
+   {
+    "paths": [
+     "mortgage_acquisition_debt_cap",
+     "gift_exclusion_annual",
+     "gift_exclusion_non_citizen_spouse",
+     "ctc_per_child",
+     "ctc_refundable_cap",
+     "odc",
+     "suv_cap"
+    ],
+    "authority_ids": [
+     "rev-proc-2025-32",
+     "pl-119-21",
+     "irc-current"
+    ],
+    "status": "POINT_OF_USE"
+   },
+   {
+    "paths": [
+     "student_loan_interest",
+     "kiddie"
+    ],
+    "authority_ids": [
+     "rev-proc-2025-32"
+    ],
+    "status": "VERIFIED",
+    "note": "Added 2026-08-29 from the year's Rev. Proc., extracted with pdftotext -layout."
+   }
+  ],
+  "unresolved": [
+   {
+    "path": "mileage_business",
+    "reason": "Intentionally unavailable: 2026 requires interval selection from mileage_rates."
+   },
+   {
+    "path": "mileage_medical",
+    "reason": "Intentionally unavailable: 2026 requires interval selection from mileage_rates."
+   },
+   {
+    "path": "mileage_charitable",
+    "reason": "Intentionally unavailable: 2026 requires interval selection from mileage_rates."
+   }
+  ]
+ },
+ "tax_year": 2026,
+ "source_notes": "Rev. Proc. 2025-32 (IRB 2025-45, Nov 3 2025), IRS Notice 2025-67 (retirement limits), IRS Notice 2026-10 plus Announcement 2026-11 (midyear mileage-rate change), Rev. Proc. 2025-19 (HSA limits), SSA 2026 COLA fact sheet, One Big Beautiful Bill Act (OBBBA, PL 119-21, July 2025). OBBBA made TCJA individual provisions permanent (rates, std deduction, QBI) and modified SALT cap, estate exemption, AMT, bonus depreciation, and §179.",
+ "brackets_ordinary": {
+  "single": [
+   [
+    12400,
+    0.1
+   ],
+   [
+    50400,
+    0.12
+   ],
+   [
+    105700,
+    0.22
+   ],
+   [
+    201775,
+    0.24
+   ],
+   [
+    256225,
+    0.32
+   ],
+   [
+    640600,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "mfj": [
+   [
+    24800,
+    0.1
+   ],
+   [
+    100800,
+    0.12
+   ],
+   [
+    211400,
+    0.22
+   ],
+   [
+    403550,
+    0.24
+   ],
+   [
+    512450,
+    0.32
+   ],
+   [
+    768700,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "mfs": [
+   [
+    12400,
+    0.1
+   ],
+   [
+    50400,
+    0.12
+   ],
+   [
+    105700,
+    0.22
+   ],
+   [
+    201775,
+    0.24
+   ],
+   [
+    256225,
+    0.32
+   ],
+   [
+    384350,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "hoh": [
+   [
+    17700,
+    0.1
+   ],
+   [
+    67450,
+    0.12
+   ],
+   [
+    105700,
+    0.22
+   ],
+   [
+    201750,
+    0.24
+   ],
+   [
+    256200,
+    0.32
+   ],
+   [
+    640600,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ]
+ },
+ "brackets_ltcg": {
+  "single": [
+   [
+    49450,
+    0.0
+   ],
+   [
+    545500,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "mfj": [
+   [
+    98900,
+    0.0
+   ],
+   [
+    613700,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "mfs": [
+   [
+    49450,
+    0.0
+   ],
+   [
+    306850,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "hoh": [
+   [
+    66200,
+    0.0
+   ],
+   [
+    579600,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ]
+ },
+ "standard_deduction": {
+  "single": 16100,
+  "mfj": 32200,
+  "mfs": 16100,
+  "hoh": 24150,
+  "qualifying_surviving_spouse": 32200,
+  "addl_65_or_blind_mfj": 1650,
+  "addl_65_or_blind_single_hoh": 2050,
+  "dependent_minimum": 1350,
+  "dependent_earned_income_addition": 450,
+  "dependent_cap_rule": "lesser of applicable basic standard deduction or greater of dependent_minimum and earned income plus dependent_earned_income_addition",
+  "zero_deduction_gates": [
+   "MFS taxpayer whose spouse itemizes",
+   "certain nonresident or dual-status aliens"
+  ]
+ },
+ "amt": {
+  "exemption": {
+   "single": 90100,
+   "mfj": 140200,
+   "mfs": 70100,
+   "hoh": 90100
+  },
+  "phaseout_start": {
+   "single": 500000,
+   "mfj": 1000000,
+   "mfs": 500000
+  },
+  "rate_breakpoint_26_28": 244500,
+  "mfs_rate_breakpoint": 122250,
+  "phaseout_rate": 0.5,
+  "_note": "OBBBA reset phaseout thresholds to $500k single / $1M MFJ (unindexed until 2027) and raised phaseout rate from 25% to 50% — exemption fully phased out at $680,200 single / $1,280,400 MFJ / $640,200 MFS."
+ },
+ "niit": {
+  "rate": 0.038,
+  "threshold_single": 200000,
+  "threshold_mfj": 250000,
+  "threshold_mfs": 125000,
+  "_note": "NIIT thresholds are statutory (not indexed) — §1411"
+ },
+ "addl_medicare": {
+  "rate": 0.009,
+  "threshold_single": 200000,
+  "threshold_mfj": 250000,
+  "threshold_mfs": 125000,
+  "_note": "Additional Medicare thresholds are statutory (not indexed) — §3101(b)(2)"
+ },
+ "ss_wage_base": 184500,
+ "ss_rate_ee": 0.062,
+ "medicare_rate_ee": 0.0145,
+ "se_tax_rate_combined": 0.153,
+ "se_multiplier": 0.9235,
+ "retirement_limits": {
+  "401k_elective": 24500,
+  "401k_catchup_50": 8000,
+  "401k_catchup_60_63_secure2": 11250,
+  "ira_trad_roth": 7500,
+  "ira_catchup_50": 1100,
+  "simple_elective": 17000,
+  "simple_catchup_50": 4000,
+  "simple_catchup_60_63": 5250,
+  "simple_eligible_plan_elective": 18100,
+  "simple_eligible_plan_catchup_50": 3850,
+  "sep_pct_of_comp": 0.25,
+  "sep_max_comp": 360000,
+  "overall_dc_415c": 72000,
+  "hsa_self": 4400,
+  "hsa_family": 8750,
+  "hsa_catchup_55": 1000,
+  "hsa_self_deductible_min": 1700,
+  "hsa_family_deductible_min": 3400,
+  "hsa_self_oop_max": 8500,
+  "hsa_family_oop_max": 17000,
+  "catchup_roth_required_note": "SECURE 2.0 eff. 2026: catch-ups must be Roth if prior-year FICA wages > $150,000."
+ },
+ "qbi": {
+  "threshold_single": 201750,
+  "threshold_mfj": 403500,
+  "threshold_mfs": 201775,
+  "phasein_range_single": 75000,
+  "phasein_range_mfj": 150000,
+  "rate": 0.2,
+  "made_permanent_by_obbba": true,
+  "min_deduction": {
+   "amount": 400,
+   "requires_qbi_at_least": 1000,
+   "note": "OBBBA: minimum requires at least $1,000 aggregate QBI from trades or businesses in which the taxpayer materially participates, effective 2026"
+  }
+ },
+ "salt_cap": {
+  "mfj": 40400,
+  "single": 40400,
+  "hoh": 40400,
+  "mfs": 20200,
+  "magi_phaseout_start_mfj": 505000,
+  "magi_phaseout_start_mfs": 252500,
+  "phaseout_rate": 0.3,
+  "floor_mfj": 10000,
+  "floor_mfs": 5000,
+  "_note": "OBBBA §70120: cap +1%/yr through 2029; reverts to $10k in 2030. PTET workarounds unaffected."
+ },
+ "mortgage_acquisition_debt_cap": {
+  "on_or_before_2017_12_15": {
+   "non_mfs": 1000000,
+   "mfs": 500000
+  },
+  "after_2017_12_15": {
+   "non_mfs": 750000,
+   "mfs": 375000
+  },
+  "transition_exception": {
+   "written_binding_contract_before": "2017-12-15",
+   "contract_requires_closing_before": "2018-01-01",
+   "actual_purchase_before": "2018-04-01",
+   "treatment": "treated as incurred on or before 2017-12-15"
+  },
+  "selector": "Use debt-incurred date, not calendar year. The transition exception requires independent evidence of all three facts: written binding contract before 2017-12-15, contract required closing before 2018-01-01, and actual purchase before 2018-04-01."
+ },
+ "gift_exclusion_annual": 19000,
+ "gift_exclusion_non_citizen_spouse": 194000,
+ "estate_exemption": 15000000,
+ "estate_exemption_note": "Statutory flat amount for 2026; indexing resumes 2027.",
+ "ctc_per_child": 2200,
+ "ctc_refundable_cap": 1700,
+ "ctc_phaseout_note": "$50 per $1,000 MAGI over $200,000 (single/HOH/MFS) / $400,000 (MFJ) — statutory.",
+ "odc": 500,
+ "mileage_business": null,
+ "mileage_medical": null,
+ "mileage_charitable": null,
+ "mileage_rate_note": "No single annual scalar is valid for 2026. Select a dated interval and verify every effective-date condition in Notice 2026-10 and Announcement 2026-11, including allowance-payment timing where applicable.",
+ "mileage_allowance_effective_date_logic": {
+  "pre_july_rate_if": "allowance_payment_date < 2026-07-01 OR employee_expense_date < 2026-07-01",
+  "post_june_rate_if": "allowance_payment_date >= 2026-07-01 AND employee_expense_date >= 2026-07-01",
+  "source": "Announcement 2026-11, IRB 2026-29"
+ },
+ "mileage_rates": [
+  {
+   "start": "2026-01-01",
+   "end": "2026-06-30",
+   "business": 0.725,
+   "medical_and_qualified_moving": 0.205,
+   "charitable": 0.14,
+   "source": "Notice 2026-10"
+  },
+  {
+   "start": "2026-07-01",
+   "end": "2026-12-31",
+   "business": 0.76,
+   "medical_and_qualified_moving": 0.235,
+   "charitable": 0.14,
+   "source": "Announcement 2026-11, IRB 2026-29"
+  }
+ ],
+ "bonus_depreciation": {
+  "acquired_after_2025_01_19": 1.0,
+  "acquired_on_or_before_2025_01_19": 0.2,
+  "_note": "OBBBA §70301: 100% permanent for property ACQUIRED after 1/19/2025 (binding-contract date controls); earlier acquisitions stay on TCJA phase-down (20% 2026, 0% after). Transition election available — Notice 2026-11."
+ },
+ "section_179_cap": 2560000,
+ "section_179_phaseout_start": 4090000,
+ "suv_cap": 32000,
+ "obbba_deductions": {
+  "tips": {
+   "cap": 25000,
+   "magi_phaseout_start": 150000,
+   "magi_phaseout_start_mfj": 300000,
+   "phaseout_reduction_per_completed_1000": 100
+  },
+  "overtime": {
+   "cap": 12500,
+   "cap_mfj": 25000,
+   "magi_phaseout_start": 150000,
+   "magi_phaseout_start_mfj": 300000,
+   "phaseout_reduction_per_completed_1000": 100,
+   "note": "FLSA premium portion only"
+  },
+  "senior_65": {
+   "amount_per_person": 6000,
+   "magi_phaseout_start": 75000,
+   "magi_phaseout_start_mfj": 150000,
+   "phaseout_rate": 0.06,
+   "note": "stacks on regular additional 65+ std deduction"
+  },
+  "car_loan_interest": {
+   "cap": 10000,
+   "magi_phaseout_start": 100000,
+   "magi_phaseout_start_mfj": 200000,
+   "phaseout_reduction_per_1000_or_portion": 200,
+   "note": "new qualifying personal vehicle; apply first-lien, original-use, final-assembly, VIN, GVWR, related-party, excluded-loan, and refinancing gates"
+  },
+  "_note": "Caps/thresholds are statutory, unindexed through 2028 (2025-2028 provisions)."
+ },
+ "excess_business_loss_threshold": {
+  "single": 256000,
+  "mfj": 512000,
+  "_note": "OBBBA re-based the section 461(l) threshold; the 2026 figures are LOWER than 2025 by design, not by error. Verify against the controlling revenue procedure per authority.md before use."
+ },
+ "safe_harbor_prior_year_pct_high_agi": 1.1,
+ "safe_harbor_prior_year_pct_low_agi": 1.0,
+ "safe_harbor_high_agi_threshold_non_mfs": 150000,
+ "safe_harbor_high_agi_threshold_mfs": 75000,
+ "safe_harbor_current_year_pct": 0.9,
+ "estimated_tax_due_dates": [
+  "2026-04-15",
+  "2026-06-15",
+  "2026-09-15",
+  "2027-01-15"
+ ],
+ "foreign_earned_income_exclusion": 132900,
+ "fsa_contribution_limit": 3400,
+ "fsa_carryover_max": 680,
+ "qualified_transportation_fringe_monthly": 340,
+ "info_return_threshold_6041_6041a": {
+  "amount": 2000,
+  "forms": [
+   "1099-NEC",
+   "1099-MISC"
+  ],
+  "_note": "OBBBA (PL 119-21) 70433 raised IRC 6041(a)/6041A(a)(2) from $600 to $2,000 for payments made after 2025-12-31. Inflation indexing begins with 2027 payments under new IRC 6041(h), base year 2025, rounded to nearest $100. Applies only to payments made in the course of a trade or business - personal/household payments never trigger a 1099. Do NOT confuse with 1099-K (IRC 6050W), restored by OBBBA 70432 to >$20,000 AND >200 transactions. Some states retain $600 in their own statutes - check state rules separately. Collect a W-9 regardless of threshold."
+ },
+ "student_loan_interest": {
+  "max": 2500,
+  "phaseout_start_single": 85000,
+  "phaseout_complete_single": 100000,
+  "phaseout_start_mfj": 175000,
+  "phaseout_complete_mfj": 205000
+ },
+ "kiddie": {
+  "unearned_income_reduction": 1350,
+  "parental_election_gross_income_ceiling": 13500
+ },
+ "adoption_credit": {
+  "max": 17670,
+  "phaseout_start": 265080,
+  "phaseout_complete": 305080
+ }
+}

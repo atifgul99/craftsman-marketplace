@@ -1,0 +1,59 @@
+# Stock Issuance Closing Manifest — [Issuer] — [Tranche ID]
+
+**Closing status:** [ ]  
+**Legal issuance date:** [ ]  
+**§83 property-transfer date:** [NOT APPLICABLE / ]  
+**Substantial-vesting date(s):** [NOT APPLICABLE / ]  
+**Tax holding-period start:** [ ]  
+**Manifest cutoff:** [YYYY-MM-DD]
+
+## Binder index
+
+| ID | Required artifact | Final/executed path | Date | Reviewer | Status / exception |
+|---|---|---|---|---|---|
+| AUTH-01 | Filed charter and amendments | [ ] | [ ] | [ ] | [ ] |
+| AUTH-02 | Incorporator/director/officer authority and bylaws | [ ] | [ ] | [ ] | [ ] |
+| CAP-01 | Pre/post capitalization and capacity | [ ] | [ ] | [ ] | [ ] |
+| TERMS-01 | Final transaction agreement | [ ] | [ ] | [ ] | [ ] |
+| GOV-01 | Board/shareholder/class approval and conflict record | [ ] | [ ] | [ ] | [ ] |
+| CONSID-01 | Cash/property/services/conversion evidence | [ ] | [ ] | [ ] | [ ] |
+| VALUE-01 | FMV/adequacy/valuation support | [ ] | [ ] | [ ] | [ ] |
+| SEC-01 | Counsel securities-exemption memo | [ ] | [ ] | [ ] | [ ] |
+| SEC-02 | Federal/state filing or no-filing conclusion and proof | [ ] | [ ] | [ ] | [ ] |
+| STOCK-01 | Certificate or uncertificated information notice | [ ] | [ ] | [ ] | [ ] |
+| STOCK-02 | Stock ledger and cap table | [ ] | [ ] | [ ] | [ ] |
+| TAX-01 | §1202/§1244/§351/§83/state tax memo | [ ] | [ ] | [ ] | [ ] |
+| TAX-02 | §83(b) election/decision and proof, if applicable | [ ] | [ ] | [ ] | [ ] |
+| BOOK-01 | Journal entry tied to tranche ID | [ ] | [ ] | [ ] | [ ] |
+| PROFILE-01 | Entity/profile ownership reconciliation | [ ] | [ ] | [ ] | [ ] |
+
+## Exact-match control
+
+| Field | Approval | Agreement | Payment/property | Ledger | Cap table | Certificate/notice | Tax memo | Books | Difference |
+|---|---|---|---|---|---|---|---|---|---|
+| Tranche ID | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Recipient | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Class | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Shares | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Price / total | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Legal issuance date | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| §83 property-transfer date | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Substantial-vesting date(s) | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Tax holding-period start | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+| Vesting/restrictions | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+
+## Final arithmetic
+
+Reconcile authorized, issued, outstanding, treasury/reacquired,
+reserved/committed, and legally available shares by class. Apply the
+formation-state rule and charter rather than a universal formula.
+
+[inputs → formation-state formula → result by class, with counsel source]
+
+**Unexplained difference:** NONE / [ ]  
+**Highest supported state:** [ ]  
+**Open deadlines/exceptions:** [ ]
+
+Do not mark `ISSUED AND RECONCILED` unless every required artifact is final,
+every exact-match field agrees, every deadline is resolved, and arithmetic
+balances.

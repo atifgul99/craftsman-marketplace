@@ -1,0 +1,151 @@
+# Action by Written Consent of the <APPROVING PERSON AND CAPACITY>
+
+## <LLC NAME>
+
+**Company:** <LLC NAME>, a <STATE> limited liability company (<STATE ID / UBI>)
+**Member:** <MEMBER NAME>, a <STATE> <ENTITY TYPE> (<STATE ID / UBI>)
+**Date:** <YYYY-MM-DD>
+
+---
+
+<APPROVING PERSON>, <CAPACITY — e.g. the sole member and <manager / governor> of <LLC NAME>>,
+acting by written consent in lieu of a meeting, causes the Company to act as follows:
+
+**1. Distribution.** The Company shall distribute **$<AMOUNT>** to the Member, transferred from the
+Company's <BANK> account ending **<LAST4>** to the Member's <BANK> account ending **<LAST4>**.
+
+**2. Character.** The distribution is made in respect of the Member's membership interest. It is
+**not a loan** — there is no note, no interest, and nothing is repayable — and it is not payment
+for goods or services.
+
+**3. Authority under the LLC agreement.** *(choose one — delete the other)*
+   - The limited liability company agreement has been reviewed and permits this distribution.
+   - No limited liability company agreement is in effect. A search of the Company's records on
+     <DATE> located none.
+
+**4. Solvency.** After giving effect to the distribution, the Company satisfies the distribution
+limitations of **<SOLVENCY STATUTE>**, applying the test(s) that statute imposes. On the figures at
+signing, the Company holds approximately **$<CASH AFTER>** in cash against known liabilities of
+**$<LIABILITIES>**<, and its assets exceed its liabilities per the balance sheet at <DATE / WORKPAPER REF>>.
+
+---
+
+**<MEMBER OR APPROVING ENTITY NAME>**
+
+By: &nbsp;&nbsp;_______________________________________
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SIGNATORY NAME>, <TITLE>
+
+Date: &nbsp;&nbsp;_______________________________________
+
+<!--
+=============================== DRAFTING NOTES ===============================
+Delete this block before issuing.
+
+SCOPE. This template documents authorization for a cash distribution by an LLC to its
+member. It does not substitute for the governing LLC agreement or the law of the
+formation state. Have counsel in that state review before first use.
+
+WHY IT IS SHORT. The LLC acts impose a SUBSTANTIVE prohibition — do not distribute
+into insolvency — rather than a documentation duty. The consent exists for three
+practical reasons: veil discipline (entities respected as separate), characterization
+(distribution, not loan or income), and giving the ledger entry an authority to cite.
+
+Resist padding. Tax analysis, consolidation mechanics, and stock-basis effects belong
+in `books/journal-entries.md`, not in a document the owner signs. A reviewer asked to
+check completeness will always find more to add; completeness is not the standard —
+legal sufficiency is.
+
+--- SECTION 4 IS THE CLAUSE THAT MUST NOT BE TRIMMED -------------------------
+
+THE TESTS ARE NOT UNIFORM ACROSS STATES. Do not assert a universal two-test rule.
+Look up the formation state's distribution-limitation section and state its actual
+test(s):
+
+  · WA — RCW 25.15.231: BOTH an equity/liquidity test (able to pay debts as they come
+    due) AND a balance-sheet test. The balance-sheet test is NOT a bare
+    assets-exceed-liabilities comparison — it EXCLUDES liabilities to members on
+    account of their LLC interests and liabilities whose recourse is limited to
+    specified property, with collateral counted only to the extent of the excess.
+    ⚠️ RCW 25.15.235 was REPEALED effective 2016-01-01. The superseded section number
+    still circulates widely online — verify you are citing the current one.
+  · DE — 6 Del. C. §18-607: BALANCE-SHEET TEST ONLY. Delaware does NOT impose the
+    cash-flow test. Asserting both in a Delaware consent states a legal standard that
+    does not apply.
+  · WY — W.S. 17-29-405: both tests, and the asset side additionally accounts for
+    amounts needed to satisfy preferential dissolution rights.
+
+Recite only what the governing statute requires. Overstating the standard is not
+conservative — it makes a representation the signer may not actually satisfy.
+
+EVIDENCE vs ASSERTION. Cash-on-hand against known liabilities evidences LIQUIDITY. It
+does not establish asset FAIR VALUE. Where the state imposes a balance-sheet test,
+cite a current balance sheet or solvency worksheet rather than implying two figures
+prove both prongs.
+
+PERSONAL LIABILITY IS CONDITIONAL, NOT AUTOMATIC. A consenting member or manager can
+be personally liable for a non-compliant distribution, but typically only on a failure
+of the duty of care (WA: RCW 25.15.236) — or, for a recipient, on knowing receipt. The
+point is not that any error creates liability; it is that this clause is the signer's
+own record of having made the determination.
+
+--- OTHER FIELDS -------------------------------------------------------------
+
+APPROVING PERSON — AND SAY WHY THEY MAY ACT. The distribution is an act OF THE LLC.
+The consent must show who has authority to cause the LLC to act, and in what capacity:
+
+  · Member-managed: the member manages, so the member's consent IS the LLC acting.
+  · Manager-managed: the MANAGER acts. A member's consent alone may not suffice.
+  · The LLC agreement may reserve distribution authority regardless of either.
+
+Where one person holds both roles, NAME BOTH ("the sole member and manager") — the
+operative authority is the management capacity, not the ownership. State the capacity;
+do not cite the filing that proves it. A consent asserts its authority, it does not
+argue for it, and the filings are public record. Terminology is state-specific: WA uses
+GOVERNOR on the Initial Report and Annual Report; most states use MANAGER or
+MANAGING MEMBER. Pull the filed report and use the term that appears on it.
+
+Draft the operative line so the LLC is the actor — "<PERSON>, as <CAPACITY>, causes the
+Company to distribute" — not "<PERSON> resolves to take the Company's cash."
+
+DO NOT put ledger accounts or journal-entry numbers in the signed consent. The books
+cite the consent as their authority; a signed document citing the books inverts that,
+and goes stale the moment the chart of accounts is renumbered. Book the entry in
+`books/journal-entries.md` and let it reference this document.
+
+LLC AGREEMENT. Nearly every act conditions distributions on the agreement first. If one
+exists, READ IT and confirm it permits this. If none exists, say so as a documented
+search result — never "the member is not aware of any," which does not cure an
+agreement that exists and restricts.
+
+FIGURES. Use the position on the TRANSFER date, not a stale feed pull. Confirm the
+liabilities figure is complete: open tax notices, assessments, unbilled professional
+fees, and chargebacks are liabilities even when unquantified.
+
+--- FOR A DISREGARDED SMLLC --------------------------------------------------
+
+FEDERAL. A transfer between a disregarded LLC and its sole owner is a NON-EVENT
+(Treas. Reg. §301.7701-3): no income, no deduction, nothing reportable. It remains a
+real legal and bookkeeping transaction. Keep that analysis in the books, not here.
+
+STATE MAY DIVERGE. A disregarded entity can still be a SEPARATE taxpayer for state
+gross-receipts, excise, or franchise tax. A genuine distribution on an ownership
+interest is generally not gross receipts — confirm against the state's own definition
+rather than assuming federal disregard carries over.
+
+ACCOUNTS. Entry mechanics, the parent/SMLLC account mapping, and the consolidation
+eliminations live in `entities/disregarded.md`. Do not restate them here.
+
+--- EXECUTION ----------------------------------------------------------------
+
+TWO TRANSFERS, NEVER ONE. The distribution goes to the MEMBER'S OWN ACCOUNT; the
+member then pays its own obligations from that account as a separate transaction on a
+later date. The Company paying the Member's creditors directly is commingling and a
+veil-piercing factor. This is operating discipline, not a clause — which is why it is
+not a resolution above.
+
+ONE CONSENT PER DISTRIBUTION. A single consent is not standing authority for a series
+of transfers; a blanket authorization for ongoing sweeps reads as exactly the
+commingling this document exists to rebut.
+==============================================================================
+-->

@@ -1,0 +1,78 @@
+# Stock Issuance Tax Memorandum — [Issuer] — [Tranche ID]
+
+**Legal issuance date:** [VERIFIED date / UNVERIFIED]  
+**§83 property-transfer date:** [date / NOT APPLICABLE / UNVERIFIED]  
+**Substantial-vesting date(s):** [date(s) / NOT APPLICABLE / UNVERIFIED]  
+**§83(b) status:** TIMELY ELECTED / AFFIRMATIVELY NOT ELECTED / NOT APPLICABLE / MISSED OR UNRESOLVED  
+**Tax holding-period start:** [date and authority / UNVERIFIED]  
+**Recipient:** [ ]  
+**Shares / class:** [ ]  
+**Consideration:** [type, amount, transfer date]  
+**Evidence cutoff:** [YYYY-MM-DD]
+
+> Workpaper, not a tax opinion. Verify with tax counsel or a CPA/EA before
+> relying on qualification or filing a return.
+
+## Chronology and evidence
+
+| Date | Event | Evidence | What it proves |
+|---|---|---|---|
+| [ ] | [ ] | [path] | [ ] |
+
+Do not collapse payment, approval, transfer, issuance, vesting, or bookkeeping
+dates. Explain every difference.
+
+## §1202 result
+
+**Issuance status:** ISSUANCE-DATE PRONGS SATISFIED — PROVISIONAL / ISSUANCE-DATE INELIGIBLE / UNVERIFIED / NOT APPLICABLE
+
+| Prong | Result | Facts and computation | Evidence / authority |
+|---|---|---|---|
+| C-corporation status | [ ] | [ ] | [ ] |
+| Original issuance / qualifying consideration | [ ] | [ ] | [ ] |
+| Acquisition-date regime | [ ] | [ ] | [ ] |
+| Aggregate gross assets before | [ ] | inputs → formula → result | [ ] |
+| Aggregate gross assets immediately after | [ ] | inputs → formula → result | [ ] |
+| Predecessor / controlled-group aggregation | [ ] | [ ] | [ ] |
+| Qualified trade or business | [ ] | [ ] | [ ] |
+| 80% active business / working capital | [ ] | [ ] | [ ] |
+| Redemption windows | [ ] | [ ] | [ ] |
+| Holding-period / lot continuity | [ ] | [ ] | [ ] |
+
+## §1244 result
+
+**Issuance status:** ISSUANCE-DATE PRONGS SATISFIED — PROVISIONAL / ISSUANCE-DATE INELIGIBLE / UNVERIFIED / NOT APPLICABLE
+
+| Prong | Result | Facts and computation | Evidence / authority |
+|---|---|---|---|
+| Domestic corporation / actual stock | [ ] | [ ] | [ ] |
+| Original eligible holder | [ ] | [ ] | [ ] |
+| Money/property, not services | [ ] | [ ] | [ ] |
+| Capital receipts through prior tax years | [ ] | money + corporate property basis − qualifying liabilities; no distribution reduction | [ ] |
+| Current-year receipts before/at issuance | [ ] | inputs → formula → result | [ ] |
+| Transitional year | BEFORE / CURRENT / AFTER / UNVERIFIED | first year receipts exceed $1M and stock is issued | [ ] |
+| Transitional-year available pool | [ ] | $1M − prior-tax-year capital receipts = $[ ] | [ ] |
+| Designation / default allocation | N/A / TIMELY / PROPORTIONAL / UNVERIFIED | certificate-number record or alternative designation | [ ] |
+| Post-transition-year issuance | [ ] | provisional / ineligible / N/A | [ ] |
+| Historical contribution / later basis split | [ ] | [ ] | [ ] |
+| Gross-receipts records for future loss test | [ ] | [ ] | [ ] |
+
+## §351, basis, §83, payroll, and state tax
+
+| Topic | Result | Facts / computation | Evidence / follow-up |
+|---|---|---|---|
+| §351 control and property | [ ] | [ ] | [ ] |
+| Shareholder stock basis | [ ] | [ ] | [ ] |
+| Corporation property basis | [ ] | [ ] | [ ] |
+| §83 compensation / amount paid / FMV | [ ] | [ ] | [ ] |
+| §83(b) deadline and proof | [ ] | transfer date + 30 days = [ ] | [ ] |
+| Holding-period start under Reg. §1.83-4 | [ ] | valid election: after transfer; no election: after substantial vesting | [ ] |
+| Payroll / withholding / deduction | [ ] | [ ] | [ ] |
+| State tax | [ ] | [ ] | [ ] |
+
+## Conclusions and reservations
+
+- [Each issuance conclusion is provisional and limited to the facts and evidence above.]
+- [Final §1202 or §1244 qualification is reserved for the disposition/loss workpaper.]
+- [Open legal/tax issue and named reviewer.]
+- [Monitoring trigger: status change, redemption, inactive assets, transfer, sale.]

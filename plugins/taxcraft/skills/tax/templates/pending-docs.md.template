@@ -1,0 +1,30 @@
+# Pending Docs — <YEAR>
+
+Docs expected for this year but not yet received or ingested. Checked off as they arrive.
+
+Seeded from profile at year-start; updated as docs come in or new sources are added.
+
+## Expected
+
+- [ ] W-2 from `<employer>` (taxpayer)
+- [ ] W-2 from `<employer>` (spouse)
+- [ ] 1099-Composite from `<broker>`
+- [ ] 1099-INT from `<bank>`
+- [ ] 1099-DIV from `<broker>`
+- [ ] K-1 from `<entity>` (form 1065 / 1120-S / 1041)
+- [ ] 1098 from `<lender>` for `<property>`
+- [ ] 5498 from `<IRA custodian>`
+- [ ] 1099-R from `<retirement source>`
+- [ ] 1099-NEC / 1099-MISC from `<payer>` (if self-employed)
+- [ ] Charitable acknowledgment from `<DAF or charity>` (any gift > $250)
+- [ ] Property tax statement (if itemizing)
+- [ ] Mortgage statement (if itemizing + 1098 insufficient)
+
+## Received (parked for reference)
+
+- [x] `<doc>` — received YYYY-MM-DD, ingested YYYY-MM-DD → parsed to `.parsed/...`
+
+## Notes
+
+- Brokerages often issue **corrected 1099-B** through mid-March. Don't finalize Schedule D before then if amounts are material.
+- K-1s commonly arrive after April 15. Consider extension (Form 4868) if any expected K-1 hasn't landed by early April.

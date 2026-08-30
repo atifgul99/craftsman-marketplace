@@ -1,0 +1,50 @@
+# Restricted Stock / §83(b) Execution Control — [Issuer] — [Tranche ID]
+
+**Decision:** TIMELY ELECTED / AFFIRMATIVELY NOT ELECTED / NOT APPLICABLE / MISSED OR UNRESOLVED  
+**Actual property-transfer date:** [VERIFIED date / UNVERIFIED]  
+**30-day deadline:** [date, including §7503 weekend/holiday review]  
+**Owner:** [ ]
+
+> This control does not recommend an election. An election can create current
+> tax with no refund if the stock is later forfeited and is generally
+> irrevocable without IRS consent. Obtain tax-professional review immediately.
+
+## Transfer and economics
+
+| Field | Fact | Evidence |
+|---|---|---|
+| Beneficial ownership transfer under Reg. §1.83-3(a) | [ ] | [ ] |
+| Property / class / shares | [ ] | [ ] |
+| Amount paid | $[ ] | [ ] |
+| FMV at transfer, ignoring lapse restrictions | $[ ] | [valuation] |
+| Potential §83(b) income | FMV − amount paid = $[ ] | [ ] |
+| Vesting / substantial risk of forfeiture | [ ] | [ ] |
+| Repurchase / forfeiture price and terms | [ ] | [ ] |
+| Transferability / restrictions | [ ] | [ ] |
+| Payroll withholding / W-2 / §83(h) | [ ] | [ ] |
+
+## Informed decision record
+
+- Current inclusion and cash-tax result: [ ]
+- Expected basis and holding-period result: [ ]
+- Holding-period start under Reg. §1.83-4(a): [after transfer / after substantial vesting / unresolved]
+- Forfeiture downside explained: [ ]
+- QSBS acquisition/holding-period analysis: [ ]
+- §1244 services component result: INELIGIBLE / [mixed allocation]
+- Tax reviewer and date: [ ]
+
+## Election delivery package — only if ELECT
+
+- [ ] Current Form 15620 or compliant written statement completed and signed
+- [ ] Property, restrictions, transfer date, FMV, amount paid, and income agree to closing records
+- [ ] Filed with correct IRS office no later than deadline
+- [ ] Timely delivery proof retained (method, tracking, postmark/receipt)
+- [ ] Signed copy delivered to service recipient
+- [ ] Signed copy delivered to transferee if different
+- [ ] Signed copy retained by taxpayer and in closing binder
+- [ ] Payroll/withholding and books reconciled
+
+## Exception
+
+If the deadline or timely proof is missing, status is `MISSED OR UNRESOLVED`.
+Do not backdate, recreate mailing proof, or state that an election was made.

@@ -1,0 +1,39 @@
+# Capital Accounts — <ENTITY NAME>
+
+**Perpetual roll-forward** — one row set per partner/shareholder per year; never reset. Runs from formation through dissolution.
+**Basis reported**: tax-basis capital (K-1 Item L, transactional approach) — **not** §704(b) book capital and **not** holder outside basis. See notes below.
+**Generated**: YYYY-MM-DD
+
+> Source of truth: `entities/<slug>/entity.md` for ownership %, entry dates, and entity type. This file tracks the running balance only.
+> Scope: partnerships and S-corps. A **disregarded SMLLC's** member capital is not tracked here — it lives in the SMLLC's own COA equity accounts (3060/3070) and must mirror the parent's `1860 Investment` account; see `entities/disregarded.md` § two-tier equity model.
+
+## §704(b) vs. tax-basis — why this file is tax-basis
+
+- **Tax-basis capital** (this file): the transactional-approach capital account required on K-1 Item L since 2020 — starts at cash + property contributed (adjusted basis, not FMV), tracks contributions/distributions/income/loss at tax character. It is **not** the partner's outside basis (§705/§1367): outside basis adds the partner's share of liabilities and other holder-level items, and is reconstructed separately in `reconciliation.md` § 5.
+- **§704(b) book capital** (partnerships only): FMV-based capital account for partnership-agreement / substantial-economic-effect purposes. It is **not** a K-1 Item L reporting method — since 2020, Item L is tax-basis only. If the partnership agreement requires §704(b) book capital tracking (e.g., for special allocations, revaluations on admission/withdrawal), maintain it separately — do not conflate with this file.
+- Since 2020, partnerships must report tax-basis capital on K-1s regardless of the method used for §704(b) purposes — this file is that tax-basis figure.
+
+## FY<YYYY> Roll-Forward
+
+| Partner / Shareholder | Beginning Balance | Contributions | Distributions | Allocated Income / (Loss) | Other Adjustments | Ending Balance |
+|---|---|---|---|---|---|---|
+| <name> | $ | $ | ($) | $ | $ | $ |
+| **TOTAL** | $ | $ | ($) | $ | $ | $ |
+
+Notes:
+- "Other Adjustments" = transfers of capital between partners, prior-period corrections, guaranteed payments not already in allocated income.
+- **Do NOT include holder-level basis items here**: §743(b)/§754 step-ups are partner-level inside-basis adjustments excluded from tax-basis capital per the Form 1065 instructions, and S-corp shareholder **debt basis** is a holder-level attribute — both live in the recipient-side basis rec (`reconciliation.md` § 5, Form 7203, `carryforwards.json`), not in the entity's capital roll-forward.
+- Ending balance for partners *can* go negative (distributions/losses funded by liabilities) — flag if negative and explain why. Loss *deductibility* limits (§704(d), §1366(d)) are outside-basis questions tested in the holder-side rec, not here.
+- Ties to Schedule K-1 Item L (partnerships). **S-corps have no K-1 capital-account analysis** — shareholder basis is reported on Form 7203; for S-corps this file is the entity-side equity roll-forward that feeds Schedule L / M-2 only.
+
+## Prior Years
+
+| Year | Partner / Shareholder | Beginning | Contributions | Distributions | Allocated Inc/(Loss) | Other Adj | Ending |
+|---|---|---|---|---|---|---|---|
+| FY<YYYY-1> | | $ | $ | ($) | $ | $ | $ |
+
+## Check
+
+- Sum of ending balances = entity's total tax-basis equity per Schedule L: yes / **DISCREPANCY** (investigate)
+- Beginning balance this year = ending balance last year, per partner: yes / no
+- Distributions in excess of basis flagged (taxable as capital gain under §731 / §1368): yes / no / n/a

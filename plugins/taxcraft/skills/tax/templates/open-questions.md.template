@@ -1,0 +1,33 @@
+# Open Questions — <YEAR>
+
+Decisions or data points awaiting user input for this year. Each entry should be answerable; once resolved, move to a **Resolved** section at the bottom with the resolution recorded.
+
+## Open
+
+### Q1 — <short title>
+**Context**: what the skill needs to know and why
+**Options**:
+  - (a) …
+  - (b) …
+**Impact**: which section of `tax-summary.md` this affects + rough dollar impact
+**Needed by**: YYYY-MM-DD (deadline if any)
+
+### Q2 — <example: Is PartnershipX working-interest or passive this year?>
+**Context**: §469(c)(3) working-interest exception requires personal liability; limited-partner O&G is passive
+**Options**:
+  - (a) Working-interest, active — losses offset wages
+  - (b) Passive — losses suspended unless other passive income
+**Impact**: Schedule E K-1 row classification + Form 8582 treatment
+**Needed by**: before filing
+
+### Q3 — <example: 2023 Form 8582 passive-loss carryover value>
+**Context**: init couldn't extract from scanned prior return
+**Options**: user looks up or provides screenshot
+**Impact**: `<scope-root>/carryforwards.json` (i.e. `individual/carryforwards.json` or `entities/<slug>/carryforwards.json`) field `passive_loss_8582[].unallowed_loss_8582`
+**Needed by**: before estimating <YEAR> Schedule E
+
+## Resolved
+
+### R1 — <title> (resolved YYYY-MM-DD)
+**Resolution**: user chose (b); reason: …
+**Applied to**: `tax-summary.md` section …

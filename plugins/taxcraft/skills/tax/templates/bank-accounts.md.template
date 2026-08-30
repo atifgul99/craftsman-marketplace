@@ -1,0 +1,41 @@
+
+# Bank & Financial Accounts — Centralized Index
+
+**Last updated**: YYYY-MM-DD
+
+Cross-entity view of all accounts. Per-entity detail lives in `../entities/<slug>/accounts/`.
+
+## Bank Accounts
+
+| Entity | Bank | Account # (last 4) | Purpose | ACH routing | Wire routing | Authorized Signers |
+|---|---|---|---|---|---|---|
+
+## Brokerage Accounts
+
+| Entity | Broker | Account # (last 4) | Type (cash/margin) | Purpose | Authorized Traders |
+|---|---|---|---|---|---|
+
+## Retirement Accounts (owner-level, for reference)
+
+| Owner | Custodian | Type (IRA/Roth/401k/HSA/SDIRA) | Purpose |
+|---|---|---|---|
+
+## EFTPS Enrollment
+
+| Entity | EIN | Enrolled? | Enrollment Date | PIN location |
+|---|---|---|---|---|
+
+## State DOR / Business License Accounts
+
+| Entity | State | Account # | Purpose (B&O / sales / UI / withholding) |
+|---|---|---|---|
+
+## IRS Electronic Filing
+
+| Entity | EIN | IRIS TCC | FIRE TCC | Purpose |
+|---|---|---|---|---|
+
+## Notes
+
+- Never store passwords or full account numbers in this file. Last-4 only. Passwords in a password manager.
+- If an entity has a disregarded SMLLC with its own bank account, list under the SMLLC row with the regarded parent noted.

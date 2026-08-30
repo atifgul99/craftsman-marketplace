@@ -1,0 +1,188 @@
+# Tax Summary — <YEAR>
+
+**Status**: intake | in-progress | ready-for-review | filed | amended
+**Last updated**: YYYY-MM-DD
+**Filing plan**: TurboTax | other software | CPA (`<name>`)
+
+> Source-of-truth boundary: this file covers year-<YEAR> only. For standing facts see profile: `individual/profile.md` (individual scope) or `entities/<slug>/entity.md` (entity scope). For year-crossing attributes see carryforwards: `<scope-root>/carryforwards.json` (i.e. `individual/carryforwards.json` or `entities/<slug>/carryforwards.json`).
+
+## Taxpayer Snapshot (this year)
+
+- Filing status: **same as profile** *(or: changed to X because Y, effective YYYY-MM-DD)*
+- Dependents claimed: **same as profile** *(or: list differences)*
+- State residency: **same as profile** *(or: moved from X to Y on YYYY-MM-DD; part-year filings required)*
+
+## Income
+
+### W-2
+
+| Employer | Box 1 Wages | Box 2 Fed WH | State WH | Source Doc | Parsed? |
+|---|---|---|---|---|---|
+
+### 1099-INT / DIV
+
+| Payer | Interest | Ord Div | Qual Div | LTCG Dist | Foreign Tax | Source Doc |
+|---|---|---|---|---|---|---|
+
+### 1099-B (brokerage capital gains)
+
+| Broker | ST Covered Gain | LT Covered Gain | ST Noncovered | LT Noncovered | Wash Sale Adj | Notes |
+|---|---|---|---|---|---|---|
+
+### K-1s
+
+| Entity | Type | Box 1 | Box 2 | Box 5-6 | Box 8-9 | Box 10 | Box 20Z QBI | States | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+
+### Schedule E — Rentals
+
+| Property | Rents | Expenses | Depreciation | Net Inc/Loss | Passive Suspended Used | Passive Generated |
+|---|---|---|---|---|---|---|
+
+### Schedule C — Self-Employment
+
+| Activity | Gross | Expenses | Net | SE Tax | QBI-eligible? |
+|---|---|---|---|---|---|
+
+### Equity Comp Events
+
+| Employer | Event | Date | Shares | Ord Inc in W-2 | Basis Adj Needed | AMT Preference |
+|---|---|---|---|---|---|---|
+
+### Other Income
+
+(royalties, gambling, 1099-MISC, 1099-NEC — list)
+
+## Deductions
+
+### Itemize vs. Standard
+
+- Standard deduction (this year, filing status): $
+- Itemized total: $
+- **Decision**: itemize | standard
+
+### Itemized Detail
+
+- Mortgage interest (1098s): $ *(check acquisition-debt cap; grandfathered pre-2018?)*
+- SALT: $ (capped at rules-file limit)
+- Charitable cash: $
+- Charitable non-cash: $ (appreciated stock / other)
+- Medical above 7.5% AGI: $
+- Other: $
+
+### Above-the-line
+
+- HSA contribution: $
+- Student loan interest: $
+- SE health insurance: $
+- SE retirement contribution (SEP / Solo-401k): $
+- Self-employment tax deduction: $
+
+## Credits
+
+| Credit | Amount | Notes |
+|---|---|---|
+| CTC / ODC | | per-child + dependent |
+| FTC | | Form 1116 |
+| AOTC / LLC | | education |
+| EV (§30D / §25E) | | |
+| Residential clean energy | | §25D |
+| R&D (if entity) | | |
+
+## Retirement Contributions
+
+| Vehicle | Amount | Taxpayer | Deadline |
+|---|---|---|---|
+| 401(k) pre-tax | | | 12/31 |
+| 401(k) Roth | | | 12/31 |
+| Mega-backdoor | | | plan-dependent |
+| Traditional IRA | | | Apr 15 next year |
+| Roth IRA (or backdoor) | | | Apr 15 next year |
+| HSA | | | Apr 15 next year |
+| SEP / Solo-401(k) | | | extended filing |
+
+## Carryforwards Consumed This Year
+
+*(working values; confirmed and rolled into `<scope-root>/carryforwards.json` — i.e. `individual/carryforwards.json` or `entities/<slug>/carryforwards.json` — only at filing)*
+
+| Attribute | Prior Balance | Consumed | Remaining |
+|---|---|---|---|
+| Capital loss ST | | | |
+| Capital loss LT | | | |
+| NOL | | | |
+| AMT credit (8801) | | | |
+| Passive loss (by activity) | | | |
+| Charitable (by vintage) | | | |
+| FTC | | | |
+| §163(j) business interest | | | |
+| §179 disallowed carryover | | | |
+| Investment interest (§4952, Form 4952) | | | |
+| QBI loss carryover (§199A) | | | |
+| Nondeductible IRA / Roth basis (Form 8606) | | | |
+| HSA excess contributions (Form 8889) | | | |
+| *(add a row per any other `carryforwards.json` key not listed above)* | | | |
+
+## Carryforwards Generated This Year
+
+| Attribute | Amount | Cause |
+|---|---|---|
+| Capital loss (net) | | |
+| Passive loss new suspension | | |
+| Charitable over AGI limit | | |
+| §163(j) business interest disallowed | | |
+| §179 disallowed (income/basis limit) | | |
+| Investment interest disallowed (§4952) | | |
+| QBI loss carryover (§199A) | | |
+| Nondeductible IRA / Roth basis added (Form 8606) | | |
+| HSA excess contribution (Form 8889) | | |
+| *(add a row per any other `carryforwards.json` key not listed above)* | | |
+
+## Estimated Payments
+
+| Installment | Due date | Payment ID | Status | Evidenced amount | Application exception |
+|---|---|---|---|---:|---|
+| 1 | | | `NO_PAYMENT_EVIDENCE | USER_REPORTED_PAYMENT | PAYMENT_EVIDENCED | PAYMENT_RECONCILED` | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+
+Do not treat a recommendation, scheduled debit, rejected payment, or wrong-year
+application as paid. Method eligibility and calculation live only in the latest
+non-superseded control workpaper below.
+
+## Tax Liability Estimate (latest)
+
+- Run ID: `<EST-...>`
+- Status: `ESTIMATE_HOLD | PROVISIONAL | DRAFT_VERIFIED_INPUTS | READY_FOR_PRACTITIONER_REVIEW`
+- As of: `YYYY-MM-DD`
+- Canonical JSON: `<scope>/FY<YYYY>/.computed/<run-id>-estimate.json`
+- Control workpaper: `<scope>/FY<YYYY>/.computed/<run-id>-control.md`
+- AGI: `<$ | unknown>`
+- Taxable income: `<$ | unknown>`
+- Schedule 1-A deduction: `<$ | not applicable | unknown>`
+- Total federal tax: `<$ | unknown>`
+- Separately stated state tax: `<$ | held | not applicable>`
+- Evidenced payments/refundable credits: `<$ | unknown>`
+- **Balance due / refund**: `<$ | unknown>`
+
+All component math, authority IDs, input states, method eligibility, and blockers
+live in the canonical artifacts; do not duplicate them here.
+
+## Open Issues & Audit-Risk Flags
+
+- (link to `open-questions.md` for decisions)
+- (flag audit-sensitive positions here with authority cited)
+
+## Filing Plan
+
+- Software / preparer:
+- Extension filed? (Form 4868 by Apr 15)
+- E-file or paper?
+- Final review checklist:
+  - [ ] All K-1s received and entered
+  - [ ] All 1099s reconciled to Schedule B / D
+  - [ ] Basis adjustments on ESPP/RSU applied
+  - [ ] State returns for each nonresident K-1 state
+  - [ ] Entity returns filed before personal
+  - [ ] Estimated payments applied to right year
+  - [ ] Carryforwards check: consumed + generated math consistent

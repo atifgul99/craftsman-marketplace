@@ -1,0 +1,41 @@
+
+                           INTERNAL REVENUE SERVICE
+                       THIS PRODUCT CONTAINS SENSITIVE TAXPAYER DATA
+
+                              Account Transcript
+
+TAXPAYER IDENTIFICATION NUMBER: XXX-XX-5678
+FORM NUMBER:                    1040
+TAX PERIOD:                     Dec. 31, 2020
+NAME(S) SHOWN ON RETURN:        SAMPLE ENTITY LLC
+FILING STATUS:                  Married Filing Jointly
+FILING STATUS (CURRENT):        Married Filing Jointly
+
+ACCOUNT BALANCE:                   18,922.00
+ACCRUED INTEREST:                   2,341.87
+ACCRUED PENALTY:                      948.33
+
+ACCOUNT BALANCE PLUS ACCRUALS:    22,212.20
+
+ADJUSTED GROSS INCOME:            412,000.00
+TAXABLE INCOME:                   379,000.00
+TAX PER RETURN:                    89,500.00
+
+                        TRANSACTIONS
+
+CODE EXPLANATION OF TRANSACTION              CYCLE    DATE                    AMOUNT
+
+806  W-2 or 1099 withholding                20210305  04-15-2021          -$85,000.00
+150  Tax return filed                        20210405  04-15-2021           $89,500.00
+460  Extension of time to file ext           20210115  04-15-2021               $0.00
+196  Interest assessed                       20210505  05-17-2021            $1,200.00
+276  Penalty for late payment                20210505  05-17-2021              $448.00
+420  Examination of tax return               20220605  06-13-2022               $0.00
+570  Additional liability pending            20220705  07-18-2022               $0.00
+971  Notice issued                           20220705  07-18-2022               $0.00
+300  Additional tax assessed by exam         20230105  01-23-2023           $14,500.00
+196  Interest assessed                       20230205  02-27-2023            $3,422.00
+280  Accuracy-related penalty                20230205  02-27-2023            $2,900.00
+421  Examination of return completed         20230205  02-27-2023               $0.00
+670  Subsequent payment                      20230310  03-20-2023           -$2,648.00
+

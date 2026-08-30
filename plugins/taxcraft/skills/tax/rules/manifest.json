@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "contract": "authority.md",
+  "checked_at": "2026-08-29",
+  "files": [
+    {
+      "path": "federal-2023.json",
+      "tax_year": 2023,
+      "status": "REVIEW_REQUIRED",
+      "point_of_use_verification_required": true,
+      "shape_notes": [
+        "Built from primary sources 2026-08-29; per-key section citations in _field_sources.",
+        "ss_wage_base is null and unresolved: the SSA table returned HTTP 403 and the figure was not carried from memory.",
+        "mortgage_acquisition_debt_cap uses the 2026 debt-date selector idiom, not the legacy 2024 pre/post scalars.",
+        "SECURE 2.0 60-63 catch-up and Roth catch-up do NOT apply to TY2023; OBBBA applies to none of it."
+      ]
+    },
+    {
+      "path": "federal-2024.json",
+      "tax_year": 2024,
+      "status": "REVIEW_REQUIRED",
+      "point_of_use_verification_required": true,
+      "shape_notes": [
+        "Legacy bonus_depreciation_pct scalar; do not consume as the post-2024 bonus_depreciation object.",
+        "CORRECTED 2026-08-29: section_179_cap/phaseout previously held the 2023 figures; now $1,220,000/$3,050,000 per Rev. Proc. 2023-34 §3.25. suv_cap and excess_business_loss_threshold added.",
+        "Legacy pre/post mortgage scalars replaced by the debt-date selector; safe-harbor threshold split into non_mfs/mfs.",
+        "student_loan_interest, adoption_credit, kiddie, FEIE, FSA and fringe keys added 2026-08-29 from Rev. Proc. 2023-34."
+      ]
+    },
+    {
+      "path": "federal-2025.json",
+      "tax_year": 2025,
+      "status": "REVIEW_REQUIRED",
+      "point_of_use_verification_required": true,
+      "shape_notes": [
+        "OBBBA changes require target-form and effective-date verification.",
+        "obbba_deductions ADDED 2026-08-29 - they were missing although the tips/overtime/senior/car-loan deductions apply for TY2025-2028 and TY2025 returns are live.",
+        "section_179_cap/phaseout reflect OBBBA (PL 119-21), which OVERRIDES Rev. Proc. 2024-40's $1,250,000/$3,130,000.",
+        "Legacy mortgage scalars replaced by the debt-date selector; safe-harbor threshold split."
+      ]
+    },
+    {
+      "path": "federal-2026.json",
+      "tax_year": 2026,
+      "status": "SOURCE_MAPPED",
+      "point_of_use_verification_required": true,
+      "shape_notes": [
+        "Mileage is interval-selected; legacy annual mileage scalars are intentionally null.",
+        "Bonus depreciation is acquisition-date selected, not a single annual percentage.",
+        "safe_harbor_high_agi_threshold is split into safe_harbor_high_agi_threshold_non_mfs and safe_harbor_high_agi_threshold_mfs; never reuse the 2024/2025 scalar for MFS.",
+        "Mortgage acquisition-debt caps use an explicit 2017-12-15 debt-date selector and transition exception; do not select the cap by calendar year.",
+        "excess_business_loss_threshold is lower than TY2025 because OBBBA re-based it — that is expected, not a defect.",
+        "adoption_credit_max renamed to the adoption_credit object so the shape matches 2023-2025; kiddie and student_loan_interest added."
+      ]
+    }
+  ],
+  "register": "changes-2023-2026.md"
+}

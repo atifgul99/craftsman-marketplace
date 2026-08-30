@@ -1,0 +1,56 @@
+# Estimated Tax Presentation — <RUN_ID>
+
+**Scope**: `<individual | entities/<slug>>`  
+**Tax year / fiscal period**: `<YYYY / start through end>`  
+**Installment**: `<1 | 2 | 3 | 4>`  
+**As of**: `<YYYY-MM-DD>`  
+**Estimate status**: `<PROVISIONAL | DRAFT_VERIFIED_INPUTS | READY_FOR_PRACTITIONER_REVIEW | ESTIMATE_HOLD>`  
+**Control workpaper**: `<path>`  
+**Canonical JSON**: `<path>`
+
+> Analysis only. This artifact does not authorize or evidence a payment.
+
+## Method results
+
+| Method | Eligibility / status | Annual-payment base | Required installment before credits | Credits and prior payments | Amount due |
+|---|---|---:|---:|---:|---:|
+| Prior-year | `<status>` | $ | $ | ($) | $ |
+| Current-year | `<status>` | $ | $ | ($) | $ |
+| Annualized income | `<status>` | n/a | $ | ($) | $ |
+| Adjusted seasonal, corporate only | `<status>` | n/a | $ | ($) | $ |
+
+Do not place `0` in an unavailable method. Use `INELIGIBLE`,
+`BLOCKED_MISSING_INPUT`, or `BLOCKED_RULE_UNVERIFIED`.
+
+## Recommendation
+
+- **Method**: `<method | none>`
+- **Amount**: `<$ | unknown>`
+- **Due date**: `<YYYY-MM-DD | unknown>`
+- **Reason**: `<eligibility, form-line logic, and why no provisional lower method displaced a verified method>`
+- **Practitioner review**: required before relying on the amount for payment
+
+For individuals, current-year is generally 90% and Schedule AI changes required
+installments rather than creating a third safe harbor. For corporations,
+current-year uses 100%; annualized/seasonal computations follow Form 2220
+Schedule A. Use only the target-period authorities recorded in the control
+workpaper.
+
+## Authority and input limitations
+
+- Authority status: `<status>`
+- Used rule paths / IDs: `<pointer to control workpaper>`
+- Material projections: `<none | list>`
+- Reconciliation status: `<status>`
+- Missing or contradicted evidence: `<none | list>`
+
+## State or withholding components
+
+| Component | Independent authority status | Method status | Amount | Due date |
+|---|---|---|---:|---|
+| | | | | |
+
+## Open items
+
+- [ ] `<specific authority, document, reconciliation, or practitioner decision>`
+

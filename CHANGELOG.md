@@ -27,6 +27,20 @@ Metadata only — no version bump. Fold into whatever ships next.
 
 ### Added
 
+- **`taxcraft` (v0.1.0), a second plugin in this marketplace** — US tax and accounting workpapers,
+  unrelated to auditing code. One skill (`tax`) covering 1040 / 1065 / 1120-S / 1120, disregarded
+  SMLLCs, quarterly closes and estimates, carryforward and basis tracking, and corporate governance
+  records. It does not file returns and it is not tax advice. Named `taxcraft` after checking
+  collisions: `tax-pro` clashes with the IRS's own "Tax Pro Account" service and the industry's
+  generic `-Pro` suffix; `craft-tax` reads as a Craft CMS plugin and would imply an eleventh
+  craftsman audit domain; `taxbench` is taken twice. The marketplace description was widened to
+  cover both plugins, and `README.md` gained an "Also in this marketplace" section.
+  Three changes were needed to make the skill work as a distributed plugin rather than a
+  workspace-local one: the eval harness derived the user's tax workspace from the skill's own
+  install path (`ROOT.parents[2]`), which is wrong once the skill lives under `~/.claude/plugins/`
+  — it now uses the working directory, overridable with `TAX_WORKSPACE`; a dozen docs and
+  templates that pointed readers at `.claude/skills/tax/…` now use skill-relative wording; and one
+  real client entity name left in a code comment was scrubbed.
 - **`PRIVACY.md`** — the data-handling facts that were only in `SECURITY.md`, restated as a
   standalone policy so the plugin-directory submission has a real Privacy policy URL to point at.
   Adds one thing `SECURITY.md` left implicit: Craftsman transmits nothing, but the agent it runs

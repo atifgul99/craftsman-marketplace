@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "run_id": "<RUN_ID>",
+  "mode": "ESTIMATE",
+  "scope": "<individual-or-entity-path>",
+  "tax_year": "<YYYY>",
+  "tax_period": {"type": "CALENDAR", "convention": "CALENDAR", "start": "<YYYY-01-01>", "end": "<YYYY-12-31>", "week_ending_method": "NOT_APPLICABLE", "elected_ending_month": null, "elected_ending_weekday": null, "basis_status": "UNVERIFIED", "books_basis_status": "NOT_APPLICABLE", "evidence_refs": {"type": "<INPUT_ID>#tax_period_type", "convention": "<INPUT_ID>#tax_period_convention", "start": "<INPUT_ID>#tax_period_start", "end": "<INPUT_ID>#tax_period_end", "week_ending_method": "<INPUT_ID>#tax_period_week_ending_method", "elected_ending_month": "<INPUT_ID>#tax_period_elected_ending_month", "elected_ending_weekday": "<INPUT_ID>#tax_period_elected_ending_weekday", "basis_status": "<INPUT_ID>#tax_period_basis_status", "books_basis_status": "<INPUT_ID>#tax_period_books_basis_status"}},
+  "period": {"start": "<YYYY-MM-DD>", "end": "<YYYY-MM-DD>", "installment": null},
+  "as_of": "<YYYY-MM-DDTHH:MM:SSZ>",
+  "status": "ESTIMATE_HOLD",
+  "supersedes_run_id": null,
+  "superseded_by_run_id": null,
+  "status_axes": {
+    "authority": "AUTHORITY_HOLD",
+    "evidence": "INPUTS_INCOMPLETE",
+    "close": "NOT_RUN",
+    "estimate": "ESTIMATE_HOLD",
+    "payment": "NO_PAYMENT_EVIDENCE"
+  },
+  "aggregate_component_result": "ALL_COMPONENTS_HELD",
+  "components": {
+    "federal": {
+      "authority_status": "AUTHORITY_HOLD",
+      "evidence_status": "INPUTS_INCOMPLETE",
+      "estimate_status": "ESTIMATE_HOLD",
+      "method_status": "BLOCKED_RULE_UNVERIFIED",
+      "amount": null,
+      "blockers": ["<authority-or-input-blocker>"]
+    },
+    "state": []
+  },
+  "authority_dependencies": [
+    {
+      "dependency_id": "<stable-dependency-id>",
+      "component": "<federal-or-jurisdiction>",
+      "rule_origin": "RUN_SPECIFIC",
+      "rule_path": "<exact-json-path-or-rule>",
+      "jurisdiction": "<jurisdiction>",
+      "rule_date": "<YYYY-MM-DD>",
+      "effective_start": null,
+      "effective_end": null,
+      "authority_ids": ["<authority-id>"],
+      "source_url": "https://<official-source>",
+      "value_used": null,
+      "status": "UNVERIFIED",
+      "checked_at": "<YYYY-MM-DD>"
+    }
+  ],
+  "inputs": [
+    {
+      "input_id": "<stable-id>",
+      "logical_document_id": "<logical-document-id>",
+      "document_version": 1,
+      "active_status": "ACTIVE",
+      "supersedes_input_id": null,
+      "source_path": "<path>",
+      "source_sha256": "<sha256>",
+      "source_state": "USER_PROVIDED",
+      "document_metadata": {
+        "subject_id": "<individual-or-entity-path>",
+        "document_type": "OTHER_VERIFIED_SOURCE",
+        "tax_year": null,
+        "period_start": null,
+        "period_end": null,
+        "document_status": "DRAFT",
+        "evidence_refs": {
+          "subject_id": "<input-id>#document_subject_id",
+          "document_type": "<input-id>#document_type",
+          "tax_year": "<input-id>#document_tax_year",
+          "period_start": "<input-id>#document_period_start",
+          "period_end": "<input-id>#document_period_end",
+          "document_status": "<input-id>#document_status"
+        }
+      },
+      "parser_name": "<parser-or-manual>",
+      "parser_version": "<version>",
+      "parser_contract_status": "MANUAL_SOURCE",
+      "validation_report": null,
+      "fields_consumed": [
+        {
+          "field_id": "<form-line-or-box>",
+          "parser_value": null,
+          "state": "UNREADABLE",
+          "source_anchor": {"page": null, "line_or_box": "<line-or-box>"},
+          "reviewer": "<reviewer-required>",
+          "reviewed_at": "<timestamp-required>",
+          "validation_status": "BLOCKED"
+        }
+      ]
+    }
+  ],
+  "lines": {
+    "gross_income": {"value": null, "state": "NOT_PRESENT", "source_refs": [], "formula": null},
+    "schedule_1_adjustments": {"value": null, "state": "NOT_PRESENT", "source_refs": [], "formula": null},
+    "agi": {"value": null, "state": "UNREADABLE", "source_refs": [], "formula": "gross_income - schedule_1_adjustments"},
+    "form_1040_line_12": {"value": null, "state": "NOT_PRESENT", "source_refs": [], "formula": null},
+    "qbi_line_13a": {"value": null, "state": "NOT_APPLICABLE", "source_refs": [], "formula": null},
+    "schedule_1a_line_13b": {"value": null, "state": "NOT_APPLICABLE", "source_refs": [], "formula": null},
+    "form_1040_line_14_total_deductions": {"value": null, "state": "UNREADABLE", "source_refs": [], "formula": "form_1040_line_12 + qbi_line_13a + schedule_1a_line_13b"},
+    "taxable_income": {"value": null, "state": "UNREADABLE", "source_refs": [], "formula": "max(0, agi - form_1040_line_14_total_deductions)"},
+    "ordinary_tax_component": {"value": null, "state": "NOT_PRESENT", "source_refs": [], "formula": null},
+    "preferential_tax_component": {"value": null, "state": "NOT_APPLICABLE", "source_refs": [], "formula": null},
+    "regular_income_tax": {"value": null, "state": "UNREADABLE", "source_refs": [], "formula": "ordinary_tax_component + preferential_tax_component"},
+    "amt": {"value": null, "state": "NOT_APPLICABLE", "source_refs": [], "formula": null},
+    "other_taxes": {"value": null, "state": "NOT_APPLICABLE", "source_refs": [], "formula": null},
+    "nonrefundable_credits": {"value": null, "state": "NOT_APPLICABLE", "source_refs": [], "formula": null},
+    "total_tax": {"value": null, "state": "UNREADABLE", "source_refs": [], "formula": "regular_income_tax + amt + other_taxes - nonrefundable_credits"},
+    "payments_and_refundable_credits": {"value": null, "state": "NOT_PRESENT", "source_refs": [], "formula": null},
+    "balance_due_or_refund": {"value": null, "state": "UNREADABLE", "source_refs": [], "formula": "total_tax - payments_and_refundable_credits"}
+  },
+  "methods": [],
+  "recommendation": {"component": null, "method": null, "amount": null, "due_date": null, "status": "BLOCKED"},
+  "withholding_records": [],
+  "payment_records": [],
+  "reconciliation_refs": [],
+  "warnings": [],
+  "blockers": [],
+  "open_questions": [],
+  "payment_execution_authorized": false
+}

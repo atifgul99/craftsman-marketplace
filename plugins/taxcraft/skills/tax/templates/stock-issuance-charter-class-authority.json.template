@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "subject_entity_slug": "replace-me",
+  "class": "Common",
+  "authorized_shares": 1,
+  "source_document_kind": "ARTICLES_OR_AMENDMENT",
+  "source_document_path": "entities/replace-me/corporate/formation/articles.pdf",
+  "source_document_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "extraction_locator": "Article replace / page replace",
+  "observed_at": "2000-01-01T00:00:00Z",
+  "verification_status": "VERIFIED",
+  "verified_by_role": "AUTHORIZED_CORPORATE_RECORDS_OFFICER"
+}

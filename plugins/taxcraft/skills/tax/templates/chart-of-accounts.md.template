@@ -1,0 +1,162 @@
+
+# Chart of Accounts — <ENTITY NAME>
+
+**Last updated**: YYYY-MM-DD
+
+Tax-basis chart of accounts. Lines map to Form 1120 / 1065 / 1120-S P&L and Schedule L fields.
+
+## Account Numbering (optional convention)
+
+- 1xxx — Assets
+- 2xxx — Liabilities
+- 3xxx — Equity
+- 4xxx — Revenue
+- 5xxx — COGS
+- 6xxx — Operating expenses
+- 7xxx — Other income
+- 8xxx — Other expenses / taxes
+- 9xxx — Non-cash / special
+
+## Assets (Schedule L — Assets)
+
+| # | Account | Type | Notes |
+|---|---|---|---|
+| 1010 | Cash — Operating (Bank `<last 4>`) | current asset | |
+| 1020 | Cash — Reserve (Bank `<last 4>`) | current asset | |
+| 1100 | Accounts receivable | current asset | if accrual |
+| 1150 | Prepaid expenses | current asset | |
+| 1200 | Inventory | current asset | if applicable |
+| 1500 | Property & equipment (gross) | fixed asset | detail in `fixed-assets.md` |
+| 1590 | Accumulated depreciation | contra-asset | |
+| 1700 | Intangibles — amortizable | intangible | §197 / §174 / patents |
+| 1790 | Accumulated amortization | contra-asset | |
+| 1300 | Due from affiliates — `<entity>` | current asset | intercompany loans/advances; mirrors affiliate's 2300; recs per `reconciliation.md` § 3 |
+| 1800 | Investments — securities | long-term asset | per brokerage |
+| 1850 | Investments — partnership interests | long-term asset | K-1 positions |
+| 1860 | Investment in disregarded SMLLC — `<smllc>` | long-term asset | must equal SMLLC's member equity at every close; eliminated at consolidation — see `entities/disregarded.md` |
+| 1900 | Security deposits | long-term asset | |
+
+## Liabilities (Schedule L — Liabilities)
+
+| # | Account | Type | Notes |
+|---|---|---|---|
+| 2010 | Accounts payable | current liability | |
+| 2050 | Credit card balance — `<card>` | current liability | |
+| 2100 | Accrued expenses | current liability | |
+| 2150 | Accrued payroll | current liability | |
+| 2200 | Deferred revenue | current liability | |
+| 2250 | Income tax payable | current liability | federal + state |
+| 2300 | Due to affiliates — `<entity>` | current liability | mirrors affiliate's 1300 |
+| 2500 | Short-term loans | current liability | |
+| 2800 | Long-term debt | LT liability | |
+| 2850 | Deferred tax liability | LT liability | |
+
+## Equity (Schedule L — Equity, form varies)
+
+### C-corp
+| # | Account | Notes |
+|---|---|---|
+| 3010 | Common stock (par) | |
+| 3050 | Additional paid-in capital | |
+| 3100 | Retained earnings — unappropriated | |
+| 3150 | Retained earnings — appropriated (for accumulated-earnings defense) | document purpose per `governance.md` |
+| 3200 | Treasury stock | contra-equity |
+
+### S-corp (replace 3100 with AAA, OAA, E&P-era if applicable)
+| # | Account | Notes |
+|---|---|---|
+| 3100 | AAA (Accumulated Adjustments Account) | |
+| 3110 | OAA (Other Adjustments) | |
+| 3120 | Previously taxed income (PTI) | rare |
+| 3130 | Earnings & Profits (pre-S, if converted from C) | |
+
+### Partnership (capital accounts by partner)
+| # | Account | Notes |
+|---|---|---|
+| 3100 | Partner A — capital | tax-basis method |
+| 3110 | Partner B — capital | tax-basis method |
+
+### LLC — single-member or taxed as C-corp (no par stock unless units certificated)
+| # | Account | Notes |
+|---|---|---|
+| 3060 | Member capital — `<member>` | every credit names its documented contribution/issuance (date + resolution) — see `scenarios/section-1244.md` on why bare equity credits leak |
+| 3070 | Member distributions | contra-equity; closes to 3060 (or RE) at year-end |
+| 3100 | Retained earnings | if taxed as C-corp |
+
+An LLC taxed as a C-corp uses member capital/units, **not** common stock + APIC, unless it has actually certificated units — don't import corporate equity accounts the entity's own paper doesn't support. A disregarded SMLLC's full member equity here mirrors the parent's `1860 Investment` account (`entities/disregarded.md` § two-tier equity model).
+
+## Revenue
+
+| # | Account | Maps to Form | Notes |
+|---|---|---|---|
+| 4010 | Service revenue | 1120 Line 1a | |
+| 4020 | Product sales | 1120 Line 1a | |
+| 4100 | Management fee income | 1120 Line 10 (other) or Line 1a | |
+| 4200 | Interest income | 1120 Line 5 | |
+| 4210 | Dividend income | 1120 Line 4 | |
+| 4300 | Rental income | 1120 Line 6 | |
+| 4400 | Royalty income | 1120 Line 7 | |
+| 4500 | Capital gains — ST | 1120 Sch D | from brokerage |
+| 4510 | Capital gains — LT | 1120 Sch D | |
+| 4600 | §1256 60/40 income | Form 6781 | |
+| 4700 | Other income | 1120 Line 10 | |
+
+## COGS (if applicable)
+
+| # | Account | Notes |
+|---|---|---|
+| 5010 | Materials | |
+| 5050 | Direct labor | |
+| 5100 | Freight-in | |
+| 5200 | Subcontractor costs | |
+
+## Operating Expenses
+
+| # | Account | Maps to Form | Notes |
+|---|---|---|---|
+| 6010 | Officer compensation | 1120 Line 12 / 1125-E | |
+| 6020 | Wages & salaries | 1120 Line 13 | |
+| 6030 | Payroll taxes | 1120 Line 17 | |
+| 6040 | Employee benefits | 1120 Line 24 | health insurance, etc. |
+| 6050 | Retirement plan contributions | 1120 Line 23 | |
+| 6100 | Rent — office | 1120 Line 16 | |
+| 6110 | Rent — §280A Augusta | 1120 Line 16 | per board resolution |
+| 6200 | Utilities | 1120 Line 26 | |
+| 6300 | Contractor fees (1099-NEC paid) | 1120 Line 26 | |
+| 6310 | Professional fees — legal | 1120 Line 26 | |
+| 6320 | Professional fees — accounting/tax | 1120 Line 26 | |
+| 6400 | Insurance | 1120 Line 26 | |
+| 6500 | Advertising & marketing | 1120 Line 22 | |
+| 6600 | Travel | 1120 Line 26 | |
+| 6610 | Meals (50% deductible) | 1120 Line 26 | M-1 addback for 50% |
+| 6620 | Entertainment (0%) | — | M-1 full addback |
+| 6700 | Office supplies | 1120 Line 26 | |
+| 6710 | Software & subscriptions | 1120 Line 26 | |
+| 6720 | Computer & equipment (< cap threshold) | 1120 Line 26 | |
+| 6800 | Repairs & maintenance | 1120 Line 14 | |
+| 6900 | Depreciation expense | 1120 Line 20 / Form 4562 | |
+| 6910 | Amortization expense | 1120 Line 26 | |
+| 7000 | Interest expense | 1120 Line 18 | §163(j) tracking |
+| 7100 | Taxes — state income/B&O/franchise | 1120 Line 17 | |
+| 7110 | Taxes — property | 1120 Line 17 | |
+| 7200 | Charitable contributions | 1120 Line 19 | 10% limit |
+| 7300 | Employee reimbursement clearing (optional) | Balance-sheet clearing account | must reconcile to $0; post final amounts to the underlying expense or asset account and taxable failures to payroll/receivable as applicable |
+| 7400 | Bad debts | 1120 Line 15 | |
+| 7500 | Bank fees | 1120 Line 26 | |
+| 7600 | R&E — domestic (§174A expensed) | 1120 Line 26 | expensed for TYs beginning after 12/31/2024 (OBBBA); foreign R&E stays 15-yr §174 — see `entities/c-corp.md` |
+
+## Nondeductible / M-1 Items (tracked for book but not tax)
+
+| # | Account | Reason |
+|---|---|---|
+| 8010 | Federal income tax expense | nondeductible |
+| 8020 | Fines & penalties | nondeductible §162(f) |
+| 8030 | Political contributions | nondeductible §162(e) |
+| 8040 | Life insurance (key-person, corp beneficiary) | nondeductible |
+| 8050 | 50% meals disallowance | M-1 addback |
+| 8060 | Entertainment 100% | M-1 addback |
+| 8070 | §267 accrued comp to related party | M-1 deferral |
+
+## Nested Disregarded SMLLC Mapping
+
+If this entity has a disregarded SMLLC, map the SMLLC's COA to these same lines. E.g., SMLLC's "Postage" → consolidated 6700 (office supplies). Keep a mapping table at `disregarded/<smllc-slug>/books/coa-mapping.md` so consolidation is mechanical.

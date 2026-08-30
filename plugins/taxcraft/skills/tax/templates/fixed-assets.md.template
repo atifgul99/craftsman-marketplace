@@ -1,0 +1,44 @@
+
+# Fixed Assets Register — <ENTITY NAME>
+
+**Last updated**: YYYY-MM-DD
+
+Rolling depreciation schedule. One row per asset. Year-spanning.
+
+## Assets
+
+| ID | Description | Acquired | Binding contract | Bonus regime | Bonus % applied | Placed in service | Cost | Salvage | Method | Life | §179? | Bonus? | FY<prior> Accum Depr | FY<current> Depr | FY<current> End Accum | Net book value |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A001 | `<asset>` | YYYY-MM-DD | YYYY-MM-DD | $ | $ | MACRS-DB / SL | 5 / 7 / 15 / 27.5 / 39 | yes/no $ | yes/no $ | $ | $ | $ | $ |
+
+## Depreciation Convention Summary (per rules file)
+
+- **§179 limit** (current year): $ (check `rules/federal-<year>.json`)
+- **§179 phaseout start**: $
+- **Bonus depreciation** — do NOT record a single annual percentage. The rate is
+**acquisition-date selected**: two regimes coexist in 2025, with property acquired
+before the OBBBA cutoff staying on the legacy phase-down (selected by its
+placed-in-service year) and property acquired after it at 100%. Record, per asset:
+acquisition date, binding-contract date, placed-in-service date, the regime
+selected, and the rate applied — then verify the rate via `authority.md`
+(`rules/manifest.json` warns explicitly that bonus is not a single annual scalar).
+- **Conventions**: MACRS half-year default, mid-quarter if > 40% of property placed in Q4, mid-month for real estate
+
+## Disposals
+
+| ID | Disposal date | Proceeds | Basis | Gain/loss | §1245/1250 recapture | Notes |
+|---|---|---|---|---|---|---|
+
+## Rollforward Summary — FY<current>
+
+| Category | Beginning cost | Additions | Disposals | Ending cost | Beginning accum depr | Current year depr | Disposal depr | Ending accum depr | Net book value |
+|---|---|---|---|---|---|---|---|---|---|
+| 5-year property | | | | | | | | | |
+| 7-year property | | | | | | | | | |
+| 15-year property | | | | | | | | | |
+| 27.5-year residential rental | | | | | | | | | |
+| 39-year nonresidential | | | | | | | | | |
+| Intangibles §197 (15-yr) | | | | | | | | | |
+| R&E capitalized — foreign §174 (15-yr) / legacy 2022–2024 domestic (5-yr, unless catch-up elected) | | | | | | | | | |
+
+Feeds Form 4562, Schedule L, and Schedule M-1.

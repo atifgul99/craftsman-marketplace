@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/tax/corporate-records-audit.schema.json",
+  "title": "Corporate records audit control",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "subject", "scope", "authorization_mode", "intake_status", "overall_status", "formation_chronology", "authority_dependencies", "conflicts", "requirements"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["legal_name", "entity_slug", "legal_form", "formation_jurisdiction", "tax_periods"],
+      "properties": {
+        "legal_name": {"type": "string", "minLength": 1},
+        "entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "legal_form": {"type": "string", "minLength": 1},
+        "formation_jurisdiction": {"type": "string", "minLength": 1},
+        "tax_periods": {"type": "array", "items": {"type": "string", "pattern": "^(FY[0-9]{4}|REPLACE)$"}, "minItems": 1, "maxItems": 1, "uniqueItems": true}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["as_of", "source_cutoff", "jurisdictions", "years", "paths_searched", "exclusions"],
+      "properties": {
+        "as_of": {"type": "string", "format": "date"},
+        "source_cutoff": {"type": "string", "format": "date-time"},
+        "jurisdictions": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "years": {"type": "array", "items": {"type": "string", "pattern": "^([0-9]{4}|REPLACE)$"}, "minItems": 1, "maxItems": 1, "uniqueItems": true},
+        "paths_searched": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "requirement_ids", "reason"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^EXC-[0-9]{3}$"},
+              "requirement_ids": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z]+-[0-9]{2}$"}, "minItems": 1, "uniqueItems": true},
+              "reason": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "authorization_mode": {"enum": ["GENERIC_CHECKLIST", "READ_ONLY_AUDIT", "DRAFT_PACKET", "INTAKE_RECONCILIATION", "POST_EXECUTION_RECONCILIATION", "REMEDIATION"]},
+    "intake_status": {"enum": ["PENDING", "RECONCILED"]},
+    "overall_status": {"enum": ["EVIDENCE_INTAKE_PENDING", "AUTHORITY_HOLD", "FACT_CONFLICT", "COUNSEL_HOLD", "REQUIRED_RECORD_MISSING", "EXECUTION_PENDING", "OPERATION_RECONCILIATION_PENDING", "FILING_PENDING", "CURRENT_WITH_DISCLOSED_NONMATERIAL_GAPS", "RECORD_SET_RECONCILED_AS_OF"]},
+    "formation_chronology": {"$ref": "#/$defs/formationChronology"},
+    "authority_dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/authorityDependency"}
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/conflict"}
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 24,
+      "maxItems": 24,
+      "items": {"$ref": "#/$defs/requirement"},
+      "allOf": [
+        {"contains": {"properties": {"id": {"const": "F-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "F-02"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "F-03"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "F-04"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "F-05"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "O-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "O-02"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "O-03"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "O-04"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "R-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "A-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "A-02"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "T-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "T-02"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "T-03"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "P-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "P-02"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "P-03"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "L-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "L-02"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "L-03"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "S-01"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "S-02"}}, "required": ["id"]}},
+        {"contains": {"properties": {"id": {"const": "S-03"}}, "required": ["id"]}}
+      ]
+    }
+  },
+  "$defs": {
+    "nullableDate": {"type": ["string", "null"], "format": "date"},
+    "authorityDependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_id", "issue", "jurisdiction", "domain", "control_ids", "rules_path", "primary_source", "verified_on", "verified_at", "effective_from", "effective_to", "effective_for_scope"],
+      "properties": {
+        "authority_id": {"type": "string", "pattern": "^(AUTH-[A-Z0-9-]+|run-[a-z0-9-]+)$"},
+        "issue": {"type": "string", "minLength": 1},
+        "jurisdiction": {"type": "string", "minLength": 1},
+        "domain": {"enum": ["CORPORATE_LAW", "FEDERAL_TAX", "FEDERAL_BOI", "SECURITIES", "STATE_TAX_LICENSE", "PAYROLL", "CONTRACT_IP"]},
+        "control_ids": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z]+-[0-9]{2}$"}, "minItems": 1, "uniqueItems": true},
+        "rules_path": {"type": "string", "minLength": 1},
+        "primary_source": {"type": "string", "format": "uri"},
+        "verified_on": {"type": "string", "format": "date"},
+        "verified_at": {"type": "string", "format": "date-time"},
+        "effective_from": {"$ref": "#/$defs/nullableDate"},
+        "effective_to": {"$ref": "#/$defs/nullableDate"},
+        "effective_for_scope": {"type": "boolean"}
+      }
+    },
+    "formationChronology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formation_effective_date", "initial_directors_named_in_articles", "incorporator_action_date", "initial_director_action_date", "earliest_purported_corporate_action_date", "authority_order", "sequence_status", "evidence"],
+      "properties": {
+        "formation_effective_date": {"$ref": "#/$defs/nullableDate"},
+        "initial_directors_named_in_articles": {"type": ["boolean", "null"]},
+        "incorporator_action_date": {"$ref": "#/$defs/nullableDate"},
+        "initial_director_action_date": {"$ref": "#/$defs/nullableDate"},
+        "earliest_purported_corporate_action_date": {"$ref": "#/$defs/nullableDate"},
+        "authority_order": {"type": "array", "items": {"enum": ["FORMATION_EFFECTIVE", "INCORPORATOR_ACTION", "INITIAL_DIRECTOR_ACTION"]}, "uniqueItems": true},
+        "sequence_status": {"enum": ["UNVERIFIED", "VERIFIED_AFTER_INCORPORATION", "PREINCORPORATION_ACTION_PRESENT", "AUTHORITY_ORDER_DEFECT"]},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}}
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "requirement_ids", "description", "status", "resolution_evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CON-[0-9]{3}$"},
+        "requirement_ids": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z]+-[0-9]{2}$"}, "minItems": 1, "uniqueItems": true},
+        "description": {"type": "string", "minLength": 1},
+        "status": {"enum": ["OPEN", "RESOLVED"]},
+        "resolution_evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_path", "sha256", "agency_record_id", "document_kind", "locator", "evidence_subject_slug", "role", "proves", "observed_on", "observed_at"],
+      "properties": {
+        "source_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "agency_record_id": {"type": ["string", "null"], "minLength": 1},
+        "document_kind": {"enum": ["ARTICLES_OR_AMENDMENT", "AUTHORITY_CHAIN", "INCORPORATOR_ACTION", "BYLAWS", "ORGANIZATIONAL_ACTION", "EIN_NOTICE", "CAPITALIZATION_RECONCILIATION", "STOCK_CLOSING", "STOCK_LEDGER_OR_NOTICE", "STOCK_TAX_MEMO", "CORPORATE_RECORD_INDEX", "MINUTES_CONSENTS", "SHAREHOLDER_RECORDS", "ACCOUNTING_RECORDS", "ANNUAL_FINANCIAL_STATEMENTS", "SHAREHOLDER_COMMUNICATION", "SHAREHOLDER_ACTION", "BOARD_ACTION", "TAX_RETURN_OR_TRANSCRIPT", "BOOKS_RECONCILIATION", "PAYROLL_RECORD", "ACCOUNTABLE_PLAN_RECORD", "AUGUSTA_RECORD", "BENEFITS_EMPLOYMENT_RECORD", "STATE_STANDING", "LICENSE_REGISTRATION", "BOI_AUTHORITY_OR_FILING", "SUBSIDIARY_OWNERSHIP_AUTHORITY", "SUBSIDIARY_AUDIT", "IP_ASSIGNMENT", "OTHER"]},
+        "locator": {"type": "string", "minLength": 1},
+        "evidence_subject_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "role": {"enum": ["CURRENT", "HISTORICAL", "SUPERSEDED"]},
+        "proves": {"type": "string", "minLength": 1},
+        "observed_on": {"type": "string", "format": "date"}
+        ,"observed_at": {"type": "string", "format": "date-time"}
+      },
+      "oneOf": [
+        {"properties": {"sha256": {"type": "string"}, "agency_record_id": {"type": "null"}}},
+        {"properties": {"sha256": {"type": "null"}, "agency_record_id": {"type": "string"}}}
+      ]
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "requirement_class", "subject_entity_slug", "fiscal_or_tax_period", "record_or_control", "controller", "responsible_person", "applicability_status", "lifecycle_status", "verification_status", "operational_status", "filing_status", "tax_position_status", "specialist_result_reference", "approving_actor", "authority_basis_id", "authority_verified", "signature_evidence", "dates", "evidence", "conflict_ids", "deadline", "next_required_evidence", "escalation", "exclusion_id"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Z]+-[0-9]{2}$"},
+        "requirement_class": {"enum": ["FORMATION-STATE REQUIRED", "FEDERAL/REGULATORY REQUIRED", "GOVERNING-DOCUMENT REQUIRED", "EVENT-TRIGGERED", "TAX/ACCOUNTING REQUIRED", "RISK-CONTROL", "OPTIONAL STRATEGY"]},
+        "subject_entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "fiscal_or_tax_period": {"type": "string", "pattern": "^(PERMANENT|FY[0-9]{4}|REPLACE)$"},
+        "record_or_control": {"type": "string", "minLength": 1},
+        "controller": {"type": "string", "minLength": 1},
+        "responsible_person": {"type": "string", "minLength": 1},
+        "applicability_status": {"enum": ["REQUIRED", "CONDITIONAL_UNRESOLVED", "NOT_APPLICABLE_VERIFIED", "RECOMMENDED_ONLY", "OUT_OF_SCOPE"]},
+        "lifecycle_status": {"enum": ["NOT_FOUND", "DRAFT", "FINAL_UNSIGNED", "EXECUTED_AUTHORITY_UNVERIFIED", "EXECUTED_EFFECTIVE", "SUBMITTED", "ACCEPTED_OR_ISSUED", "SUPERSEDED", "EXPIRED", "UNREADABLE"]},
+        "verification_status": {"enum": ["VERIFIED", "UNVERIFIED", "CONFLICTED"]},
+        "operational_status": {"enum": ["NOT_APPLICABLE", "PROPOSED", "APPROVED_NOT_EXECUTED", "ACTIVE_NOT_YET_OPERATED", "OPERATED_NOT_RECONCILED", "RECONCILED", "PARTIAL_FAILURE", "COUNSEL_HOLD", "DEFECTIVE"]},
+        "filing_status": {"enum": ["NOT_APPLICABLE", "NOT_PREPARED", "DRAFT", "SIGNED_NOT_SUBMITTED", "SUBMITTED_UNCONFIRMED", "ACCEPTED", "TRANSCRIPT_VERIFIED", "REJECTED", "AMENDED_OR_SUPERSEDED"]},
+        "tax_position_status": {"enum": ["NOT_APPLICABLE", "NOT_TESTED", "VERIFIED", "PROVISIONAL", "INELIGIBLE", "MIXED", "COUNSEL_HOLD"]},
+        "specialist_result_reference": {"type": ["string", "null"]},
+        "specialist_result_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "specialist_result_subject_slug": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "specialist_result_period": {"type": ["string", "null"], "pattern": "^FY[0-9]{4}$"},
+        "specialist_result_status": {"type": ["string", "null"], "enum": [null, "VERIFIED", "PROVISIONAL", "INELIGIBLE", "MIXED", "COUNSEL_HOLD"]},
+        "approving_actor": {"type": ["string", "null"]},
+        "authority_basis_id": {"type": ["string", "null"]},
+        "additional_authority_basis_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "related_entity_audit_references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["entity_slug", "audit_path"],
+            "properties": {
+              "entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+              "audit_path": {"type": "string", "pattern": "^entities/[a-z0-9]+(?:-[a-z0-9]+)*/corporate/corporate-records-audit-FY[0-9]{4}\\.json$"}
+            }
+          }
+        },
+        "authority_verified": {"type": "boolean"},
+        "governing_jurisdiction": {"type": "string", "minLength": 1},
+        "authority_domain": {"enum": ["CORPORATE_LAW", "FEDERAL_TAX", "FEDERAL_BOI", "SECURITIES", "STATE_TAX_LICENSE", "PAYROLL", "CONTRACT_IP"]},
+        "execution_method": {"enum": ["NOT_APPLICABLE", "MEETING_MINUTES", "WRITTEN_CONSENT", "AGENCY_OR_EXTERNAL_RECORD", "COUNSEL_OR_COURT_VALIDATION", "OTHER_VERIFIED"]},
+        "signature_evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method", "signer_identity", "document_integrity", "notes"],
+          "properties": {
+            "method": {"enum": ["NOT_APPLICABLE", "NONE_OBSERVED", "HANDWRITTEN_OR_IMAGE_OBSERVED", "CRYPTOGRAPHIC_VALIDATED", "OTHER"]},
+            "signer_identity": {"enum": ["NOT_APPLICABLE", "VERIFIED", "UNVERIFIED"]},
+            "document_integrity": {"enum": ["NOT_APPLICABLE", "VERIFIED", "UNVERIFIED"]},
+            "notes": {"type": ["string", "null"]}
+          }
+        },
+        "dates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["prepared", "approved", "signed", "effective", "submitted", "accepted_or_issued", "expires", "superseded"],
+          "properties": {
+            "prepared": {"$ref": "#/$defs/nullableDate"},
+            "approved": {"$ref": "#/$defs/nullableDate"},
+            "signed": {"$ref": "#/$defs/nullableDate"},
+            "effective": {"$ref": "#/$defs/nullableDate"},
+            "submitted": {"$ref": "#/$defs/nullableDate"},
+            "accepted_or_issued": {"$ref": "#/$defs/nullableDate"},
+            "expires": {"$ref": "#/$defs/nullableDate"},
+            "superseded": {"$ref": "#/$defs/nullableDate"}
+          }
+        },
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+        "record_subcontrols": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "status", "evidence_period", "deadline", "evidence", "next_required_evidence"],
+            "properties": {
+              "id": {"enum": ["MINUTES_CONSENTS", "SHAREHOLDER_RECORDS", "ACCOUNTING_RECORDS", "ANNUAL_FINANCIAL_STATEMENTS", "SHAREHOLDER_COMMUNICATIONS"]},
+              "status": {"enum": ["VERIFIED", "NOT_YET_DUE", "MISSING"]},
+              "evidence_period": {"type": "string", "pattern": "^(PERMANENT|FY[0-9]{4})$"},
+              "deadline": {"type": ["string", "null"], "format": "date"},
+              "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+              "next_required_evidence": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "conflict_ids": {"type": "array", "items": {"type": "string", "pattern": "^CON-[0-9]{3}$"}, "uniqueItems": true},
+        "deadline": {"$ref": "#/$defs/nullableDate"},
+        "next_required_evidence": {"type": ["string", "null"]},
+        "escalation": {"type": "array", "items": {"enum": ["CORPORATE_COUNSEL", "SECURITIES_COUNSEL", "TAX_COUNSEL", "CPA_EA", "PAYROLL_PROVIDER", "NONE"]}, "minItems": 1, "uniqueItems": true},
+        "exclusion_id": {"type": ["string", "null"], "pattern": "^EXC-[0-9]{3}$"}
+      },
+      "allOf": [
+        {"if": {"properties": {"verification_status": {"const": "VERIFIED"}}}, "then": {"properties": {"evidence": {"minItems": 1}}}},
+        {"if": {"properties": {"verification_status": {"const": "CONFLICTED"}}}, "then": {"properties": {"conflict_ids": {"minItems": 1}}}},
+        {"if": {"properties": {"applicability_status": {"const": "CONDITIONAL_UNRESOLVED"}}}, "then": {"properties": {"next_required_evidence": {"type": "string", "minLength": 1}}}},
+        {"if": {"properties": {"applicability_status": {"const": "NOT_APPLICABLE_VERIFIED"}}}, "then": {"properties": {"lifecycle_status": {"enum": ["NOT_FOUND", "SUPERSEDED"]}, "verification_status": {"const": "VERIFIED"}, "operational_status": {"const": "NOT_APPLICABLE"}, "filing_status": {"enum": ["NOT_APPLICABLE", "AMENDED_OR_SUPERSEDED"]}, "tax_position_status": {"const": "NOT_APPLICABLE"}, "authority_verified": {"const": true}, "authority_basis_id": {"type": "string", "minLength": 1}, "execution_method": {"const": "NOT_APPLICABLE"}, "signature_evidence": {"properties": {"method": {"const": "NOT_APPLICABLE"}, "signer_identity": {"const": "NOT_APPLICABLE"}, "document_integrity": {"const": "NOT_APPLICABLE"}}}, "evidence": {"minItems": 1, "contains": {"properties": {"role": {"const": "CURRENT"}}, "required": ["role"]}}, "exclusion_id": {"type": "null"}}}},
+        {"if": {"properties": {"applicability_status": {"const": "OUT_OF_SCOPE"}}}, "then": {"properties": {"operational_status": {"const": "NOT_APPLICABLE"}, "filing_status": {"const": "NOT_APPLICABLE"}, "tax_position_status": {"const": "NOT_APPLICABLE"}, "exclusion_id": {"type": "string", "pattern": "^EXC-[0-9]{3}$"}}}, "else": {"properties": {"exclusion_id": {"type": "null"}}}},
+        {"if": {"properties": {"lifecycle_status": {"const": "EXECUTED_EFFECTIVE"}}}, "then": {"properties": {"approving_actor": {"type": "string", "minLength": 1}, "authority_verified": {"const": true}, "execution_method": {"not": {"const": "NOT_APPLICABLE"}}, "dates": {"properties": {"effective": {"type": "string", "format": "date"}}}}}},
+        {"if": {"properties": {"lifecycle_status": {"const": "ACCEPTED_OR_ISSUED"}}}, "then": {"properties": {"authority_verified": {"const": true}, "dates": {"properties": {"accepted_or_issued": {"type": "string", "format": "date"}}}}}},
+        {"if": {"properties": {"lifecycle_status": {"const": "SUBMITTED"}}}, "then": {"properties": {"dates": {"properties": {"submitted": {"type": "string", "format": "date"}}}}}},
+        {"if": {"properties": {"lifecycle_status": {"const": "EXECUTED_EFFECTIVE"}, "signature_evidence": {"properties": {"method": {"enum": ["HANDWRITTEN_OR_IMAGE_OBSERVED", "CRYPTOGRAPHIC_VALIDATED", "OTHER"]}}}}}, "then": {"properties": {"signature_evidence": {"properties": {"signer_identity": {"const": "VERIFIED"}, "document_integrity": {"const": "VERIFIED"}}}, "dates": {"properties": {"signed": {"type": "string", "format": "date"}}}}}},
+        {"if": {"properties": {"escalation": {"contains": {"const": "NONE"}}}}, "then": {"properties": {"escalation": {"maxItems": 1}}}},
+        {"if": {"properties": {"id": {"enum": ["F-01", "F-02", "F-03", "F-04", "F-05", "R-01", "A-01", "T-01", "T-02", "L-01", "L-03"]}}}, "then": {"properties": {"applicability_status": {"not": {"const": "OUT_OF_SCOPE"}}}}},
+        {"if": {"properties": {"id": {"enum": ["F-01", "F-02", "F-03", "F-04", "F-05", "R-01", "A-01", "T-01", "T-02", "L-01"]}}}, "then": {"properties": {"applicability_status": {"const": "REQUIRED"}}}},
+        {"if": {"properties": {"id": {"enum": ["F-01", "F-05", "T-01", "T-03", "L-01", "L-02", "L-03"]}, "applicability_status": {"const": "REQUIRED"}}}, "then": {"properties": {"filing_status": {"not": {"const": "NOT_APPLICABLE"}}}}},
+        {"if": {"properties": {"id": {"enum": ["F-02", "F-03", "F-04", "O-01", "O-02", "O-03", "R-01", "A-01", "A-02", "T-02", "T-03", "P-01", "P-02", "P-03", "S-01", "S-02", "S-03"]}, "applicability_status": {"const": "REQUIRED"}}}, "then": {"properties": {"operational_status": {"not": {"const": "NOT_APPLICABLE"}}}}},
+        {"if": {"properties": {"id": {"enum": ["F-03", "F-04", "A-01", "A-02"]}, "lifecycle_status": {"const": "EXECUTED_EFFECTIVE"}}}, "then": {"properties": {"execution_method": {"enum": ["MEETING_MINUTES", "WRITTEN_CONSENT", "COUNSEL_OR_COURT_VALIDATION"]}}}},
+        {"if": {"required": ["execution_method"], "properties": {"execution_method": {"const": "COUNSEL_OR_COURT_VALIDATION"}}}, "then": {"properties": {"specialist_result_reference": {"type": "string", "minLength": 1}, "escalation": {"contains": {"const": "CORPORATE_COUNSEL"}}}}},
+        {"if": {"properties": {"tax_position_status": {"enum": ["PROVISIONAL", "INELIGIBLE", "MIXED", "COUNSEL_HOLD"]}}}, "then": {"properties": {"specialist_result_reference": {"type": "string", "minLength": 1}}}}
+        ,{"if": {"required": ["specialist_result_reference"], "properties": {"specialist_result_reference": {"type": "string"}}}, "then": {"required": ["specialist_result_sha256", "specialist_result_subject_slug", "specialist_result_period", "specialist_result_status"], "properties": {"specialist_result_sha256": {"type": "string"}, "specialist_result_subject_slug": {"type": "string"}, "specialist_result_period": {"type": "string"}, "specialist_result_status": {"type": "string"}}}}
+        ,{"if": {"properties": {"id": {"enum": ["O-02", "O-03", "O-04"]}, "applicability_status": {"const": "REQUIRED"}}}, "then": {"properties": {"specialist_result_reference": {"type": "string", "pattern": "^entities/[a-z0-9]+(?:-[a-z0-9]+)*/corporate/stock-issuances/stock-issuance-audit-FY[0-9]{4}\\.json$"}}}}
+        ,{"if": {"properties": {"id": {"const": "S-02"}, "applicability_status": {"const": "REQUIRED"}}}, "then": {"required": ["related_entity_audit_references"], "properties": {"related_entity_audit_references": {"minItems": 1}}}}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"overall_status": {"const": "RECORD_SET_RECONCILED_AS_OF"}}},
+      "then": {
+        "properties": {
+          "intake_status": {"const": "RECONCILED"},
+          "formation_chronology": {"properties": {"initial_directors_named_in_articles": {"type": "boolean"}, "sequence_status": {"const": "VERIFIED_AFTER_INCORPORATION"}, "evidence": {"minItems": 1, "contains": {"properties": {"role": {"const": "CURRENT"}}, "required": ["role"]}}}},
+          "conflicts": {"items": {"properties": {"status": {"const": "RESOLVED"}, "resolution_evidence": {"minItems": 1}}}},
+          "authority_dependencies": {"items": {"properties": {"effective_for_scope": {"const": true}}}},
+          "requirements": {
+            "items": {
+              "anyOf": [
+                {"properties": {"applicability_status": {"enum": ["REQUIRED", "RECOMMENDED_ONLY"]}, "lifecycle_status": {"enum": ["EXECUTED_EFFECTIVE", "ACCEPTED_OR_ISSUED"]}, "verification_status": {"const": "VERIFIED"}, "operational_status": {"enum": ["NOT_APPLICABLE", "RECONCILED"]}, "filing_status": {"enum": ["NOT_APPLICABLE", "ACCEPTED", "TRANSCRIPT_VERIFIED"]}, "tax_position_status": {"enum": ["NOT_APPLICABLE", "NOT_TESTED", "VERIFIED", "INELIGIBLE"]}, "authority_verified": {"const": true}}},
+                {"properties": {"applicability_status": {"const": "NOT_APPLICABLE_VERIFIED"}}},
+                {"properties": {"applicability_status": {"const": "OUT_OF_SCOPE"}}}
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

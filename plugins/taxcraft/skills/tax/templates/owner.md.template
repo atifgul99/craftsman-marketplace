@@ -1,0 +1,40 @@
+
+# Workspace Owner
+
+**Last updated**: YYYY-MM-DD
+
+Individual(s) who own/control the entities in this workspace. Personal 1040-specific facts live in `../individual/profile.md`; this file is just the high-level identification.
+
+## Primary Owner
+
+- **Name**: `<First Last>`
+- **SSN last 4**: `____`
+- **Address**: `<street, city, state, ZIP>`
+- **Email**: `<email>`
+- **Phone**: `<phone>`
+- **State of residency**: `<XX>` (since YYYY-MM-DD)
+- **Community-property state**: yes / no
+
+## Spouse (if applicable, for MFJ context)
+
+- **Name**: `<First Last>`
+- **SSN last 4**: `____`
+- **Works in any of the entities?**: yes / no — if yes, which + role
+
+## Additional Owners (co-founders, family members, trusts)
+
+| Name | Relation | SSN/EIN last 4 | Entities owned | Notes |
+|---|---|---|---|---|
+
+## Roles Across Entities
+
+| Entity | Role | Ownership % | Officer? |
+|---|---|---|---|
+| `<entity>` | founder / partner / manager / employee | % | yes (title) / no |
+
+## Advisors (personal)
+
+- **Personal CPA / EA**: `<name, firm, email>`
+- **Estate attorney**: `<if any>`
+- **Financial advisor**: `<if any>`
+- **Insurance advisor**: `<if any>`

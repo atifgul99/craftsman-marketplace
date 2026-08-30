@@ -1,0 +1,44 @@
+# Stock Capitalization Table — [Legal Issuer]
+
+**As of:** [YYYY-MM-DD and time/event]  
+**Formation state:** [ ]  
+**Source ledger:** [path]  
+**Fully diluted convention:** [define included/excluded instruments]
+
+The stock ledger is the legal issuance history. This cap table is a derived
+ownership and dilution view and must reconcile to the ledger and issuance
+register.
+
+## Issued and outstanding ownership
+
+| Holder | Tranche ID | Class/series | Issued | Outstanding | Treasury/reacquired | Voting power | Actual issue date | Vesting/restrictions | Ledger ref |
+|---|---|---|---:|---:|---:|---:|---|---|---|
+| [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ]% | [ ] | [ ] | [ ] |
+
+## Reserved, promised, and convertible interests
+
+| Instrument/plan | Holder/pool | Class on exercise/conversion | Reserved shares | Issued? | Exercise/conversion terms | Approval/source |
+|---|---|---|---:|---|---|---|
+| [ ] | [ ] | [ ] | [ ] | NO | [ ] | [ ] |
+
+## Capitalization summary
+
+| Class | Authorized | Issued | Outstanding | Treasury/reacquired | Reserved/committed | Legally available | Formation-state rule/source |
+|---|---:|---:|---:|---:|---:|---:|---|
+| [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [state-specific computation] | [ ] |
+
+## Ownership views
+
+| Holder | Outstanding shares | % outstanding | As-converted shares | % as-converted | Fully diluted shares | % fully diluted |
+|---|---:|---:|---:|---:|---:|---:|
+| [ ] | [ ] | [ ]% | [ ] | [ ]% | [ ] | [ ]% |
+
+## Reconciliation
+
+- Outstanding cap table total = stock ledger total = [ ]
+- Issuance register total by status = [ ]
+- Reserved instruments = approvals/plan records = [ ]
+- Unexplained differences: NONE / [ ]
+
+Do not include a proposed, promised, or approved-but-unissued interest in the
+outstanding column. Show it separately in the reserved/fully diluted view.

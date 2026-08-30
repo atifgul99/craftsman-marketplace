@@ -38,6 +38,14 @@ well. You don't have an engineering background, and you can't say for sure what 
 would flag before you let paying customers in. If that's you, this is for you. If you already have
 someone doing this kind of review, you probably don't need it.
 
+## Also in this marketplace
+
+**[`taxcraft`](./plugins/taxcraft/)** — CPA-grade US tax and accounting workpapers for people whose
+situation outgrew consumer tax software but who still do the prep themselves: multiple entities,
+late and wrong K-1s, untracked basis and carryforwards, guessed-at quarterly estimates. Separate
+plugin, separate install, unrelated to auditing code. See its
+[README](./plugins/taxcraft/README.md).
+
 ## Install
 
 **Install the plugin named `craftsman`—not the skill named `craft-audit`.** There are four names
@@ -336,6 +344,9 @@ craftsman-marketplace/          ← marketplace (this repo)
         craft-testing/
         craft-ai/
       examples/                 ← illustrative `.craftsman/` output (a worked end-to-end audit), not live state
+    taxcraft/                   ← unrelated second plugin: US tax + accounting workpapers
+      .claude-plugin/plugin.json
+      skills/tax/               ← single skill: SKILL.md + modules, rules/, templates/, tools/, evals/
   drafts/                       ← incubator for future domains (repo-level, outside the plugin: not loaded, not shipped)
   ROADMAP.md                    ← design notes, phases, parked ideas (repo-level, not shipped in the plugin)
   CONTRIBUTING.md               ← how to propose changes to the skills

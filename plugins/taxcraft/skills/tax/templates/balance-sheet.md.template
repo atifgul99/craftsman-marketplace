@@ -1,0 +1,63 @@
+
+# Balance Sheet — <ENTITY NAME>
+
+**As of**: YYYY-MM-DD
+**Period context**: `<FY start | Q1 end | Q2 end | Q3 end | FY end>`
+**Basis**: tax | book
+**Generated**: YYYY-MM-DD
+
+## Assets
+
+| | Beginning (FY start) | Current period-end |
+|---|---|---|
+| Cash — Operating | $ | $ |
+| Cash — Reserve | $ | $ |
+| Accounts receivable | $ | $ |
+| Prepaid expenses | $ | $ |
+| Inventory | $ | $ |
+| Investments — short-term | $ | $ |
+| **TOTAL CURRENT ASSETS** | $ | $ |
+| Property & equipment (gross) | $ | $ |
+| Less: accumulated depreciation | ($) | ($) |
+| Intangibles (net) | $ | $ |
+| Investments — long-term | $ | $ |
+| **TOTAL ASSETS** | $ | $ |
+
+## Liabilities
+
+| | Beginning | Current |
+|---|---|---|
+| Accounts payable | $ | $ |
+| Accrued expenses | $ | $ |
+| Credit card balances | $ | $ |
+| Short-term debt | $ | $ |
+| Income tax payable | $ | $ |
+| Deferred revenue | $ | $ |
+| **TOTAL CURRENT LIABILITIES** | $ | $ |
+| Long-term debt | $ | $ |
+| Deferred tax liability | $ | $ |
+| **TOTAL LIABILITIES** | $ | $ |
+
+## Equity
+
+### C-corp
+| | Beginning | Current |
+|---|---|---|
+| Common stock (par) | $ | $ |
+| Additional paid-in capital | $ | $ |
+| Retained earnings | $ | $ |
+| YTD net income | — | $ |
+| Treasury stock | ($) | ($) |
+| **TOTAL EQUITY** | $ | $ |
+
+### S-corp (replace RE with AAA + OAA + E&P if applicable)
+### Partnership (capital accounts per partner)
+
+## Check
+
+- Total Liabilities + Equity = Total Assets: yes / **DISCREPANCY** (investigate)
+- Cash ties to bank statements (period-end balances): yes / no
+- Fixed assets tie to `books/fixed-assets.md`: yes / no
+- Accumulated depreciation increment = period depreciation expense: yes / no
+
+Feeds Schedule L at annual close.

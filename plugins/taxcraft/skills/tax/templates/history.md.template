@@ -1,0 +1,31 @@
+# Tax History
+
+Append-only chronological log of notable tax events. Skill reads this for continuity; user writes to it after major events.
+
+Format: `## YYYY-MM-DD — <short title>` followed by a brief narrative.
+
+---
+
+## YYYY-MM-DD — <example: IRS Letter 0012C for 2022>
+
+- Notice code, date received, response deadline
+- Year covered
+- Issue summary
+- Resolution and date (if closed)
+- Any carryforward impact
+
+## YYYY-MM-DD — <example: Form 2553 S-corp election>
+
+- Entity, effective date, filed date, IRS ack date
+
+## YYYY-MM-DD — <example: sold rental property>
+
+- Property, sale price, basis, gain character (ordinary / §1231 / §1250 recapture)
+- §1031 exchange or taxable sale?
+- Impact on passive loss suspension release
+
+## YYYY-MM-DD — <example: §1202 QSBS acquisition>
+
+- Company, share count, cost basis, acquisition date
+- 5-year hold clock
+- Original issuance or later transfer?

@@ -1,0 +1,24 @@
+# Cross-Entity Follow-Up Log
+
+**Opened**: <YYYY-MM-DD>
+**Source matter**: <entity/slug/plan this log was spawned from>
+**Purpose**: track issues discovered during <source matter> that belong to other entities and should be worked in their own engagement — do NOT act on these from inside the source matter.
+
+## Rules
+
+- One row per issue per target entity.
+- When an issue is opened, set `status: open` and a date. When it's picked up in the target entity's own engagement, mark `status: picked-up` with the date and link to the follow-up plan.
+- Never silently fix cross-entity issues from another entity's work. Doing so loses audit trail and mixes scopes.
+
+## Open items
+
+| Target entity | Tax year | Issue | Evidence | Priority | Status | Opened | Picked up |
+|---|---|---|---|---|---|---|---|
+| <slug> | <FY2024> | <short description> | <path to evidence> | <high/med/low> | open | <YYYY-MM-DD> |  |
+
+## Closed items
+
+_(move rows here when picked up or determined to be non-issues; retain for audit trail)_
+
+| Target entity | Tax year | Issue | Disposition | Closed |
+|---|---|---|---|---|

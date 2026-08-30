@@ -1,0 +1,35 @@
+
+                           INTERNAL REVENUE SERVICE
+                       THIS PRODUCT CONTAINS SENSITIVE TAXPAYER DATA
+
+                              Account Transcript
+
+TAXPAYER IDENTIFICATION NUMBER: XXX-XX-1234
+FORM NUMBER:                    1040
+TAX PERIOD:                     Dec. 31, 2022
+NAME(S) SHOWN ON RETURN:        SAMPLE TAXPAYER
+FILING STATUS:                  Single
+FILING STATUS (CURRENT):        Single
+
+ACCOUNT BALANCE:                    1,637.54
+ACCRUED INTEREST:                      23.12
+ACCRUED PENALTY:                        0.00
+
+ACCOUNT BALANCE PLUS ACCRUALS:     1,660.66
+
+ADJUSTED GROSS INCOME:            225,000.00
+TAXABLE INCOME:                   198,500.00
+TAX PER RETURN:                    47,123.00
+
+                        TRANSACTIONS
+
+CODE EXPLANATION OF TRANSACTION              CYCLE    DATE                    AMOUNT
+
+806  W-2 or 1099 withholding                20231205  04-15-2023          -$44,800.00
+150  Tax return filed                       20230805  08-28-2023           $47,123.00
+460  Extension of time to file ext          20230115  04-18-2023               $0.00
+196  Interest assessed                      20230905  09-11-2023              $441.96
+276  Penalty for late payment of tax        20230905  09-11-2023            $1,195.58
+610  Payment with return                    20230808  08-28-2023           -$3,000.00
+670  Subsequent payment                     20231015  10-23-2023             -$123.00
+

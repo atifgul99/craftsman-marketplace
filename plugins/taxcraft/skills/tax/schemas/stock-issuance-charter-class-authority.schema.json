@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.example/tax/stock-issuance-charter-class-authority.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "subject_entity_slug", "class", "authorized_shares", "source_document_kind", "source_document_path", "source_document_sha256", "extraction_locator", "observed_at", "verification_status", "verified_by_role"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "subject_entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "class": {"type": "string", "minLength": 1},
+    "authorized_shares": {"type": "integer", "minimum": 1},
+    "source_document_kind": {"const": "ARTICLES_OR_AMENDMENT"},
+    "source_document_path": {"type": "string", "pattern": "^entities/[a-z0-9]+(?:-[a-z0-9]+)*/corporate/formation/.+\\.(?:pdf|json)$"},
+    "source_document_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "extraction_locator": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "verification_status": {"const": "VERIFIED"},
+    "verified_by_role": {"enum": ["CORPORATE_COUNSEL", "AUTHORIZED_CORPORATE_RECORDS_OFFICER"]}
+  }
+}

@@ -1,0 +1,51 @@
+# Estimated Payment Evidence — <PAYMENT_ID>
+
+Create this record only after the user reports a payment or supplies payment
+evidence. A recommendation or draft instruction does not belong here.
+
+## Identity and application
+
+- **Scope**: `<individual | entities/<slug>>`
+- **Taxpayer/entity identifier**: `<masked; last 4 only>`
+- **Jurisdiction**: `<federal | state>`
+- **Form / tax type**: `<1040-ES | corporate estimated tax | state type>`
+- **Tax year / period**: `<YYYY / installment>`
+- **Payment / settlement / agency application dates**: `<YYYY-MM-DD each | pending>`
+- **Related estimate run ID**: `<RUN_ID | none>`
+
+## Payment state
+
+**Status**: `USER_REPORTED_PAYMENT | PAYMENT_EVIDENCED | PAYMENT_RECONCILED`
+
+| Event | Date/time | Amount | Evidence | Verified taxpayer/form/year/period? |
+|---|---|---:|---|---|
+| User reported or authorized | | $ | | |
+| Submitted or scheduled | | $ | | |
+| Agency confirmation received | | $ | `<confirmation reference>` | |
+| Bank cleared | | $ | `<statement line / hash>` | |
+| Agency transcript/account application reconciled | | $ | `<evidence>` | |
+
+Do not advance to `PAYMENT_EVIDENCED` without documentary confirmation. Do not
+advance to `PAYMENT_RECONCILED` until taxpayer/entity, tax type, tax year,
+period, amount, and agency application agree. A rejected, canceled, returned,
+or misapplied payment remains an open exception and is not counted as paid.
+
+## Method and account data
+
+- **Payment channel**: `<EFTPS | IRS Direct Pay | state portal | check | other>`
+- **Account debited**: `<institution + last 4 only>`
+- **Confirmation reference**: `<masked as needed>`
+- **Prior-year overpayment applied**: `<$ | none | unverified>`
+
+## Exceptions
+
+| Issue | Status | Required action | Owner |
+|---|---|---|---|
+| | | | |
+
+## Downstream reconciliation
+
+- [ ] Canonical estimate/payment ledger references this payment ID once.
+- [ ] Bank activity agrees or an identified timing item remains open.
+- [ ] Tax transcript/account evidence agrees when available.
+- [ ] Wrong-year, wrong-form, duplicate, rejected, or refunded amounts excluded.

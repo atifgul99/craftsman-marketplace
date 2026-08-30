@@ -1,0 +1,46 @@
+
+# General Ledger — <ENTITY NAME> — <PERIOD>
+
+**Period**: `<Q1 | Q2 | Q3 | Q4 | Annual>` FY<YYYY>
+**Generated**: YYYY-MM-DD
+
+Transaction-level journal. Every row traceable to a source document (CSV row, receipt, journal entry).
+
+## Journal (chronological)
+
+| Date | Account (COA #) | Account name | Debit | Credit | Source | Description | Entity (div) |
+|---|---|---|---|---|---|---|---|
+| YYYY-MM-DD | 1010 | Cash — Operating | $ | | `<bank.csv:row 42>` | Wire from client X | `<parent>` |
+| YYYY-MM-DD | 4010 | Service revenue | | $ | same | Invoice INV-001 | `<parent>` |
+| YYYY-MM-DD | 6010 | Officer compensation | $ | | `<payroll csv:row 3>` | Q1 salary — `<name>` | `<parent>` |
+| YYYY-MM-DD | 2150 | Accrued payroll | | $ | same | Matching accrual | `<parent>` |
+| ... | | | | | | | |
+
+## Journal Entries (period-end accruals, depreciation, adjustments)
+
+| JE # | Date | Description | DR Account | DR $ | CR Account | CR $ |
+|---|---|---|---|---|---|---|
+| JE-Q1-01 | YYYY-MM-DD | Quarter depreciation | 6900 Depreciation | $ | 1590 Accum Depr | $ |
+| JE-Q1-02 | | Accrue payroll | 6020 Wages | $ | 2150 Accrued payroll | $ |
+
+## Trial Balance (end of period)
+
+| Account # | Account | Debit | Credit |
+|---|---|---|---|
+| | | | |
+| | **TOTALS** | $ | $ |
+
+Debits must equal credits.
+
+## Unclassified / Quarantined
+
+| Date | Source | Amount | Reason quarantined | Proposed treatment |
+|---|---|---|---|---|
+
+These must be resolved before period close.
+
+## Reconciliations
+
+- Bank statement ending balance (per institution) vs GL cash balance: $ vs $ → delta $ (outstanding checks / deposits in transit)
+- Credit card statement vs GL credit card liability: matches / delta $
+- Brokerage statement vs GL investment balance: matches / delta $

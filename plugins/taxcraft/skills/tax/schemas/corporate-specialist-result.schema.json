@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.example/tax/corporate-specialist-result.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "subject_entity_slug", "fiscal_or_tax_period", "as_of", "source_cutoff", "status", "control_ids", "conclusion", "gates", "authority_dependencies", "source_artifacts"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"enum": ["ACCOUNTABLE_PLAN", "AUGUSTA_PLAN", "IP_REMEDIATION", "LEGAL_VALIDATION", "OTHER_TAX_SPECIALIST"]},
+    "subject_entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "fiscal_or_tax_period": {"type": "string", "pattern": "^FY[0-9]{4}$"},
+    "as_of": {"type": "string", "format": "date"},
+    "source_cutoff": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["VERIFIED", "PROVISIONAL", "INELIGIBLE", "COUNSEL_HOLD"]},
+    "control_ids": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z]+-[0-9]{2}$"}, "minItems": 1, "uniqueItems": true},
+    "conclusion": {"type": "string", "minLength": 1},
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "applicability", "execution", "operation", "tax", "source_reconciliation"],
+      "properties": {
+        "authority": {"$ref": "#/$defs/gateStatus"},
+        "applicability": {"$ref": "#/$defs/gateStatus"},
+        "execution": {"$ref": "#/$defs/gateStatus"},
+        "operation": {"$ref": "#/$defs/gateStatus"},
+        "tax": {"$ref": "#/$defs/gateStatus"},
+        "source_reconciliation": {"$ref": "#/$defs/gateStatus"}
+      }
+    },
+    "authority_dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["authority_id", "rule", "source_url", "verified_at", "effective_from", "effective_to", "status"],
+        "properties": {
+          "authority_id": {"type": "string", "pattern": "^run-[a-z0-9-]+$"},
+          "rule": {"enum": ["ACCOUNTABLE_PLAN_1_62_2", "AUGUSTA_280A", "BUSINESS_RENT_162", "RELATED_PARTY_267", "WA_CORPORATE_LAW", "WA_COURT_VALIDATION", "USPTO_ASSIGNMENT", "IRS_P15B"]},
+          "source_url": {"type": "string", "format": "uri"},
+          "verified_at": {"type": "string", "format": "date-time"},
+          "effective_from": {"type": ["string", "null"], "format": "date"},
+          "effective_to": {"type": ["string", "null"], "format": "date"},
+          "status": {"const": "VERIFIED"}
+        }
+      }
+    },
+    "source_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path", "sha256"],
+        "properties": {
+          "kind": {"enum": ["ADOPTION_AUTHORITY", "EXECUTED_PLAN", "TRANSACTION_RECORD", "PAYMENT_PROOF", "RECONCILIATION", "TAX_MEMO", "LEGAL_MEMO", "IP_ASSIGNMENT", "REGISTRY_RECORD", "OTHER"]},
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "gateStatus": {"enum": ["VERIFIED", "NOT_APPLICABLE", "UNVERIFIED", "CONFLICTED", "COUNSEL_HOLD"]}
+  }
+}
