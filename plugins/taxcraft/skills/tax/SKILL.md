@@ -51,38 +51,43 @@ tools resolve them against the current directory. `workspace-doctor` defaults it
 root to `$TAX_WORKSPACE`, else the current directory — so run it from the
 workspace, and never assume it inferred the right tree from its own location.
 
-## First-run tooling check
+## First-run dependency check
 
-The `tools/` scripts are standard-library only and need nothing installed. The
-validators under `evals/` are different: they need two packages, and Claude Code
-installs Node dependencies for a plugin automatically but has no pip equivalent.
+This skill needs things the plugin installer does not provide: **poppler** for
+every PDF path, and **`jsonschema` + `markdown-it-py`** for every validator under
+`evals/`. Claude Code installs a plugin's Node dependencies automatically and has
+no pip equivalent, so a fresh install is normally missing them. The `tools/`
+scripts themselves are standard-library only and need nothing.
 
-**Run this check the first time a request will use a validator** — that is, any
-close, estimate, rules change, stock issuance, or corporate-records work. Skip it
-for a generic tax question that touches no artifact:
-
-```bash
-python3 -c "import jsonschema, markdown_it" 2>&1 || echo "MISSING"
-```
-
-If anything is missing, do **not** pre-authorize the install or run it silently.
-Tell the user what is needed and why, then propose the command so their normal
-approval prompt appears:
+**Run this once per session**, the first time a request will read a PDF or use a
+validator — any intake, close, estimate, rules change, stock issuance, or
+corporate-records work. Skip it for a generic tax question that touches no
+document and no artifact:
 
 ```bash
-pip install jsonschema markdown-it-py
+python3 -B "${CLAUDE_PLUGIN_ROOT}/skills/tax/tools/dep-check/dep_check.py"
 ```
 
-Say it in one line before proposing: *"The rules-freshness gate needs `jsonschema`
-— without it I cannot verify your tax rules are current."* Offer `pip install
---user` when no virtualenv is active, or `uv add` in a uv-managed project. Ask
-once per session, not per invocation.
+It verifies the skill's own install, the runtime, poppler, the validator
+packages, and the optional fallback rungs, and prints the exact fix command for
+this platform for anything missing. Exit 0 = all required present.
 
-**If the user declines, stop the task that needed the validator.** Do not proceed
-and do not summarize as though the check ran. `evals/validate_rules.py` exits 2 on
-expired tax data; a gate that could not run is not a gate that passed, and the
-whole point of these checks is that stale rules produce confidently wrong numbers.
-Say plainly which verification is unavailable and let the user decide.
+If something is missing, do **not** pre-authorize the install or run it silently.
+Say in one line what it is for and what goes unchecked without it, then propose
+the printed command so the user's normal approval prompt appears — e.g. *"The
+rules-freshness gate needs `jsonschema`; without it I cannot verify your tax
+rules are current."*
+
+**If the user declines, stop the task that needed it.** A gate that could not run
+is not a gate that passed — `evals/validate_rules.py` exits 2 on expired tax
+data, and stale rules produce confidently wrong numbers. Never substitute a
+lower-fidelity path (no `Read`-on-PDF when poppler is absent). Name the
+verification that is unavailable, then continue with whatever genuinely does not
+depend on it.
+
+Full detection/repair matrix per layer — plugin install, poppler, validator
+packages, optional rungs — is in `dependencies.md`. Do not restate install
+commands from memory; that file is the SSOT.
 
 ## On Invocation: Router
 
@@ -133,6 +138,7 @@ Or describe what you need.
 
 | File | Purpose |
 |---|---|
+| `dependencies.md` | Install / verify / fix SSOT: plugin-install integrity, poppler, validator packages, optional fallback rungs; the never-install-silently and declined-install rules |
 | `init.md` | First-time workspace setup: scan, draft profile + entity roster, seed folders |
 | `migrate.md` | Convert legacy workspace to canonical layout (folders + filenames) |
 | `layout.md` | Target workspace tree; regarded vs. disregarded placement rules |
@@ -169,7 +175,8 @@ Or describe what you need.
 | `states/wa/property-other.md` | WA Personal Property Tax (King County) + Unclaimed Property |
 | `states/wy/README.md` | WY: no income tax, annual report only |
 | `calendar.md` | Compliance calendar — read-only deadline projection over `entity.md` + tax-summary + rules; dashboards, overdue/upcoming |
-| `tools/README.md` | 9 shipped tools (pdf-extractor, chase-statement-parser, ibkr-parser, k1-parser, return-parser, transcript-parser, coa-categorizer, parse-verify, workspace-doctor) — see `tools/README.md` |
+| `tools/dep-check/` | One-shot dependency preflight: `python3 -B "$TAX_SKILL/tools/dep-check/dep_check.py"` — checks install integrity, poppler, validator packages, optional rungs; prints the platform-correct fix command; exits 1 when a required dependency is missing. Never installs anything |
+| `tools/README.md` | 10 shipped tools (pdf-extractor, chase-statement-parser, ibkr-parser, k1-parser, return-parser, transcript-parser, coa-categorizer, parse-verify, workspace-doctor, dep-check) — see `tools/README.md` |
 | `tools/workspace-doctor/` | Report-only lint: runs `python3 -B "$TAX_SKILL/tools/workspace-doctor/doctor.py"` from the workspace root; reports missing canonical files (e.g. `workspace-profile/slugs.md`), naming violations, empty parse caches, sync-conflict duplicates, unprocessed corporate docs — never modifies anything |
 
 Read sub-skill files via Read tool as needed. Never load all upfront.

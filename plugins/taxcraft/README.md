@@ -73,6 +73,23 @@ codex plugin marketplace add gul-labs/craftsman-marketplace
 codex plugin add taxcraft@craftsman-marketplace
 ```
 
+### After installing
+
+The plugin installer does not bring two things the skill needs: **poppler** (every PDF is read
+through `pdftotext`, never by eye) and two Python packages used by the artifact validators.
+The skill checks for them itself on first use and proposes the right command for your platform
+— you approve it, it never installs anything silently. To do it up front:
+
+```bash
+brew install poppler && pip install --user jsonschema markdown-it-py
+```
+
+On Debian/Ubuntu substitute `sudo apt install poppler-utils`. To verify at any time:
+
+```bash
+python3 -B ~/.claude/plugins/cache/*/taxcraft/*/skills/tax/tools/dep-check/dep_check.py
+```
+
 ## First use
 
 Run Claude Code from the **root of your tax workspace** — the folder where your entity and

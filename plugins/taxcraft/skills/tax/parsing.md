@@ -16,11 +16,12 @@ This chain requires **poppler** (`pdftotext`, `pdftoppm`). Everything else below
 
 ```bash
 command -v pdftotext pdftoppm    # both must resolve
-# macOS: brew install poppler | Debian/Ubuntu: apt install poppler-utils
-# Fedora: dnf install poppler-utils | Windows: choco install poppler
 ```
 
-If poppler is missing, say so and stop — do not fall back to `Read`-on-PDF.
+If poppler is missing, say so and stop — do not fall back to `Read`-on-PDF. The
+per-platform install commands and the propose-don't-install rule live in
+`dependencies.md`; the session-level preflight that catches this before an intake
+starts is `tools/dep-check/dep_check.py`.
 
 ### The fallback ladder (always try in this order)
 
