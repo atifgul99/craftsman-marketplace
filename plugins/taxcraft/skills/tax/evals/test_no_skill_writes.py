@@ -24,6 +24,10 @@ its sandbox under `evals/` and then cleans it up leaves no trace on a writable
 disk while still being broken for every user who installed the plugin read-only.
 The permission bit is the property under test, so the test takes it away.
 
+Coverage is the scripts that run unattended: everything under `evals/` and any
+`tools/*/test_*.py`. Tools that need arguments are not exercised here, so the
+design principle in `tools/README.md` is what holds them to the same rule.
+
 Usage:
     python3 -B evals/test_no_skill_writes.py
 """
