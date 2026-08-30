@@ -1,0 +1,114 @@
+# Close / Estimate Control — <RUN_ID>
+
+## Run identity
+
+- **Mode**: `READINESS | CLOSE | ESTIMATE | CLOSE_AND_ESTIMATE | PAYMENT_RECONCILIATION`
+- **Scope**: `individual | entities/<slug>`
+- **Tax classification**: `<individual | partnership | S corporation | C corporation | disregarded>`
+- **Tax year / fiscal period**: `<YYYY / start through end>`
+- **Tax-period convention / basis**: `<CALENDAR|MONTHLY|WEEK_52_53|SHORT> / <basis_status> / <underlying evidence refs>`
+- **Installment**: `<none | 1 | 2 | 3 | 4>`
+- **As of**: `<YYYY-MM-DDTHH:MM:SSZ>`
+- **Authorization boundary**: `<report-only | authorized local artifacts | payment reconciliation only>`
+- **Supersedes run**: `<run ID | none>`
+
+## Status axes
+
+| Axis | Status | Reason / controlling evidence |
+|---|---|---|
+| Authority | `VERIFIED_FOR_USED_RULES | PARTIALLY_VERIFIED_UNUSED_GAPS | AUTHORITY_HOLD` | |
+| Evidence | `INPUTS_VERIFIED | MATERIAL_PROJECTIONS | INPUTS_INCOMPLETE` | |
+| Close | `NOT_RUN | RECONCILIATION_HOLD | DRAFT_OPEN_ITEMS | CLOSE_RECONCILED` | |
+| Estimate | `NOT_RUN | ESTIMATE_HOLD | PROVISIONAL | DRAFT_VERIFIED_INPUTS | READY_FOR_PRACTITIONER_REVIEW | SUPERSEDED` | |
+| Payment | `NO_PAYMENT_EVIDENCE | USER_REPORTED_PAYMENT | PAYMENT_EVIDENCED | PAYMENT_RECONCILED` | |
+
+**Aggregate component result**:
+`COMPLETE_COMPONENT_RESULT | PARTIAL_COMPONENT_RESULT | ALL_COMPONENTS_HELD`
+
+| Component | Authority status | Evidence status | Estimate/method status | Amount | Blockers |
+|---|---|---|---|---:|---|
+| Federal | | | | | |
+| State `<XX>` | | | | | |
+
+## Authority register — used rules only
+
+| Component | Origin | Rule path | Value used | Jurisdiction / period | Authority ID | Primary source | Checked at | Status | Scope limitation |
+|---|---|---|---:|---|---|---|---|---|---|
+| `federal | jurisdiction` | `BUNDLED_RULES | RUN_SPECIFIC` | | | | | | | `VERIFIED | UNVERIFIED | SUPERSEDED` | |
+
+Bundled entries must use a metadata authority ID and covered JSON path.
+Run-specific entries must use a `run-...` ID and a named rule with independently
+recorded official source/effective dates.
+
+### Unused rules-file gaps
+
+- `<path — why it does not affect this run>`
+
+## Input manifest
+
+| Input ID | Source / hash | Period | Field or lines consumed | State | Validation | Dependent outputs |
+|---|---|---|---|---|---|---|
+| | | | | `FINAL | PROJECTED | USER_PROVIDED | SUPERSEDED | CONTRADICTED` | | |
+
+Do not list an unreadable or absent monetary field as zero. The canonical JSON
+retains field-level states.
+
+## Reconciliation gates
+
+| Gate | Applies | Result | Evidence / difference | Owner / next action |
+|---|---|---|---|---|
+| Complete account and statement-period roster | | | | |
+| Active source versions and hashes validated | | | | |
+| Quarantine cleared or explicitly excluded | | | | |
+| Debits = credits | | | | |
+| Cash exactly reconciled after identified timing items | | | | |
+| Assets = liabilities + equity | | | | |
+| Intercompany / payroll / fixed asset / capital-basis controls | | | | |
+| Proposed JEs separately posted and independently evidenced, if applicable | | | | |
+
+## Method eligibility and result
+
+| Method | Eligibility facts | Method status | Required annual payment | Required installment | Credits/payments applied | Amount due | Authority IDs |
+|---|---|---|---:|---:|---:|---:|---|
+| Prior-year | | | | | | | |
+| Current-year | | | | | | | |
+| Annualized income | | | n/a | | | | |
+| Adjusted seasonal | | | n/a | | | | |
+| State / withholding | | | | | | | |
+
+Allowed method statuses: `AVAILABLE_VERIFIED`, `AVAILABLE_PROVISIONAL`,
+`INELIGIBLE`, `BLOCKED_MISSING_INPUT`, `BLOCKED_RULE_UNVERIFIED`.
+
+## Recommendation
+
+- **Status**: `<BLOCKED | PROVISIONAL | READY_FOR_PRACTITIONER_REVIEW>`
+- **Component**: `<federal | jurisdiction | none>`
+- **Method**: `<method | none>`
+- **Amount**: `<USD | unknown>`
+- **Due date**: `<YYYY-MM-DD | unknown>`
+- **Reason selected**: `<eligibility and comparison logic>`
+- **Practitioner review required**: `yes`
+- **Payment execution authorized by this artifact**: `no`
+
+## Payment evidence records
+
+Leave this table empty when payment status is `NO_PAYMENT_EVIDENCE`. Every
+higher status requires a matching canonical payment record.
+
+| Record ID | Status | Amount | Confirmation | Bank settlement | Taxpayer/form/period/amount/year all match | Reviewer / reviewed at |
+|---|---|---:|---|---|---|---|
+| | `USER_REPORTED_PAYMENT | PAYMENT_EVIDENCED | PAYMENT_RECONCILED` | | | | | |
+
+## Blockers and open items
+
+| Severity | Dependent result | Missing authority/evidence/decision | Owner | Next action |
+|---|---|---|---|---|
+| | | | | |
+
+## Closing controls
+
+- [ ] Canonical estimate JSON identities pass.
+- [ ] Presentation points to this run ID and canonical JSON.
+- [ ] Prior run marked `SUPERSEDED`, if applicable.
+- [ ] Payment record exists only for a reported/evidenced payment.
+- [ ] No signing, filing, portal use, communication, or payment was inferred.

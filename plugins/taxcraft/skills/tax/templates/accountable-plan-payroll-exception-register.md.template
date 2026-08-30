@@ -1,0 +1,27 @@
+# <Legal Entity Name> — Employee Reimbursement Payroll Exception Register
+
+**Tax year:** FY<YYYY>  
+**Service employer / payroll EIN:** `<entity / masked EIN>`  
+**Custodian:** `<role>`  
+**Last reconciled:** `<YYYY-MM-DD>`
+
+Use one row per failed amount. Do not place full SSNs, bank numbers, or unmasked
+EINs in this register.
+
+| Exception ID | Employee | Claim/card/advance ID | Failure type | Taxable or receivable amount | Trigger/deadline | First affected payroll | FITW/FICA/FUTA/state treatment | W-2 boxes / code L | 941/941-X | 940 amendment | W-2/W-2c | GL/receivable/owner classification | Resolution/status |
+|---|---|---|---|---:|---|---|---|---|---|---|---|---|---|
+| | | | | $ | | | | | | | | | |
+
+## Period-close certification
+
+- [ ] Every denied, unsubstantiated, late, excess, personal card, and
+      wage-substitution item was evaluated.
+- [ ] Current-period inclusion is separated from historical corrections.
+- [ ] Employee FICA collection or employer gross-up treatment is documented.
+- [ ] Related-entity/payroll-EIN routing and mirror entries agree.
+- [ ] Register totals reconcile to payroll, W-2/W-3, 941, 940, state filings,
+      receivables, and underlying GL accounts.
+- [ ] Open items have a responsible owner and resolution date.
+
+**Prepared by / date:** `<...>`  
+**Reviewed by / date:** `<...>`

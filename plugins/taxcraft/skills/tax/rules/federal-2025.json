@@ -1,0 +1,478 @@
+{
+ "_meta": {
+  "schema_version": 1,
+  "jurisdiction": "US-federal",
+  "tax_year": 2025,
+  "status": "REVIEW_REQUIRED",
+  "checked_at": "2026-08-29",
+  "stale_after": "2027-02-28",
+  "stale_after_rationale": "6 months: the year is current or still being filed, so retroactive legislation and late guidance are live risks",
+  "legislation_checked_through": "2026-08-29",
+  "legislation_checked_note": "Elapsed time is a proxy; this is the real question. Records the date through which enacted legislation was reviewed for retroactive effect on this tax year. A statute checklist would overpromise completeness, so this is a date, not a list.",
+  "declared_repeats": [],
+  "authorities": [
+   {
+    "id": "rev-proc-2024-40",
+    "title": "Rev. Proc. 2024-40, 2025 inflation adjustments",
+    "url": "https://www.irs.gov/pub/irs-drop/rp-24-40.pdf",
+    "source_type": "revenue-procedure",
+    "effective_from": "2025-01-01",
+    "effective_to": "2025-12-31"
+   },
+   {
+    "id": "irc-current",
+    "title": "Internal Revenue Code (current, prelim)",
+    "url": "https://uscode.house.gov/view.xhtml?path=/prelim@title26&edition=prelim",
+    "source_type": "statute",
+    "effective_from": null,
+    "effective_to": null
+   },
+   {
+    "id": "pl-119-21-deductions",
+    "title": "Public Law 119-21 (OBBBA) §§70103, 70201-70203 - tips, overtime, senior, car-loan interest",
+    "url": "https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf",
+    "source_type": "statute",
+    "effective_from": "2025-01-01",
+    "effective_to": "2028-12-31",
+    "application": "Tax years beginning after 2024 and before 2029. Caps and MAGI phaseout thresholds for THESE FOUR DEDUCTIONS are statutory and unindexed across the window, so the TY2025 and TY2026 figures are identical by design."
+   },
+   {
+    "id": "pl-119-21-179",
+    "title": "Public Law 119-21 (OBBBA) §70306 - §179 expensing reset",
+    "url": "https://www.congress.gov/119/plaws/publ21/PLAW-119publ21.pdf",
+    "source_type": "statute",
+    "effective_from": "2025-01-01",
+    "effective_to": null,
+    "application": "RESETS the §179 cap and phaseout for TY2025, overriding Rev. Proc. 2024-40's $1,250,000 / $3,130,000. ⚠ Unlike the four new deductions, §179 CONTINUES TO BE INDEXED after the reset - TY2026 is $2,560,000 / $4,090,000, not a repeat of TY2025."
+   }
+  ],
+  "coverage": [
+   {
+    "paths": [
+     "adoption_credit",
+     "foreign_earned_income_exclusion",
+     "fsa_carryover_max",
+     "fsa_contribution_limit",
+     "gift_exclusion_non_citizen_spouse",
+     "kiddie",
+     "qualified_transportation_fringe_monthly",
+     "suv_cap"
+    ],
+    "authority_ids": [
+     "rev-proc-2024-40"
+    ],
+    "status": "VERIFIED",
+    "note": "Added 2026-08-29 from Rev. Proc. 2024-40, 2025 inflation adjustments, extracted with pdftotext -layout."
+   },
+   {
+    "paths": [
+     "mortgage_acquisition_debt_cap",
+     "safe_harbor_high_agi_threshold_mfs"
+    ],
+    "authority_ids": [
+     "irc-current"
+    ],
+    "status": "POINT_OF_USE",
+    "note": "Statutory. Legacy pre/post scalars replaced by the debt-date selector; the MFS safe-harbor threshold is half the non-MFS figure (§6654(d)(1)(C)(ii))."
+   },
+   {
+    "paths": [
+     "obbba_deductions"
+    ],
+    "authority_ids": [
+     "pl-119-21-deductions"
+    ],
+    "status": "POINT_OF_USE",
+    "note": "Added 2026-08-29. Applies TY2025-2028; absence from this file was a gap since TY2025 returns are live. Figures are identical to TY2026 because the statute does not index them - confirmed against PL 119-21."
+   },
+   {
+    "paths": [
+     "student_loan_interest"
+    ],
+    "authority_ids": [
+     "rev-proc-2024-40"
+    ],
+    "status": "VERIFIED",
+    "note": "Added 2026-08-29 from the year's Rev. Proc., extracted with pdftotext -layout."
+   },
+   {
+    "paths": [
+     "section_179_cap",
+     "section_179_phaseout_start"
+    ],
+    "authority_ids": [
+     "pl-119-21-179"
+    ],
+    "status": "POINT_OF_USE",
+    "note": "OBBBA §70306 OVERRIDES Rev. Proc. 2024-40's $1,250,000 / $3,130,000 for TY2025."
+   }
+  ],
+  "unresolved": [
+   {
+    "path": "*",
+    "reason": "Legacy rules file includes post-enactment changes but has not been fully path-mapped; verify every used value at point of use."
+   }
+  ]
+ },
+ "tax_year": 2025,
+ "source_notes": "Rev. Proc. 2024-40 as modified by OBBBA (PL 119-21, 7/4/2025) and Rev. Proc. 2025-32 §3. OBBBA made TCJA rates/std deduction/QBI permanent.",
+ "brackets_ordinary": {
+  "single": [
+   [
+    11925,
+    0.1
+   ],
+   [
+    48475,
+    0.12
+   ],
+   [
+    103350,
+    0.22
+   ],
+   [
+    197300,
+    0.24
+   ],
+   [
+    250525,
+    0.32
+   ],
+   [
+    626350,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "mfj": [
+   [
+    23850,
+    0.1
+   ],
+   [
+    96950,
+    0.12
+   ],
+   [
+    206700,
+    0.22
+   ],
+   [
+    394600,
+    0.24
+   ],
+   [
+    501050,
+    0.32
+   ],
+   [
+    751600,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "mfs": [
+   [
+    11925,
+    0.1
+   ],
+   [
+    48475,
+    0.12
+   ],
+   [
+    103350,
+    0.22
+   ],
+   [
+    197300,
+    0.24
+   ],
+   [
+    250525,
+    0.32
+   ],
+   [
+    375800,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "hoh": [
+   [
+    17000,
+    0.1
+   ],
+   [
+    64850,
+    0.12
+   ],
+   [
+    103350,
+    0.22
+   ],
+   [
+    197300,
+    0.24
+   ],
+   [
+    250500,
+    0.32
+   ],
+   [
+    626350,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ]
+ },
+ "brackets_ltcg": {
+  "single": [
+   [
+    48350,
+    0.0
+   ],
+   [
+    533400,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "mfj": [
+   [
+    96700,
+    0.0
+   ],
+   [
+    600050,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "mfs": [
+   [
+    48350,
+    0.0
+   ],
+   [
+    300000,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "hoh": [
+   [
+    64750,
+    0.0
+   ],
+   [
+    566700,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ]
+ },
+ "standard_deduction": {
+  "single": 15750,
+  "mfj": 31500,
+  "mfs": 15750,
+  "hoh": 23625,
+  "addl_65_or_blind_mfj": 1600,
+  "addl_65_or_blind_single_hoh": 2000
+ },
+ "amt": {
+  "exemption": {
+   "single": 88100,
+   "mfj": 137000,
+   "mfs": 68500,
+   "hoh": 88100
+  },
+  "phaseout_start": {
+   "single": 626350,
+   "mfj": 1252700,
+   "mfs": 626350
+  },
+  "rate_breakpoint_26_28": 239100,
+  "mfs_rate_breakpoint": 119550
+ },
+ "niit": {
+  "rate": 0.038,
+  "threshold_single": 200000,
+  "threshold_mfj": 250000,
+  "threshold_mfs": 125000
+ },
+ "addl_medicare": {
+  "rate": 0.009,
+  "threshold_single": 200000,
+  "threshold_mfj": 250000,
+  "threshold_mfs": 125000
+ },
+ "ss_wage_base": 176100,
+ "ss_rate_ee": 0.062,
+ "medicare_rate_ee": 0.0145,
+ "se_tax_rate_combined": 0.153,
+ "se_multiplier": 0.9235,
+ "retirement_limits": {
+  "401k_elective": 23500,
+  "401k_catchup_50": 7500,
+  "401k_catchup_60_63_secure2": 11250,
+  "ira_trad_roth": 7000,
+  "ira_catchup_50": 1000,
+  "simple_elective": 16500,
+  "simple_catchup_50": 3500,
+  "sep_pct_of_comp": 0.25,
+  "sep_max_comp": 350000,
+  "overall_dc_415c": 70000,
+  "hsa_self": 4300,
+  "hsa_family": 8550,
+  "hsa_catchup_55": 1000
+ },
+ "qbi": {
+  "threshold_single": 197300,
+  "threshold_mfj": 394600,
+  "phasein_range_single": 50000,
+  "phasein_range_mfj": 100000,
+  "rate": 0.2,
+  "made_permanent_by_obbba": true
+ },
+ "salt_cap": {
+  "mfj": 40000,
+  "single": 40000,
+  "hoh": 40000,
+  "mfs": 20000,
+  "magi_phaseout_start_mfj": 500000,
+  "magi_phaseout_start_mfs": 250000,
+  "phaseout_rate": 0.3,
+  "floor_mfj": 10000,
+  "floor_mfs": 5000,
+  "_note": "OBBBA §70120: cap reduced by 30% of MAGI over threshold, not below floor; fully at floor by $600k/$300k MAGI. +1%/yr through 2029; reverts to $10k in 2030. PTET workarounds unaffected."
+ },
+ "gift_exclusion_annual": 19000,
+ "estate_exemption": 13990000,
+ "estate_exemption_note": "OBBBA: exemption rises to $15M in 2026, permanent, indexed from 2027.",
+ "ctc_per_child": 2200,
+ "ctc_refundable_cap": 1700,
+ "ctc_phaseout_note": "$50 per $1,000 MAGI over $200,000 (single/HOH/MFS) / $400,000 (MFJ) — statutory.",
+ "odc": 500,
+ "mileage_business": 0.7,
+ "mileage_medical": 0.21,
+ "mileage_charitable": 0.14,
+ "bonus_depreciation": {
+  "acquired_after_2025_01_19": 1.0,
+  "acquired_on_or_before_2025_01_19": 0.4,
+  "_note": "OBBBA §70301: 100% permanent for property ACQUIRED after 1/19/2025 (binding-contract date controls); earlier acquisitions stay on TCJA phase-down (40% 2025, 20% 2026, 0% after). Transition election available — Notice 2026-11."
+ },
+ "section_179_cap": 2500000,
+ "section_179_phaseout_start": 4000000,
+ "obbba_deductions": {
+  "tips": {
+   "cap": 25000,
+   "magi_phaseout_start": 150000,
+   "magi_phaseout_start_mfj": 300000,
+   "phaseout_reduction_per_completed_1000": 100
+  },
+  "overtime": {
+   "cap": 12500,
+   "cap_mfj": 25000,
+   "magi_phaseout_start": 150000,
+   "magi_phaseout_start_mfj": 300000,
+   "phaseout_reduction_per_completed_1000": 100,
+   "note": "FLSA premium portion only"
+  },
+  "senior_65": {
+   "amount_per_person": 6000,
+   "magi_phaseout_start": 75000,
+   "magi_phaseout_start_mfj": 150000,
+   "phaseout_rate": 0.06,
+   "note": "stacks on regular additional 65+ std deduction"
+  },
+  "car_loan_interest": {
+   "cap": 10000,
+   "magi_phaseout_start": 100000,
+   "magi_phaseout_start_mfj": 200000,
+   "phaseout_reduction_per_1000_or_portion": 200,
+   "note": "new qualifying personal vehicle; apply first-lien, original-use, final-assembly, VIN, GVWR, related-party, excluded-loan, and refinancing gates"
+  },
+  "_note": "Caps/thresholds are statutory and unindexed for the 2025-2028 window, so the TY2025 and TY2026 figures are identical - that is expected, not a copy-forward bug. Verify against PL 119-21 and the target-year form before use."
+ },
+ "excess_business_loss_threshold": {
+  "single": 313000,
+  "mfj": 626000
+ },
+ "safe_harbor_prior_year_pct_high_agi": 1.1,
+ "safe_harbor_prior_year_pct_low_agi": 1.0,
+ "safe_harbor_current_year_pct": 0.9,
+ "estimated_tax_due_dates": [
+  "2025-04-15",
+  "2025-06-16",
+  "2025-09-15",
+  "2026-01-15"
+ ],
+ "info_return_threshold_6041_6041a": {
+  "amount": 600,
+  "forms": [
+   "1099-NEC",
+   "1099-MISC"
+  ],
+  "_note": "$600 (pre-OBBBA) Applies only to payments made in the course of a trade or business - personal/household payments never trigger a 1099. Do NOT confuse with 1099-K (IRC 6050W), restored by OBBBA 70432 to >$20,000 AND >200 transactions. Some states retain $600 in their own statutes - check state rules separately. Collect a W-9 regardless of threshold."
+ },
+ "foreign_earned_income_exclusion": 130000,
+ "adoption_credit": {
+  "max": 17280,
+  "phaseout_start": 259190,
+  "phaseout_complete": 299190
+ },
+ "fsa_contribution_limit": 3300,
+ "fsa_carryover_max": 660,
+ "qualified_transportation_fringe_monthly": 325,
+ "gift_exclusion_non_citizen_spouse": 190000,
+ "suv_cap": 31300,
+ "kiddie": {
+  "unearned_income_reduction": 1350,
+  "parental_election_gross_income_ceiling": 13500
+ },
+ "mortgage_acquisition_debt_cap": {
+  "on_or_before_2017_12_15": {
+   "non_mfs": 1000000,
+   "mfs": 500000
+  },
+  "after_2017_12_15": {
+   "non_mfs": 750000,
+   "mfs": 375000
+  },
+  "_note": "Selected by the date the DEBT was incurred, never by tax year. Binding-contract transition: contract before 2017-12-15, required closing before 2018-01-01, purchase before 2018-04-01."
+ },
+ "safe_harbor_high_agi_threshold_non_mfs": 150000,
+ "safe_harbor_high_agi_threshold_mfs": 75000,
+ "student_loan_interest": {
+  "max": 2500,
+  "phaseout_start_single": 85000,
+  "phaseout_complete_single": 100000,
+  "phaseout_start_mfj": 170000,
+  "phaseout_complete_mfj": 200000
+ }
+}

@@ -1,0 +1,132 @@
+# <Entity> — Multi-Year Audit & Remediation Plan
+
+**Entity**: <Legal Name> (EIN <EIN>) — <State> <Type>, <fiscal year>
+**Parent of**: <list of disregarded SMLLCs, if any>
+**Partners / Shareholders**: <list>
+**Scope of plan**: <year list — e.g., TY2022, TY2023, TY2024>
+**Drafted**: <YYYY-MM-DD>
+**Status**: Plan only — not yet executed
+**Sequencing decision**: <back-fix first / forward-first / parallel>
+**Scope boundary**: <entity-only / expand as needed>
+**Preparer history**: <self-prepared / CPA — same / CPA — different>
+**Materiality philosophy**: <compliance-first / dollar-threshold $X / refund-only>
+
+> Disclaimer — this plan produces analysis and workpapers. Numbers, amendment decisions, and capital-account restatements must be verified by a CPA/EA before any return is filed. Partners' / shareholders' 1040s may need amendment if the entity's K-1s change.
+
+---
+
+## 1. Why this plan exists
+
+<One paragraph: symptoms observed, evidence, user's stated concern.>
+
+| Symptom | Evidence |
+|---|---|
+| <…> | <…> |
+
+## 2. Objectives (priority order)
+
+1. <first objective>
+2. <…>
+
+## 2a. Explicit exclusions
+
+- <out-of-scope item 1 — where it will be tracked instead>
+- <…>
+
+## 3. Ground rules
+
+- PDFs parsed via `pdftotext -layout`; never the built-in Read (per skill `parsing.md`).
+- Single source of truth: year-specific state in `tax/FY<YYYY>/annual/workpapers/`; cross-year state in `books/`.
+- Nothing filed without <CPA / user> sign-off.
+- Every entity change cascades: if the entity's return changes, partners/SH K-1s change, their 1040s may need 1040-X.
+
+## 4. Phased workplan
+
+### Phase −1 — Pre-work (user action items)
+
+- [ ] <downloads, subscriptions, access>
+
+### Phase 0 — Triage
+
+- [ ] Parse every filed return for in-scope years (use `parsing.md` 1065-Return / 1120-Return / 1120-S-Return schemas).
+- [ ] Parse every K-1 and 1099 received.
+- [ ] Parse every IRS letter on file.
+- [ ] Inventory bank/brokerage accounts for every year.
+- [ ] Pull IRS transcripts per `scenarios/irs-transcripts.md`.
+
+### Phase 1 — Roster & labeling audit
+
+- [ ] Verify K-1 recipient entity matches subscription docs (regarded owner, not SMLLC).
+- [ ] Verify GP vs. LP character matches standing structure (see `entities/disregarded.md` dual-K-1 rule).
+- [ ] Update entity.md roster to match observed reality.
+
+### Phase 2 — Books reconstruction
+
+Per year, build full workpaper set per `reconciliation.md`:
+- [ ] Bank / brokerage / intercompany recs.
+- [ ] Upstream K-1 pickup pivot (per `reconciliation.md` §8a).
+- [ ] Capital accounts (tax basis) per partner / stock + debt basis per SH.
+- [ ] Schedule L rollforward.
+- [ ] Schedule M-1 / M-2.
+- [ ] §199A Statement A pickup per upstream trade or business.
+- [ ] Partner 1040 cross-check.
+
+### Phase 3 — Variance & tax-impact quantification
+
+- [ ] Dollar impact per year × partner × character.
+- [ ] IRS-matching exposure assessment.
+- [ ] Character-shift impact (LTCG/ordinary, §199A, NIIT, SE tax).
+
+### Phase 4 — Amendment decision
+
+Use decision framework per `scenarios/amend-partnership.md` or equivalent. Output: amend / work-around decision per year with authority.
+
+### Phase 5 — Execution (only if authorized)
+
+- [ ] Draft AAR / 1065-X / amended K-1s / partner 1040-Xs per `scenarios/amend-partnership.md`.
+- [ ] <CPA / user> review gate.
+
+### Phase 6 — Upstream K-1 corrections
+
+- [ ] Request corrected K-1s from issuers where titling was wrong (Reg §1.6031(b)-1T).
+- [ ] Substitute K-1 via Form 8082 (Notice 2008-14) where issuer refuses.
+
+### Phase 7 — Penalty abatement
+
+Per `scenarios/penalty-abatement.md` — Rev. Proc. 84-35 → FTA → reasonable cause → Form 843.
+
+### Phase 8 — Forward-looking process
+
+- [ ] Populate `books/chart-of-accounts.md` + `books/opening-balances.md`.
+- [ ] Install perpetual capital-accounts ledger.
+- [ ] Install K-1 intake SOP (60-second check at receipt).
+- [ ] Install quarterly close cadence per `quarterly.md`.
+
+## 5. Deliverables checklist
+
+- `tax/audit-triage-<YYYY-MM>.md`
+- `books/k1-roster.md`
+- `tax/FY<YYYY>/annual/workpapers/*` for each in-scope year
+- `audit-variance-report.md`
+- `amendment-recommendation.md`
+- `tax/FY<YYYY>/amended/*` (if authorized)
+- Partner 1040-X packages (if authorized)
+- Penalty-abatement package (if applicable)
+
+## 6. Risks / unknowns
+
+- <bank-statement availability>
+- <prior-preparer file accessibility>
+- <BBA regime per filed return (parse Form 1065 page 3)>
+- <any disregarded-SMLLC activity beyond pure conduit>
+
+## 7. Pressure test before starting
+
+A 2-hour sanity check before committing to full reconstruction:
+1. Parse the most recent filed return; note Sch K line totals.
+2. Sum the same boxes across received K-1s and direct activity.
+3. Delta within 10% → surgical remediation. Delta >50% → structural rebuild.
+
+---
+
+**Next step**: run the pressure test; then Phase −1 + Phase 0.

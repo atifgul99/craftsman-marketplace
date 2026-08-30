@@ -1,0 +1,1094 @@
+{
+  "$comment": "Regression matrix for the individual/ module set. Each entry pins one proposition that a review caught as WRONG or MISSING, so that a future editorial pass cannot silently delete it. `anchors` are literal substrings that must all be present in `owner`. `forbidden` are regexes for the known-wrong formulation; if one matches, the correction has been reverted. `warn_required` asserts the point-of-use marker (authority.md) sits in the same structural block (list item / table row / paragraph, fences excluded) as `marker_anchor` — which is mandatory once a warn-required entry has more than one anchor. `scope` is mandatory for multi-anchor entries: \"local\" enforces that all anchors sit in one block, \"distributed\" records a deliberate spread. `no_restatement_outside_owner` regexes are scanned across the OTHER individual modules to enforce a sole-ownership claim. Run: python3 -B evals/validate_individual_matrix.py",
+  "version": 1,
+  "entries": [
+    {
+      "id": "R001",
+      "proposition": "§121 nonqualified use is prorated over TOTAL ownership, and §121(b)(5)(C)(ii)(I) excepts only TRAILING non-use within the five-year window — rental before the last residency period still counts.",
+      "owner": "individual/1040.md",
+      "authority": "IRC §121(b)(5)(C)(ii)(I)",
+      "origin": "cpa-review-2, codex-signoff-4 (wrong in both directions)",
+      "warn_required": true,
+      "marker_anchor": "§121(b)(5)(C)(ii)(I) excepts trailing",
+      "scope": "local",
+      "anchors": [
+        "§121(b)(5)(C)(ii)(I) excepts trailing",
+        "total period of\n   ownership",
+        "do not\n   apply a categorical rule in either direction"
+      ],
+      "forbidden": [
+        "prorated over the \\*\\*(five|5)-year",
+        "lived[- ]in[^.]{0,80}zero nonqualified"
+      ],
+      "failure_mode": "Either overstates gain (counting trailing rental) or understates it (exempting pre-residency rental)."
+    },
+    {
+      "id": "R002",
+      "proposition": "§121(b)(2) is asymmetric on MFJ: either spouse may meet ownership, both must meet use; failing use as to one spouse falls to the sum of separately computed amounts, not zero.",
+      "owner": "individual/1040.md",
+      "authority": "IRC §121(b)(2)(B)",
+      "origin": "post-cut regression audit; found MISSING again by the regression matrix build",
+      "warn_required": true,
+      "marker_anchor": "§121(b)(2) is asymmetric",
+      "scope": "local",
+      "anchors": [
+        "§121(b)(2) is asymmetric",
+        "**both** must satisfy",
+        "sum of the separately computed"
+      ],
+      "forbidden": [],
+      "failure_mode": "Denies the exclusion entirely when one spouse fails the use test, instead of allowing the single-filer amount."
+    },
+    {
+      "id": "R003",
+      "proposition": "A prior §1031 exchange bars §121 for five years — a threshold disqualifier tested before any computation.",
+      "owner": "individual/1040.md",
+      "authority": "IRC §121(d)(10)",
+      "origin": "module build",
+      "warn_required": true,
+      "marker_anchor": "§121(d)(10)",
+      "scope": "local",
+      "anchors": [
+        "§121(d)(10)",
+        "test it first"
+      ],
+      "forbidden": [],
+      "failure_mode": "Computes an exclusion that is unavailable."
+    },
+    {
+      "id": "R004",
+      "proposition": "§121(d)(6) basis reduction is depreciation ALLOWED BUT NOT LESS THAN ALLOWABLE; unclaimed depreciation for 2+ years is corrected by Form 3115 with a §481(a) adjustment, not an amended return.",
+      "owner": "individual/1040.md",
+      "authority": "IRC §121(d)(6), §1016(a)(2), Rev. Proc. 2015-13",
+      "origin": "cpa-review-1",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "allowed, but not less than allowable",
+        "Form 3115 with a §481(a)"
+      ],
+      "forbidden": [
+        "amend[^.]{0,60}unclaimed depreciation"
+      ],
+      "failure_mode": "Understates recapture, or sends the taxpayer down a barred amendment path."
+    },
+    {
+      "id": "R005",
+      "proposition": "On a converted residence, basis for LOSS is the lesser of FMV at conversion or adjusted basis.",
+      "owner": "individual/1040.md",
+      "authority": "Reg §1.165-9(b)(2)",
+      "origin": "module build",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "1.165-9(b)(2)",
+        "lesser of FMV at conversion"
+      ],
+      "forbidden": [],
+      "failure_mode": "Claims a loss that personal-use appreciation history does not support."
+    },
+    {
+      "id": "R006",
+      "proposition": "Inherited ROTH IRAs take no annual RMDs in years 1-9; the owner is always treated as dying before the RBD.",
+      "owner": "individual/retirement.md",
+      "authority": "Reg §1.408A-6 Q&A-14(b); 2024 final regs",
+      "origin": "retirement-specialist review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "1.408A-6 Q&A-14(b)",
+        "no annual RMDs in years 1–9"
+      ],
+      "forbidden": [
+        "inherited Roth[^.|]{0,80}annual RMDs? (are |is )?required"
+      ],
+      "failure_mode": "Forces distributions that destroy ten years of tax-free growth."
+    },
+    {
+      "id": "R007",
+      "proposition": "SEPP from a QUALIFIED PLAN requires separation from service; an in-service SEPP from a current employer's 401(k) is penalized.",
+      "owner": "individual/retirement.md",
+      "authority": "IRC §72(t)(3)(B); Notice 2022-6",
+      "origin": "retirement-specialist review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§72(t)(3)(B)",
+        "in-service SEPP"
+      ],
+      "forbidden": [],
+      "failure_mode": "Recommends a penalized distribution stream."
+    },
+    {
+      "id": "R008",
+      "proposition": "A qualified Roth distribution requires the five-year clock AND a §408A(d)(2)(A) triggering event. Five years alone is not enough.",
+      "owner": "individual/retirement.md",
+      "authority": "IRC §408A(d)(2)(A), §408A(d)(2)(B), §408A(d)(3)(F)",
+      "origin": "retirement-specialist review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§408A(d)(2)(A) event",
+        "five years is not enough"
+      ],
+      "forbidden": [],
+      "failure_mode": "Treats a taxable distribution as tax-free."
+    },
+    {
+      "id": "R009",
+      "proposition": "§465(e) recapture has TWO legs — income under (e)(1)(A) and a deduction in the succeeding year under (e)(1)(B).",
+      "owner": "individual/loss-limitations.md",
+      "authority": "IRC §465(e)(1)(A), §465(e)(1)(B)",
+      "origin": "passive-loss specialist review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§465(e)(1)(B)",
+        "succeeding"
+      ],
+      "forbidden": [],
+      "failure_mode": "Permanently overstates tax by booking the income and never the offsetting deduction."
+    },
+    {
+      "id": "R010",
+      "proposition": "PREDICATE: qualified nonrecourse financing exists only for an activity of HOLDING REAL PROPERTY. Nonrecourse debt in equipment, oil-and-gas, or operating funds is never QNRF.",
+      "owner": "individual/loss-limitations.md",
+      "authority": "IRC §465(b)(6)(A)",
+      "origin": "post-cut regression audit (cap/predicate coupling failure)",
+      "warn_required": true,
+      "anchors": [
+        "§465(b)(6)(A) limits qualified nonrecourse financing"
+      ],
+      "forbidden": [],
+      "failure_mode": "Grants at-risk basis for non-real-property nonrecourse debt — an unbounded number, because the mechanics that follow it survived the cut."
+    },
+    {
+      "id": "R011",
+      "proposition": "A RELATED person can be a qualified person for QNRF where the financing is commercially reasonable and on substantially the same terms as unrelated lending.",
+      "owner": "individual/loss-limitations.md",
+      "authority": "IRC §465(b)(6)(D)(ii)",
+      "origin": "passive-loss specialist review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§465(b)(6)(D)(ii)",
+        "commercially reasonable"
+      ],
+      "forbidden": [
+        "must be (an )?unrelated lender"
+      ],
+      "failure_mode": "A flat unrelated-lender test denies at-risk basis the statute grants."
+    },
+    {
+      "id": "R012",
+      "proposition": "A related-party sale DEFERS suspended passive losses; it does not extinguish them.",
+      "owner": "individual/loss-limitations.md",
+      "authority": "IRC §469(g)(1)(B)",
+      "origin": "passive-loss specialist review",
+      "warn_required": false,
+      "scope": "distributed",
+      "anchors": [
+        "§469(g)(1)(B)",
+        "unrelated"
+      ],
+      "forbidden": [],
+      "failure_mode": "Writes off a live carryforward as dead."
+    },
+    {
+      "id": "R013",
+      "proposition": "ORDERING: released §469 losses go first against that activity, then against other passive income, then against nonpassive.",
+      "owner": "individual/loss-limitations.md",
+      "authority": "IRC §469(g)(1)(A)",
+      "origin": "post-cut regression audit",
+      "warn_required": true,
+      "marker_anchor": "§469(g)(1)(A)",
+      "scope": "local",
+      "anchors": [
+        "§469(g)(1)(A)",
+        "then** against net income from **all other passive"
+      ],
+      "forbidden": [],
+      "failure_mode": "Releasing straight against wages skips step 2 and understates how much other suspended loss is freed."
+    },
+    {
+      "id": "R014",
+      "proposition": "The §469(i) modified-AGI definition is owned here: AGI without IRA deductions, taxable SS, §221, §199A, §911, and the passive losses themselves.",
+      "owner": "individual/loss-limitations.md",
+      "authority": "IRC §469(i)(3)(F)",
+      "origin": "post-cut regression audit (the MAGI register in 1040.md §4 pointed at a definition that had been cut)",
+      "warn_required": true,
+      "anchors": [
+        "§469(i)(3)(F) modified-AGI definition"
+      ],
+      "forbidden": [],
+      "failure_mode": "The MAGI register dangles; ordinary AGI gets substituted and the $25,000 allowance phases out at the wrong point."
+    },
+    {
+      "id": "R015",
+      "proposition": "§469 material-participation / STR status does NOT determine SE tax under §1402. The two are independent.",
+      "owner": "individual/loss-limitations.md",
+      "authority": "IRC §1402(a)(1); Reg §1.1402(a)-4(c)(2)",
+      "origin": "passive-loss specialist review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§469 status does not determine SE tax",
+        "1.1402(a)-4(c)(2)"
+      ],
+      "forbidden": [],
+      "failure_mode": "Wrong Schedule SE in both directions on short-term rentals."
+    },
+    {
+      "id": "R016",
+      "proposition": "§213(d)(5) treats a child of divorced or separated parents as a dependent of EACH parent — BOTH deduct what they actually paid, regardless of Form 8332.",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §213(d)(5), §213(a), §152(b)",
+      "origin": "family-CPA review — an earlier Codex-driven 'fix' had made this worse",
+      "warn_required": true,
+      "marker_anchor": "§213(d)(5) treats a child of divorced or separated parents as a",
+      "scope": "local",
+      "anchors": [
+        "§213(d)(5) treats a child of divorced or separated parents as a",
+        "**both** deduct what they actually paid"
+      ],
+      "forbidden": [
+        "stays with the custodial parent",
+        "only the custodial parent[^.]{0,40}medical"
+      ],
+      "failure_mode": "Denies the noncustodial parent a deduction the statute grants."
+    },
+    {
+      "id": "R017",
+      "proposition": "§25A FOLLOWS THE DEPENDENCY CLAIM under §25A(g)(3); it is not itself an item released by Form 8332. It moves as a consequence of the release, not as a released item.",
+      "owner": "individual/credits.md",
+      "authority": "IRC §25A(g)(3); Form 8332 instructions",
+      "origin": "cpa-review vs codex-signoff-5 conflict — resolved by stating the mechanism",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§25A keys to whoever claims the student",
+        "§25A(g)(3)"
+      ],
+      "forbidden": [
+        "8332 releases the §25A",
+        "§25A is released by"
+      ],
+      "failure_mode": "Either answer stated flatly is wrong for the most common divorced-parent pattern."
+    },
+    {
+      "id": "R018",
+      "proposition": "§6015(f) equitable relief HAS a deadline — before the §6502 collection statute expires, or within the §6511 refund period.",
+      "owner": "individual/life-events.md",
+      "authority": "Rev. Proc. 2013-34; IRC §6502, §6511",
+      "origin": "tax-attorney review",
+      "warn_required": true,
+      "marker_anchor": "Rev. Proc. 2013-34",
+      "scope": "local",
+      "anchors": [
+        "Rev. Proc. 2013-34",
+        "is not\n  open-ended"
+      ],
+      "forbidden": [
+        "§6015\\(f\\)[^.]{0,80}no deadline",
+        "\\(f\\) equitable[^.]{0,60}no time limit"
+      ],
+      "failure_mode": "'No deadline' costs a taxpayer relief they were entitled to."
+    },
+    {
+      "id": "R019",
+      "proposition": "§471(c) is NOT an expensing election — it does not license deducting unsold inventory. Adopting it initially is not a method CHANGE requiring Form 3115.",
+      "owner": "individual/schedule-c.md",
+      "authority": "IRC §471(c)",
+      "origin": "cpa-review-1; refined by codex-signoff-6 (the Form 3115 overstatement)",
+      "warn_required": true,
+      "anchors": [
+        "§471(c) is not a license to deduct unsold inventory"
+      ],
+      "forbidden": [
+        "§471\\(c\\)[^.]{0,60}(always|must) require[sd]? (a )?Form 3115"
+      ],
+      "failure_mode": "Invites deducting unsold inventory, or blocks a permissible initial method."
+    },
+    {
+      "id": "R020",
+      "proposition": "ISO status post-termination is §422(a)(2)'s three months. The plan's post-termination exercise period is a separate contractual term; a 10-year PTEP does not extend §422.",
+      "owner": "individual/job-loss.md",
+      "authority": "IRC §422(a)(2), §22(e)(3)",
+      "origin": "equity-comp review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§422(a)(2)",
+        "does not extend §422"
+      ],
+      "forbidden": [],
+      "failure_mode": "Treats an NSO exercise as an ISO — wrong AMT and wrong ordinary income."
+    },
+    {
+      "id": "R021",
+      "proposition": "The age-55 exception turns on the SEPARATION date, not the distribution date; rolling to an IRA destroys it and NUA permanently.",
+      "owner": "individual/retirement.md",
+      "authority": "IRC §72(t)(2)(A)(v)",
+      "origin": "retirement-specialist review",
+      "warn_required": false,
+      "anchors": [
+        "separation date, not the distribution date"
+      ],
+      "forbidden": [],
+      "failure_mode": "Destroys the only penalty-free pre-59½ access the taxpayer has."
+    },
+    {
+      "id": "R022",
+      "proposition": "Digital-asset ABANDONMENT losses are barred by §67(h) (a miscellaneous itemized deduction); THEFT losses survive via §67(b)(3). Both arise under §165(c)(2) — the distinction is the §67 gate, not the loss provision.",
+      "owner": "individual/digital-assets.md",
+      "authority": "IRC §67(h), §67(b)(3), §165(c)(2); CCA 202511015",
+      "origin": "digital-asset specialist review",
+      "warn_required": false,
+      "anchors": [
+        "theft survives and abandonment does not"
+      ],
+      "forbidden": [],
+      "failure_mode": "Claims a disallowed abandonment loss, or forfeits an allowable theft loss."
+    },
+    {
+      "id": "R023",
+      "proposition": "Notice 2025-7 and Notice 2026-20 provide lot-identification relief; 2026-20 extends it through 12/31/2026.",
+      "owner": "individual/digital-assets.md",
+      "authority": "Notice 2025-7; Notice 2026-20",
+      "origin": "digital-asset specialist review — guidance the author did not know existed",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "Notice 2025-7",
+        "Notice 2026-20"
+      ],
+      "forbidden": [],
+      "failure_mode": "Forces FIFO where books-and-records identification is permitted."
+    },
+    {
+      "id": "R024",
+      "proposition": "§1091 reaches 'stock or securities'; digital assets are property, so wash sales do not apply — BUT crypto ETPs and crypto-related equities ARE securities and §1091 applies in full.",
+      "owner": "individual/digital-assets.md",
+      "authority": "IRC §1091",
+      "origin": "digital-asset specialist review",
+      "warn_required": true,
+      "marker_anchor": "§1091 reaches \"stock or securities.\"",
+      "scope": "distributed",
+      "anchors": [
+        "§1091 reaches \"stock or securities.\"",
+        "ETP",
+        "§1091 applies in"
+      ],
+      "forbidden": [],
+      "failure_mode": "Harvesting an ETP loss and rebuying is a wash sale; a blanket 'crypto is exempt' rule gets it wrong."
+    },
+    {
+      "id": "R025",
+      "proposition": "PTP amount realized includes §752(d) liability relief; the §751 ordinary component is computed INDEPENDENTLY and is not a carve-out of total gain, so the remainder is frequently a capital LOSS.",
+      "owner": "individual/ptp.md",
+      "authority": "IRC §752(d), §751, §1001; Reg §1.751-1(a)(2)",
+      "origin": "passive-loss/PTP specialist review",
+      "warn_required": true,
+      "marker_anchor": "§752(d)",
+      "scope": "distributed",
+      "anchors": [
+        "§752(d)",
+        "not a carve-out of total gain"
+      ],
+      "forbidden": [],
+      "failure_mode": "Understates gain, then mischaracterizes the remainder as capital gain when it is a loss."
+    },
+    {
+      "id": "R026",
+      "proposition": "Worker classification is a legal DETERMINATION, not a tax election. Form 8919 vs Schedule C is not a taxpayer choice.",
+      "owner": "individual/worker-classification.md",
+      "authority": "Rev. Rul. 87-41; §3121(d)",
+      "origin": "procedure/EA review",
+      "warn_required": false,
+      "anchors": [
+        "Classification is a determination, not an election"
+      ],
+      "forbidden": [
+        "choose between Form 8919 and Schedule C",
+        "elect to file Form 8919"
+      ],
+      "failure_mode": "Frames a legal test as a planning lever."
+    },
+    {
+      "id": "R027",
+      "proposition": "TWO bonus-depreciation regimes coexist in 2025 — acquisition date selects the regime, placed-in-service year selects the legacy percentage. Acquisition date alone cannot select the percentage.",
+      "owner": "individual/schedule-c.md",
+      "authority": "IRC §168(k)(6); OBBBA PL 119-21",
+      "origin": "cpa-review-3",
+      "warn_required": true,
+      "marker_anchor": "Two regimes coexist in 2025",
+      "scope": "local",
+      "anchors": [
+        "Two regimes coexist in 2025",
+        "acquisition-date",
+        "Record\n  **both** dates and the regime"
+      ],
+      "forbidden": [],
+      "failure_mode": "Applies 100% bonus to property acquired before 1/19/2025, or the phase-down to property acquired after."
+    },
+    {
+      "id": "R028",
+      "proposition": "CAP: §179 cannot exceed aggregate taxable income from the active conduct of a trade or business, cannot create a loss, and the disallowed amount carries forward indefinitely. Bonus has no such limit and CAN create a loss — this is what decides the election.",
+      "owner": "individual/schedule-c.md",
+      "authority": "IRC §179(b)(3)",
+      "origin": "post-cut regression audit; found STILL MISSING by the regression matrix build",
+      "warn_required": true,
+      "marker_anchor": "§179(b)(3)",
+      "scope": "local",
+      "anchors": [
+        "§179(b)(3)",
+        "cannot create a loss",
+        "carries forward indefinitely"
+      ],
+      "forbidden": [],
+      "failure_mode": "Produces an unbounded §179 deduction, and generates a carryforward that three other files (1040.md §5, year-over-year.md, carryforwards.json) already expect but nothing computes."
+    },
+    {
+      "id": "R029",
+      "proposition": "CAP: §108(a)(3) limits the insolvency exclusion to the amount of insolvency immediately BEFORE the discharge. A taxpayer insolvent by $1 excludes $1.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §108(a)(3)",
+      "origin": "post-cut regression audit (the worksheet survived, the cap did not)",
+      "warn_required": true,
+      "marker_anchor": "§108(a)(3) caps the exclusion",
+      "scope": "local",
+      "anchors": [
+        "§108(a)(3) caps the exclusion",
+        "insolvent by $1 excludes $1"
+      ],
+      "forbidden": [],
+      "failure_mode": "Excludes the entire discharge on a showing of any insolvency — an unbounded exclusion."
+    },
+    {
+      "id": "R030",
+      "proposition": "QPRI (§108(a)(1)(E)/§108(h)) is NOT permanent and was not extended by OBBBA; insolvency IS permanent. Never present them as a matched pair.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §108(a)(1)(E), §108(h)",
+      "origin": "cpa-review-2",
+      "warn_required": true,
+      "marker_anchor": "NOT permanent",
+      "scope": "local",
+      "anchors": [
+        "NOT permanent",
+        "it as a matched pair with insolvency"
+      ],
+      "forbidden": [],
+      "failure_mode": "Claims an expired exclusion for the target year."
+    },
+    {
+      "id": "R031",
+      "proposition": "A 1099-A is a DISPOSITION, not COD. Nonrecourse: amount realized is the full debt (Tufts). Recourse: BIFURCATE into disposition (FMV vs basis) plus COD (debt minus FMV).",
+      "owner": "individual/life-events.md",
+      "authority": "Comm'r v. Tufts, 461 U.S. 300 (1983); Reg §1.1001-2(a)(2); IRC §61(a)(11)",
+      "origin": "architecture audit — COD had no owning module",
+      "warn_required": true,
+      "marker_anchor": "A 1099-A is a disposition, not COD",
+      "scope": "distributed",
+      "anchors": [
+        "A 1099-A is a disposition, not COD",
+        "Tufts",
+        "bifurcate"
+      ],
+      "forbidden": [],
+      "failure_mode": "Reports COD only, missing a Schedule D / 4797 event entirely."
+    },
+    {
+      "id": "R032",
+      "proposition": "Capital loss carryover is reduced by the amount ALLOWABLE, not the amount that produced a benefit — a zero-tax year still consumes it.",
+      "owner": "individual/capital-gains.md",
+      "authority": "IRC §1212(b)(2)",
+      "origin": "post-cut regression audit",
+      "warn_required": false,
+      "anchors": [
+        "§1212(b)(2)"
+      ],
+      "forbidden": [],
+      "failure_mode": "Overstates the carryforward into every subsequent year."
+    },
+    {
+      "id": "R033",
+      "proposition": "A math-error notice carries a hard 60-day window to request abatement under §6213(b)(2); missing it forfeits the deficiency procedures.",
+      "owner": "individual/notices-amendments.md",
+      "authority": "IRC §6213(b)(2)",
+      "origin": "post-cut regression audit",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§6213(b)(2)",
+        "60 days"
+      ],
+      "forbidden": [],
+      "failure_mode": "Loses Tax Court access on an assessment that could have been abated."
+    },
+    {
+      "id": "R034",
+      "proposition": "§6501(c)(8) suspends the period on the ENTIRE return, but reasonable cause can limit the suspension to related items.",
+      "owner": "individual/1040.md",
+      "authority": "IRC §6501(c)(8)",
+      "origin": "codex-signoff-6 (compression distortion — the qualifier had been cut)",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§6501(c)(8)",
+        "reasonable cause can limit it to related items"
+      ],
+      "forbidden": [],
+      "failure_mode": "Overstates the exposure and the hold."
+    },
+    {
+      "id": "R035",
+      "proposition": "Form 8283 Section B may be transmitted on e-file as a PDF attachment OR by mail with Form 8453 — it is not Form 8453-exclusive.",
+      "owner": "individual/itemized.md",
+      "authority": "Form 8283 / Form 8453 instructions",
+      "origin": "codex-signoff-6 (compression distortion)",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "PDF attachment",
+        "Form 8453"
+      ],
+      "forbidden": [
+        "only by mail with \\*\\*Form 8453",
+        "must be mailed with Form 8453"
+      ],
+      "failure_mode": "Sends the taxpayer down an unnecessary paper path."
+    },
+    {
+      "id": "R036",
+      "proposition": "The §170(f)(11) readily-valued-property exception does NOT reach digital assets — they are not securities. CCA 202302012 also rejected reasonable cause.",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §170(f)(11)(A)(ii)(I); CCA 202302012",
+      "origin": "digital-asset specialist review",
+      "warn_required": true,
+      "marker_anchor": "Digital assets are not securities and",
+      "scope": "local",
+      "anchors": [
+        "Digital assets are not securities and",
+        "CCA 202302012"
+      ],
+      "forbidden": [],
+      "failure_mode": "A six-figure crypto donation is disallowed in full for want of an appraisal."
+    },
+    {
+      "id": "R037",
+      "proposition": "SUBSTANTIATION IS NOT CURABLE: a §170(f)(8) CWA must be obtained by the EARLIER of filing or the due date. One obtained during examination is too late.",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §170(f)(8)",
+      "origin": "module build; flagged by cpa-review-1 as the highest-frequency real loss",
+      "warn_required": true,
+      "marker_anchor": "Not curable after the fact",
+      "scope": "distributed",
+      "anchors": [
+        "§170(f)(8)",
+        "Not curable after the fact",
+        "too late"
+      ],
+      "forbidden": [],
+      "failure_mode": "The deduction is lost and no remediation exists."
+    },
+    {
+      "id": "R038",
+      "proposition": "The §111 tax-benefit rule must be COMPUTED, not assumed — with the SALT cap binding or the standard deduction taken, a state refund is frequently not taxable at all.",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §111",
+      "origin": "cpa-review-1",
+      "warn_required": true,
+      "marker_anchor": "§111 tax-benefit rule",
+      "scope": "local",
+      "anchors": [
+        "§111 tax-benefit rule",
+        "do not assume"
+      ],
+      "forbidden": [],
+      "failure_mode": "Taxes a refund that produced no benefit."
+    },
+    {
+      "id": "R039",
+      "proposition": "The §163(d)(4)(B)(iii) election trades the preferential rate on qualified dividends/LTCG for a current ordinary deduction. Record it as a decision with the arithmetic both ways. The §163(d) NII figure is NOT the §1411 NIIT base.",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §163(d)(4)(B)(iii), §163(d)(2), §1411",
+      "origin": "cpa-review-1",
+      "warn_required": true,
+      "marker_anchor": "§163(d)(4)(B)(iii)",
+      "scope": "local",
+      "anchors": [
+        "§163(d)(4)(B)(iii)",
+        "**not the same number**"
+      ],
+      "forbidden": [],
+      "failure_mode": "Silently surrenders preferential rates, or reuses the wrong base for NIIT."
+    },
+    {
+      "id": "R040",
+      "proposition": "§1014(b)(6): community property receives a FULL step-up on BOTH halves. This file owns the rule.",
+      "owner": "individual/estate-gift.md",
+      "authority": "IRC §1014(b)(6)",
+      "origin": "module build; ownership assigned by architecture audit",
+      "warn_required": true,
+      "marker_anchor": "§1014(b)(6)",
+      "scope": "local",
+      "anchors": [
+        "§1014(b)(6)",
+        "This file owns the rule"
+      ],
+      "forbidden": [],
+      "no_restatement_outside_owner": [
+        "full step-up on both halves"
+      ],
+      "failure_mode": "Halves the step-up for a community-property couple, or duplicates the rule in state-residency.md."
+    },
+    {
+      "id": "R041",
+      "proposition": "Rev. Rul. 2023-2: assets in a completed-gift irrevocable grantor trust not includible in the gross estate get NO §1014 adjustment.",
+      "owner": "individual/estate-gift.md",
+      "authority": "Rev. Rul. 2023-2",
+      "origin": "tax-attorney review",
+      "warn_required": true,
+      "anchors": [
+        "Rev. Rul. 2023-2"
+      ],
+      "forbidden": [],
+      "failure_mode": "Assumes a step-up the ruling denies — the whole planning conclusion inverts."
+    },
+    {
+      "id": "R042",
+      "proposition": "§1014(e) denies the step-up where appreciated property was gifted to a decedent within one year and returns to the donor OR THE DONOR'S SPOUSE. The spouse variant is the one the strategy actually uses.",
+      "owner": "individual/estate-gift.md",
+      "authority": "IRC §1014(e)",
+      "origin": "tax-attorney review",
+      "warn_required": true,
+      "marker_anchor": "§1014(e)",
+      "scope": "local",
+      "anchors": [
+        "§1014(e)",
+        "the donor's spouse"
+      ],
+      "forbidden": [],
+      "failure_mode": "Blesses the exact transaction the anti-abuse rule targets."
+    },
+    {
+      "id": "R043",
+      "proposition": "Portability requires a timely Form 706, but Rev. Proc. 2022-32 allows a LATE election within five years of death for estates not otherwise required to file.",
+      "owner": "individual/estate-gift.md",
+      "authority": "Rev. Proc. 2022-32",
+      "origin": "tax-attorney review",
+      "warn_required": true,
+      "marker_anchor": "2022-32 allows a late election",
+      "scope": "local",
+      "anchors": [
+        "2022-32 allows a late election",
+        "five years of death"
+      ],
+      "forbidden": [],
+      "failure_mode": "Writes off a recoverable multi-million-dollar exclusion as permanently lost."
+    },
+    {
+      "id": "R044",
+      "proposition": "DSUE is available only from the LAST deceased spouse; remarriage plus a second spousal death wipes out a banked DSUE. GST exemption is not portable.",
+      "owner": "individual/estate-gift.md",
+      "authority": "IRC §2010(c)(4), §2010(c)(5)(B)",
+      "origin": "tax-attorney review",
+      "warn_required": true,
+      "marker_anchor": "§2010(c)(4)",
+      "scope": "local",
+      "anchors": [
+        "§2010(c)(4)",
+        "GST exemption is not portable"
+      ],
+      "forbidden": [],
+      "failure_mode": "Relies on an exclusion that no longer exists."
+    },
+    {
+      "id": "R045",
+      "proposition": "§2503(e) covers TUITION ONLY — not books, supplies, room or board — and must be paid DIRECTLY to the institution.",
+      "owner": "individual/estate-gift.md",
+      "authority": "IRC §2503(e)",
+      "origin": "tax-attorney review",
+      "warn_required": true,
+      "marker_anchor": "§2503(e) covers tuition only",
+      "scope": "local",
+      "anchors": [
+        "§2503(e) covers tuition only",
+        "directly"
+      ],
+      "forbidden": [],
+      "failure_mode": "Treats room and board as an excluded transfer, consuming exclusion the donor thought was free."
+    },
+    {
+      "id": "R046",
+      "proposition": "Before recommending a phased-out parent forgo the dependency so the student claims AOTC: §25A(b)(4)(B) bars a student subject to the kiddie tax from the 40% refundable portion — usually the entire point of the move.",
+      "owner": "individual/education.md",
+      "authority": "IRC §25A(b)(4)(B)",
+      "origin": "family-CPA review",
+      "warn_required": true,
+      "marker_anchor": "§25A(b)(4)(B)",
+      "scope": "local",
+      "anchors": [
+        "§25A(b)(4)(B)",
+        "refundable portion"
+      ],
+      "forbidden": [],
+      "failure_mode": "Recommends a strategy whose entire benefit is statutorily barred."
+    },
+    {
+      "id": "R047",
+      "proposition": "The 1099-Q goes to the RECIPIENT of the distribution. Paid to the beneficiary or the school it carries the beneficiary's TIN, and taxable earnings land on the STUDENT's return.",
+      "owner": "individual/education.md",
+      "authority": "IRC §529; Form 1099-Q instructions",
+      "origin": "family-CPA review",
+      "warn_required": true,
+      "marker_anchor": "1099-Q goes to the recipient",
+      "scope": "local",
+      "anchors": [
+        "1099-Q goes to the recipient",
+        "beneficiary's TIN"
+      ],
+      "forbidden": [],
+      "failure_mode": "Puts 529 earnings on the wrong return — one of the most common real 529 errors."
+    },
+    {
+      "id": "R048",
+      "proposition": "§135 savings bonds: the bond must be issued in the name of the taxpayer (or taxpayer and spouse) who was 24+ at issuance. A bond in the CHILD's name never qualifies at any age.",
+      "owner": "individual/education.md",
+      "authority": "IRC §135(b)(2), §135(c)(1), §135(d)(3)",
+      "origin": "family-CPA review",
+      "warn_required": true,
+      "marker_anchor": "24+ at issuance",
+      "scope": "local",
+      "anchors": [
+        "24+ at issuance",
+        "child's name never qualifies"
+      ],
+      "forbidden": [],
+      "failure_mode": "Claims an exclusion the ownership rule kills outright."
+    },
+    {
+      "id": "R049",
+      "proposition": "§221 requires LEGAL OBLIGATION — a parent paying a loan in the child's name gets nothing. The planning answer: treat the payment as a gift to the student, who is then treated as paying the interest and may deduct it if not claimed as a dependent.",
+      "owner": "individual/education.md",
+      "authority": "IRC §221",
+      "origin": "family-CPA review",
+      "warn_required": true,
+      "marker_anchor": "legally\n  obligated",
+      "scope": "local",
+      "anchors": [
+        "legally\n  obligated",
+        "gift to the student"
+      ],
+      "forbidden": [],
+      "failure_mode": "Loses the deduction entirely when a compliant path existed."
+    },
+    {
+      "id": "R050",
+      "proposition": "OWNERSHIP: kiddie-dependents.md §2 is the SOLE owner of how a taxable scholarship is characterized for §1(g) and Form 8615. education.md must not restate it — the §1(g) threshold test and the Form 8615 computation treat it differently.",
+      "owner": "individual/education.md",
+      "authority": "IRC §1(g); Form 8615 instructions",
+      "origin": "architecture audit — the two files contradicted each other",
+      "warn_required": true,
+      "marker_anchor": "kiddie-dependents.md` §2 **owns**",
+      "scope": "local",
+      "anchors": [
+        "kiddie-dependents.md` §2 **owns**",
+        "not** restated here"
+      ],
+      "forbidden": [
+        "scholarship counts as \\*?\\*?earned",
+        "treated as earned income for (Form )?8615"
+      ],
+      "failure_mode": "Two files give different answers to the fact that decides the whole scholarship-allocation strategy."
+    },
+    {
+      "id": "R051",
+      "proposition": "MFJ -> MFS is a ONE-WAY DOOR: not permitted after the unextended due date. MFS -> MFJ is permitted under §6013(b) with limits.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §6013(b)",
+      "origin": "module build; flagged highest-consequence procedural fact",
+      "warn_required": true,
+      "marker_anchor": "one-way door",
+      "scope": "local",
+      "anchors": [
+        "one-way door",
+        "not\npermitted after the unextended due date"
+      ],
+      "forbidden": [],
+      "failure_mode": "Advises an amendment that the statute forecloses."
+    },
+    {
+      "id": "R052",
+      "proposition": "§1041 nonrecognition does NOT apply where the transferee spouse is a nonresident alien.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §1041(d)",
+      "origin": "tax-attorney review",
+      "warn_required": true,
+      "anchors": [
+        "§1041(d)"
+      ],
+      "forbidden": [],
+      "failure_mode": "Treats a fully taxable transfer as nonrecognition."
+    },
+    {
+      "id": "R053",
+      "proposition": "The §72(t)(2)(C) QDRO penalty exception applies to a distribution FROM THE PLAN to the alternate payee. Rolling it into an IRA destroys the exception permanently.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §72(t)(2)(C), §3405(c)",
+      "origin": "retirement-specialist review",
+      "warn_required": true,
+      "marker_anchor": "§72(t)(2)(C)",
+      "scope": "local",
+      "anchors": [
+        "§72(t)(2)(C)",
+        "Rolling it into an IRA destroys the exception permanently"
+      ],
+      "forbidden": [],
+      "failure_mode": "Destroys often the only penalty-free pre-59½ access that spouse has."
+    },
+    {
+      "id": "R054",
+      "proposition": "Carryforwards die with the decedent. §469(g)(2) allows suspended passive losses on the final return only to the extent they EXCEED the step-up.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §469(g)(2)",
+      "origin": "module build",
+      "warn_required": true,
+      "marker_anchor": "§469(g)(2)",
+      "scope": "local",
+      "anchors": [
+        "§469(g)(2)",
+        "exceed the step-up"
+      ],
+      "forbidden": [],
+      "failure_mode": "Passes carryforwards to an estate or survivor that cannot use them, or overstates the final-return deduction."
+    },
+    {
+      "id": "R055",
+      "proposition": "§66(c) is a DISTINCT regime from §6015 for community-property spouses, and is often the applicable path. Form 8379 injured spouse is neither.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §66(c), §6015",
+      "origin": "tax-attorney review",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "§66(c)",
+        "Legally distinct from §6015"
+      ],
+      "forbidden": [],
+      "failure_mode": "Files the wrong relief request, often after the other regime's window has closed."
+    },
+    {
+      "id": "R056",
+      "proposition": "Charitable carryover is YEAR-CROSSING state tracked BY CLASS in carryforwards.json, not in an annual workpaper. A single aggregate carryover is insufficient.",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §170(b), §170(d)",
+      "origin": "codex-signoff-7 (workpaper single-source contract)",
+      "warn_required": true,
+      "marker_anchor": "year-crossing state",
+      "scope": "local",
+      "anchors": [
+        "year-crossing state",
+        "single aggregate carryover is insufficient"
+      ],
+      "forbidden": [],
+      "failure_mode": "Five-year classes collapse into one number and expire in the wrong order."
+    },
+    {
+      "id": "R057",
+      "proposition": "ORDERING: §108(a)(2)(C) applies QPRI BEFORE insolvency unless the taxpayer elects otherwise. Listing QPRI last inverts the statutory default.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §108(a)(2)(A), §108(a)(2)(B), §108(a)(2)(C)",
+      "origin": "independent audit of the second-cut proposal, 2026-08-29",
+      "warn_required": true,
+      "marker_anchor": "§108(a)(2)(C)",
+      "scope": "local",
+      "anchors": [
+        "§108(a)(2)(C)",
+        "applied *before* insolvency",
+        "Listing QPRI last inverts the default"
+      ],
+      "forbidden": [],
+      "failure_mode": "Applies insolvency first, consuming the insolvency amount and wasting a QPRI exclusion that applies by default — and reverses the attribute-reduction consequences."
+    },
+    {
+      "id": "R058",
+      "proposition": "CAPS: §108(c)(2)(A) limits the QRPBI exclusion to principal over FMV of the securing property; §108(c)(2)(B) further caps it at aggregate adjusted bases of depreciable real property.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §108(c)(2)(A), §108(c)(2)(B)",
+      "origin": "independent audit — identical shape to the §108(a)(3) regression",
+      "warn_required": true,
+      "marker_anchor": "§108(c)(2)(A)",
+      "scope": "local",
+      "anchors": [
+        "§108(c)(2)(A)",
+        "§108(c)(2)(B)",
+        "Two caps, both required"
+      ],
+      "forbidden": [],
+      "failure_mode": "The QRPBI election is retained as a mechanic with no ceiling — an unbounded exclusion."
+    },
+    {
+      "id": "R059",
+      "proposition": "FLOOR: §1017(b)(2) caps the §108(b) basis reduction at the excess of aggregate bases over aggregate liabilities immediately after the discharge.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §1017(b)(2)",
+      "origin": "independent audit",
+      "warn_required": true,
+      "anchors": [
+        "§1017(b)(2) floors the basis reduction"
+      ],
+      "forbidden": [],
+      "failure_mode": "Over-reduces basis, converting an exclusion into a larger future gain than the statute requires."
+    },
+    {
+      "id": "R060",
+      "proposition": "FLOORS: a personal casualty loss surviving the §165(h)(5) declared-disaster gate is still reduced by $100 PER EVENT (§165(h)(1)) and then allowed only above 10% of AGI (§165(h)(2)).",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §165(h)(1), §165(h)(2)",
+      "origin": "independent audit — the gate survived the cut, both floors did not",
+      "warn_required": true,
+      "marker_anchor": "§165(h)(1)",
+      "scope": "local",
+      "anchors": [
+        "§165(h)(1)",
+        "$100 per casualty event",
+        "§165(h)(2)",
+        "10% of AGI"
+      ],
+      "forbidden": [],
+      "failure_mode": "A qualifying disaster loss is deducted in full — an unbounded number, while the workpaper schema and life-events.md both already reference the deduction."
+    },
+    {
+      "id": "R061",
+      "proposition": "The charitable CLASS TAXONOMY and ORDER OF APPLICATION are mechanics this file owns; only the percentages belong to authority.md. A crowded-out gift carries forward in its own class on its own clock.",
+      "owner": "individual/itemized.md",
+      "authority": "IRC §170(b)(1)(A), §170(b)(1)(C)(iii), §170(b)(1)(G), §170(d)",
+      "origin": "independent audit — the file asserted 'the limits stack in order' and supplied no order, contradicting its own charter",
+      "warn_required": true,
+      "marker_anchor": "The classes and the order of application are mechanics this file owns",
+      "scope": "distributed",
+      "anchors": [
+        "The classes and the order of application are mechanics this file owns",
+        "§170(b)(1)(G)",
+        "The order is not neutral"
+      ],
+      "forbidden": [],
+      "failure_mode": "'agi_limit_applied' and carryover 'by_class' are required by the schema with no rule to compute them; classes collapse and expire wrong."
+    },
+    {
+      "id": "R062",
+      "proposition": "The §529 10%-penalty waivers split in two: DEATH AND DISABILITY ARE UNCAPPED; tax-free assistance, service-academy, and §25A-coordination are AMOUNT-LIMITED. The assistance waiver is §530(d)(4)(B)(iii) — NOT (ii), which is disability — and incorporates the WHOLE §25A(g)(2) list, materially broader than scholarships. The list itself is NOT paraphrased here: it must be read from primary authority at point of use. Excludability from gross income is the operative condition. Earnings remain taxable in every case.",
+      "owner": "individual/education.md",
+      "authority": "IRC §529(c)(6); §530(d)(4)(B)(i)-(iii); §25A(g)(2); §117; Pub. 970",
+      "origin": "codex-signoff-8 P0 ('each waiver is capped'), signoff-9 P0 (broader than scholarship), signoff-10 P0 (chapter 1606, enrollment branch, (ii)/(iii) miscite), signoff-11 P0 (§117 excludability), signoff-12 P0 (§117(c)(2) carve-outs). FOUR consecutive wrong paraphrases of one statutory list is itself the finding: on Codex's direct recommendation the enumeration was REPLACED by a point-of-use pointer, which cannot drift.",
+      "warn_required": true,
+      "anchors": [
+        "death and disability\n  are uncapped",
+        "amount-limited",
+        "The tax-free-assistance waiver is §530(d)(4)(B)(iii)",
+        "(not (ii), which is disability)",
+        "materially broader than scholarships",
+        "Read §25A(g)(2) from primary authority at\n  point of use",
+        "excludability is the\n  operative condition"
+      ],
+      "forbidden": [
+        "[Ee]ach waiver is capped",
+        "per-dollar match",
+        "§530\\(d\\)\\(4\\)\\(B\\)\\(ii\\) takes",
+        "service scholarship\\s+paid for teaching or research"
+      ],
+      "failure_mode": "Understates the penalty waiver by reading the assistance category as scholarships only; cites the disability subparagraph for the assistance rule; or re-introduces an inline paraphrase of §25A(g)(2), which has been wrong on every attempt.",
+      "marker_anchor": "The tax-free-assistance waiver is §530(d)(4)(B)(iii)",
+      "scope": "local"
+    },
+    {
+      "id": "R065",
+      "proposition": "QPRI reaches a discharge before the statutory cutoff OR ONE SUBJECT TO AN ARRANGEMENT ENTERED INTO AND EVIDENCED IN WRITING BEFORE THAT DATE. A workout agreed in writing before the cutoff qualifies even though the discharge falls after it.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §108(a)(1)(E), §108(h)",
+      "origin": "codex-signoff-8 P1",
+      "warn_required": true,
+      "marker_anchor": "Test the written-arrangement branch before",
+      "scope": "local",
+      "anchors": [
+        "evidenced in writing before that date",
+        "Test the written-arrangement branch before"
+      ],
+      "forbidden": [
+        "applies only to discharges before its statutory expiration"
+      ],
+      "failure_mode": "Rejects QPRI for a qualifying pre-cutoff workout, pushing the taxpayer onto the capped insolvency exclusion or into full inclusion."
+    },
+    {
+      "id": "R066",
+      "proposition": "PREDICATE (tested before the caps): QRPBI requires debt incurred or assumed in connection with real property USED IN A TRADE OR BUSINESS and secured by it, qualified acquisition indebtedness if post-1992 (refinancing of pre-1993 qualifying debt still qualifies up to the amount refinanced), unavailable to a C corporation, and QUALIFIED FARM INDEBTEDNESS IS CARVED OUT. Investment real property does not qualify.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §108(c)(3), §108(c)(4), §108(a)(1)(D); Pub. 4681",
+      "origin": "codex-signoff-8 P1 (predicate missing under new caps); codex-signoff-9 P1 (farm carve-out and refinancing branch)",
+      "warn_required": true,
+      "marker_anchor": "Test the §108(c)(3)\n   predicate before the caps",
+      "scope": "local",
+      "anchors": [
+        "Test the §108(c)(3)\n   predicate before the caps",
+        "used in a trade or business",
+        "unavailable to a C corporation",
+        "held for *investment*",
+        "qualified farm indebtedness is carved out of QRPBI",
+        "§108(c)(4) treats debt from **refinancing**",
+        "to the extent it does not exceed the amount refinanced"
+      ],
+      "forbidden": [],
+      "failure_mode": "Elects QRPBI for investment property, a C corporation, or farm debt — the caps then bound a computation that should never have started; or rejects a refinanced pre-1993 mortgage that qualifies."
+    },
+    {
+      "id": "R067",
+      "proposition": "§1017(c)(1) protects an INDIVIDUAL's exempt property from basis reduction entirely — distinct from and additional to the §1017(b)(2) aggregate-basis floor, and it bites precisely in the title-11 cases where §108(a)(1)(A) did the excluding.",
+      "owner": "individual/life-events.md",
+      "authority": "IRC §1017(c)(1)",
+      "origin": "codex-signoff-8 P1",
+      "warn_required": true,
+      "marker_anchor": "§1017(c)(1) additionally protects an individual's exempt",
+      "scope": "local",
+      "anchors": [
+        "§1017(c)(1) additionally protects an individual's exempt",
+        "takes no basis reduction"
+      ],
+      "forbidden": [],
+      "failure_mode": "Reduces basis in exempt property after a bankruptcy discharge, converting relief into a future gain the statute shields."
+    },
+    {
+      "id": "R063",
+      "proposition": "CONSISTENCY: 1040.md must state the Form 8283 Section B dual route (PDF attachment OR Form 8453) and point at itemized.md §5.2, not present Form 8453 as exclusive.",
+      "owner": "individual/1040.md",
+      "authority": "Form 8283 / Form 8453 instructions",
+      "origin": "independent audit — 1040.md contradicted itemized.md (R035)",
+      "warn_required": false,
+      "scope": "local",
+      "anchors": [
+        "either as a **PDF attachment**",
+        "`itemized.md` §5.2 owns"
+      ],
+      "forbidden": [
+        "travels\non \\*\\*Form 8453\\*\\* \\(with"
+      ],
+      "failure_mode": "A reader who loads 1040.md alone files unnecessary paper."
+    },
+    {
+      "id": "R064",
+      "proposition": "The §121(b)(1)/(b)(2)(A) maximum exclusion is an authority.md value, not an inline constant — and §121 has never been indexed, so a 'that number hasn't changed' assumption is right for the wrong reason.",
+      "owner": "individual/1040.md",
+      "authority": "IRC §121(b)(1), §121(b)(2)(A)",
+      "origin": "independent audit — §121(c) told the reader to prorate a maximum the file never stated or pointed at",
+      "warn_required": true,
+      "marker_anchor": "maximum itself is an exact value under",
+      "scope": "local",
+      "anchors": [
+        "maximum itself is an exact value under",
+        "never been indexed"
+      ],
+      "forbidden": [],
+      "failure_mode": "The prorating mechanic has no base; or an unverified constant is carried in silently because it happens to be stable."
+    }
+  ]
+}

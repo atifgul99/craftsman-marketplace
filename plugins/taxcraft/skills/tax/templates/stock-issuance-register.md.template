@@ -1,0 +1,34 @@
+# Stock Issuance Register — [Issuer]
+
+This is the per-tranche index and reconciliation control. It points to executed
+source documents; it does not replace the legal stock ledger, cap table, bank
+evidence, tax memo, or securities-law file.
+
+## Register
+
+| Tranche ID | Status | Recipient | Class | Shares | Price/share | Total | Consideration | Approval date | Legal issuance date | §83 property-transfer date | Substantial-vesting date(s) | Tax holding-period start | Certificate/notice | Ledger ref | Tax memo | Securities memo | Book entry |
+|---|---|---|---|---:|---:|---:|---|---|---|---|---|---|---|---|---|---|---|
+| [ISS-YYYY-NNN] | [status] | [name] | [class] | [ ] | $[ ] | $[ ] | [type] | [ ] | [ ] | [N/A / ] | [N/A / ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+
+## Capitalization control
+
+| Class | Authorized | Issued | Outstanding | Treasury/reacquired | Reserved/committed | Legally available | Formation-state rule/source |
+|---|---:|---:|---:|---:|---:|---:|---|
+| [Common] | [ ] | [ ] | [ ] | [ ] | [ ] | [state-specific computation] | [ ] |
+
+**Control totals:** register = ledger = cap table for issued, outstanding,
+treasury/reacquired, and reserved shares: [ ]  
+**Last reconciled:** [YYYY-MM-DD] by [role]  
+**Unexplained differences:** NONE / [list]
+
+## Event continuity
+
+| Event ID | Date | Type | Source tranche(s) | Resulting tranche(s) | Shares before/after | Basis/holding-period treatment | Approval/evidence |
+|---|---|---|---|---|---|---|---|
+| [EVT-YYYY-NNN] | [ ] | split / repurchase / transfer / conversion / recap / forfeiture | [ ] | [ ] | [ ] | [ ] | [ ] |
+
+## Open deadlines
+
+| Tranche ID | Obligation | Deadline | Owner | Status | Proof |
+|---|---|---|---|---|---|
+| [ ] | §83(b) / Form D / state notice / payment / notice delivery | [ ] | [ ] | [ ] | [ ] |

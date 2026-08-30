@@ -1,0 +1,45 @@
+
+# Business / Tax Workspace
+
+This folder uses the `tax` Claude Code skill. On invocation, activate the skill and follow its router.
+
+## Pointer Map (source of truth for each fact)
+
+### Cross-entity (workspace-level)
+- **Owner identity** → `workspace-profile/owner.md`
+- **Entity roster** → `workspace-profile/entities-index.md`
+- **Org / ownership chart** → `workspace-profile/org-chart.md`
+- **Bank/brokerage/IRS accounts** → `workspace-profile/bank-accounts.md`
+- **Cross-entity event log** → `workspace-profile/history.md`
+- **Advisor memos, IRS correspondence** → `workspace-profile/notes/`
+
+### Individual (1040)
+- **Individual standing facts** → `individual/profile.md`
+- **Year-crossing attributes** (NOL, AMT credit, cap loss, passive, QBI, FTC, Roth basis) → `individual/carryforwards.json`
+- **Individual history** → `individual/history.md`
+- **Active year workpaper** → `individual/FY<YYYY>/tax-summary.md`
+- **Quarterly estimates** → `individual/FY<YYYY>/quarterly/Q<n>/`
+
+### Entity (per `entities/<slug>/`)
+- **Entity standing config** → `entities/<slug>/entity.md`
+- **Persistent books** (COA, fixed assets, opening balances) → `entities/<slug>/books/`
+- **Corporate governance** → `entities/<slug>/corporate/` (formation, minutes, resolutions, annual-reports, licenses)
+- **Nested disregarded SMLLCs** → `entities/<slug>/disregarded/<smllc-slug>/` (books + corporate only, NO tax/)
+- **Active year workpaper** → `entities/<slug>/tax/FY<YYYY>/tax-summary.md`
+- **Year source docs** → `entities/<slug>/tax/FY<YYYY>/source/{bank-cc, brokerage, k1s-received, 1099s-received, contractors-w9, receipts}/`
+- **Quarterly close** → `entities/<slug>/tax/FY<YYYY>/quarterly/Q<n>/{pnl, balance-sheet, general-ledger, estimate, payment}.md`
+- **Annual close** → `entities/<slug>/tax/FY<YYYY>/annual/{pnl, balance-sheet, m-1-reconciliation, general-ledger}.md` + `workpapers/`
+- **Issued docs** (1099s, K-1s, W-2s, 1042-S) → `entities/<slug>/tax/FY<YYYY>/issued/`
+- **Filed return + confirmations** → `entities/<slug>/tax/FY<YYYY>/filed/`
+
+## Anti-Duplication Rule
+
+A fact lives in exactly one file. If a year-scoped value diverges from the higher-level default (e.g., filing status changed mid-year), the year file records only the **delta** ("changed from MFJ to Single because …") — never copies the full profile.
+
+## PDF Reading Discipline
+
+**NEVER use the built-in `Read` tool for structured PDFs** (K-1s, 1099s, W-9s, tax forms). Use `pdftotext -layout <file.pdf> -` instead. For scanned PDFs where that returns empty, rasterize with `pdftoppm` and request OCR or screenshots.
+
+## Skill
+
+The skill files live wherever the tax skill is installed (a plugin under `~/.claude/plugins/`, or `~/.claude/skills/tax/`). Do not copy skill content here — this file is a **pointer map only**.

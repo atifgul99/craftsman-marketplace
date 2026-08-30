@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "kind": "ACCOUNTABLE_PLAN",
+  "subject_entity_slug": "replace-me",
+  "fiscal_or_tax_period": "FY2000",
+  "as_of": "2000-01-01",
+  "source_cutoff": "2000-01-01T00:00:00Z",
+  "status": "PROVISIONAL",
+  "control_ids": ["P-01"],
+  "conclusion": "REPLACE with the specialist module's evidence-bound conclusion.",
+  "gates": {
+    "authority": "VERIFIED",
+    "applicability": "VERIFIED",
+    "execution": "VERIFIED",
+    "operation": "UNVERIFIED",
+    "tax": "UNVERIFIED",
+    "source_reconciliation": "UNVERIFIED"
+  },
+  "authority_dependencies": [
+    {
+      "authority_id": "run-replace-specialist-authority",
+      "rule": "ACCOUNTABLE_PLAN_1_62_2",
+      "source_url": "https://www.ecfr.gov/current/title-26/section-1.62-2",
+      "verified_at": "2000-01-01T00:00:00Z",
+      "effective_from": null,
+      "effective_to": null,
+      "status": "VERIFIED"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "kind": "EXECUTED_PLAN",
+      "path": "entities/replace-me/corporate/accountable-plan/replace-source.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

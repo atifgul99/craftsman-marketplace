@@ -1,0 +1,37 @@
+
+# Entities Index
+
+**Last updated**: YYYY-MM-DD
+
+Master roster of every entity in this workspace. Per-entity config lives in `../entities/<slug>/entity.md`.
+
+## Regarded Entities (file their own returns)
+
+| Slug | Legal Name | Type | EIN | State | Fiscal Year | Active? |
+|---|---|---|---|---|---|---|
+| `<slug>` | | C-corp / S-corp / partnership / LLC-P / LLC-S / LLC-C | XX-XXXXXXX | XX | calendar / FY end `<month>` | yes / no |
+
+## Disregarded SMLLCs (consolidate into parents)
+
+| Slug | Legal Name | Parent Entity Slug | State | Own EIN? | Dual-EIN (payroll)? |
+|---|---|---|---|---|---|
+| `<slug>` | | `<parent-slug>` | XX | yes/no | yes/no |
+
+## Ownership Summary
+
+| Entity | Owners (% each) |
+|---|---|
+| `<slug>` | `<owner A 50%, owner B 50%>` |
+
+## Primary Contacts
+
+| Entity | CPA/EA | Attorney | Registered Agent |
+|---|---|---|---|
+| `<slug>` | | | |
+
+## Quick Links
+
+- Org chart (Mermaid): `org-chart.md`
+- Bank accounts (centralized): `bank-accounts.md`
+- Owner identity: `owner.md`
+- Cross-entity history: `history.md`

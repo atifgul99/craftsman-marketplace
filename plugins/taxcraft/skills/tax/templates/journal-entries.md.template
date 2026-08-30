@@ -1,0 +1,36 @@
+# Journal Entries — <ENTITY NAME>
+
+**Perpetual register** — every non-cash, reclass, or adjusting entry, all years, numbered sequentially. Never reset.
+**Last updated**: YYYY-MM-DD
+
+Bank-feed-driven books only capture what moves through an account. Everything else exists **only if it is posted here**: owner/parent contributions of property, expenses paid personally or by an affiliate, depreciation/amortization, accruals and reversals, equity reclasses, intercompany charges settled by offset, debt forgiveness, in-kind distributions. An unposted non-cash event is invisible to the P&L, the balance sheet, and the return.
+
+Period-end mechanical JEs (depreciation, accruals) may be generated at close, but they are **recorded here** so the GL has one authoritative JE trail.
+
+## Register
+
+| JE # | Date | Description / reason | DR Account (COA #) | DR $ | CR Account (COA #) | CR $ | Authority / source doc | Posted to GL |
+|---|---|---|---|---|---|---|---|---|
+| JE-0001 | YYYY-MM-DD | <what happened and why this entry> | | $ | | $ | <resolution / receipt / statement / Reg §> | [ ] |
+
+Conventions:
+
+- **JE numbers are sequential across the life of the entity** (JE-0001, JE-0002, …), not per-year.
+- One row per DR/CR leg pair; multi-leg entries repeat the JE # on consecutive rows.
+- **Equity entries name their event.** A credit to member capital / APIC / common stock must say which documented contribution or issuance it belongs to (date + resolution reference) — bare equity credits are how contributions get lost and how §1244/§1202 issuance treatment leaks (see `scenarios/section-1244.md`).
+- **Intercompany entries name the mirror.** Any entry with an affiliate counterpart cites the counterpart's JE # so the intercompany rec (`reconciliation.md` § 3) can tie both sides.
+- Reversal entries reference the JE they reverse.
+
+## Non-cash sweep (run at every close)
+
+Before closing a period, sweep for events that never hit a bank feed:
+
+- [ ] Owner/parent cash or property contributions (booked? issuance documented?)
+- [ ] Expenses paid personally or by an affiliate on this entity's behalf
+- [ ] This entity's payments of an owner's/affiliate's expense (→ distribution or due-from)
+- [ ] Depreciation / amortization for the period
+- [ ] Accruals + prior-period accrual reversals (accrual method)
+- [ ] Intercompany fees/charges settled by offset rather than cash
+- [ ] Debt forgiven, converted to equity, or capitalized interest
+- [ ] In-kind distributions
+- [ ] Reclasses (misposted prior entries, equity re-characterizations)

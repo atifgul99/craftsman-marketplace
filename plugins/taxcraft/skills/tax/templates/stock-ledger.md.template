@@ -1,0 +1,34 @@
+# Stock Ledger — [Legal Issuer]
+
+**Formation state:** [ ]  
+**Charter as of:** [YYYY-MM-DD]  
+**Ledger as of:** [YYYY-MM-DD]
+
+## Authorized capital
+
+| Class / series | Authorized | Par value | Charter source |
+|---|---:|---:|---|
+| [ ] | [ ] | [no par / $ ] | [path] |
+
+## Issuances and dispositions
+
+| Entry | Tranche ID | Holder | Address on issuer records | Class | Shares +/− | Balance | Legal issuance/stock-transfer date | Consideration | Certificate/notice no. | Restrictions/legend | Approval and source |
+|---|---|---|---|---|---:|---:|---|---|---|---|---|
+| [LED-YYYY-NNN] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [path] |
+
+Do not enter a proposed or merely approved issuance as outstanding. Record a
+cancelled certificate, transfer, repurchase, conversion, split, forfeiture, or
+correction as its own dated entry; never overwrite history.
+
+## Reconciliation
+
+| Class | Authorized | Issued | Outstanding | Treasury/reacquired | Reserved | Legally available | Cap table | Register | Difference |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [state-specific] | [ ] | [ ] | [ ] |
+
+**Formation-state capacity rule/source:** [ ]
+
+**Certification:** This ledger reflects executed evidence listed above and has
+not been used to manufacture or backdate an issuance.  
+**Prepared/reconciled by:** [role]  
+**Date:** [YYYY-MM-DD]

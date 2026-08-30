@@ -1,0 +1,537 @@
+{
+ "_meta": {
+  "schema_version": 1,
+  "jurisdiction": "US-federal",
+  "tax_year": 2023,
+  "status": "REVIEW_REQUIRED",
+  "checked_at": "2026-08-29",
+  "stale_after": "2027-08-29",
+  "stale_after_rationale": "12 months: the year is closed, but retroactive legislation can still reach it",
+  "legislation_checked_through": "2026-08-29",
+  "legislation_checked_note": "Elapsed time is a proxy; this is the real question. Records the date through which enacted legislation was reviewed for retroactive effect on this tax year. A statute checklist would overpromise completeness, so this is a date, not a list.",
+  "declared_repeats": [],
+  "authorities": [
+   {
+    "id": "rev-proc-2022-38",
+    "title": "Rev. Proc. 2022-38, 2023 inflation adjustments",
+    "url": "https://www.irs.gov/pub/irs-drop/rp-22-38.pdf",
+    "source_type": "revenue-procedure",
+    "effective_from": "2023-01-01",
+    "effective_to": "2023-12-31"
+   },
+   {
+    "id": "notice-2022-55",
+    "title": "Notice 2022-55, 2023 retirement plan limitations",
+    "url": "https://www.irs.gov/pub/irs-drop/n-22-55.pdf",
+    "source_type": "notice",
+    "effective_from": "2023-01-01",
+    "effective_to": "2023-12-31"
+   },
+   {
+    "id": "rev-proc-2022-24",
+    "title": "Rev. Proc. 2022-24, 2023 HSA/HDHP inflation adjustments",
+    "url": "https://www.irs.gov/pub/irs-drop/rp-22-24.pdf",
+    "source_type": "revenue-procedure",
+    "effective_from": "2023-01-01",
+    "effective_to": "2023-12-31"
+   },
+   {
+    "id": "notice-2023-03",
+    "title": "Notice 2023-03, 2023 standard mileage rates",
+    "url": "https://www.irs.gov/pub/irs-drop/n-23-03.pdf",
+    "source_type": "notice",
+    "effective_from": "2023-01-01",
+    "effective_to": "2023-12-31"
+   },
+   {
+    "id": "irc-current",
+    "title": "Internal Revenue Code (current, prelim)",
+    "url": "https://uscode.house.gov/view.xhtml?path=/prelim@title26&edition=prelim",
+    "source_type": "statute",
+    "effective_from": null,
+    "effective_to": null
+   },
+   {
+    "id": "ssa-contribution-base",
+    "title": "SSA contribution and benefit base",
+    "url": "https://www.ssa.gov/oact/cola/cbb.html",
+    "source_type": "agency-table",
+    "effective_from": "2023-01-01",
+    "effective_to": "2023-12-31"
+   }
+  ],
+  "coverage": [
+   {
+    "paths": [
+     "brackets_ordinary",
+     "brackets_ltcg",
+     "standard_deduction",
+     "amt",
+     "qbi",
+     "section_179_cap",
+     "section_179_phaseout_start",
+     "suv_cap",
+     "excess_business_loss_threshold",
+     "foreign_earned_income_exclusion",
+     "adoption_credit",
+     "fsa_contribution_limit",
+     "fsa_carryover_max",
+     "qualified_transportation_fringe_monthly",
+     "gift_exclusion_annual",
+     "gift_exclusion_non_citizen_spouse",
+     "estate_exemption",
+     "ctc_refundable_cap",
+     "kiddie",
+     "student_loan_interest"
+    ],
+    "authority_ids": [
+     "rev-proc-2022-38"
+    ],
+    "status": "VERIFIED",
+    "note": "Extracted from the Rev. Proc. PDF via pdftotext -layout on 2026-08-29; section numbers recorded per key in _field_sources."
+   },
+   {
+    "paths": [
+     "retirement_limits.401k_elective",
+     "retirement_limits.401k_catchup_50",
+     "retirement_limits.ira_trad_roth",
+     "retirement_limits.ira_catchup_50",
+     "retirement_limits.simple_elective",
+     "retirement_limits.simple_catchup_50",
+     "retirement_limits.sep_max_comp",
+     "retirement_limits.overall_dc_415c"
+    ],
+    "authority_ids": [
+     "notice-2022-55"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "retirement_limits.hsa_self",
+     "retirement_limits.hsa_family",
+     "retirement_limits.hdhp_self_deductible_min",
+     "retirement_limits.hdhp_family_deductible_min",
+     "retirement_limits.hdhp_self_oop_max",
+     "retirement_limits.hdhp_family_oop_max"
+    ],
+    "authority_ids": [
+     "rev-proc-2022-24"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "mileage_business",
+     "mileage_medical",
+     "mileage_charitable"
+    ],
+    "authority_ids": [
+     "notice-2023-03"
+    ],
+    "status": "VERIFIED"
+   },
+   {
+    "paths": [
+     "niit",
+     "addl_medicare",
+     "ss_rate_ee",
+     "medicare_rate_ee",
+     "se_tax_rate_combined",
+     "se_multiplier",
+     "salt_cap",
+     "mortgage_acquisition_debt_cap",
+     "ctc_per_child",
+     "odc",
+     "retirement_limits.sep_pct_of_comp",
+     "retirement_limits.hsa_catchup_55",
+     "bonus_depreciation_pct",
+     "safe_harbor_prior_year_pct_high_agi",
+     "safe_harbor_prior_year_pct_low_agi",
+     "safe_harbor_high_agi_threshold_non_mfs",
+     "safe_harbor_current_year_pct",
+     "estimated_tax_due_dates",
+     "info_return_threshold_6041_6041a",
+     "safe_harbor_high_agi_threshold_mfs"
+    ],
+    "authority_ids": [
+     "irc-current"
+    ],
+    "status": "POINT_OF_USE",
+    "note": "Statutory (unindexed) or calendar-derived. Verify the target-year form before use."
+   },
+   {
+    "paths": [
+     "ss_wage_base"
+    ],
+    "authority_ids": [
+     "ssa-contribution-base"
+    ],
+    "status": "UNRESOLVED"
+   }
+  ],
+  "unresolved": [
+   {
+    "path": "ss_wage_base",
+    "reason": "SSA source returned HTTP 403 to this environment on 2026-08-29 and the figure was not carried from memory. Supply from https://www.ssa.gov/oact/cola/cbb.html at point of use."
+   },
+   {
+    "path": "kiddie.amt_exemption_earned_income_addition",
+    "reason": "Rev. Proc. 2022-38 §3.12 gives the $8,800 addition; recorded, but the §59(j) interaction must be verified against the target-year Form 6251 instructions before it determines a result."
+   }
+  ]
+ },
+ "tax_year": 2023,
+ "source_notes": "Built 2026-08-29 from primary sources (Rev. Proc. 2022-38; Notice 2022-55; Rev. Proc. 2022-24; Notice 2023-03), extracted with pdftotext -layout. TY2023 remains reachable for refund claims under §6511 into 2027, so this file supports amended-return and prior-year-comparison work. Status is REVIEW_REQUIRED: point-of-use verification still governs.",
+ "brackets_ordinary": {
+  "single": [
+   [
+    11000,
+    0.1
+   ],
+   [
+    44725,
+    0.12
+   ],
+   [
+    95375,
+    0.22
+   ],
+   [
+    182100,
+    0.24
+   ],
+   [
+    231250,
+    0.32
+   ],
+   [
+    578125,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "mfj": [
+   [
+    22000,
+    0.1
+   ],
+   [
+    89450,
+    0.12
+   ],
+   [
+    190750,
+    0.22
+   ],
+   [
+    364200,
+    0.24
+   ],
+   [
+    462500,
+    0.32
+   ],
+   [
+    693750,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "mfs": [
+   [
+    11000,
+    0.1
+   ],
+   [
+    44725,
+    0.12
+   ],
+   [
+    95375,
+    0.22
+   ],
+   [
+    182100,
+    0.24
+   ],
+   [
+    231250,
+    0.32
+   ],
+   [
+    346875,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ],
+  "hoh": [
+   [
+    15700,
+    0.1
+   ],
+   [
+    59850,
+    0.12
+   ],
+   [
+    95350,
+    0.22
+   ],
+   [
+    182100,
+    0.24
+   ],
+   [
+    231250,
+    0.32
+   ],
+   [
+    578100,
+    0.35
+   ],
+   [
+    null,
+    0.37
+   ]
+  ]
+ },
+ "brackets_ltcg": {
+  "single": [
+   [
+    44625,
+    0.0
+   ],
+   [
+    492300,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "mfj": [
+   [
+    89250,
+    0.0
+   ],
+   [
+    553850,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "mfs": [
+   [
+    44625,
+    0.0
+   ],
+   [
+    276900,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ],
+  "hoh": [
+   [
+    59750,
+    0.0
+   ],
+   [
+    523050,
+    0.15
+   ],
+   [
+    null,
+    0.2
+   ]
+  ]
+ },
+ "standard_deduction": {
+  "single": 13850,
+  "mfj": 27700,
+  "mfs": 13850,
+  "hoh": 20800,
+  "addl_65_or_blind_mfj": 1500,
+  "addl_65_or_blind_single_hoh": 1850,
+  "dependent_minimum": 1250,
+  "dependent_earned_income_addition": 400
+ },
+ "amt": {
+  "exemption": {
+   "single": 81300,
+   "mfj": 126500,
+   "mfs": 63250
+  },
+  "phaseout_start": {
+   "single": 578150,
+   "mfj": 1156300,
+   "mfs": 578150
+  },
+  "phaseout_rate": 0.25,
+  "rate_breakpoint_26_28": 220700,
+  "mfs_rate_breakpoint": 110350
+ },
+ "niit": {
+  "rate": 0.038,
+  "threshold_single": 200000,
+  "threshold_mfj": 250000,
+  "threshold_mfs": 125000,
+  "_note": "IRC §1411 thresholds are NOT indexed."
+ },
+ "addl_medicare": {
+  "rate": 0.009,
+  "threshold_single": 200000,
+  "threshold_mfj": 250000,
+  "threshold_mfs": 125000,
+  "_note": "IRC §3101(b)(2) thresholds are NOT indexed."
+ },
+ "ss_wage_base": null,
+ "ss_rate_ee": 0.062,
+ "medicare_rate_ee": 0.0145,
+ "se_tax_rate_combined": 0.153,
+ "se_multiplier": 0.9235,
+ "retirement_limits": {
+  "401k_elective": 22500,
+  "401k_catchup_50": 7500,
+  "ira_trad_roth": 6500,
+  "ira_catchup_50": 1000,
+  "simple_elective": 15500,
+  "simple_catchup_50": 3500,
+  "sep_pct_of_comp": 0.25,
+  "sep_max_comp": 330000,
+  "overall_dc_415c": 66000,
+  "hsa_self": 3850,
+  "hsa_family": 7750,
+  "hsa_catchup_55": 1000,
+  "hdhp_self_deductible_min": 1500,
+  "hdhp_family_deductible_min": 3000,
+  "hdhp_self_oop_max": 7500,
+  "hdhp_family_oop_max": 15000,
+  "_note": "SECURE 2.0 §109 (60-63 catch-up tier) and §603 (Roth catch-up) do NOT apply to TY2023."
+ },
+ "qbi": {
+  "threshold_single": 182100,
+  "threshold_mfj": 364200,
+  "threshold_mfs": 182100,
+  "phasein_range_single": 50000,
+  "phasein_range_mfj": 100000,
+  "rate": 0.2
+ },
+ "salt_cap": {
+  "mfj": 10000,
+  "single": 10000,
+  "hoh": 10000,
+  "mfs": 5000,
+  "_note": "TCJA §164(b)(6) flat cap, no phaseout. The OBBBA increased cap and its income phaseout do NOT apply to TY2023."
+ },
+ "mortgage_acquisition_debt_cap": {
+  "on_or_before_2017_12_15": {
+   "non_mfs": 1000000,
+   "mfs": 500000
+  },
+  "after_2017_12_15": {
+   "non_mfs": 750000,
+   "mfs": 375000
+  },
+  "_note": "Selected by the date the DEBT was incurred, never by tax year. Binding-contract transition: contract before 2017-12-15, required closing before 2018-01-01, purchase before 2018-04-01."
+ },
+ "kiddie": {
+  "unearned_income_reduction": 1250,
+  "parental_election_gross_income_ceiling": 12500,
+  "amt_exemption_earned_income_addition": 8800
+ },
+ "gift_exclusion_annual": 17000,
+ "gift_exclusion_non_citizen_spouse": 175000,
+ "estate_exemption": 12920000,
+ "ctc_per_child": 2000,
+ "ctc_refundable_cap": 1600,
+ "odc": 500,
+ "adoption_credit": {
+  "max": 15950,
+  "phaseout_start": 239230,
+  "phaseout_complete": 279230
+ },
+ "student_loan_interest": {
+  "max": 2500,
+  "phaseout_start_single": 75000,
+  "phaseout_complete_single": 90000,
+  "phaseout_start_mfj": 155000,
+  "phaseout_complete_mfj": 185000
+ },
+ "mileage_business": 0.655,
+ "mileage_medical": 0.22,
+ "mileage_charitable": 0.14,
+ "bonus_depreciation_pct": 0.8,
+ "_bonus_note": "IRC §168(k)(6) phase-down: 80% for property placed in service in 2023. OBBBA's 100% restoration applies only to property ACQUIRED after 2025-01-19 and is irrelevant to TY2023.",
+ "section_179_cap": 1160000,
+ "section_179_phaseout_start": 2890000,
+ "suv_cap": 28900,
+ "excess_business_loss_threshold": {
+  "single": 289000,
+  "mfj": 578000,
+  "_note": "IRC §461(l)(3)(A)(ii)(II). Disallowed EBL becomes an NOL carryforward under §461(l)(2)."
+ },
+ "foreign_earned_income_exclusion": 120000,
+ "fsa_contribution_limit": 3050,
+ "fsa_carryover_max": 610,
+ "qualified_transportation_fringe_monthly": 300,
+ "safe_harbor_prior_year_pct_high_agi": 1.1,
+ "safe_harbor_prior_year_pct_low_agi": 1.0,
+ "safe_harbor_current_year_pct": 0.9,
+ "estimated_tax_due_dates": [
+  "2023-04-18",
+  "2023-06-15",
+  "2023-09-15",
+  "2024-01-16"
+ ],
+ "_estimated_tax_due_dates_note": "Q1 shifted to 04-18 (weekend + DC Emancipation Day); Q4 to 01-16 (MLK Day). Re-verify holiday shifts against the target-year Form 1040-ES.",
+ "info_return_threshold_6041_6041a": {
+  "amount": 600,
+  "forms": [
+   "1099-NEC",
+   "1099-MISC"
+  ],
+  "_note": "Trade-or-business payments only. Distinct from 1099-K (§6050W), which for TY2023 was subject to IRS transition relief - verify the applicable threshold separately."
+ },
+ "_field_sources": {
+  "brackets_ordinary": "Rev. Proc. 2022-38 §3.01 Tables 1-4",
+  "brackets_ltcg": "Rev. Proc. 2022-38 §3.03",
+  "standard_deduction": "Rev. Proc. 2022-38 §3.15",
+  "amt": "Rev. Proc. 2022-38 §3.11",
+  "kiddie": "Rev. Proc. 2022-38 §3.02, §3.12",
+  "adoption_credit": "Rev. Proc. 2022-38 §3.04",
+  "ctc_refundable_cap": "Rev. Proc. 2022-38 §3.05",
+  "fsa_contribution_limit": "Rev. Proc. 2022-38 §3.16",
+  "qualified_transportation_fringe_monthly": "Rev. Proc. 2022-38 §3.17",
+  "section_179_cap": "Rev. Proc. 2022-38 §3.25",
+  "qbi": "Rev. Proc. 2022-38 §3.27",
+  "student_loan_interest": "Rev. Proc. 2022-38 §3.30",
+  "excess_business_loss_threshold": "Rev. Proc. 2022-38 §3.32",
+  "foreign_earned_income_exclusion": "Rev. Proc. 2022-38 §3.39",
+  "estate_exemption": "Rev. Proc. 2022-38 §3.41",
+  "gift_exclusion_annual": "Rev. Proc. 2022-38 §3.43(1)",
+  "gift_exclusion_non_citizen_spouse": "Rev. Proc. 2022-38 §3.43(2)",
+  "retirement_limits": "Notice 2022-55",
+  "retirement_limits.hsa_*": "Rev. Proc. 2022-24 §3.01",
+  "mileage_*": "Notice 2023-03 §3"
+ },
+ "safe_harbor_high_agi_threshold_non_mfs": 150000,
+ "safe_harbor_high_agi_threshold_mfs": 75000
+}

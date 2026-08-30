@@ -1,0 +1,91 @@
+# Stock Issuance Readiness — [Issuer] — [Tranche ID]
+
+**As of:** [YYYY-MM-DD]  
+**Mode:** readiness | design | counsel packet | closing verification | remediation  
+**Overall status:** PROPOSED | COUNSEL HOLD | APPROVED — NOT ISSUED | ISSUED — CONSIDERATION OUTSTANDING OR ESCROWED | PURPORTED ISSUANCE — CONSIDERATION UNVERIFIED | ISSUED AND PAID — OTHER EVIDENCE INCOMPLETE | ISSUED AND RECONCILED | DISPUTED OR DEFECTIVE
+
+> Draft analysis only. Review with corporate and securities counsel before
+> signing, issuing, or filing. Verify tax conclusions with tax counsel or a CPA/EA.
+
+## Proposed tranche
+
+| Field | Verified fact | Evidence | Status |
+|---|---|---|---|
+| Legal issuer / formation state | [ ] | [path] | VERIFIED / UNVERIFIED |
+| Federal tax status on issuance date | [ ] | [path] | [ ] |
+| Recipient and capacity | [ ] | [path] | [ ] |
+| Class / series | [ ] | [path] | [ ] |
+| Shares / price / total | [ ] | [path] | [ ] |
+| Consideration type and date | [ ] | [path] | [ ] |
+| Vesting / repurchase / restrictions | [ ] | [path] | [ ] |
+| Proposed/actual legal issuance date | [ ] | [path] | [ ] |
+| §83 property-transfer date | [ ] | [path] | [ ] |
+| Substantial-vesting date(s) | [ ] | [path] | [ ] |
+| Tax holding-period start | [ ] | [path] | [ ] |
+
+## Authority and capitalization
+
+| Gate | Result | Evidence / unresolved item |
+|---|---|---|
+| Filed charter and amendments | [ ] | [ ] |
+| Incorporator and director authority chain | [ ] | [ ] |
+| Bylaws and approving actor | [ ] | [ ] |
+| Preemptive / class / investor rights | [ ] | [ ] |
+| Authorized shares | [ ] | [ ] |
+| Issued before | [ ] | [ ] |
+| Outstanding before | [ ] | [ ] |
+| Treasury/reacquired before | [ ] | [ ] |
+| Reserved / committed before | [ ] | [ ] |
+| Formation-state capacity rule | [state rule and counsel source] | [ ] |
+| Legally available capacity | [inputs → state-specific formula → result] | [ ] |
+| Contradictory share records | NONE / HOLD | [ ] |
+| Related-party conflict route | [ ] | [ ] |
+
+## Consideration and valuation
+
+- Branch: new cash | historical cash/APIC | property | services | future services/note | debt conversion | SAFE/note conversion | mixed
+- Actual chronology: [dates and events; never restate history]
+- Receipt/payment evidence: [ ]
+- FMV / adequacy evidence: [ ]
+- §83/§83(b)/payroll issue: [ ]
+- Historical-cash tax-counsel conclusion, if applicable: [NOT PROVIDED / path]
+
+## Tax matrix
+
+| Doctrine | Result | Controlling facts | Source / reviewer |
+|---|---|---|---|
+| §1202 / QSBS | ISSUANCE-DATE PRONGS SATISFIED — PROVISIONAL / ISSUANCE-DATE INELIGIBLE / UNVERIFIED / N/A | [ ] | [ ] |
+| §1244 | ISSUANCE-DATE PRONGS SATISFIED — PROVISIONAL / ISSUANCE-DATE INELIGIBLE / UNVERIFIED / N/A | [ ] | [ ] |
+| §351 / basis | [ ] | [ ] | [ ] |
+| §83 / payroll | [ ] | [ ] | [ ] |
+| State tax | [ ] | [ ] | [ ] |
+
+## Securities-law path — counsel conclusion required
+
+- Federal path and facts: [UNRESOLVED / counsel citation]
+- Offerees / solicitation: [ ]
+- Federal filing and deadline: [NONE CONFIRMED / ]
+- Offer/sale states: [ ]
+- State exemption, filing, fee, deadline: [UNRESOLVED / ]
+- Legend / uncertificated notice: [ ]
+
+## Closing dependencies
+
+- [ ] Counsel-reviewed terms and exemption analysis
+- [ ] Valid approvals and conflict record
+- [ ] Executed transaction agreement
+- [ ] Consideration receipt / lawful escrow evidence
+- [ ] Certificate or uncertificated notice
+- [ ] Stock ledger and cap table
+- [ ] Tax memo and §83(b) package if applicable
+- [ ] Required securities notices/filings
+- [ ] Post-closing journal entry tied to tranche ID
+- [ ] Closing manifest and arithmetic reconciliation
+
+## Hard stops and next decisions
+
+1. [blocker — owner — required evidence/decision]
+
+## Sources inspected
+
+- [path or authority — date inspected — what it proves]

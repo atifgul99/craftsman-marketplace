@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.example/tax/stock-issuance-audit.schema.json",
+  "title": "Validated stock-issuance audit result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "subject_entity_slug", "fiscal_or_tax_period", "as_of", "source_cutoff", "overall_status", "tranches"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "subject_entity_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "fiscal_or_tax_period": {"type": "string", "pattern": "^FY[0-9]{4}$"},
+    "as_of": {"type": "string", "format": "date"},
+    "source_cutoff": {"type": "string", "format": "date-time"},
+    "overall_status": {"enum": ["COUNSEL_HOLD", "FACT_CONFLICT", "CLOSING_PENDING", "ISSUED_AND_RECONCILED"]},
+    "tranches": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tranche_id", "issuance_date", "status", "class", "holder_slug", "shares", "price_per_share", "total_consideration", "capitalization", "gates", "transaction_jurisdiction_facts", "applicable_securities_jurisdictions", "securities_authorities", "tax_fact_flags", "tax_positions", "tax_authorities", "closing_manifest_path", "closing_manifest_sha256"],
+        "properties": {
+          "tranche_id": {"type": "string", "pattern": "^ISS-[0-9]{4}-[0-9]{3}$"},
+          "issuance_date": {"type": "string", "format": "date"},
+          "status": {"enum": ["COUNSEL_HOLD", "FACT_CONFLICT", "CLOSING_PENDING", "ISSUED_AND_RECONCILED"]},
+          "class": {"type": "string", "minLength": 1},
+          "holder_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "shares": {"type": "integer", "minimum": 1},
+          "price_per_share": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2,6}$"},
+          "total_consideration": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2}$"},
+          "capitalization": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["scope", "class", "charter_class_authority_path", "charter_class_authority_sha256", "authorized_before", "issued_before", "outstanding_before", "treasury_before", "reserved_before", "legally_available_before", "authorized_after", "issued_after", "outstanding_after", "treasury_after", "reserved_after", "legally_available_after", "formation_state_capacity_rule", "capacity_authority_url", "capacity_authority_verified_at"],
+            "properties": {
+              "scope": {"const": "CLASS"},
+              "class": {"type": "string", "minLength": 1},
+              "charter_class_authority_path": {"type": "string", "pattern": "^entities/[a-z0-9]+(?:-[a-z0-9]+)*/corporate/formation/.+-class-authority\\.json$"},
+              "charter_class_authority_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+              "authorized_before": {"type": "integer", "minimum": 0},
+              "issued_before": {"type": "integer", "minimum": 0},
+              "outstanding_before": {"type": "integer", "minimum": 0},
+              "treasury_before": {"type": "integer", "minimum": 0},
+              "reserved_before": {"type": "integer", "minimum": 0},
+              "legally_available_before": {"type": "integer", "minimum": 0},
+              "authorized_after": {"type": "integer", "minimum": 0},
+              "issued_after": {"type": "integer", "minimum": 0},
+              "outstanding_after": {"type": "integer", "minimum": 0},
+              "treasury_after": {"type": "integer", "minimum": 0},
+              "reserved_after": {"type": "integer", "minimum": 0},
+              "legally_available_after": {"type": "integer", "minimum": 0},
+              "formation_state_capacity_rule": {"enum": ["WA_REACQUIRED_AUTHORIZED_UNISSUED", "COUNSEL_VALIDATED_OTHER_STATE"]},
+              "capacity_authority_url": {"type": "string", "format": "uri"},
+              "capacity_authority_verified_at": {"type": "string", "format": "date-time"}
+            }
+          },
+          "gates": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["formation_authority", "authorized_capacity", "board_approval", "terms", "consideration", "valuation", "vesting_restrictions", "securities", "tax", "certificate_notice", "ledger_cap_table", "books", "closing_manifest_signoff"],
+            "properties": {
+              "formation_authority": {"$ref": "#/$defs/gateStatus"},
+              "authorized_capacity": {"$ref": "#/$defs/gateStatus"},
+              "board_approval": {"$ref": "#/$defs/gateStatus"},
+              "terms": {"$ref": "#/$defs/gateStatus"},
+              "consideration": {"$ref": "#/$defs/gateStatus"},
+              "valuation": {"$ref": "#/$defs/gateStatus"},
+              "vesting_restrictions": {"$ref": "#/$defs/gateStatus"},
+              "securities": {"$ref": "#/$defs/gateStatus"},
+              "tax": {"$ref": "#/$defs/gateStatus"},
+              "certificate_notice": {"$ref": "#/$defs/gateStatus"},
+              "ledger_cap_table": {"$ref": "#/$defs/gateStatus"},
+              "books": {"$ref": "#/$defs/gateStatus"},
+              "closing_manifest_signoff": {"$ref": "#/$defs/gateStatus"}
+            }
+          },
+          "transaction_jurisdiction_facts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["issuer_formation_jurisdiction", "holder_residence_jurisdiction", "offer_jurisdictions", "sale_jurisdiction", "solicitation_jurisdictions", "evidence_path", "evidence_sha256"],
+            "properties": {
+              "issuer_formation_jurisdiction": {"type": "string", "minLength": 1},
+              "holder_residence_jurisdiction": {"type": "string", "minLength": 1},
+              "offer_jurisdictions": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+              "sale_jurisdiction": {"type": "string", "minLength": 1},
+              "solicitation_jurisdictions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+              "evidence_path": {"type": "string", "minLength": 1},
+              "evidence_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            }
+          },
+          "applicable_securities_jurisdictions": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 2, "uniqueItems": true, "contains": {"const": "United States"}},
+          "securities_authorities": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["authority_id", "jurisdiction", "source_url", "verified_at", "effective_from", "effective_to", "route", "status"],
+              "properties": {
+                "authority_id": {"type": "string", "pattern": "^run-[a-z0-9-]+$"},
+                "jurisdiction": {"type": "string", "minLength": 1},
+                "source_url": {"type": "string", "format": "uri"},
+                "verified_at": {"type": "string", "format": "date-time"},
+                "effective_from": {"type": ["string", "null"], "format": "date"},
+                "effective_to": {"type": ["string", "null"], "format": "date"},
+                "route": {"enum": ["SECTION_4_A_2", "RULE_506_B", "RULE_506_C", "REGULATION_CF", "REGULATION_A", "RULE_701", "WA_REGISTRATION", "WA_EXEMPTION", "WA_NOTICE"]},
+                "status": {"const": "VERIFIED"}
+              }
+            }
+          },
+          "tax_positions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["section_83", "section_351", "section_1202", "section_1244"],
+            "properties": {
+              "section_83": {"enum": ["NOT_APPLICABLE", "ISSUANCE_PRONGS_VERIFIED", "INELIGIBLE", "UNVERIFIED", "COUNSEL_HOLD"]},
+              "section_351": {"enum": ["NOT_APPLICABLE", "ISSUANCE_PRONGS_VERIFIED", "INELIGIBLE", "UNVERIFIED", "COUNSEL_HOLD"]},
+              "section_1202": {"enum": ["NOT_APPLICABLE", "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL", "ISSUANCE_DATE_INELIGIBLE", "UNVERIFIED", "COUNSEL_HOLD"]},
+              "section_1244": {"enum": ["NOT_APPLICABLE", "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL", "ISSUANCE_DATE_INELIGIBLE", "UNVERIFIED", "COUNSEL_HOLD"]}
+            }
+          },
+          "tax_fact_flags": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["substantially_nonvested", "property_transfer", "liabilities_assumed", "integrated_transfer_plan", "section_351_control_percent_after", "section_351_control_test_status", "section_83_b"],
+            "properties": {
+              "substantially_nonvested": {"type": "boolean"},
+              "property_transfer": {"type": "boolean"},
+              "liabilities_assumed": {"type": "boolean"},
+              "integrated_transfer_plan": {"type": "boolean"},
+              "section_351_control_percent_after": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+              "section_351_control_test_status": {"enum": ["SATISFIED", "NOT_SATISFIED", "NOT_APPLICABLE", "COUNSEL_HOLD"]},
+              "section_83_b": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["decision", "property_transfer_date", "filing_deadline", "election_signed_at", "irs_delivery_at", "service_recipient_copy_at", "holding_period_result", "evidence_path", "evidence_sha256"],
+                "properties": {
+                  "decision": {"enum": ["NOT_APPLICABLE", "TIMELY_ELECTED", "AFFIRMATIVELY_NOT_ELECTED", "MISSED_OR_UNRESOLVED"]},
+                  "property_transfer_date": {"type": ["string", "null"], "format": "date"},
+                  "filing_deadline": {"type": ["string", "null"], "format": "date"},
+                  "election_signed_at": {"type": ["string", "null"], "format": "date-time"},
+                  "irs_delivery_at": {"type": ["string", "null"], "format": "date-time"},
+                  "service_recipient_copy_at": {"type": ["string", "null"], "format": "date-time"},
+                  "holding_period_result": {"enum": ["NOT_APPLICABLE", "STARTS_AT_TRANSFER", "STARTS_AT_VESTING", "UNRESOLVED"]},
+                  "evidence_path": {"type": ["string", "null"], "minLength": 1},
+                  "evidence_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+                }
+              }
+            }
+          },
+          "tax_authorities": {
+            "type": "array",
+            "minItems": 4,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["doctrine", "rule", "authority_id", "source_url", "verified_at", "effective_from", "effective_to", "status"],
+              "properties": {
+                "doctrine": {"enum": ["section_83", "section_351", "section_1202", "section_1244"]},
+                "rule": {"enum": ["SECTION_83_CODE", "REG_1_83_2", "REG_1_83_4", "SECTION_351_CODE", "REG_1_351_1", "SECTION_357_CODE", "SECTION_358_CODE", "SECTION_362_CODE", "SECTION_368_C_CODE", "REG_1_351_3", "REG_1_358_2", "SECTION_1012_CODE", "SECTION_1202_CODE", "SECTION_1244_CODE"]},
+                "authority_id": {"type": "string", "pattern": "^run-[a-z0-9-]+$"},
+                "source_url": {"type": "string", "format": "uri"},
+                "verified_at": {"type": "string", "format": "date-time"},
+                "effective_from": {"type": ["string", "null"], "format": "date"},
+                "effective_to": {"type": ["string", "null"], "format": "date"},
+                "status": {"const": "VERIFIED"}
+              }
+            }
+          },
+          "closing_manifest_path": {"type": "string", "pattern": "^entities/[a-z0-9]+(?:-[a-z0-9]+)*/corporate/stock-issuances/.+\\.json$"},
+          "closing_manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    }
+  },
+  "$defs": {"gateStatus": {"enum": ["VERIFIED", "NOT_APPLICABLE", "UNVERIFIED", "CONFLICTED", "COUNSEL_HOLD"]}},
+  "allOf": [
+    {
+      "if": {"properties": {"overall_status": {"const": "ISSUED_AND_RECONCILED"}}},
+      "then": {"properties": {"tranches": {"items": {"properties": {"status": {"const": "ISSUED_AND_RECONCILED"}}}}}}
+    }
+  ]
+}

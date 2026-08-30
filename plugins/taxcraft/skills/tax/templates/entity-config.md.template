@@ -1,0 +1,216 @@
+
+# Entity Config — <ENTITY DISPLAY NAME>
+
+**Last updated**: YYYY-MM-DD
+
+> Per-entity standing facts. Year-specific working state lives in `tax/FY<YYYY>/tax-summary.md`. Cross-entity roster lives in `../../../workspace-profile/entities-index.md`.
+
+> **Entity-type-conditional sections**: sections below are tagged `[ALL]`, `[PARTNERSHIP]`, `[S-CORP]`, or `[C-CORP]`. Delete blocks not applicable to this entity type when instantiating this template for a real entity.
+
+## Identity [ALL]
+
+- **Legal name**: `<Full Legal Name, Inc./LLC/LP>`
+- **Display name**: `<name for display>`
+- **Slug**: `<kebab-case-slug>` (stable folder key)
+- **Entity type**: C-corp | S-corp | Partnership | SMLLC (disregarded) | LLC-taxed-as-partnership | LLC-taxed-as-S | LLC-taxed-as-C
+- **EIN**: `XX-XXXXXXX` *(leave blank if disregarded SMLLC using owner's EIN)*
+- **State of formation**: `XX`
+- **Formation date**: YYYY-MM-DD
+- **Fiscal year**: calendar | FY end `<month>` (e.g., "FY end September")
+- **Accounting method**: cash | accrual
+- **S-election effective**: YYYY-MM-DD (if applicable)
+- **Form 8832 election**: N/A | C-election effective YYYY-MM-DD
+
+## Parent Entity (if disregarded SMLLC) [ALL]
+
+- **Regarded parent slug**: `<parent-slug>` *(for disregarded only)*
+- **Federal treatment**: consolidated as division into parent's `<1120 | 1065 | 1120-S | 1040 Schedule C/E>`
+- **Own EIN for payroll/excise?**: yes / no — if yes, document dual-EIN usage
+
+## Ownership [ALL]
+
+| Owner | Class | % | Acquired | Capital contributed | Current basis notes |
+|---|---|---|---|---|---|
+| `<owner name/entity>` | common stock / LLC units / GP / LP | 100% | YYYY-MM-DD | $ | |
+
+## Officers / Directors / Managers [ALL]
+
+| Person | Role | Appointed | Term | Notes |
+|---|---|---|---|---|
+| `<name>` | President / Secretary / Treasurer / Director / Member-Manager | YYYY-MM-DD | annual | |
+
+## Partners' Capital Accounts [PARTNERSHIP]
+
+- Roll-forward maintained in `books/capital-accounts.md` (tax-basis) — see that file for §704(b) vs. tax-basis distinction.
+- **§754 election status**: made YYYY, in force | not made
+- Special allocations / substantial-economic-effect provisions: `<summary, or "none — pro rata per ownership %">`
+
+## §6221(b) BBA Opt-Out Election [PARTNERSHIP]
+
+- **Eligible to opt out?**: yes / no — requires ≤100 partners, all "eligible partners" (no partnerships/trusts/disregarded entities as partners)
+- **Opt-out elected**: yes (Schedule B-2 filed with return) / no — partnership uses BBA centralized audit regime
+- **Partnership Representative**: `<name, address>` — designated on return; sole authority to bind partnership in BBA proceedings
+- **Note**: opt-out is an annual election, must be re-made (or re-evaluated) each filing
+
+## K-1s Issued [PARTNERSHIP]
+
+| Tax year | Recipient | K-1 issued date | Amended? | Notes |
+|---|---|---|---|---|
+| FY<YYYY> | `<partner name>` | YYYY-MM-DD | no | |
+
+*Detail workpapers in `tax/FY<YYYY>/issued/k1s-issued/`.*
+
+## AAA — Accumulated Adjustments Account [S-CORP]
+
+- Roll-forward maintained in `tax/FY<YYYY>/annual/` (Schedule M-2) — beginning AAA, ordinary income/loss, other adjustments, distributions, ending AAA.
+- **AAA balance (most recent year-end)**: $
+- **OAA (Other Adjustments Account) balance**: $
+- **AE&P from C-corp years (if converted from C-corp)**: $ — distributions in excess of AAA are taxable dividends to the extent of this balance
+
+## Shareholder Basis [S-CORP]
+
+- Stock basis + debt basis tracked per shareholder in `books/capital-accounts.md`.
+- Losses in excess of basis suspended under §1366(d) — tracked in `carryforwards.json`.
+- **Built-in gains (BIG) tax exposure** (if converted from C-corp within 5-year recognition period): yes / no — recognition period ends YYYY-MM-DD
+
+## E&P — Earnings & Profits [C-CORP]
+
+- **Current E&P (this year)**: $
+- **Accumulated E&P (cumulative)**: $
+- Distributions characterized as dividend (to extent of E&P) vs. return of capital vs. capital gain — tracked at distribution in `tax/FY<YYYY>/annual/`.
+
+## §531 Accumulated Earnings Tax Documentation [C-CORP]
+
+- **Accumulated earnings credit used**: $250,000 general / $150,000 (personal service corp) / documented reasonable-needs amount: $
+- **Reasonable needs of the business documentation**: `<board resolution / memo citing specific business needs — expansion, working capital, debt retirement, contingencies>` — location: `corporate/resolutions/`
+- **Retained-earnings rationale reviewed**: YYYY-MM-DD — re-review annually if accumulated E&P is growing without a clear business purpose
+
+## Addresses [ALL]
+
+- **Principal place of business**: `<street, city, state, ZIP>`
+- **Mail address** (if different): `<address + service + renewal>`
+- **Address of record (IRS)**: `<address on file with IRS per most recent return / Form 8822-B>` — update via Form 8822-B if changed
+- **Registered agent**: `<name, firm, address>`
+- **Registered office**: `<address>` (if separate from RA)
+
+## State Registrations [ALL]
+
+- **Home state**: `<XX>` — Articles filed YYYY-MM-DD; state ID `<#>`
+- **Foreign qualifications**: `<XX, XX, ...>` — list each with Certificate of Authority filing date
+- **DOR / B&O / sales tax accounts**: `<account #s per state>`
+- **Unemployment / UI**: `<account #s per state>`
+
+## Filings Record [ALL]
+
+| Tax year | Return type | Filed date | Extension filed? | Amended? | Location |
+|---|---|---|---|---|---|
+| FY<YYYY> | 1120 / 1065 / 1120-S | YYYY-MM-DD | yes/no | no | `tax/FY<YYYY>/filed/` |
+
+*Tracks filing history at a glance; source documents live at the `Location` path per year.*
+
+## Nested Disregarded SMLLCs [ALL]
+
+| SMLLC slug | Legal name | State | Has own EIN? | Has own bank acct? | Payroll EIN? |
+|---|---|---|---|---|---|
+| `<smllc-slug>` | `<SMLLC legal name>` | `<XX>` | yes/no | yes/no | yes/no |
+
+*If populated, see `disregarded/<smllc-slug>/entity.md` for each.*
+
+## Accounts [ALL]
+
+### Bank
+| Bank | Account # (last 4) | Purpose | Authorized signers |
+|---|---|---|---|
+| | | | |
+
+### Brokerage
+| Broker | Account # (last 4) | Purpose |
+|---|---|---|
+| | | |
+
+### IRS / Federal
+- **EFTPS enrolled**: yes / no — enrollment date YYYY-MM-DD; PIN: `<stored securely, not here>`
+- **IRIS TCC**: `<code>` (for entities issuing 1099s/1042-S electronically)
+- **FIRE TCC**: `<code>` (legacy)
+
+## K-1 Positions Held (this entity as partner/LP/shareholder in others) [ALL]
+
+| Upstream entity | Type | Ownership % | Classification | Review notes |
+|---|---|---|---|---|
+| `<entity>` | partnership-operating / partnership-real-estate / partnership-oil-gas / partnership-vc-pe / S-corp | % | working interest vs passive / at-risk / §199A eligibility | annual re-check items |
+
+*Per-investment standing context (PPM, subscription docs) in `investments/<slug>/`.*
+
+## Properties Owned (if applicable) [ALL]
+
+| Property slug | Address | Acquired | Basis | Land % | In-service | Depr. | Cost seg? | Status |
+|---|---|---|---|---|---|---|---|---|
+| `<slug>` | | YYYY-MM-DD | $ | % | YYYY-MM-DD | 27.5-SL | no | rented / vacant / sold |
+
+*Per-property detail in `properties/<slug>/`.*
+
+## Active Tax Strategies [ALL]
+
+- **Employee reimbursement arrangement** (Reg §1.62-2, if applicable)
+  - Evidence status: `<NO ARRANGEMENT EVIDENCED / APPROVED, NOT EXECUTED / ACTIVE, NOT YET OPERATED / ACTIVE AND OPERATED / PARTIAL FAILURE / NONACCOUNTABLE ARRANGEMENT>`
+  - Approved: `<YYYY-MM-DD / unknown / not applicable>`
+  - Signed: `<YYYY-MM-DD / unsigned / writing not used>`
+  - Effective: `<YYYY-MM-DD / not effective>`
+  - First operated: `<YYYY-MM-DD / not yet operated / unknown>`
+  - Current plan/policy: `<path or none>`
+  - Latest operating evidence reviewed: `<claim/register/payroll period or none>`
+- [ ] **§280A(g) Augusta Rule** — home rental to corp ≤14 days/yr; FMV $/day; board auth YYYY-MM-DD
+- [ ] **§179 policy**: aggressive / moderate / conservative
+- [ ] **Bonus depreciation**: elect / opt out / default (check rules file for current %)
+- [ ] **§163(j)(7) real-property trade or business election** (if real-estate entity): yes / no
+- [ ] **§754 election** (partnerships): made YYYY, in force
+- [ ] **§199A aggregation** (partnerships / S-corps): yes — aggregated with `<entities>`
+- [ ] **Qualified Joint Venture** (MFJ spouses + community-prop state): yes / no
+- [ ] **Family employment**: yes — `<family member, role, wage rationale>`
+- [ ] **§1202 QSBS tracking**: yes — issuance-date balance sheet at `corporate/qsbs-tracking/`
+- [ ] **State PTE election**: state, effective YYYY-MM-DD
+- [ ] Other: `<custom>`
+
+## Standing Elections — Accounting [ALL]
+
+- Cash vs accrual: `<>`
+- §263A UNICAP: applicable / exempt (small-biz)
+- §174 R&D: applicable / none
+- §461(l) excess business loss: monitored at owner level
+- §471 inventory method: `<>` (if inventory)
+- Depreciation conventions: MACRS default, §179 and bonus policies per above
+
+## Banking, Payroll, Insurance [ALL]
+
+- **Payroll provider**: `<Gusto / ADP / Paychex / in-house>`
+- **Payroll EIN**: matches main EIN or separate for SMLLC (explain if different)
+- **General liability insurance**: carrier, policy, expires
+- **Professional liability (E&O)**: carrier, policy, expires
+- **Workers' comp**: carrier, policy, expires
+- **D&O (if applicable)**: carrier, policy, expires
+
+## Corporate Records Audit Pointer [ALL]
+
+- Canonical audit: `corporate/corporate-records-audit-FY<YYYY>.json`
+- Audit `as_of`: `<YYYY-MM-DD / not yet audited>`
+- Overall status: `<EVIDENCE_INTAKE_PENDING / AUTHORITY_HOLD / FACT_CONFLICT /
+  COUNSEL_HOLD / REQUIRED_RECORD_MISSING / EXECUTION_PENDING / FILING_PENDING /
+  OPERATION_RECONCILIATION_PENDING / CURRENT_WITH_DISCLOSED_NONMATERIAL_GAPS /
+  RECORD_SET_RECONCILED_AS_OF>`
+- Scope summary: `<entities, jurisdictions, and fiscal/tax years>`
+
+Do not duplicate bylaws, annual-action, filing, license, BOI, or authority
+statuses here. The structured audit owns those multi-axis conclusions; this
+profile stores only its pointer and as-of snapshot.
+
+## Advisors [ALL]
+
+- **CPA / EA**: `<name, firm, email, phone>`
+- **Attorney**: `<name, firm, email>`
+- **Registered agent**: `<firm, contact>`
+- **Banker**: `<contact>`
+- **Insurance broker**: `<contact>`
+
+## Notes [ALL]
+
+Free-form. Anything that doesn't fit above but matters across years.

@@ -1,0 +1,99 @@
+# FY<YYYY> Return Package — <scope-slug>
+
+**Prepared**: YYYY-MM-DD  **Package status**: (per `individual/1040.md` §9)
+
+> The handoff index. Everything the taxpayer or their practitioner needs, in one
+> list, with nothing unresolved left silent.
+
+## 1. Scope
+
+| | |
+|---|---|
+| Taxpayer / spouse | |
+| Filing status and the rule that determined it | 12/31 · §6013(a)(3) · §7703(b) · §2(a) |
+| Dependents | |
+| Resident state(s) and any part-year dates | |
+| Nonresident / source states | |
+
+## 2. Workpapers
+
+Every workpaper produced, and every §2 source row with facts that has **not** produced
+one (with the reason).
+
+| Workpaper | Covers | Status | Ties to |
+|---|---|---|---|
+| `wp-<topic>.md` | | complete / hold | |
+
+**Rows with no facts** (single attestation per `individual/1040.md` §2 scope
+gate):
+
+## 3. Source documents
+
+| Document | Canonical filename | Location | Received | Parsed |
+|---|---|---|---|---|
+
+**Expected but not received** (from `pending-docs.md`):
+
+**Wage & Income transcript reconciliation** — three-way tie and both exception
+lists (`individual/1040.md` §2.4):
+
+| W&I item | Source doc | Return line | Exception |
+|---|---|---|---|
+
+## 4. Required attachments and signatures
+
+| Attachment | Trigger | Signed by | E-file route |
+|---|---|---|---|
+| Form 8283 Section B | Noncash > $5,000 | Appraiser **and** donee | Form 8453 |
+| Form 8332 | Released dependency | Custodial parent | Form 8453, **every year** |
+| Form 1098-C | Donated vehicle | Donee | Form 8453 |
+| Form 3115 | Method change | | Attached + separate copy |
+| Form 8275 / 8275-R | Disclosed position | | Original or superseding return |
+| Other | | | |
+
+## 5. Filings outside the return
+
+| Filing | Authority | Channel | Deadline | Status |
+|---|---|---|---|---|
+| FinCEN Form 114 (FBAR) | 31 U.S.C. §5314 | **BSA E-Filing only** — needs FinCEN 114a authorization | Apr 15, automatic extension to Oct 15 | |
+| State returns | | | | |
+| Estimated payments | | | | |
+| Other | | | | |
+
+## 6. Foreign information returns
+
+Drives the §6501(c)(8) hold. **Any unfiled required return makes the package
+`RETURN_HOLD`, never `PROVISIONAL`.** Note FinCEN 114 is a Title 31 filing and
+does **not** trigger §6501(c)(8).
+
+| Form | Required | Filed | Drives §6501(c)(8) |
+|---|---|---|---|
+
+## 7. Lifetime basis updated
+
+Each track touched this year, and the SSOT it was written back to
+(`individual/1040.md` §5).
+
+| Track | SSOT path | Movement this year | Updated |
+|---|---|---|---|
+
+## 8. Carryforwards
+
+| Class | Beginning | Consumed | Generated | Ending |
+|---|---|---|---|---|
+
+Rolls into `individual/carryforwards.json` **only** when the user marks the year
+filed.
+
+## 9. Unresolved holds
+
+Copied from `review.md` §2. If this section is non-empty the package is not
+ready.
+
+## 10. Handoff
+
+- Deliverable is **workpapers**, not a filed return.
+- Positions and disclosure decisions are in `review.md` §3.
+- Accepted risks are in `review.md` §5.
+
+**Verify with a licensed practitioner before filing.**

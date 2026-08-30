@@ -1,0 +1,74 @@
+# <Legal Entity Name> — Employee Reimbursement Annual Review
+
+**Tax year:** FY<YYYY>  
+**Plan/policy:** `<path and version>`  
+**Evidence status:** `<status from scenarios/accountable-plan.md>`  
+**Service employer / payroll EIN:** `<entity / masked EIN>`  
+**Income-tax owner:** `<entity or same>`  
+**Prepared / reviewed:** `<names or roles and dates>`
+
+> This is an operating and tax workpaper, not proof that every payment qualifies.
+> Apply `scenarios/accountable-plan.md` to each exception.
+
+## 1. Scope and timing method
+
+- Review period: `<dates>`
+- Timing method: `<30/60/120 fixed-date safe harbor / quarterly-statement safe harbor / facts-and-circumstances>`
+- Expense modules used: `<home office / mileage / travel / meals / phone / equipment / other>`
+- Current-source checks completed: `<mileage, per diem, W-2, state rules, dates>`
+
+## 2. Control-total reconciliation
+
+| Population | Count | Gross amount | Accountable amount | Taxable/receivable amount | Unresolved |
+|---|---:|---:|---:|---:|---:|
+| Employee claims | | $ | $ | $ | $ |
+| Company-card charges | | $ | $ | $ | $ |
+| Advances issued | | $ | $ | $ | $ |
+| Advances returned | | $ | $ | $ | $ |
+| Bank payments | | $ | $ | $ | $ |
+| Underlying expense/asset GL | | $ | $ | $ | $ |
+| Payroll exceptions | | $ | n/a | $ | $ |
+
+Explain every difference and cross-reference the source register or exception ID.
+
+## 3. Open advances and deadline aging
+
+| Advance ID | Employee | Expense paid/incurred | Accounting due/received | Return due/received | Open excess | Payroll trigger | Status |
+|---|---|---|---|---|---:|---|---|
+| | | | | | $ | | |
+
+## 4. Payroll and information-return reconciliation
+
+| Item | Register | Payroll/return | Difference | Correction/status |
+|---|---:|---:|---:|---|
+| Taxable exceptions — W-2 boxes 1/3/5 | $ | $ | $ | |
+| Federal-rate allowance — W-2 box 12 code L when required | $ | $ | $ | |
+| Forms 941 / 941-X | $ | $ | $ | |
+| Form 940 / amended Form 940 | $ | $ | $ | |
+| State/local payroll | $ | $ | $ | |
+
+Attach or link the payroll exception register. Confirm whether employee FICA was
+collected and whether any prior-period W-2c/W-3c is required.
+
+## 5. Related-entity and duplicate-recovery check
+
+| Claim ID | Service employer | Legal payor | Benefiting entity/division | Allocation | Intercompany mirror | Duplicate check |
+|---|---|---|---|---:|---|---|
+| | | | | % | | |
+
+## 6. Testing and exceptions
+
+- Population and sample method: `<describe; include owner-employee emphasis>`
+- Missing/secondary evidence: `<IDs and resolution>`
+- Personal/company-card receivables: `<IDs, repayment or wage/distribution route>`
+- Wage-substitution test: `<result>`
+- State/local conformity and reimbursement-law check: `<result>`
+
+## 7. Conclusion and sign-off
+
+- Final evidence status: `<status>`
+- Unresolved items and owners: `<list with dates>`
+- Prospective control changes: `<list; do not backdate>`
+- Preparer sign-off: `<name/role/date>`
+- Reviewer sign-off: `<name/role/date>`
+- Licensed-practitioner items: `<CPA/EA/tax counsel/corporate counsel>`

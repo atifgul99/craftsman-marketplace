@@ -1,0 +1,49 @@
+
+# Opening Balances — <ENTITY NAME> FY<YYYY>
+
+**Seeded from**: prior-year filed return Schedule L (ending) — `tax/FY<YYYY-1>/filed/<return>.pdf`
+**Seeded on**: YYYY-MM-DD
+
+Opening trial balance for the current fiscal year. Must tie to prior year's ending Schedule L (or Schedule M-2 capital account rollforward for pass-throughs).
+
+## Trial Balance (FY<YYYY> Opening)
+
+| Account # | Account | Debit | Credit |
+|---|---|---|---|
+| 1010 | Cash — Operating | | |
+| 1020 | Cash — Reserve | | |
+| 1100 | Accounts receivable | | |
+| ... | (complete per COA) | | |
+| | **TOTALS** | | |
+
+(Debits must equal credits.)
+
+## Reconciliation to Prior Year
+
+- Prior FY ending Schedule L total assets: $
+- Opening total assets here: $
+- Delta: $0 (should be zero)
+
+## Capital Account Rollforward (partnerships / S-corps)
+
+| Partner/Shareholder | Prior FY Ending Capital | = Current FY Opening |
+|---|---|---|
+| | $ | $ |
+
+## E&P / AAA Rollforward (C-corp / S-corp)
+
+- E&P opening balance (C-corp): $
+- AAA opening balance (S-corp): $
+- OAA opening: $
+
+## Carryforward Items (Opening)
+
+| Attribute | Amount | Expires |
+|---|---|---|
+| NOL (post-2018, 80% limit) | $ | indefinite |
+| §163(j) disallowed interest | $ | indefinite |
+| §179 carryover | $ | indefinite |
+| Charitable contribution (10% limit) | $ | FY<YYYY+5> |
+| Capital loss (C-corp only) | $ | FY<YYYY+5> |
+| Foreign tax credit | $ | FY<YYYY+10> |
+| AMT credit | $ | indefinite |

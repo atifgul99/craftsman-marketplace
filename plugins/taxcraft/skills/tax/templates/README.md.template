@@ -1,0 +1,44 @@
+
+# Business / Tax Workspace
+
+This workspace uses the `tax` Claude Code skill for individuals (1040), partnerships (1065), S-corps (1120-S), C-corps (1120), disregarded SMLLCs (consolidated into parents), quarterly closes with estimated tax, and corporate governance.
+
+## Structure
+
+- **Activation + pointer map**: `CLAUDE.md`
+- **Owner & entity roster**: `workspace-profile/`
+- **Individual 1040 work**: `individual/`
+- **Per-entity work** (books, corporate, properties, tax): `entities/<slug>/`
+- **Nested disregarded SMLLCs**: `entities/<parent>/disregarded/<smllc>/`
+
+## Federal Deadlines (static)
+
+### Individual (calendar year)
+- **April 15** — 1040 filing (or extension 4868) + IRA/HSA contributions + Q1 estimated tax
+- **June 15** — Q2 estimated tax
+- **September 15** — Q3 estimated tax
+- **October 15** — extended 1040 filing
+- **January 15 (next year)** — Q4 estimated tax
+
+### Calendar-year Partnership / S-corp
+- **March 15** — 1065 / 1120-S filing + K-1 delivery (or extension 7004 → Sept 15)
+
+### Calendar-year C-corp
+- **April 15** — 1120 filing (or extension 7004 → Oct 15)
+- **Estimated tax** — 15th of 4th/6th/9th/12th month of fiscal year
+
+### Fiscal-year entities
+- Filing due 15th day of 3.5 or 4.5 months after FY end (per form). See each entity's `entity.md` for specific dates.
+
+### Governance
+- **S-corp election (Form 2553)** — within 2½ months of start of the tax year for which election is effective
+- **State annual reports** — vary by state (check each entity's state)
+- **FinCEN BOIR** — check current FinCEN guidance (enforcement has been in flux)
+
+## Quick Invocation
+
+Run Claude Code from this folder. The `tax` skill will activate and route you based on what you ask for or what folder state it detects.
+
+## ⚠️ Not Tax Advice
+
+All outputs are estimates, workpapers, and drafts only. Verify with your CPA/EA before filing, and with corporate counsel before signing governance documents.

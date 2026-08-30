@@ -1,0 +1,58 @@
+# <Entity Name> — Books
+
+The perpetual bookkeeping record for <Entity Name>. Runs continuously from entity formation to dissolution — **never reset per tax year**. Year-bound views (this year's P&L, this year's balance sheet) live in `../tax/FY<YYYY>/`, not here.
+
+For the overall structural philosophy see the tax skill's `accounting-101.md`.
+
+## What lives here
+
+| File / folder | Purpose | Scope |
+|---|---|---|
+| `chart-of-accounts.md` | The entity's account list (assets / liabilities / equity / income / expense buckets) | Perpetual |
+| `opening-balances.md` | Trial balance from formation through the first fiscal year opening | Perpetual |
+| `fixed-assets.md` | Asset register with acquisition date, cost, depreciation method, accumulated depreciation | Perpetual |
+| `capital-accounts.md` | Per-partner / per-shareholder tax-basis capital roll-forward (partnerships + S-corps) | Perpetual |
+| `journal-entries.md` | Register of every non-cash / adjusting / reclass entry (contributions, accruals, depreciation, intercompany, equity events) | Perpetual |
+| `general-ledger.csv` | The actual general ledger — every transaction posted to its COA account, all years | Perpetual |
+| `transaction-ledgers/` | Reconciled cashbooks per account (pre-categorization; proves our data matches the bank) | Perpetual, per account |
+| `transaction-ledgers/regenerate.py` | Thin driver invoking the skill's parser tool with this entity's account config | Tool |
+
+## What does NOT live here
+
+- **Raw bank statements, CSV exports, check images** → `../accounts/<account-slug>/`
+- **Year-end trial balance, P&L, balance sheet** → `../tax/FY<YYYY>/annual/`
+- **Reconciliation workpapers for a specific year** → `../tax/FY<YYYY>/annual/workpapers/`
+- **The filed return** → `../tax/FY<YYYY>/filed/`
+- **Formation docs, minutes, resolutions** → `../corporate/`
+
+If a file needs an `FY<YYYY>` label, it does not belong in `books/`. The only exception is a rolling history file (e.g., capital-accounts roll-forward that logs each year-end balance as a row) — the FILE is perpetual even though individual rows reference years.
+
+## How to regenerate transaction ledgers
+
+```bash
+cd transaction-ledgers
+python3 regenerate.py
+```
+
+The parser (lives in the tax skill at `tools/chase-statement-parser/`) reads raw statement PDFs + CSV from `../accounts/<slug>/`, reconciles against stated statement balances, and writes:
+
+- `transaction-ledgers/<account>-unified-ledger.csv` — master reconciled cashbook (all years)
+- `transaction-ledgers/<account>-validation.md` — per-statement balance reconciliation report
+- `../tax/FY<YYYY>/source/bank-cc/<account>.csv` — year-filtered slices for each year
+
+All ledgers and validation reports overwrite on each run. Source files are never modified.
+
+## Data flow (this entity)
+
+```
+accounts/<slug>/statements/*.pdf   →  transaction-ledgers/<account>-unified-ledger.csv
+accounts/<slug>/all-transactions.csv                    │
+                                                        ↓
+                                          books/general-ledger.csv  (after categorization)
+                                                        ↓
+                                          tax/FY<YYYY>/annual/{pnl,balance-sheet}.md
+                                                        ↓
+                                          tax/FY<YYYY>/filed/<return>.pdf
+```
+
+Each arrow is a verification layer. Break any link and the audit trail breaks.

@@ -1,0 +1,38 @@
+
+# Ownership & Organization Chart
+
+**Last updated**: YYYY-MM-DD
+
+Visual representation of entity ownership + nesting. Update whenever ownership changes.
+
+## Diagram
+
+```mermaid
+graph TD
+    Owner[Individual: First Last]
+    Owner --> EntityA[Entity A — C-corp]
+    Owner --> EntityB[Entity B — Partnership]
+    EntityA --> SmllcA1[SMLLC A1 — disregarded]
+    EntityB --> SmllcB1[SMLLC B1 — disregarded]
+    SmllcB1 --> Inv1[LP interest in Upstream Fund]
+```
+
+## Ownership Detail
+
+- **Individual / Family** owns:
+  - `<Entity A>` (C-corp, 100%) — filed separately
+  - `<Entity B>` (Partnership, 50% with spouse) — filed separately
+
+- **`<Entity A>`** owns:
+  - `<SMLLC A1>` (disregarded) — consolidated into Entity A's 1120
+
+- **`<Entity B>`** owns:
+  - `<SMLLC B1>` (disregarded) — consolidated into Entity B's 1065
+  - Upstream K-1 investments held via SMLLC B1:
+    - `<Upstream Fund>` (LP interest)
+
+## Notes
+
+- Disregarded SMLLCs appear with "— disregarded" suffix.
+- For K-1 positions held through a disregarded SMLLC, the regarded parent is the tax partner (see `disregarded.md` for W-9/K-1 labeling).
+- Ownership changes logged in `history.md`.

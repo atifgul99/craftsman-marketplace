@@ -1,0 +1,95 @@
+
+# Individual Taxpayer Profile
+
+**Last updated**: YYYY-MM-DD
+
+> Year-independent facts for the individual's 1040. Year-specific overrides (e.g., filing status changed mid-year) live in `FY<YYYY>/tax-summary.md` as a **delta**, never a copy. Identity basics also appear in `../workspace-profile/owner.md`; this file focuses on tax-relevant details.
+
+## Identity
+
+- **Taxpayer**: `<first name>` (SSN last 4: ____)
+- **Spouse**: `<first name>` (SSN last 4: ____) — *omit section if single*
+- **Filing status default**: Single | MFJ | MFS | HoH | QW
+- **Address**: `<street, city, state, ZIP>`
+- **State of residency**: `<XX>` (since YYYY-MM-DD)
+- **Community-property state**: yes / no
+- **Foreign accounts (FBAR/8938 triggers)**: yes / no — if yes, list custodians/countries
+
+## Dependents
+
+| Name | DOB | Relation | Notes |
+|---|---|---|---|
+| `<name>` | YYYY-MM-DD | child / parent / other | |
+
+## Entities Owned (reference)
+
+Entities are managed in `../entities/<slug>/entity.md`. Summary reference here:
+
+| Entity slug | Type | Ownership % | K-1 expected? |
+|---|---|---|---|
+| `<slug>` | C-corp / S-corp / partnership | % | yes (for pass-throughs) / no (C-corp → 1099-DIV instead) |
+
+## K-1s Received Directly (not via an entity)
+
+For K-1s that hit the 1040 directly (not held through an owned entity):
+
+| Issuer | Type | Ownership % | State sources | Annual re-check |
+|---|---|---|---|---|
+| `<issuer>` | partnership-operating / partnership-oil-gas / etc. | % | list | e.g., working-interest vs. passive each year |
+
+## Rental Properties (owned individually, not in an entity)
+
+| Address | Acquired | Basis | Land % | In-service | Depr. Method | Cost Seg? | REPS? | STR? |
+|---|---|---|---|---|---|---|---|---|
+| `<address>` | YYYY-MM-DD | $ | % | YYYY-MM-DD | 27.5-SL | no | no | no |
+
+## Primary Residence
+
+- Address: `<same as identity or different>`
+- Acquired: YYYY-MM-DD
+- Basis: $ (include capital improvements)
+- §121 eligibility notes:
+
+## Brokerage & Retirement Accounts (individual)
+
+| Institution | Type | Purpose |
+|---|---|---|
+| `<broker>` | taxable / IRA / Roth / 401k / HSA / SDIRA | |
+
+## Charitable
+
+- **DAF sponsor**: `<Fidelity Charitable / Schwab / Vanguard / none>`
+- **Giving pattern**: annual / bunched (every N years)
+- **Non-cash giving**: stock / real property / QCD — list strategies used
+
+## Retirement Contribution Plan
+
+- 401(k): pre-tax / Roth / mega-backdoor
+- IRA strategy: backdoor Roth (watch pro-rata rule — aggregate trad IRA balance)
+- Catchup eligible (age 50+): yes / no
+- SEP / Solo-401(k) / SIMPLE: entity/plan
+
+## Equity Comp Relationships
+
+| Employer (current/former) | Types | Notes |
+|---|---|---|
+| `<employer>` | RSU / ESPP / ISO / NSO | plan administrator(s), transfer history if any |
+
+## Standing Tax Elections (individual-level)
+
+- [ ] §469 grouping (Reg §1.469-4) — grouped activities:
+- [ ] §199A aggregation — aggregated trades/businesses:
+- [ ] Real Estate Professional (§469(c)(7)) — which spouse qualifies:
+- [ ] §59(e) 5-yr amortization of IDC — applicable to which K-1s:
+- [ ] Qualified Joint Venture (Rev. Proc. 2002-69) — spouse LLC (if in community-prop state):
+- [ ] Other:
+
+## Advisors
+
+- **CPA / EA**: `<name, firm, email, phone>`
+- **Attorney**: `<if any>`
+- **Financial advisor**: `<if any>`
+
+## Notes
+
+Free-form. Anything that doesn't fit above but matters across years.

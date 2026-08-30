@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tax-rules-schema-v2",
+  "title": "Tax skill rules file schema v2",
+  "type": "object",
+  "required": [
+    "_meta",
+    "tax_year"
+  ],
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "jurisdiction",
+        "tax_year",
+        "status",
+        "checked_at",
+        "stale_after",
+        "authorities",
+        "coverage",
+        "unresolved",
+        "stale_after_rationale",
+        "legislation_checked_through",
+        "declared_repeats"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "jurisdiction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tax_year": {
+          "type": "integer",
+          "minimum": 1900
+        },
+        "status": {
+          "enum": [
+            "SOURCE_MAPPED",
+            "REVIEW_REQUIRED",
+            "SUPERSEDED"
+          ]
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "authorities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "url",
+              "source_type",
+              "effective_from",
+              "effective_to"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^https://"
+              },
+              "source_type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "effective_from": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "effective_to": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "coverage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "paths",
+              "authority_ids",
+              "status"
+            ],
+            "properties": {
+              "paths": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "authority_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "status": {
+                "enum": [
+                  "VERIFIED",
+                  "POINT_OF_USE",
+                  "UNRESOLVED"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "unresolved": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "reason"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "stale_after": {
+          "type": "string",
+          "format": "date"
+        },
+        "stale_after_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legislation_checked_through": {
+          "type": "string",
+          "format": "date"
+        },
+        "declared_repeats": {
+          "type": "array",
+          "description": "Genuine year-over-year repeats of a finely-indexed parameter, each bound to evidence. An unchanged value is otherwise treated as a copy-forward bug.",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "prior_year",
+              "authority_id",
+              "source_location",
+              "rationale"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prior_year": {
+                "type": "integer",
+                "minimum": 1900
+              },
+              "authority_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_location": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "tax_year": {
+      "type": "integer",
+      "minimum": 1900
+    }
+  },
+  "additionalProperties": true
+}

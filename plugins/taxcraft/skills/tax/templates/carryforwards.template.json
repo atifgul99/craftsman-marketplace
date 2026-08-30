@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "as_of_tax_year": null,
+  "last_updated": "YYYY-MM-DD",
+  "_note": "Rolled forward only when a tax year is marked FILED. Working values during an open year live in FY<year>/tax-summary.md.",
+  "capital_loss": {
+    "short_term": 0,
+    "long_term": 0,
+    "source_year": null
+  },
+  "nol": [
+    {
+      "origin_year": null,
+      "amount_remaining": 0,
+      "pre_2018_or_post": "post-2018",
+      "_authority": "Vintage, carryback, and the taxable-income limitation percentage all changed across TY2018-2026 (TCJA, CARES, OBBBA). Verify per authority.md; do not rely on this note. See individual/loss-limitations.md section 2."
+    }
+  ],
+  "amt_credit_8801": 0,
+  "passive_loss_8582": [
+    {
+      "activity": "<rental address or entity name>",
+      "type": "rental | nonrental-passive | ptp",
+      "ptp_name": null,
+      "section_469_group": "",
+      "unallowed_loss_8582": 0,
+      "source_year": null
+    }
+  ],
+  "charitable_carryover": [
+    {
+      "year_contributed": null,
+      "type": "cash-60pct | cash-30pct | stock-30pct | stock-20pct | other",
+      "remaining": 0,
+      "expires": null,
+      "_note": "5-year carryover rule \u2014 track vintage"
+    }
+  ],
+  "foreign_tax_credit_1116": [
+    {
+      "basket": "passive|general|foreign_branch|GILTI",
+      "year_arising": null,
+      "amount_remaining": 0,
+      "expires_after": null
+    }
+  ],
+  "section_163j_interest": [
+    {
+      "partnership_slug": "",
+      "year_allocated": null,
+      "suspended_amount": 0,
+      "basis_reduced_when_allocated": 0
+    }
+  ],
+  "_lifetime_basis_note": "Lifetime basis is NOT a carryforward and does not live here. IRA nondeductible basis -> individual/records/basis/form-8606-basis.md (one per individual); Roth contribution basis and conversion layers -> individual/records/basis/roth-basis.md; AMT dual basis -> records/basis/amt-dual-basis.md; pass-through outside basis -> individual/investments/<slug>/position.md; property -> individual/properties/<slug>/depreciation-schedule.md; securities and digital-asset lots -> individual/accounts/<slug>/lot-basis.md. See individual/1040.md section 5.",
+  "hsa_basis_8889_excess_contribs": 0,
+  "section_179_carryover": 0,
+  "investment_interest_4952": 0,
+  "at_risk_6198": [
+    {
+      "activity": "",
+      "section_465_activity": "",
+      "suspended_beginning": 0,
+      "allowed": 0,
+      "suspended_ending": 0,
+      "recapture_465e_deduction_next_year": 0
+    }
+  ],
+  "_at_risk_note": "Per section 465 activity, which is NOT the same partition as the section 469 grouping. See individual/loss-limitations.md section 3.",
+  "adoption_credit_carryforward": 0,
+  "section_25D_carryforward": 0,
+  "general_business_credit_39": 0,
+  "qbi_negative_carryforward": 0,
+  "qualified_ptp_reit_negative_carryforward": 0,
+  "_ftc_note": "Per basket, per year arising - 1-year carryback and 10-year carryforward (section 904(c)); a claim for a year affected by FTC carryback gets 10 years under section 6511(d)(3).",
+  "_investment_interest_note": "Section 163(d)(2) disallowed investment interest; carries forward indefinitely.",
+  "_section_179_note": "Amount disallowed by the business-income limit; carries forward indefinitely.",
+  "_passive_note": "A PTP loss is suspended per PTP under section 469(k) and must carry ptp_name - it never enters the general passive basket. See individual/ptp.md.",
+  "_163j_note": "Excess business interest expense is keyed to the originating partnership: released only by excess taxable income or excess business interest income from that same partnership (section 163(j)(4)(B)(ii)); reduces outside basis when allocated and is added back to basis on disposition rather than deducted. An aggregate scalar cannot represent this."
+}

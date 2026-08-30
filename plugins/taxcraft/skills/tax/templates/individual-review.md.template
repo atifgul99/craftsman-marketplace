@@ -1,0 +1,99 @@
+# FY<YYYY> Individual Return Review — <scope-slug>
+
+**Prepared**: YYYY-MM-DD  **Package status**: `RETURN_HOLD` | `DEADLINE_EXPOSURE` |
+`PROVISIONAL` | `DRAFT_VERIFIED_INPUTS` | `READY_FOR_PRACTITIONER_REVIEW` |
+`PRIOR_YEAR_ERROR_IDENTIFIED`  (see `individual/1040.md` §9)
+
+> Narrative companion to the workpapers. This is where judgment, decisions, and
+> accepted risk are recorded — the workpapers hold the arithmetic.
+
+## 1. Deadlines and standing
+
+| Item | Status |
+|---|---|
+| Original due date / extended due date | |
+| Form 4868 filed and accepted | |
+| Balance paid by the original due date (§6651(a)(2) runs regardless of extension) | |
+| §7508A disaster postponement applicable | |
+| Under examination / open notice | |
+| Assessment and refund clocks for years in scope | |
+
+## 2. Holds
+
+Every unresolved item blocking the package, and what would clear it.
+
+| Hold | Source | What clears it | Owner |
+|---|---|---|---|
+
+State each explicitly. **Never present a held line as zero.**
+
+## 3. Positions taken
+
+| Position | Authority | Confidence | Disclosed | Basis for the decision |
+|---|---|---|---|---|
+
+Confidence ladder and disclosure decision per `individual/1040.md` §7. Record
+**Form 8275/8275-R** decisions here — attached to the original timely-filed (or
+superseding) return, or to a **qualified amended return**, whose availability
+requires testing all four Reg §1.6664-2(c)(3) cutoff events, not merely "before
+contact."
+
+| QAR cutoff event | Occurred? |
+|---|---|
+| Examination of the taxpayer | |
+| Examination of a pass-through entity (pass-through item) | |
+| Promoter examination | |
+| John Doe summons | |
+
+## 4. Elections
+
+| Election | Code / Reg | First effective year | Made on this return | Revocable | Where recorded |
+|---|---|---|---|---|---|
+
+Elections valid only on a timely-filed original return, and any §301.9100 relief
+sought, are noted here. Permanent elections also go to
+`individual/records/elections/`.
+
+## 5. Accepted risks
+
+Decisions where the taxpayer knowingly accepts exposure. Each needs the
+alternative that was rejected and why.
+
+- **Filing before Wage & Income transcript completeness** (if applicable) —
+  W&I is not complete until roughly May of Y+1 and accretes through Y+2.
+- **Penalty accepted as cheaper than the alternative** (if applicable).
+- Others:
+
+## 6. Engagement posture
+
+Output is workpapers. The taxpayer self-files or hands off to a practitioner;
+the taxpayer bears §6662 exposure and no preparer bears §6694 here. If this
+package was prepared for someone other than the taxpayer, note the preparer-status
+and §7216 considerations from `individual/README.md`.
+
+## 7. Prior-year errors identified
+
+Circular 230 §10.21 requires advising the taxpayer of any error found, its
+consequences, and how to correct it — it does not authorize correcting it
+unilaterally.
+
+| Year | Error | Consequence | §6511 open? | Advice given | Date |
+|---|---|---|---|---|---|
+
+## 8. State filings required
+
+| State | Return type | Basis (residency / source) | Due | Status |
+|---|---|---|---|---|
+
+## 9. Open questions
+
+Carried from `FY<YYYY>/open-questions.md`. Each needs an owner and what would
+resolve it.
+
+## 10. Planning items for next year
+
+Forward-looking only — do not let these change this year's numbers.
+
+---
+
+*Verify with a licensed practitioner before filing.*

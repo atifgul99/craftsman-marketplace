@@ -1,0 +1,65 @@
+# §351 / Property Transfer Schedule — [Issuer] — [Tranche ID]
+
+**Proposed/actual transfer date:** [ ]  
+**Integrated transaction window reviewed:** [ ]  
+**Status:** ELIGIBLE / INELIGIBLE / UNVERIFIED / NOT APPLICABLE
+
+> Tax workpaper only. Tax counsel or a CPA must review characterization, basis,
+> liability, and return-statement conclusions. Corporate counsel must confirm
+> title, assignment, issuance authority, and closing.
+
+## Transferor schedule
+
+| Transferor | Cash contributed | Other property | Other-property adjusted basis | Other-property FMV | Services | Liabilities assumed/subject to | Stock/other property received | Evidence |
+|---|---:|---|---:|---:|---|---:|---|---|
+| [ ] | $[ ] | [description] | $[ ] | $[ ] | [description/NONE] | $[ ] | [ ] | [ ] |
+
+## Control computation immediately after
+
+| Component | Numerator | Denominator | Percentage | Included/excluded and why |
+|---|---:|---:|---:|---|
+| Total combined voting power of all voting classes | [ ] | [ ] | [ ]% | must be ≥80% |
+| Total number of shares of all other classes, aggregated | [ ] | [ ] | [ ]% | must be ≥80% |
+
+- Integrated prior/subsequent transfers: [ ]
+- Service-only or nominal-property participants excluded/tested: [ ]
+- Commitments, options, redemptions, or dispositions affecting control: [ ]
+- Boot received: [ ]
+
+## Per-transferor recognition and stock basis
+
+Compute each transferor separately. One transferor's excess basis cannot shelter
+another transferor's liabilities for §357(c).
+
+| Transferor | Basis of cash + other property contributed | Liabilities treated as money under §358(d) | §357(c) gain | Actual money received (not contributed cash) | FMV nonstock property/boot received | Loss recognized | Total gain/dividend amount recognized | §358 aggregate stock basis | Reg. §1.358-2 allocation among stock/classes |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| [ ] | $[ ] | $[ ] | max(0, this transferor's liabilities − this transferor's aggregate basis), subject to exceptions = $[ ] | $[ ] | $[ ] | $[ ] | $[ ] | contributed basis − actual money received − FMV nonstock property − loss recognized + gain/dividend recognized − §358(d) liabilities + other adjustments = $[ ] | [ ] |
+
+Reconcile the aggregate §358 basis to the stock and each class/property received.
+Do not put contributed cash in the “money received” column, do not omit noncash
+boot, and do not subtract the same liability twice.
+
+## Per-property corporation basis and special rules
+
+| Transferor / property | Transferor basis | Gain recognized allocable | §362 corporate basis | §362(e)(2) built-in-loss result/election | Holding period | §1202(i) FMV/basis | §1244 capital receipts |
+|---|---:|---:|---:|---|---|---|---|
+| [ ] | $[ ] | $[ ] | basis + allocable gain + adjustments = $[ ] | [ ] | [ ] | [ ] | [ ] |
+
+## Property and title evidence
+
+- [ ] IP/property schedule and valuation
+- [ ] Executed assignment, bill of sale, deed, or transfer instrument
+- [ ] Third-party consents, liens, licenses, and chain of title
+- [ ] Corporation receipt and accounting classification
+- [ ] No service value hidden in property allocation
+
+## Reporting
+
+- [ ] Transferor Reg. §1.351-3 statement and return attachment reviewed
+- [ ] Transferee Reg. §1.351-3 statement and return attachment reviewed
+- [ ] Payroll/information reporting for service component
+- [ ] State conformity/reporting reviewed
+
+## Reviewer conclusion and reservations
+
+[Name/role, date, conclusion, open issues]

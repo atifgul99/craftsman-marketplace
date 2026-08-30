@@ -1,0 +1,263 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "individual-records-audit.schema.json",
+  "title": "Individual Permanent Records Audit",
+  "description": "Per-year evidence and status SSOT for the individual permanent-records pipeline (individual/records.md). Analogous to corporate-records-audit.schema.json on the entity side.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "tax_year",
+    "scope",
+    "as_of",
+    "retention_status",
+    "record_classes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "tax_year": {
+      "type": "integer",
+      "minimum": 1900,
+      "maximum": 2200
+    },
+    "scope": {
+      "type": "string",
+      "description": "Individual scope slug from workspace-profile/slugs.md (primary filer). Joint returns do not change the slug."
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date"
+    },
+    "retention_status": {
+      "type": "object",
+      "required": [
+        "assessment",
+        "refund",
+        "basis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "assessment": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "CLOSED_ASSESSMENT",
+            "EXTENDED_6501E",
+            "PERPETUALLY_OPEN_6501C8",
+            "OPEN_FRAUD_OR_UNFILED"
+          ],
+          "description": "PERPETUALLY_OPEN_6501C8 whenever any required foreign information return is unfiled - the whole return stays open."
+        },
+        "refund": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "CLOSED_REFUND"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "const": "RETAIN_INDEFINITELY",
+          "description": "Basis-establishing records are never closed by elapsed time."
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "record_classes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "class",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "type": "string",
+            "enum": [
+              "identity",
+              "basis",
+              "elections",
+              "estate",
+              "plans",
+              "legal",
+              "insurance"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PRESENT",
+              "MISSING",
+              "CONTESTED",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "document",
+                "proves",
+                "status"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "document": {
+                  "type": "string",
+                  "description": "Canonical filename per records.md section 6."
+                },
+                "sha256_prefix": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{12}$"
+                },
+                "proves": {
+                  "type": "string",
+                  "description": "The single field this document is competent evidence for. One document, one field."
+                },
+                "target_file": {
+                  "type": "string",
+                  "description": "The file this document updated."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "PRESENT",
+                    "MISSING",
+                    "CONTESTED",
+                    "SUPERSEDED"
+                  ]
+                },
+                "superseded_by": {
+                  "type": "string"
+                },
+                "contradiction": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "other_document": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "raised_in_open_questions": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "basis_index": {
+      "type": "array",
+      "description": "Pointer registry only - never figures. One row per lifetime basis track (individual/1040.md section 5).",
+      "items": {
+        "type": "object",
+        "required": [
+          "track",
+          "ssot_path"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "track": {
+            "type": "string",
+            "enum": [
+              "ira_8606",
+              "roth",
+              "pass_through_outside",
+              "property",
+              "securities_lots",
+              "digital_assets",
+              "amt_dual",
+              "section_1031",
+              "section_453",
+              "qsbs",
+              "charitable_carryover"
+            ]
+          },
+          "individual": {
+            "type": "string",
+            "description": "Required for per-person tracks (8606, Roth) - never merged across spouses."
+          },
+          "ssot_path": {
+            "type": "string"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date"
+          },
+          "last_document": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "foreign_information_returns": {
+      "type": "array",
+      "description": "Foreign reporting tracked for this year. Only the IRC information returns (8938, 5471, 8865, 8858, 3520, 3520-A, 8621) drive the section 6501(c)(8) hold in individual/1040.md. FinCEN 114 (FBAR) is a Title 31 filing with FinCEN, is NOT an IRC information return, and must NOT be treated as an input to that hold - it is listed here only so the year's foreign filings are tracked in one place.",
+      "items": {
+        "type": "object",
+        "required": [
+          "form",
+          "required",
+          "filed",
+          "drives_6501c8"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "form": {
+            "type": "string",
+            "enum": [
+              "FinCEN114",
+              "8938",
+              "5471",
+              "8865",
+              "8858",
+              "3520",
+              "3520-A",
+              "8621"
+            ],
+            "description": "FinCEN114 is tracked but excluded from the 6501(c)(8) input set."
+          },
+          "required": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "filed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          },
+          "drives_6501c8": {
+            "type": "boolean",
+            "description": "True only for IRC information returns. Must be false for FinCEN114."
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
