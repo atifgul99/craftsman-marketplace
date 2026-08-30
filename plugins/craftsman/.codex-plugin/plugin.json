@@ -1,7 +1,7 @@
 {
   "name": "craftsman",
   "version": "0.5.0",
-  "description": "The engineering review you'd get from the technical co-founder you don't have. Written by a software engineer of 25 years, including at Microsoft and Amazon. Findings are ranked by real consequence, not alphabetically, so a broken invoice check beats a missing comment. Audits a whole project for production-readiness across ten areas (UX, frontend, backend, database, security, infrastructure, observability, testing, lint, AI integrations), not just security. The craft-fix companion drives the fixes but can never mark its own work fixed.",
+  "description": "Ship something with Lovable, Replit, Bolt, v0, Claude Code, or Codex and it works, but nobody with an engineering background has checked it. craft-audit audits the whole project for production readiness across ten areas (UX, frontend, backend, database, security, infrastructure, observability, testing, lint, AI integrations), not just security. Findings are ranked by real consequence, not alphabetically, so a broken invoice check beats a missing comment. The craft-fix companion drives the fixes but can never mark its own work fixed.",
   "author": {
     "name": "Atif Gul",
     "url": "https://github.com/atifgul99"
@@ -11,20 +11,20 @@
   "license": "MIT",
   "keywords": [
     "craftsman",
-    "audit",
-    "engineering",
     "production-readiness",
-    "frontend",
-    "backend",
-    "database",
+    "code-audit",
+    "engineering-standards",
+    "vibe-coding",
+    "lovable",
+    "replit",
+    "bolt",
+    "v0",
+    "ai-generated-code",
+    "llm-integration",
+    "prompt-injection",
     "security",
-    "infrastructure",
-    "observability",
-    "testing",
-    "lint",
-    "eslint",
-    "ux",
-    "ai"
+    "multi-tenant",
+    "observability"
   ],
   "skills": "./skills/",
   "interface": {

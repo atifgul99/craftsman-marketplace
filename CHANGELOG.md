@@ -21,6 +21,33 @@ may still land in MINOR while the project settles). `1.0.0` is reserved for the 
 and workflow are considered stable enough to commit to strict SemVer against the trigger surface,
 not a synonym for "public."
 
+## [Unreleased]
+
+Metadata only — no version bump. Fold into whatever ships next.
+
+### Changed
+
+- **Rewrote the three manifest descriptions.** Dropped the "Written by a software engineer of 25
+  years, including at Microsoft and Amazon" sentence. It was authority-by-assertion in a product
+  whose own non-negotiables are "plain-language findings, consequence before jargon" and "evidence
+  over assumption, go look" — and "including at" was ungrammatical besides. Ex-FAANG is also close
+  to inert as a differentiator in a directory of 2,282 plugins, where `A full worked example is
+  included` does more work because a skeptic can verify it. The credential stays on the README,
+  where a reader has already opted in, rephrased so it explains the standard rather than just
+  asserting it. Characters reinvested in the searchable opener and the scope disclaimers.
+- **Reworked plugin keywords.** The old list was half internal structure (`ux`, `frontend`,
+  `backend`, `infra`, `lint`) and carried a bare `ai` tag that reads as "this is an AI plugin"
+  rather than "this audits your LLM integration". Replaced with tags describing the situation a
+  searcher is actually in: `vibe-coding`, `lovable`, `replit`, `bolt`, `v0`, `ai-generated-code`,
+  `code-audit`, `llm-integration`, `prompt-injection`, `multi-tenant`.
+
+  Scope note, so nobody re-litigates this later: keywords do **not** reach the Anthropic community
+  directory. Zero of its 2,282 catalog entries carry a `keywords` field — the ingestion strips it,
+  confirmed against a plugin whose own manifest declares keywords. The catalog keeps `name`,
+  `description`, `source`, `homepage`, and sometimes `category`. This change is for the
+  self-hosted marketplace, which is the install path the README documents; discovery in the
+  directory rides entirely on `description`.
+
 ## [0.5.0] (2026-08-24)
 
 ### Added

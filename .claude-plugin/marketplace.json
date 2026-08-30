@@ -12,7 +12,7 @@
       "name": "craftsman",
       "source": "./plugins/craftsman",
       "category": "development",
-      "description": "Ship something with Lovable, Replit, Bolt, v0, Claude Code, or Codex and it works, but nobody with an engineering background has checked it. Written by a software engineer of 25 years, including at Microsoft and Amazon. Before you let real customers in, craft-audit checks it the way a senior engineer would, across ten areas: security is one of them, alongside the database rules that keep one customer's data separate from another's, and whether the money path is tested and errors get seen before a customer has to report them. It writes plain-language findings to a workspace in your project so a long audit can pause and resume. The companion skill, craft-fix, drives the fixes, but it can never mark its own work fixed; only a fresh audit pass can confirm that. A worked example is included, so you can see exactly what it finds before you run it.",
+      "description": "Ship something with Lovable, Replit, Bolt, v0, Claude Code, or Codex and it works, but nobody with an engineering background has checked it before real customers arrive. craft-audit reviews the whole project the way a senior engineer would, across ten areas: not just security, but the database rules that keep one customer's data separate from another's, whether the money path is tested, and whether errors get seen before a customer has to report them. Findings are plain language, ranked by real consequence, so a broken invoice check beats a missing comment, and written to a workspace in your project so a long audit can pause and resume. The companion skill craft-fix drives the repairs but can never mark its own work fixed; only a fresh audit pass confirms that. A full worked example is included, so you can see exactly what it finds before you run it. Not a penetration test, not continuous monitoring, no numeric score.",
       "version": "0.5.0",
       "author": {
         "name": "Atif Gul",
@@ -21,20 +21,20 @@
       "homepage": "https://github.com/gul-labs/craftsman-marketplace",
       "license": "MIT",
       "keywords": [
-        "engineering-standards",
-        "audit",
         "production-readiness",
-        "ux",
-        "frontend",
-        "backend",
-        "database",
+        "code-audit",
+        "engineering-standards",
+        "vibe-coding",
+        "lovable",
+        "replit",
+        "bolt",
+        "v0",
+        "ai-generated-code",
+        "llm-integration",
+        "prompt-injection",
         "security",
-        "infra",
-        "observability",
-        "testing",
-        "lint",
-        "eslint",
-        "ai"
+        "multi-tenant",
+        "observability"
       ]
     }
   ]
