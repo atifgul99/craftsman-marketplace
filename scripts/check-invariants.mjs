@@ -1163,26 +1163,47 @@ function checkVendoredGuidelines() {
 // either, which a raw character lookback would have silently exempted.
 // ---------------------------------------------------------------------------
 
-// A block ends at a blank line, a heading, a new list item, or a table row. Indented
-// continuation lines stay with the item that opened the block.
+// A block ends at a blank line, a heading, a list item, or a table row. Indented
+// continuation lines stay with the item that opened the block. A leading "> " is
+// stripped first, so a blockquote scopes by the same rules as the prose it quotes —
+// its wrapped lines stay together, its bullets still split. Fenced code is dropped:
+// an example path inside a fence is illustration, not navigation.
 function splitIntoBlocks(text) {
   const blocks = [];
   let current = [];
-  for (const line of text.split("\n")) {
+  let inFence = false;
+  const flush = () => {
+    if (current.length) blocks.push(current.join(" "));
+    current = [];
+  };
+  for (let line of text.split("\n")) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      flush();
+      continue;
+    }
+    if (inFence) continue;
+    line = line.replace(/^(\s*)>\s?/, "$1");
     const opensBlock =
       line.trim() === "" ||
       /^#{1,6}\s/.test(line) ||
       /^\s*([-*+]|\d+\.)\s/.test(line) ||
       /^\s*\|/.test(line);
-    if (opensBlock && current.length) {
-      blocks.push(current.join(" "));
-      current = [];
-    }
+    if (opensBlock) flush();
     if (line.trim() !== "") current.push(line);
   }
-  if (current.length) blocks.push(current.join(" "));
+  flush();
   return blocks;
 }
+
+// A skill token only owns a pointer when it is syntactically attached to it: nothing
+// between them but decoration, whitespace (these docs wrap mid-pointer), and a connector
+// (`→`, `->`, `'s`, `:`, `/`, an opening paren). Merely being the nearest earlier token is
+// not enough — "route to craft-infra (pipeline mechanism) → `references/strategy.md`"
+// points at the *current* skill's file, and reading the aside as the qualifier would send
+// the check hunting for it in craft-infra. Any word or other punctuation between the two
+// breaks the attachment, which is the same judgment a reader makes.
+const ATTACHED_QUALIFIER = /^[\s`*'"]*(?:(?:→|->|'s|:|\/|\()[\s`*'"]*){0,3}$/;
 
 function checkReferencePointersResolve() {
   const skillsRoot = join(ROOT, "plugins", "craftsman", "skills");
@@ -1196,34 +1217,31 @@ function checkReferencePointersResolve() {
       for (const m of block.matchAll(/references\/([a-z0-9-]+\.md)/g)) {
         const fileTok = m[1];
         checked++;
-        // The nearest craft-* token earlier in the same block, if any, owns this pointer.
+
         const before = block.slice(0, m.index);
         const tokens = [...before.matchAll(/craft-[a-z0-9-]+/g)];
-        const qualifier = tokens.length ? tokens[tokens.length - 1][0] : null;
+        const last = tokens.length ? tokens[tokens.length - 1] : null;
+        const attached =
+          last && ATTACHED_QUALIFIER.test(before.slice(last.index + last[0].length));
+        const qualifier = attached && last[0] !== ownSkill ? last[0] : null;
 
-        // Unqualified, or self-qualified: must live in this skill.
-        if (!qualifier || qualifier === ownSkill) {
+        // No attached qualifier (or it names this skill): the file must be this skill's own.
+        if (!qualifier) {
           if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
-          if (!qualifier) {
-            fail(
-              `${relPath}: unqualified pointer "references/${fileTok}" does not exist in ` +
-                `${ownSkill}'s own references/ — name the owning skill ` +
-                '("`craft-x` → `references/…`") or fix the path',
-            );
-          } else {
-            fail(`${relPath}: pointer "references/${fileTok}" does not exist in ${ownSkill}/references/`);
-          }
+          fail(
+            `${relPath}: pointer "references/${fileTok}" does not exist in ${ownSkill}'s own ` +
+              'references/ — name the owning skill ("`craft-x` → `references/…`") or fix the path',
+          );
           dangling++;
           continue;
         }
 
-        // Qualified by another skill. An aside can name a neighbouring skill while the
-        // file is still this skill's own (see checkCrossSkillPointers) — accept either.
-        if (existsSync(join(skillsRoot, ownSkill, "references", fileTok))) continue;
+        // Attached to another skill: it must exist there. No own-skill fallback — the
+        // pointer said whose file it is, so that is the claim being checked.
         if (existsSync(join(skillsRoot, qualifier, "references", fileTok))) continue;
         fail(
-          `${relPath}: pointer "${qualifier} … references/${fileTok}" resolves in neither ` +
-            `${qualifier}/references/ nor ${ownSkill}/references/`,
+          `${relPath}: pointer "${qualifier} → references/${fileTok}" does not exist in ` +
+            `${qualifier}/references/`,
         );
         dangling++;
       }
