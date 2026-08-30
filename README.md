@@ -14,8 +14,9 @@ actually is, then finds the gaps between a working demo and something you'd trus
 customers. It writes everything it finds to disk so you can pick it back up later instead of
 losing the work.
 
-Written by [Atif Gul](https://github.com/atifgul99), a software engineer of 25 years, including
-time at Microsoft and Amazon.
+Written by [Atif Gul](https://github.com/atifgul99). Every opinion in it comes from 25 years of
+building and shipping enterprise software, including time at Microsoft and Amazon, and from
+watching what breaks when these standards get skipped.
 
 ## In short
 
