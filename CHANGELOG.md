@@ -165,8 +165,24 @@ some tranches to derive a different — and more accurate — status afterwards.
 
 ### Corrected after independent review
 
-Two independent Codex reviews of the release commit both returned NOT APPROVED;
-all findings were applied. The corrections that changed a stated rule:
+Three independent Codex reviews were run against this release: a tax and
+corporate-law pass, an engineering pass, and a confirmation pass over the
+applied fixes. The first two returned NOT APPROVED with 17 and 8 findings; the
+confirmation pass found four of the applied fixes had left a contradiction
+elsewhere in the skill, and those were fixed in turn.
+
+**Two findings are accepted as designed rather than resolved**, and are recorded
+here rather than claimed closed:
+
+- The persisted stock-issuance artifact still carries six status values, not the
+  eight in the prose. Pre-closing states are deliberately not persisted, because
+  every tranche row requires a closing manifest; `scenarios/stock-issuance.md`
+  now carries the full mapping and names the two machine-only values.
+- The release assertions in `evals/validate_corporate_records.py` remain literal
+  substring checks. They are brittle against rewording and cannot prove a rule
+  survived intact. They are a regression tripwire, not a semantic gate.
+
+The corrections that changed a stated rule:
 
 - **An accountable plan does not require a signature to exist.** The release
   said an unsigned plan is "no arrangement". §62(c) and Reg. §1.62-2 ask what
@@ -216,14 +232,21 @@ all findings were applied. The corrections that changed a stated rule:
   report proves what was filed rather than good standing.
 - **A two-party instrument does not always need bilateral termination**, and a
   mutual release is a separate bargain with carve-outs.
-- The shipped stock templates no longer pre-assert satisfied tax positions,
-  verified evidence, or a Washington capacity rule under a placeholder
-  jurisdiction. A release check now fails any JSON template carrying a real
-  jurisdiction's statute or URL, or a satisfied tax position.
-- The generic state-authority check no longer accepts any `.gov` host: an
-  authority carries a two-letter jurisdiction code and its source must belong to
-  that jurisdiction. The reviewer's proof-of-concept — a NASA page accepted as a
-  Washington securities and capacity authority — is now a fixture.
+- The shipped stock **audit** template no longer pre-asserts satisfied tax
+  positions or a Washington capacity rule under a placeholder jurisdiction; a
+  release check fails any JSON template carrying a real jurisdiction's statute or
+  URL, or a satisfied tax position. The **closing manifest** template still shows
+  verified values, because a manifest exists only for a completed closing; it is
+  now labelled a specimen and says so.
+- **Binding an authority to its jurisdiction.** Each authority carries the
+  two-letter code of the jurisdiction whose law it states, and its source must be
+  an HTTPS `.gov` host. Where a host label equals the code, that proves it;
+  otherwise a **named person must attest** to the match, recorded in the
+  artifact. Substring and path matches are rejected. This closes the reviewers'
+  proof-of-concept (a NASA page accepted as Washington authority, including via a
+  `/wa/` path segment) without a roster of hostnames, and without rejecting
+  legitimate state sites that do not carry their own code such as `mass.gov` and
+  `cca.hawaii.gov`.
 
 ### Added — taxcraft governance doctrine
 

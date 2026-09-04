@@ -104,9 +104,13 @@ acyclic chains.
   entity's ownership profile is not updated from either status.
 - Do not mark the §1244 or accountable-plan positions satisfied because the
   binder contains a plan. A §1244 plan is not required at all (see
-  `scenarios/section-1244.md`), and an accountable plan is effective only on
-  execution by a body with authority to adopt it (see
-  `scenarios/accountable-plan.md`).
+  `scenarios/section-1244.md`), and federal accountable-plan treatment turns on
+  the reimbursement arrangement that actually existed when a payment was made —
+  not on the presence of an unexecuted form, and not on a signature (see
+  `scenarios/accountable-plan.md`). Record the binder resolution's real date and
+  unexecuted status as a governance fact, then determine the arrangement in fact
+  separately; entity-law execution requirements are a different question from
+  the federal test.
 - Do not assume the vendor's invoice is all §248 organizational expenditure.
   Classify it item by item; registered-agent fees, the state filing fee, stock
   certificates and kit, and any lease or plan drafting are different categories,

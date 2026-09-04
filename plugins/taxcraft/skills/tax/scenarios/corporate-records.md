@@ -592,10 +592,12 @@ above still govern — but each is a document a record set is regularly found to
 need and rarely has. Test applicability, then draft or record `NOT_FOUND` with
 the reason.
 
-- **Adequacy and fairness determination** for share consideration, signed before
-  the issuance it supports; where the subscriber is also a director or officer,
-  the conflict findings belong in the same signed writing
-  (`scenarios/stock-issuance.md`).
+- **Adequacy determination** for share consideration, made before the issuance
+  it supports. It may sit in the issuance resolution or in a separate
+  contemporaneous instrument, depending on what the formation state requires;
+  a separate signed form is an evidentiary preference. Where the subscriber is
+  also a director or officer, put the conflict and fairness findings in the same
+  signed writing as the determination (`scenarios/stock-issuance.md`).
 - **Incumbency certificate**, reconciling the capacities an owner has actually
   used going forward (`governance.md`).
 - **Banking and brokerage authority resolution**, including — for an entity with

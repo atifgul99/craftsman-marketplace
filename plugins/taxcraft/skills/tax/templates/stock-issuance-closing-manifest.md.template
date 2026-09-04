@@ -1,5 +1,12 @@
 # Stock Issuance Closing Manifest — [Issuer] — [Tranche ID]
 
+> **The JSON companion to this file is a specimen of a COMPLETED closing.** Every `VERIFIED` value
+> in it is an assertion the preparer makes after performing that check — not a default to leave in
+> place. A closing manifest exists only for a closing that actually completed; an incomplete closing
+> is represented in the audit artifact's gates, never by a manifest with soft values. If you cannot
+> truthfully assert every field, the closing is not done. Replace every `REPLACE`, every zero hash,
+> and every `2000-01-01` date before use.
+
 **Closing status:** [ ]  
 **Legal issuance date:** [ ]  
 **§83 property-transfer date:** [NOT APPLICABLE / ]  

@@ -40,15 +40,20 @@ later document)*
 
    - **The interest.** <SUBSCRIBER> is also <CAPACITY>, and the nature and extent of that interest
      is: <DESCRIBE>.
-   - **Availability of the safe harbors.** *(choose one — delete the other)*
-     - Approval by disinterested directors or by qualified shares is available and was obtained as
-       follows: <DESCRIBE>.
-     - **The safe harbors are unavailable** because <e.g. the only director is the interested
-       person>. Fairness to the Corporation is therefore the only route, and the findings below
-       are made on that basis.
-   - **Fairness findings.** The transaction is fair to the Corporation because: <STATE THE FACTS —
-     price relative to the evidence in ¶3, the corporation's need for the capital, the terms
-     compared to what an unrelated subscriber would receive, and the absence of any side benefit>.
+   - **Route actually relied on.** Test each route separately on the facts and record the result
+     for each; the interested person's participation does not by itself close the other two.
+     - *Qualified directors:* <obtained as follows / unavailable because — e.g. the interested
+       person is the only director>.
+     - *Qualified shares:* <obtained as follows / unavailable because — state the ownership facts
+       from the ledger; only shares owned or controlled by the interested person or a related
+       person are excluded, so this route fails only where no unrelated qualifying shares exist>.
+     - *Fairness:* <relied on / not needed>. Do **not** recite that no safe harbor was available
+       unless the board composition and the ledger establish it.
+   - **Fairness findings.** *(complete where fairness is a route relied on)* The transaction is fair
+     to the Corporation because: <STATE THE FACTS — price relative to the evidence in ¶3, the
+     corporation's need for the capital, the alternatives considered, the process followed, the
+     terms compared to what an unrelated subscriber would receive, and the absence of any side
+     benefit — judged on the facts at the time of commitment>.
 
 **7. Order of events.** Consideration is to be received at <TIME / DATE>, and the shares issued at
 <TIME / DATE>, in that order. Both timestamps are to be recorded in the closing manifest.
