@@ -153,11 +153,12 @@ Carried forward from the previously unreleased entry; these ship in this release
 
 Gaps found while running a full C-corporation record-book build end to end:
 
-- `governance.md`: **Conflicting-Interest Transactions in Owner-Controlled Entities** — the
-  disinterested-director and qualified-share safe harbors are unavailable when the sole director
-  is the counterparty, so fairness is the only route; what the record must contain, and the fact
-  that a corporate-law fairness record is not a §482, reasonable-compensation, or bona-fide-debt
-  conclusion.
+- `governance.md`: **Conflicting-Interest Transactions in Owner-Controlled Entities** — test each
+  statutory route on the facts: an interested sole director cannot supply qualified-director
+  approval, only shares he owns or controls are excluded from the qualified-share route, and
+  fairness applies where neither approval route is satisfied. Delaware's DGCL §144 is classified
+  under its 2025 subsections. What the record should contain, and the fact that a corporate-law
+  fairness record is not a §482, reasonable-compensation, or bona-fide-debt conclusion.
 - `governance.md`: a **bylaws drafting pattern** — who adopts, no shareholder action before shares
   exist, issuance approval and the adequacy/fully-paid effect, certificate signature requirements
   versus the uncertificated information statement, indemnification in tiers (including the
@@ -178,6 +179,39 @@ Gaps found while running a full C-corporation record-book build end to end:
 - `evals/corporate-records.md`: new prose cases **E21** (false disinterested-approval recital) and
   **E22** (cited pricing memorandum not in the entity's folder); the validator now pins the new
   doctrine. (Superseded in this release: the suite now runs E1–E27.)
+
+### Fixed — independent review of the governance doctrine
+
+An adversarial corporate-law/tax review of the governance-doctrine commit returned nine findings,
+all applied before release:
+
+- the qualified-**share** route survives an interested sole director — only shares he owns or
+  controls are excluded (RCW 23B.08.730(2)); the fairness route applies where no unrelated
+  qualified shares exist, and no draft may recite that a safe harbor was unavailable unless the
+  ownership facts establish it;
+- DGCL §144 as amended in 2025 separates director/officer, controlling-stockholder, and
+  going-private transactions — classify the transaction before naming a route;
+- the fairness route's documentation list is evidentiary, not a set of statutory elements;
+- initial bylaws may be adopted by the incorporators **or** the board (RCW 23B.02.060); the
+  articles may reserve issuance authority to shareholders (RCW 23B.06.210(1)); officers hold
+  offices the bylaws describe, appointed by the board or a duly authorized officer (RCW 23B.08.400);
+- advancement takes the statutory **unlimited general obligation** undertaking — unsecured, and
+  acceptable without regard to ability to pay (RCW 23B.08.530(2));
+- classify the parties federally before applying §482, §6662, or §267: a payment between an owner
+  and its own disregarded entity is generally not a transaction between separate taxpayers, and
+  neither an agreement nor an invoice makes one;
+- Reg. §1.6662-6(d) documentation supports a reasonable-cause defense to the §6662(e)
+  net-§482-adjustment penalties — it does not validate the price, create a deduction, or make a
+  penalty impossible; services-cost-method use also needs a books-and-records statement of intent;
+- "state tax follows the invoice" is replaced by per-jurisdiction classification, nexus, base,
+  apportionment, and sourcing analysis, and §267(a)(2) is stated with its predicates;
+- the lifecycle value stays `NOT_FOUND` — the only one the schema allows — with a stated search
+  scope, and a counterparty-only copy is an internal record-control gap, not a filing defect;
+- §248/§195: the deduction/amortization treatment is the **deemed default**; it is the choice to
+  capitalize that requires a timely return. Founder-paid formation costs get contribution and
+  constructive-payment analysis; abandoned issuance costs go to §165;
+- the prose-eval gate is now labelled structure-only — it checks that each case states a mandatory
+  result, and does not verify that the result is legally correct.
 
 ## [0.6.0] (2026-08-29)
 
