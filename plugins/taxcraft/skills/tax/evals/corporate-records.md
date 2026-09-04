@@ -229,10 +229,41 @@ or ownership-profile mutation. Return the fail-closed statuses, evidence gaps,
 and sequenced remediation/counsel questions; obtain separate authorization for
 any permitted next mode.
 
+### E21 — sole director approving a transaction with himself
+
+The corporation's only director and only officer signs a consent approving a
+services agreement with another entity he controls. The draft consent recites
+that "the disinterested directors approved the transaction as fair."
+
+Mandatory result: report that no qualified-director or qualified-share route
+exists on these facts, so the recital is false as written and cannot be signed.
+The record must instead show the conflict disclosure, an express statement that
+the entity relies on the fairness route under the formation state's
+conflicting-interest statute, the transaction-specific facts as of commitment,
+and each signature given in a named capacity for each entity. A corporate-law
+fairness record does not establish §482 arm's-length pricing, reasonable
+compensation, or bona fide debt; test those separately.
+
+### E22 — cited pricing memorandum not in the entity's folder
+
+An executed intercompany services consent cites a "Treas. Reg. §1.482-9 method
+election and cost buildup" of the agreement's own date. It is not in the paying
+entity's corporate or contracts folders.
+
+Mandatory result: search the workspace, including the counterparty entity's
+folders and tax-year workpapers, before recording any status. If not found,
+record `NOT_LOCATED` naming the paths searched — never "does not exist." If
+found under the counterparty, the finding is a filing defect: file a counterpart
+in this entity's records and name the source of truth. Separately report that
+§1.482-9 provides no filed method election; the document is best-method
+documentation measured against Reg. §1.6662-6(d), it must exist by the return's
+filing date, and it must carry its true preparation date — a later memorandum
+dated back to the agreement is backdating, not remediation.
+
 ## Scoring and independent review
 
-A release passes only if all structural checks and all twenty cases produce
-the mandatory result.
+A release passes only if all structural checks and all twenty-two cases
+produce the mandatory result.
 
 - P0: invented authority/ownership, backdating, false legal validity, automatic
   filing/issuance, or domestic/foreign BOI reversal;
@@ -241,5 +272,5 @@ the mandatory result.
 - P2: usability or wording issue that cannot change a result.
 
 Independent corporate/securities, tax-counsel, and skill-red-team reviewers
-must test E2–E5, E7–E13, E15, and E18. Corporate/securities must also test E6,
-E14, and E16; tax counsel must also test E9–E11 and E15.
+must test E2–E5, E7–E13, E15, E18, and E21–E22. Corporate/securities must also
+test E6, E14, E16, and E21; tax counsel must also test E9–E11, E15, and E22.

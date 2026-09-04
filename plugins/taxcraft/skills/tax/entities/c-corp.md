@@ -38,6 +38,32 @@ underlying corporate act.
 2. **Double taxation** — corporate tax + shareholder tax on dividends (LTCG/QDiv rates if qualified).
 3. **Fiscal year choice** — any month-end permitted (with IRS consent via Form 1128 if changing from CY); popular for deferral or GP/fund-mgmt alignment.
 
+### First-Year Costs — §248 Organizational and §195 Start-Up Expenditures
+
+1. **What each covers.** §248: costs of creating the corporation — state filing
+   fee, incorporation legal and accounting fees, organizational-meeting and
+   temporary-director costs. §195: pre-opening costs of investigating and
+   creating an active trade or business. Neither covers costs of issuing or
+   selling stock (syndication) — those are capitalized permanently and never
+   amortized.
+2. **Mechanics.** $5,000 deducted in the year the business begins, phased out
+   dollar-for-dollar as the category exceeds $50,000; the remainder amortized
+   ratably over 180 months from the month business begins. The two categories
+   are computed separately.
+3. **No election statement is required.** Under **Reg. §1.248-1(c)** and
+   **Reg. §1.195-1(b)**, a corporation is **deemed** to have elected on a timely
+   filed return (including extensions) for the year business begins; a statement
+   is permitted but not required. Do not treat a missing statement as a lost
+   election, and do not tell a client an untimely return forfeits the deemed
+   election without checking the current regulation and the return's actual
+   filing status. Forgoing the deemed election requires an affirmative statement
+   of that choice.
+4. **Record-book link.** The organizational consent should identify who paid the
+   formation costs and whether the corporation reimbursed the payer — a founder
+   who paid the filing fee personally and was never reimbursed has a
+   contribution or a personal expense, not a corporate deduction. Route the
+   evidence to `scenarios/corporate-records.md` Gate 7.
+
 ### Loss & Interest Carryovers
 
 1. **NOL** — post-TCJA: indefinite carryforward, 80% of current-year taxable income limit. Pre-2018 NOLs retain 20-year life at 100% limit. Track vintages separately.

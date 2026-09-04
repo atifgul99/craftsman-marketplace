@@ -382,7 +382,12 @@ Identify event-triggered approvals and operating evidence for:
 - new bank/brokerage authority;
 - loans, guarantees, dividends/distributions, and capital events;
 - major customer/vendor, lease, IP, acquisition, and financing contracts;
-- shareholder-, director-, officer-, family-, or affiliate-related transactions;
+- shareholder-, director-, officer-, family-, or affiliate-related transactions
+  — for each, test whether any disinterested-approval route actually exists
+  before accepting a consent that recites one, and record the conflict
+  disclosure, the route relied on, and the contemporaneous fairness facts per
+  `governance.md` → "Conflicting-Interest Transactions in Owner-Controlled
+  Entities";
 - accountable-plan adoption/amendment/termination and actual operations;
 - §280A(g) rentals and per-event evidence;
 - retirement, health, cafeteria, education, or other benefit plans; and
@@ -459,7 +464,13 @@ For each corporation-owned SMLLC or subsidiary, prove both tiers separately:
 - consideration/funding trail and mirrored books;
 - contracts and signatures in the correct legal entity;
 - intercompany agreements only when an actual legal/tax transaction exists;
-  federal disregard does not erase state-law or state-tax separateness; and
+  federal disregard does not erase state-law or state-tax separateness. Where
+  one exists, test both sides: each entity's own approval, the written agreement
+  signed in both names, arm's-length pricing support built to Reg. §1.6662-6(d)
+  and current-dated (there is no filed §482 "method election"), counterparts
+  filed in both entities' records, §267(a)(2) timing, and the payee-state
+  consequence of the charge — see `governance.md` → "Intercompany arrangements
+  between commonly controlled entities"; and
 - founder/employee/contractor invention, confidentiality, IP, domain, and
   product-rights assignments to the entity that claims ownership.
 
@@ -490,6 +501,17 @@ subfolder is an intake unit. If any material file is unprocessed:
   standing fields; and
 - never infer that absence of a file proves an event did not occur without
   stating the search scope and evidence limitation.
+
+**Search the whole workspace before recording `NOT_FOUND`.** A document an
+executed instrument refers to is frequently filed under the *other* party — the
+counterparty entity's workpapers, the parent's folder, a tax-year folder rather
+than `corporate/`. Before classifying a cited document missing, search by name,
+date, and subject across the workspace (excluding privileged paths). Where it is
+still not found, record `NOT_LOCATED` **naming the paths searched**, not "does
+not exist"; the distinction is the difference between a fact and an assumption,
+and the remediation differs (obtain and file a counterpart versus create the
+document). When it is found elsewhere, the finding is a filing defect: place a
+counterpart in this entity's records and name the source of truth.
 
 ## Core and conditional document families
 

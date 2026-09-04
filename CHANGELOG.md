@@ -23,7 +23,35 @@ not a synonym for "public."
 
 ## [Unreleased]
 
-Nothing yet.
+### Added — taxcraft governance doctrine (PATCH)
+
+Gaps found while running a full C-corporation record-book build end to end:
+
+- `governance.md`: **Conflicting-Interest Transactions in Owner-Controlled Entities** — the
+  disinterested-director and qualified-share safe harbors are unavailable when the sole director
+  is the counterparty, so fairness is the only route; what the record must contain, and the fact
+  that a corporate-law fairness record is not a §482, reasonable-compensation, or bona-fide-debt
+  conclusion.
+- `governance.md`: a **bylaws drafting pattern** — who adopts, no shareholder action before shares
+  exist, issuance approval and the adequacy/fully-paid effect, certificate signature requirements
+  versus the uncertificated information statement, indemnification in tiers (including the
+  shareholder authorization a pre-issuance corporation cannot yet have), officers, and records.
+- `governance.md`: **intercompany arrangements between commonly controlled entities** — there is no
+  filed §482 "method election"; pricing support is best-method documentation measured against
+  Reg. §1.6662-6(d), must exist by the return's filing date, must carry its true preparation date,
+  and must be filed as counterparts on both sides. Plus §267(a)(2) timing and the payee-state
+  consequence of the charge.
+- `scenarios/corporate-records.md`: search the workspace (including the counterparty's folders)
+  before recording a cited document as missing, and record `NOT_LOCATED` with the paths searched
+  rather than "does not exist"; related-party and intercompany hooks into the new doctrine.
+- `scenarios/stock-issuance.md`: the sole-director purchaser conflict route points at the new
+  governance section instead of a generic reference.
+- `entities/c-corp.md`: **§248/§195 first-year costs** — the Reg. §1.248-1(c) / §1.195-1(b) deemed
+  election (no statement required), what is excluded (syndication costs), and the record-book link
+  for who actually paid formation costs.
+- `evals/corporate-records.md`: new prose cases **E21** (false disinterested-approval recital) and
+  **E22** (cited pricing memorandum not in the entity's folder); the validator now pins the new
+  doctrine and expects E1–E22.
 
 ## [0.6.0] (2026-08-29)
 

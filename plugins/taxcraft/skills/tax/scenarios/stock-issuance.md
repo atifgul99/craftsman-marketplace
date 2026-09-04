@@ -156,6 +156,11 @@ Record the actual terms, not merely an intended ownership percentage:
   promised but unissued interests; and
 - related-party conflict disclosure and the formation-state fairness/approval
   route, especially where the purchaser is also the sole director or officer.
+  Where the purchaser is the only director, the disinterested-director and
+  qualified-share safe harbors are unavailable and fairness is the only route;
+  record it as `governance.md` → "Conflicting-Interest Transactions in
+  Owner-Controlled Entities" requires, rather than reciting a disinterested
+  approval no one gave.
 
 An ownership percentage is an output of a reconciled cap table, not an
 independent fact. Do not describe someone as a shareholder until issuance is

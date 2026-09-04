@@ -2111,6 +2111,9 @@ def _run_artifact_fixtures(clean: dict, schema: dict, fixtures: list[dict]) -> N
         assert audit["overall_status"] == actual
 
 
+EXPECTED_EVAL_CASES = 22
+
+
 def structural_release_checks(schema: dict, template: dict) -> None:
     router = read("SKILL.md")
     records = read("scenarios/corporate-records.md")
@@ -2126,8 +2129,10 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     specialist_template = json.loads(read("templates/corporate-specialist-result.json.template"))
 
     require(router, ["corporate-records.md", "record-book", "formation cleanup", "annual governance"], "router")
-    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453"], "corporate-records orchestrator")
+    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453", "NOT_LOCATED", "1.6662-6(d)"], "corporate-records orchestrator")
     require(governance, ["corporate-records.md", "final rule", "domestic"], "governance backlink")
+    require(governance, ["Conflicting-Interest Transactions in Owner-Controlled Entities", "fairness is the only route left", "no \"method election\" filed with anyone", "1.6662-6(d)", "RCW 23B.08.560", "RCW 23B.06.250(4)"], "conflict, bylaws, and intercompany doctrine")
+    require(ccorp, ["Reg. §1.248-1(c)", "deemed"], "organizational-expenditure deemed election")
     require(ccorp, ["corporate-records.md"], "C-corp backlink")
     require(stock, ["corporate-records.md"], "stock backlink")
     require(layout, ["corporate-records-audit-FY<YYYY>.json"], "layout")
@@ -2153,7 +2158,9 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     assert [row["id"] for row in template["requirements"]] == list(CANONICAL_IDS)
 
     sections = {int(number): body for number, body in re.findall(r"^### E(\d+) —.*?\n(.*?)(?=^### E\d+ —|^## Scoring)", evals, flags=re.MULTILINE | re.DOTALL)}
-    assert set(sections) == set(range(1, 21)), "eval suite must contain E1–E20"
+    assert set(sections) == set(range(1, EXPECTED_EVAL_CASES + 1)), (
+        f"eval suite must contain E1–E{EXPECTED_EVAL_CASES}"
+    )
     for case, body in sections.items():
         require(body, ["Mandatory result:"], f"eval E{case}")
     require(evals, ["RECORD_SET_RECONCILED_AS_OF", "EXECUTED_AUTHORITY_UNVERIFIED", "FINAL_UNSIGNED", "EVIDENCE_INTAKE_PENDING", "SUBMITTED_UNCONFIRMED", "visible handwritten", "does not authorize", "Independent corporate/securities, tax-counsel, and skill-red-team reviewers"], "substantive eval contract")
@@ -2189,7 +2196,7 @@ def main() -> None:
         validated += 1
     print(
         f"PASS: corporate-records release; 24-row schema, {len(fixtures)} record-set fixtures, "
-        f"{len(specialist_fixtures)} specialist fixtures, 20 prose evals, {validated} instantiated audit(s)"
+        f"{len(specialist_fixtures)} specialist fixtures, {EXPECTED_EVAL_CASES} prose evals, {validated} instantiated audit(s)"
     )
 
 

@@ -103,6 +103,51 @@ and intake branches.
 - [ ] Capital adequately infused (factor in piercing-veil analysis)
 - [ ] Required shareholder and director actions truthfully documented; no fictional meetings
 
+## Conflicting-Interest Transactions in Owner-Controlled Entities
+
+Nearly every closely-held governance document this skill drafts approves a
+transaction the signer is on both sides of: officer compensation, a shareholder
+loan, an Augusta rental, family employment, an intercompany services agreement,
+a founder stock purchase. Do not paper these with a disinterested-approval
+recital the entity cannot satisfy.
+
+**The safe harbors require actors the entity does not have.** The MBCA-derived
+director's-conflicting-interest statutes (WA **RCW 23B.08.700–.730**; DGCL
+**§144**; state analogues) offer three routes: approval by qualified
+(disinterested) directors, approval by qualified shares, or fairness to the
+corporation. A sole director who is also the counterparty is not a qualified
+director (WA **RCW 23B.08.720**), and shares he owns or controls are not
+qualified shares (**RCW 23B.08.730(2)**). **Fairness is the only route left**
+(**RCW 23B.08.710(2)(c)**; DGCL §144(a)(3) entire fairness). Recording a
+"disinterested approval" that no disinterested person gave is worse than
+recording nothing — it is a false statement in the record the transaction will
+be defended with.
+
+**What the record must contain**, per transaction and contemporaneously:
+
+1. the required disclosure of the conflict and of the material facts known to
+   the interested actor;
+2. an express statement that no qualified-director or qualified-share route is
+   available, and that the entity relies on fairness;
+3. the transaction-specific facts establishing fairness **at the time of
+   commitment** — price, terms, process, and the comparables or other market
+   evidence actually consulted, not a conclusory "the Board finds this fair";
+4. the capacity in which each signature is given, where one person acts for two
+   entities (sign twice, in each capacity, rather than once for both); and
+5. the date the determination was actually made. Fairness is judged on the facts
+   at commitment, so a later-dated memorandum must say it was prepared later and
+   describe the data available at commitment. Never date it back.
+
+**LLCs** run on the operating agreement plus the state's duty-of-loyalty
+provisions (a self-dealing transaction is typically permitted only if the
+agreement authorizes it or the members with knowledge of the material facts
+approve it). Verify the current act; do not import corporate conflict statutes.
+
+**A clean conflict record is not a tax result.** Fairness under corporate law
+does not establish arm's-length pricing under §482, reasonable compensation
+under §162(a)(1), or a bona fide debt. Those are tested separately on their own
+authority.
+
 ## Document Intake (post-filing)
 
 Trigger and high-level rules live in `SKILL.md` → "Corporate document intake". This section owns the mechanics. State-generic by design — examples cite specific agencies (WA SOS, FinCEN, etc.) only as illustrations; real intake reads the agency name from the document itself.
@@ -248,6 +293,51 @@ Rationale: the "never answer standing questions with unprocessed files in the wa
 
 All drafted documents are written in plain English (not legalese), tailored to the entity's facts, and end with clear signature blocks.
 
+### Bylaws (first adoption or restatement)
+
+Bylaws are the one document a record-book cleanup most often finds missing, and
+the one most often adopted from a generic form that contradicts the entity's
+facts. Decide each of these on the entity's actual facts and the formation
+state's current statute:
+
+- **Who adopts them.** In most states the incorporator or the initial board
+  adopts initial bylaws (WA: **RCW 23B.02.060**), and a corporation with no
+  shares issued has no shareholder who can act. If the articles named no initial
+  director, the incorporator must first elect one (WA: **RCW 23B.02.050(1)(b)**).
+- **No shareholder action before shares exist.** State the point expressly, so
+  no later consent recites a shareholder that the ledger does not show. A person
+  entitled to subscribe is not a shareholder.
+- **Share issuance.** Authorize the board to determine that consideration is
+  adequate, and state the consequence the statute attaches — shares are fully
+  paid and nonassessable when the corporation receives the authorized
+  consideration (WA: **RCW 23B.06.210(2)** approval, **(3)** adequacy and
+  fully-paid effect). Do not draft money previously advanced as automatic
+  consideration; route it to `scenarios/stock-issuance.md`.
+- **Certificates or uncertificated shares.** Either say the corporation issues
+  uncertificated shares and delivers the statutory information statement, or
+  meet the certificate signature requirement — which in several states is **two
+  officers** (WA: **RCW 23B.06.250(4)**; uncertificated statement:
+  **RCW 23B.06.260**). Whether one individual holding two offices satisfies a
+  two-officer requirement is a counsel question; default to uncertificated.
+- **Indemnification, in tiers, without overstating the board's authority.**
+  Distinguish (i) mandatory indemnification of a successful defendant, (ii)
+  permissive indemnification on the statutory standard of conduct, (iii)
+  advancement of expenses — which typically requires the director's written
+  affirmation and an **unqualified general undertaking to repay**, enforceable
+  regardless of ability to pay (WA: **RCW 23B.08.530(2)**), (iv) witness
+  expenses, (v) derivative-proceeding limits and any court/notice requirement,
+  and (vi) D&O insurance, which the corporation may buy beyond what it may
+  indemnify. Broader-than-statutory indemnity generally requires **shareholder
+  authorization** (WA: **RCW 23B.08.560**) or an articles provision — bylaws
+  alone cannot grant it. In a pre-issuance corporation that authorization cannot
+  exist yet; draft the shareholder resolution to be adopted after the first
+  issuance rather than reciting authority the entity lacks.
+- **Officers.** Which offices exist, who may hold more than one, and who signs
+  what. An office does not exist until the board appoints it; nothing signed
+  earlier can bear that title.
+- **Records and signatures.** Electronic records, electronic signatures, and
+  written consents in lieu of meetings — permitted, and on what majority.
+
 ### Written Consent in Lieu of Annual Shareholder Meeting
 
 Structure:
@@ -282,6 +372,42 @@ Verify the section number is *current* — several states recodified their LLC a
 **Confirm who may approve.** Do not assume the sole member is the correct actor; a manager-managed LLC or an agreement reserving distribution authority may require the manager or another authorized person.
 
 **Execute as two transfers, never one.** The distribution goes to the member's own account; the member then pays its own obligations from that account as a separate, later transaction. The LLC paying the member's creditors directly is commingling. One consent per distribution — a blanket authorisation for ongoing sweeps reads as the very commingling the document exists to rebut.
+
+### Intercompany arrangements between commonly controlled entities
+
+Applies whenever one entity in the group provides services, licences IP, leases
+property, or lends to another — including where one side is a disregarded SMLLC,
+because federal disregard does not erase state-law separateness, state gross-
+receipts/sales-tax consequences, or the need for a real agreement.
+
+- **Write the agreement before or at the start of performance,** signed by both
+  entities in their own names with each signer's capacity stated. Approvals on
+  both sides (each entity's own board/member action), not one consent covering
+  both.
+- **Pricing support is a best-method memorandum, not an election.** Treas. Reg.
+  §1.482-9 (services) and the §1.482 regulations generally require selecting the
+  *best method* on the facts; there is **no "method election" filed with anyone**
+  and nothing to attach to a return. A document titled "method election" is
+  documentation, and the standard it should be built to is **Reg. §1.6662-6(d)**
+  — the principal and background documents that, if in existence by the date the
+  return is filed, provide penalty protection under §6662(e).
+- **Timing is the whole point.** The documentation must exist by the return's
+  filing date and must be dated when it was actually prepared. A memorandum
+  prepared later, dated to the agreement date, is a backdated document and
+  forfeits the protection it was written to obtain. Prepare it current-dated and
+  say what data was available at the transaction date.
+- **File counterparts on both sides.** The agreement, the pricing support, and
+  the market data belong in both entities' folders. A document that exists only
+  in the counterparty's workpapers is not in this entity's record.
+- **§267(a)(2)** defers an accrual-basis payer's deduction until the related
+  cash-basis payee includes the amount; between related parties, unpaid
+  intercompany fees at year end are a deduction-timing problem, not a plan.
+- **State tax follows the invoice, not the federal classification.** An
+  intercompany charge can create taxable gross receipts, a sales-tax event, or a
+  nexus fact in the payee's state; check the state module before assuming the
+  charge is tax-neutral.
+- Route the conflict record to "Conflicting-Interest Transactions in
+  Owner-Controlled Entities" above; the same person is on both sides.
 
 ### Board Resolution — Standalone
 
