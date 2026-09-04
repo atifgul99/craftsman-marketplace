@@ -26,11 +26,19 @@ payment made under one, before it has been approved in a signed writing that rec
 and the control relationship, the subject and the amount or formula, the term, the basis for the
 price, and the approving actor and their authority.
 
-**4. Pricing and fairness.** State the basis for the price: a market quote, a comparable
-third-party transaction, a cost-plus computation, or a valuation. Where the approving person is
-also the interested person, the disinterested-approval safe harbors are unavailable and **fairness
-to the Entity is the only route** — make the fairness findings in the same signed writing (see
-`governance.md`).
+**4. Approval route, then pricing.** Identify the formation state's conflict statute and the
+interested person's role, then test each route separately on the actual facts: authorization by
+qualified or disinterested **directors**; approval or ratification by informed qualified or
+disinterested **shares**; or **fairness** to the Entity. The interested person's participation does
+not by itself eliminate every disinterested route — other directors may be qualified, and shares
+not owned or controlled by the interested person or a related person may still qualify. Establish
+that from the ledger and the board composition before concluding a route is unavailable, and never
+recite that no safe harbor existed unless the facts show it. See `governance.md`.
+
+State the basis for the price in every case: a market quote, a comparable third-party transaction,
+a cost-plus computation, or a valuation. Where fairness is the route relied on, make the fairness
+findings — price, terms, alternatives, process, and corporate benefit at the time of commitment —
+in the same signed writing.
 
 **5. Two-transfer rule.** Money owed by the Entity to a related party is paid **to that party**, and
 any onward payment is that party's own transaction. The Entity does not pay a related party's

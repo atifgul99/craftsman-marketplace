@@ -107,6 +107,29 @@ historical cash transfer is not such evidence.
 Never update the recipient to shareholder or change an entity ownership profile
 from a `PURPORTED ISSUANCE` status.
 
+### The templates ship blank, and blank means unverified
+
+Two rules about the shipped JSON templates, because a filled-in default is the
+easiest way to publish a conclusion nobody reached:
+
+- **The audit template ships every tax position `UNVERIFIED`, the §351 control
+  test `COUNSEL_HOLD`, every gate `UNVERIFIED`, and the capacity rule
+  `COUNSEL_VALIDATED_JURISDICTION_RULE` with a placeholder source.** §351
+  requires qualifying transferors to control the corporation immediately after
+  the exchange, and §§1202 and 1244 each carry further issuance-date and
+  continuing tests. None of that can be true of a blank form. Never ship, commit,
+  or rely on a template value you did not affirmatively establish.
+- **The closing manifest is produced only for a closing that actually
+  completed.** That is why its evidence and signature fields admit only the
+  verified values: the manifest is the preparer's assertion that each of those
+  checks was performed. An incomplete closing is represented in the *audit*
+  artifact through its gates, not by a manifest with soft values. If you cannot
+  truthfully assert the manifest's fields, the closing is not done.
+
+No template may carry a real jurisdiction's statute or URL. The formation state's
+rule is looked up per engagement and cited from the state's own official source;
+a template that names one state teaches every other state's user the wrong law.
+
 ### The persisted artifact records a subset, and says which
 
 The eight statuses above are the working vocabulary. The validated JSON artifact
@@ -241,17 +264,31 @@ trail that makes tracing possible.
 No-par stock does not mean free stock or arbitrary value. Document the board's
 good-faith adequacy determination under state law and the tax FMV evidence.
 
-**The adequacy determination is its own signed instrument, made before the
-issuance it supports.** A recital inside the issuance resolution that the
-consideration "is adequate" is not the determination; most corporation statutes
-make the board's determination of adequacy conclusive only when it was actually
-made, and a determination cannot be made about a payment that has already been
-converted into shares. Draft it as a separate consent carrying: the class and
-number of shares, the consideration and its form, the facts relied on, the
-determination itself, and — where the subscriber is also a director or officer —
-the fairness findings in the **same** signed writing. Record the receipt
-timestamp and the issuance timestamp so the order is provable. Instantiate
-`templates/adequacy-and-fairness-determination.md.template`, one per closing.
+**Document the adequacy determination before the issuance, in whichever
+instrument the formation state allows.** The determination must actually be
+made by the authorized decision-maker on the specified consideration; it does
+**not** have to live in a separate document. The MBCA §6.21 official comment
+says no explicit resolution is required and the determination may be inferred
+from authorization of the shares for specified consideration, and DGCL §152(a)
+expressly permits the number, timing, and consideration to be fixed in the board
+resolution, with §152(d) making the directors' valuation judgment conclusive
+absent actual fraud. Verify the formation state's own statute and the charter.
+
+A separate contemporaneous instrument is an **evidentiary preference**, not a
+legal requirement — and it is the right choice where the subscriber is
+interested, because the conflict findings then sit in the same signed writing.
+Whichever form is used, capture the class and number of shares, the
+consideration and its form, the facts relied on, the determination itself, and
+the receipt and issuance timestamps so the order is provable. Instantiate
+`templates/adequacy-and-fairness-determination.md.template` where a separate
+instrument is used.
+
+**Deferred consideration may be lawful.** Do not assume shares can never issue
+before payment. MBCA §6.21(b), (e) permits promissory notes and contracts for
+future services or benefits, with escrow or transfer restrictions available, and
+DGCL §156 permits partly paid shares. Determine what the formation state allows,
+what protection it requires, and do not describe shares as fully paid and
+nonassessable before the governing statute permits it.
 
 **No retroactive true-up.** Money that reached the corporation before a valid
 subscription and an effective authorization existed is a refundable subscription

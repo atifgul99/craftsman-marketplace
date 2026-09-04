@@ -80,10 +80,13 @@ acyclic chains.
    quorum mechanics for a multi-member board, and a registered office in the
    vendor's state. Each is a clause defect to list, not a reason to discard the
    document.
-7. **Draft the present-dated replacement chain** — incorporator confirmation or
-   the state's no-initial-director branch, director election, bylaws adoption,
-   officer appointment, account and authority ratification, and a separate
-   counsel-gated route for the share issuance.
+7. **Draft the present-dated replacement chain** — incorporator action under
+   the branch the formation state actually provides, then bylaws adoption by
+   whichever body the statute empowers (in many states the incorporators may
+   adopt them directly rather than electing a director first — see
+   `governance.md`), officer appointment, account and authority ratification,
+   and a separate counsel-gated route for the share issuance. Record which body
+   in fact acted; the paths produce different authority chains.
 8. **Route the pre-formation validation question to counsel** as a written
    question with the three branches, not as a conclusion.
 9. **Preserve the binder unaltered**, and never again describe it as "the

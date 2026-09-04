@@ -61,11 +61,17 @@ liability, not a filing-season chore.
 
 - Payments **in the course of a trade or business** only. Personal and household
   payments never trigger a 1099, whoever the payee is.
-- **Corporations are generally exempt** (Reg. §1.6041-3(p)) — with exceptions
-  that matter in practice, including **attorneys' fees and gross proceeds paid
-  to attorneys** (§6045(f)) and **medical and health care payments**. A payment
-  to a law firm organized as a corporation is still reportable. Do not clear a
-  payee from reporting on corporate status alone.
+- **Corporations are generally exempt** (Reg. §1.6041-3(p)) — but the exception
+  expressly does **not** cover **attorneys' fees for services** or payments to
+  corporations providing **medical and health care services**. A payment to a law
+  firm organized as a corporation is still reportable. Do not clear a payee from
+  reporting on corporate status alone.
+- **Two different attorney rules, two different authorities.** Attorneys' fees
+  *for services* are reportable under **§6041/§6041A** on the applicable form and
+  box. **Gross proceeds** paid to an attorney — settlement funds passing through
+  a lawyer's hands — are a separate rule under **§6045(f)**, which excludes the
+  portion already reportable under §6041 or §6051. Collapsing the two produces
+  the wrong form, box, and threshold.
 - **Do not confuse §6050W.** Payment-card and third-party-network transactions
   are reported by the settlement entity on Form 1099-K, on its own thresholds
   (restored by OBBBA §70432 — see the rules file), and amounts settled that way
@@ -76,11 +82,21 @@ liability, not a filing-season chore.
 
 ## Foreign payees and sourcing
 
-Source the payment before deciding anything else. **Compensation for labor or
-personal services is sourced where the services are performed** — §861(a)(3) for
-services performed in the United States, §862(a)(3) for services performed
-outside it. The payee's residence, the currency, and the place of payment do not
-change the source.
+Source the payment before deciding anything else. The **general** rule is that
+compensation for labor or personal services is sourced **where the services are
+performed** — §861(a)(3) for services performed in the United States,
+§862(a)(3) for services performed outside it. The payee's residence, the
+currency, and the place of payment do not change it.
+
+Two qualifications the general rule hides:
+
+- **§861(a)(3) contains its own exceptions**, including one for certain
+  short-term services performed in the United States by a nonresident alien and
+  one for certain foreign-vessel crew. Check them before concluding US source.
+- **Mixed services must be allocated.** Where services are performed partly
+  within and partly outside the United States, allocate under **Reg. §1.861-4**
+  by the method that most correctly reflects source. Do not classify the whole
+  payment by where the payee lives or where the money was sent.
 
 - Services performed **entirely outside** the United States by a nonresident are
   foreign-source; generally no §1441 withholding and no Form 1042-S.
@@ -104,11 +120,17 @@ Escalate any of this to the CPA/EA before the payment where possible;
   W-2s, 1099s of every flavour, and 1042-S all count toward the same total, so
   an entity with a handful of each crosses the line without any single form type
   doing so.
-- **IRIS or FIRE credentials are a governance object.** The Transmitter Control
-  Code is issued against a named **Responsible Official**. Listing a person who
-  holds no office and has no delegated authority is a records defect: fix it by
-  either appointing that person to a role by board action or replacing the
-  listing. Record who holds the credential in the entity's records register.
+- **IRIS and FIRE credentials are controlled organizational records.** For IRIS,
+  the **organization** applies for Transmitter Control Codes for the roles and
+  transmission methods it selects, and names the required **Responsible
+  Officials**, Authorized Delegates, and contacts. A Responsible Official must
+  have responsibility for and authority over the organization — which can come
+  from an actual employment or delegation structure and does **not** require a
+  statutory corporate office or a new board appointment. Confirm each named
+  person still meets the current IRS requirements and the entity's own
+  governance, document where that authority comes from, and replace anyone who
+  no longer qualifies. FIRE has its own application mechanics; check it
+  separately. Record who holds each credential in the entity's records register.
 - **Penalties.** §6721 for failure to file a correct information return and
   §6722 for failure to furnish the payee statement are **separate** penalties on
   the same failure, each tiered by how late the correction is, with a much higher

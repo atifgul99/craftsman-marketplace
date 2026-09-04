@@ -6,8 +6,11 @@ Two clocks run at once and confusing them is the most common miss on a non-calen
 
 - **Fiscal-year clock** — the income tax return, corporate estimated payments, and any election
   window measured from the tax year.
-- **Calendar-year clock** — information returns, payroll returns, and most state and local report,
-  licence, and property filings, whatever the entity's year end.
+- **Non-income-tax clock** — information returns and payroll filings generally run on calendar-year
+  or quarterly periods whatever the entity's year end, but recipient and agency due dates **vary by
+  form**. State and local reports, licences, and property filings may run on a calendar year, an
+  anniversary date, a jurisdiction-assigned month, or another cycle. Derive each one from the current
+  form instructions and the governing jurisdiction; do not assume a calendar-year rule.
 
 Derive every date below from the entity's actual year end. Do not copy a calendar-year template.
 
@@ -15,8 +18,8 @@ Derive every date below from the entity's actual year end. Do not copy a calenda
 
 | Obligation | Rule | Date this cycle | Owner | Status |
 |---|---|---|---|---|
-| Income tax return | <e.g. §6072(b) — 15th day of the 4th month after year end; the June-30 exception applies to a June-30 C corporation> | <DATE> | | |
-| Extension, if used | <FORM 7004 — verify the extension length for this year end> | <DATE> | | |
+| Income tax return | <cite the subsection that applies to this entity — for a C corporation, §6072(a); a June-30 C-corporation year beginning before 2026 follows the Pub. L. 114-41 §2006 transition> | <DATE> | | |
+| Extension, if used | <Form 7004 — verify the extension length for this entity type and year end; it is not 6 months in every case> | <DATE> | | |
 | Estimated payment 1 | 15th day of the 4th month of the tax year | <DATE> | | |
 | Estimated payment 2 | 15th day of the 6th month | <DATE> | | |
 | Estimated payment 3 | 15th day of the 9th month | <DATE> | | |
@@ -25,15 +28,15 @@ Derive every date below from the entity's actual year end. Do not copy a calenda
 | Annual owner action and any required governing-body action | <BYLAWS / AGREEMENT ARTICLE> | <DATE> | | |
 | Election windows open this cycle | <ELECTION AND STATUTE> | <DATE> | | |
 
-## 2. Calendar-year clock
+## 2. Non-income-tax clock
 
 | Obligation | Rule | Date | Owner | Status |
 |---|---|---|---|---|
-| Payee statements (1099 series) | January 31 | | | |
+| Payee statements (1099 series) | <per the current General Instructions for the specific form — commonly January 31, but February 15 for Forms 1099-B, 1099-DA and 1099-S and for 1099-MISC boxes 8 or 10, and other dates exist> | | | |
 | 1099 transmittal | <by form type> | | | |
 | W-2 and payroll returns | January 31 and quarterly | | | |
 | 1042 / 1042-S | March 15 | | | |
-| State annual report | <STATE RULE> | | | |
+| State annual report | <STATE RULE — may be an anniversary date or an assigned month, not necessarily calendar-year> | | | |
 | Business licence renewals | <RULE PER LICENCE> | | | |
 | Local personal-property listing | <RULE> | | | |
 | State gross-receipts or franchise filings | <RULE AND PERIOD> | | | |

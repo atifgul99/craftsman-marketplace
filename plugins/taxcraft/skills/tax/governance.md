@@ -359,7 +359,7 @@ A public filing proves the fact the form asks for and nothing else.
 | Document | Proves | Does **not** prove |
 |---|---|---|
 | Charter / articles | Existence, effective date, name, authorized shares, whatever the articles actually recite | Any internal election, adoption of bylaws, or receipt of consideration |
-| Initial report / annual report | What the filer reported to the state, and standing as of that filing | That an internal election ever occurred; an officer or governor entry is a **filing**, not board or incorporator action |
+| Initial report / annual report | What the filed report states and, with an agency acknowledgment, that it was accepted | Current good standing, or that an internal election ever occurred — an officer or governor entry is a **filing**, not board or incorporator action. For standing, obtain the formation state's own status certificate |
 | Stock certificate | That a certificate was printed and signed | That shares were validly authorized, issued, or paid for |
 | Bank signature card | Who the bank will honour | Who holds the office, or that the board authorized the account |
 | EIN letter / CP notice | What the IRS has on record | The entity's start date, tax classification history, or address as a matter of state law |
@@ -368,19 +368,28 @@ Carry this as a **"Proves"** column in the evidence inventory. The honest entry
 is often "Nothing by itself" or "Nothing until signed", and writing that down is
 what stops an inference from being laundered into a fact.
 
-### 4. Execution metadata is ground truth
+### 4. Execution evidence is weighed, not ranked
 
-Where a document was electronically signed, read the certificate of completion
-and the envelope timestamps, and compare them to every recited meeting time,
-date, and place. Where it was signed on paper, use the PDF creation and
-modification timestamps and any notarial record. A recited formality that is
-physically impossible against that timeline — a meeting an hour before the
-envelope existed, the same meeting placed in two cities — must never be
-described as having occurred. Preserve the document unaltered and describe it
-for what it is.
+Collect and reconcile every source: the signed document, a trusted e-signature
+certificate of completion, the notarial record, the delivery record, file
+provenance, and native or PDF metadata. Compare them to every recited meeting
+time, date, and place.
 
-Extraction mechanics live in `parsing.md`; the rule that the metadata outranks
-the recital lives here.
+These sources are **not equally reliable**, and none is categorically "ground
+truth". A trusted e-signature completion certificate is strong evidence of when
+signatures were applied; ordinary PDF creation and modification timestamps are
+weak, because a file can be regenerated and its metadata edited. Authenticity is
+a foundation supported by the item, the process that produced it, and the
+surrounding circumstances (cf. Fed. R. Evid. 901), not a property a timestamp
+confers by itself.
+
+The operative rule: where **authenticated** evidence shows a recited formality
+was impossible — a meeting an hour before the envelope that contains its minutes
+existed, the same meeting placed in two cities — report the conflict and never
+again repeat the recital as fact. Where the evidence is only suggestive, record
+it as a discrepancy to resolve. Preserve the document unaltered either way.
+
+Extraction mechanics live in `parsing.md`.
 
 ### 5. Recitals must be true, and are a separate defect class from dates
 
@@ -465,13 +474,23 @@ not a harmless surplus — each one is an outstanding obligation, a deduction
 position, or a benefit-plan compliance duty. Formation-vendor binders routinely
 contain several.
 
-### 10. Bilateral instruments need bilateral termination
+### 10. Read the termination clause before choosing a termination route
 
-A board consent cannot terminate a two-party instrument to which the shareholder
-or a third party is the counterparty. Retire it with a present-dated bilateral
-termination and mutual release, signed in each capacity, reciting the amounts
-actually advanced, outstanding, and accrued, the absence of claims, and the
-cancellation of the originals. Template:
+A board consent cannot, by itself, release or amend a counterparty's rights. It
+does **not** follow that every two-party instrument needs bilateral termination.
+Establish first: the instrument's own termination clause, the governing law,
+accrued obligations, any security or guaranty, and what survives termination.
+An agreement may give the entity a unilateral termination right, an indefinite
+agreement may be terminable on reasonable notice under applicable law, or an
+agreed event may already have ended it. Where the entity holds a termination
+right, the board action authorizes the entity to **exercise** it.
+
+Use a bilateral termination where the instrument or the governing law requires
+mutual consent, or where both sides want the record closed. A **mutual release
+is a separate bargain**, not part of terminating — add one only after counsel
+identifies the claims and the carve-outs, because a blanket release can waive
+fraud, indemnity, confidentiality, security, accrued-payment, and tax claims
+nobody meant to give up. Template:
 `templates/bilateral-termination-and-release.md.template`.
 
 ### 11. Why the never-backdate rule is not negotiable
@@ -479,15 +498,22 @@ cancellation of the originals. Template:
 The rule is stated throughout this skill. The reason to give an owner, when the
 temptation arises, is the exposure ladder:
 
-- A state filing is typically executed **under penalty of perjury**; a false
-  statement in one is its own offense.
-- A backdated instrument produced to the IRS to support a §1244 basis, an
-  accountable plan, an accumulated-earnings defense, or an S-election timeline
-  converts a late-documentation problem into a **false-document** problem
-  (§7206; 18 U.S.C. §1001).
-- It **forfeits the §6664(c) reasonable-cause defense** the entity will need for
-  every other open item in the same file. That is usually the larger loss.
-- It is trivially discoverable. E-signature certificates, PDF metadata, bank
+- A state filing is typically executed **under penalty of perjury**, so a false
+  statement in one carries its own exposure.
+- A knowingly false or backdated instrument produced in a federal tax matter —
+  to support a §1244 basis, an accountable plan, an accumulated-earnings
+  defense, or an S-election timeline — may create criminal exposure under
+  **§7206** or **18 U.S.C. §1001** where those statutes' elements are met.
+  Neither is automatic: §7206 requires willfulness and material falsity (and
+  §7206(1) a document subscribed under penalties of perjury), and §1001 requires
+  a knowing and willful materially false statement in a matter within federal
+  jurisdiction. State the exposure as exposure, not as a foregone conclusion.
+- It is powerful evidence **against** reasonable cause and good faith under
+  **§6664(c)**, especially for the portion of an underpayment and the factual
+  issues the document relates to. But §6664(c) applies **portion by portion**
+  and Reg. §1.6664-4 is a facts-and-circumstances inquiry; one false document
+  does not legislatively forfeit relief for unrelated items.
+- It is trivially discoverable. E-signature certificates, file metadata, bank
   posting dates, and agency timestamps all outlive the document.
 
 What is legitimate: an instrument dated the day it is signed, reciting the true

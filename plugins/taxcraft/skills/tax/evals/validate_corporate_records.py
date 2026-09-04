@@ -2211,7 +2211,8 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         "Authority Chains and Drafting Integrity",
         "Authority chains must be acyclic",
         "A filed document controls only the field it proves",
-        "Execution metadata is ground truth",
+        "Execution evidence is weighed, not ranked",
+        "none is categorically",
         '"Approved" means signed',
         "No recital of events later than",
         "Ratification is bounded",
@@ -2219,8 +2220,10 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         "three-branch ratification triage",
         "within the power of the corporation",
         "executed legacy instruments",
-        "bilateral termination",
-        "\u00a76664(c)",
+        "Read the termination clause before choosing",
+        "is a separate bargain",
+        "portion by portion",
+        "does not legislatively forfeit relief for unrelated items",
         "read but deliberately not reproduced",
     ], "governance authority-chain doctrine")
     binder = read("scenarios/pre-formation-binder.md")
@@ -2243,19 +2246,46 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         "\u00a76721",
         "\u00a7861(a)(3)",
         "Reg. \u00a71.6041-3(p)",
+        "Two different attorney rules",
+        "\u00a76045(f)",
+        "Reg. \u00a71.861-4",
+        "Responsible Officials",
+        "does **not** require a\n  statutory corporate office",
     ], "information-returns scenario")
+    require(read("scenarios/section-1244.md"), [
+        "numerical test, not a business-failure narrative",
+        "Business labels do not decide it",
+    ], "\u00a71244 numerical exception")
+    require(read("entities/s-corp.md"), [
+        "accumulated earnings and profits at the close of the year",
+        "succeeded to in a qualifying reorganization",
+        "does not require a separate appraisal of every asset",
+    ], "S-corp conversion conditionality")
     ccorp_reduction = read("scenarios/ccorp-tax-reduction.md")
     require(ccorp_reduction, [
         "\u00a7532(b)(1)",
         "Run the PHC test first",
-        "\u00a7547",
-        "\u00a7565",
-        "\u00a77872",
+        "at least** 60%",
+        "within 90 days",
+        "within 120 days",
+        "\u00a7565 consent dividend",
+        "dividend income and tax with no cash",
+        "\u00a77872(f)(2)",
         "demand loan",
-        "No constructive-wage rule",
-    ], "AET/PHC ordering and loan pricing")
+        "present value at inception",
+        "$10,000 aggregate",
+        "Keep status and amount separate",
+        "no rule that an unpaid officer must be imputed",
+    ], "AET/PHC ordering, dividend cures, and loan pricing")
     forbid(ccorp_reduction, ["consider PHC \u00a7541 risk too"], "stale AET-first ordering")
-    require(ccorp, ["\u00a76072(b)", "June 30 fiscal-year exception", "\u00a7532(b)(1)"], "c-corp deadlines and PHC precedence")
+    require(ccorp, [
+        "\u00a76072(a)",
+        "June 30 fiscal-year transition",
+        "Pub. L. 114-41",
+        "\u00a7532(b)(1)",
+        "at least** 60%",
+    ], "c-corp deadlines and PHC precedence")
+    forbid(ccorp, ["Form 1120 due** (\u00a76072(b))"], "wrong 1120 deadline citation")
     require(router, [
         "Portability rule (STRICT)",
         "ships publicly",
@@ -2272,15 +2302,20 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     ], "portability reference")
     plan = read("scenarios/accountable-plan.md")
     require(plan, [
-        "unsigned plan is not an arrangement in force",
-        "cannot precede its execution",
-        "outside both safe harbors",
-    ], "accountable-plan execution dating")
+        "does not depend on a written or signed plan",
+        "a missing signature is **not**\n  conclusive",
+        "Publication 5137",
+        "requires statements at\nleast **quarterly**",
+        "item by item",
+    ], "accountable-plan arrangement-in-fact rule")
     require(stock, [
-        "adequacy determination is its own signed instrument",
+        "does **not** have to live in a separate document",
+        "evidentiary preference**, not a\nlegal requirement",
+        "Deferred consideration may be lawful",
         "No retroactive true-up",
         "Marital-property character",
-    ], "stock-issuance adequacy and true-up rules")
+        "blank means unverified",
+    ], "stock-issuance adequacy, deferred consideration, and template discipline")
     require(records, [
         "Working registers the record set needs",
         "Registers carry evidence-backed statuses only",
@@ -2305,6 +2340,32 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     ):
         text = (ROOT / "templates" / f"{name}.md.template").read_text(encoding="utf-8")
         require(text, ["DRAFT \u2014 NOT EXECUTED", "counsel before signing"], f"{name} legends")
+    # A shipped template must not teach one state's law to every state's user,
+    # and must not pre-assert a tax or evidence conclusion nobody reached.
+    # A JSON template's values are machine-readable defaults a user can leave in
+    # place, so they must never carry one jurisdiction's law or a tax conclusion
+    # nobody reached. (Markdown templates may cite a statute as a labelled
+    # example, which a reader can see is an example.)
+    import re as _re
+    for path in sorted((ROOT / "templates").glob("*.json.template")):
+        body = path.read_text(encoding="utf-8")
+        for pattern, label in (
+            (r"https?://[a-z0-9.-]*\.(?:wa|ca|ny|tx|de|fl)\.gov", "a live state-government URL"),
+            (r"\bRCW\s+\d", "a Washington statute citation"),
+            (r"\bDGCL\b", "a Delaware statute citation"),
+        ):
+            if _re.search(pattern, body):
+                raise AssertionError(
+                    f"template {path.name} ships {label} as a default value; "
+                    "jurisdiction rules are looked up per engagement"
+                )
+        for banned in (
+            '"ISSUANCE_PRONGS_VERIFIED"',
+            '"ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL"',
+            '"section_351_control_test_status": "SATISFIED"',
+        ):
+            if banned in body:
+                raise AssertionError(f"template {path.name} pre-asserts a tax conclusion: {banned}")
     require(governance, [
         "Conflicting-Interest Transactions in Owner-Controlled Entities",
         "RCW 23B.08.730(2)",

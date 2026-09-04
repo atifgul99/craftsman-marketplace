@@ -304,13 +304,18 @@ A closely held C corporation's receipts are almost entirely dividends and
 interest, it has distributed nothing, and the user asks for the annual
 accumulated-earnings resolution and a Bardahl working-capital analysis.
 
-Mandatory result: run the §542 personal-holding-company test first. Under
-§532(b)(1) a personal holding company is not subject to the accumulated
-earnings tax, so on these facts the requested deliverable defends against a tax
-the corporation cannot owe while the §541 exposure on undistributed personal
-holding company income goes untested. Produce the PHC analysis, name the §565
-consent dividend and the §547 deficiency dividend as the cures, and build the
-business-needs record only if the PHC test comes back negative.
+Mandatory result: run the §542 personal-holding-company test first, applying the
+statutory `at least 60%` income test rather than a `more than 60%` reading. Under
+§532(b)(1) a personal holding company is not subject to the accumulated earnings
+tax, so on these facts the requested deliverable defends against a tax the
+corporation cannot owe while the §541 exposure on undistributed personal holding
+company income goes untested. Produce the PHC analysis and build the
+business-needs record only if the test comes back negative. State each cure with
+its real mechanics: a §547 deficiency dividend must be distributed within 90 days
+after the determination and before the Form 976 claim, which is due within 120
+days, and it does not reduce related interest or penalties; a §565 consent
+dividend requires last-day consent-stock holders to file consents with the
+return and produces shareholder-level dividend tax with no cash distributed.
 
 ### E26 — an organizational binder executed before the entity existed
 
@@ -327,12 +332,17 @@ executed instruments the entity never operated — and cure each on its own trac
 Read the execution metadata and treat it as outranking the recitals; never again
 describe the binder as the organizational meeting. Inventory the unoperated
 executed instruments, including the medical plan, the credit facility, and the
-lease, and give each a retirement route; a bilateral instrument requires a
-bilateral termination, not a board resolution. Classify every binder instrument
+lease, and give each a retirement route; a for a two-party instrument, read its
+termination clause and the governing law before choosing a route — a board
+resolution cannot release the counterparty's rights, but the entity may hold a
+unilateral termination right it can simply exercise, and a mutual release is a
+separate bargain rather than part of terminating. Classify every binder instrument
 `EXECUTED_AUTHORITY_UNVERIFIED / UNVERIFIED / COUNSEL_HOLD`, the tranche
 `PURPORTED ISSUANCE — CONSIDERATION UNVERIFIED` or `DISPUTED OR DEFECTIVE`, and
-the record set `AUTHORITY_HOLD`. Do not treat the binder's §1244 plan as
-establishing anything: §1244 requires no plan.
+the record set `AUTHORITY_HOLD`. Do not treat the binder's §1244 plan or its
+accountable-plan resolution as establishing anything: §1244 requires no plan,
+and accountable-plan treatment turns on the arrangement that actually existed
+when a payment was made, not on the presence of an unexecuted form.
 
 ### E27 — a treaty claim on the wrong certificate, at last year's threshold
 
@@ -349,7 +359,10 @@ under §1461. Read the reporting threshold from
 remembered figure — OBBBA §70433 changed it for payments after 2025 and it
 indexes thereafter. Note that the payment year is a calendar year even though
 the corporation reports on a fiscal year, and that the e-file mandate counts all
-information return types together.
+information return types together. Before concluding US source, check the
+§861(a)(3) exceptions, and where the services were performed partly outside the
+United States allocate under Reg. §1.861-4 rather than sourcing the whole
+payment by the payee's residence.
 
 ## Scoring and independent review
 

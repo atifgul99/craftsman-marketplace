@@ -174,12 +174,14 @@ The alternative safe harbor is a periodic statement issued at least quarterly,
 requiring the employee to account for or return outstanding amounts within 120
 days after the statement.
 
-Note what that leaves out: an **annual** reimbursement cycle — the default for a
-closely held entity that settles with its owner-employee once a year — is
-outside both safe harbors, because the periodic-statement route requires at
-least quarterly statements. It is not prohibited, but it lands squarely in the
-facts-and-circumstances analysis below and must be documented as such rather
-than described as compliant.
+Note what that leaves out. The periodic-statement route requires statements at
+least **quarterly**, so an entity that describes its cycle as **annual** does not
+satisfy it. But test **item by item** rather than condemning the whole
+arrangement: a particular expense substantiated within 60 days of payment or
+incurrence is inside the fixed-date safe harbor even if the employer calls its
+general cycle annual. Items that fall outside both safe harbors are not
+prohibited — they require the documented facts-and-circumstances reasonable-period
+analysis below, and should be described that way rather than as compliant.
 
 The regulation also permits a facts-and-circumstances "reasonable period."
 Treat a longer cycle as a deliberate, documented risk decision—not as a generic
@@ -413,14 +415,19 @@ destroy records merely because the annual review is complete.
 
 - Never backdate an approval, signature, effective date, report, receipt, or
   mileage log.
-- **An unsigned plan is not an arrangement in force, and its effective date
-  cannot precede its execution.** A drafted-but-unexecuted plan, a plan approved
-  in a consent nobody signed, and a plan resolution executed before the entity
-  legally existed are all the same thing for this purpose: no arrangement. State
-  the effective date as the execution date, and carry a stated scope term for
-  earlier outlays only as a proposal, with a written CPA/EA determination behind
-  it before any payment is made on it. Do not record an effective date the
-  signature page cannot support because a prior engagement or memo assumed one.
+- **Federal accountable-plan treatment does not depend on a written or signed
+  plan.** §62(c) and Reg. §1.62-2 ask what reimbursement *arrangement* actually
+  existed when the payment was made, and whether it required business
+  connection, timely substantiation, and return of excess; IRS Publication 5137
+  says expressly that the policy need not be a written plan. A signed,
+  prospectively adopted plan is preferred evidence and may be required by the
+  entity's own governing law or documents — but a missing signature is **not**
+  conclusive that no federal arrangement existed. Determine and state the
+  arrangement in force, do not backdate the instrument, and where a governance
+  document is unsigned say so as a governance fact rather than as a tax
+  conclusion. An effective date the signature page cannot support is a drafting
+  error; route the tax characterization of pre-execution outlays to the CPA or
+  EA in writing.
 - A new plan cannot retroactively transform an employer payment already made as
   wages, distribution, or undocumented allowance. Analyze it under the
   arrangement that actually existed when paid.

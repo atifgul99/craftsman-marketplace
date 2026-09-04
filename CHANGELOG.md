@@ -163,6 +163,68 @@ some tranches to derive a different — and more accurate — status afterwards.
   prohibition on hard-coding a jurisdiction into a schema or validator, and the
   instruction to extract the rule and leave the engagement facts behind.
 
+### Corrected after independent review
+
+Two independent Codex reviews of the release commit both returned NOT APPROVED;
+all findings were applied. The corrections that changed a stated rule:
+
+- **An accountable plan does not require a signature to exist.** The release
+  said an unsigned plan is "no arrangement". §62(c) and Reg. §1.62-2 ask what
+  arrangement actually existed when the payment was made, and Publication 5137
+  says the policy need not be written. A missing signature is a governance fact
+  and preferred-evidence problem, not a tax conclusion. The annual-cycle rule is
+  now tested item by item: an expense substantiated within 60 days is inside the
+  fixed-date safe harbor whatever the employer calls its cycle.
+- **A stock-adequacy determination need not be a separate instrument.** MBCA
+  §6.21's comment says no explicit resolution is required and DGCL §152(a)
+  permits the terms in the board resolution. A separate instrument is an
+  evidentiary preference. Deferred consideration — notes, future services,
+  partly paid shares under DGCL §156 — can also be lawful, so the guidance no
+  longer bars issuance before payment in every state.
+- **Backdating consequences are not automatic.** §7206 and 18 U.S.C. §1001
+  require their own elements, and §6664(c) applies portion by portion under a
+  facts-and-circumstances test. One false document is powerful evidence against
+  reasonable cause; it does not forfeit relief for unrelated items.
+- **The interested person does not eliminate every disinterested route.** Other
+  qualified directors, and shares not owned or controlled by the interested
+  person, can still supply approval. Fairness is not automatically the only route.
+- **Form 1120's deadline is §6072(a), not §6072(b)** — current §6072(b) covers
+  partnerships and S corporations — and the June-30 rule is the Pub. L. 114-41
+  §2006 transition rather than a current-text exception. The general rule would
+  put that deadline a month late, not two weeks.
+- **§542(a)(1) is "at least 60%", not "more than 60%".** The §547 deficiency
+  dividend has two clocks (90 days to distribute, 120 days for Form 976) and the
+  §565 consent dividend creates shareholder-level tax with no cash.
+- **§7872 imports its rates from §1274(d)** rather than displacing it, term and
+  demand loans have different mechanics, and the §7872(c)(3) $10,000 exception is
+  tested rather than assumed inapplicable.
+- **A corporate officer is generally an employee under §3121(d)(1)** even when
+  unpaid; the narrow regulatory exception needs no-or-minor services *and* no
+  remuneration. Status and wage amount are separate questions.
+- **§1375 looks to all accumulated E&P at year end**, including AE&P succeeded
+  to in a reorganization, and §1374 does not require a separate appraisal of
+  every asset.
+- **§1244 outcomes are numerical.** The "operating startups pass, holding
+  companies fail" summary contradicted the exception stated immediately above it.
+- Attorneys' service fees report under §6041/§6041A while gross proceeds are the
+  separate §6045(f) rule; §861(a)(3) has its own exceptions and mixed services
+  allocate under Reg. §1.861-4; an IRIS Responsible Official needs authority, not
+  a corporate office; 1099 recipient dates vary by form; and the retention floors
+  for information returns, W-9s, and W-8s are three different rules.
+- **Execution evidence is weighed, not ranked.** A trusted e-signature completion
+  certificate and an editable PDF timestamp are not the same thing, and an annual
+  report proves what was filed rather than good standing.
+- **A two-party instrument does not always need bilateral termination**, and a
+  mutual release is a separate bargain with carve-outs.
+- The shipped stock templates no longer pre-assert satisfied tax positions,
+  verified evidence, or a Washington capacity rule under a placeholder
+  jurisdiction. A release check now fails any JSON template carrying a real
+  jurisdiction's statute or URL, or a satisfied tax position.
+- The generic state-authority check no longer accepts any `.gov` host: an
+  authority carries a two-letter jurisdiction code and its source must belong to
+  that jurisdiction. The reviewer's proof-of-concept — a NASA page accepted as a
+  Washington securities and capacity authority — is now a fixture.
+
 ### Added — taxcraft governance doctrine
 
 Carried forward from the previously unreleased entry; these ship in this release:

@@ -48,17 +48,24 @@ as a **condition with its own test**. Presenting them as automatic consequences
 of electing is a common and material error:
 
 - **§1375 passive investment income tax** applies only if the corporation has
-  **accumulated earnings and profits from its C years** *and* passive investment
-  income exceeds 25% of gross receipts for the year. A converted corporation
-  with no accumulated E&P cannot owe it at all, however passive its income.
-  Establish the C-year E&P balance before saying anything about §1375.
+  **accumulated earnings and profits at the close of the year** *and* passive
+  investment income exceeds 25% of gross receipts. An S corporation with no AE&P
+  cannot owe it at all, however passive its income. Determine AE&P from **all**
+  relevant sources, not only this corporation's own prior C years — AE&P
+  succeeded to in a qualifying reorganization with a C corporation counts, as the
+  Form 1120-S instructions note. Establish the balance before saying anything
+  about §1375.
 - **§1362(d)(3) termination** requires **three consecutive** tax years meeting
   both conditions, and terminates the election as of the following tax year —
   not immediately, and not on a single bad year.
-- **§1374 built-in gains tax** requires net unrealized built-in gain determined
-  **as of the conversion date**. Without asset-by-asset conversion-date
-  valuations there is no NUBIG figure and no defensible §1374 number; commission
-  the valuation as part of the conversion, not after the first sale.
+- **§1374 built-in gains tax** measures net unrealized built-in gain **as of the
+  first day of the first S year**, under the statutory aggregate formula. The
+  Code does not require a separate appraisal of every asset, and a supportable
+  whole-business valuation with a defensible allocation can be appropriate. But
+  obtain evidence sufficient for both the aggregate NUBIG figure **and**
+  asset-level tracking through the recognition period, and commission it as part
+  of the conversion rather than after the first sale — the measurement date does
+  not move.
 
 Each of these turns on figures the entity may not have. Say what is unknown and
 what would resolve it rather than modelling a consequence on assumed facts.

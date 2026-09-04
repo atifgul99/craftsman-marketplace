@@ -4,12 +4,12 @@
   "fiscal_or_tax_period": "FY2000",
   "as_of": "2000-01-01",
   "source_cutoff": "2000-01-01T00:00:00Z",
-  "overall_status": "CLOSING_PENDING",
+  "overall_status": "COUNSEL_HOLD",
   "tranches": [
     {
       "tranche_id": "ISS-2000-001",
       "issuance_date": "2000-01-01",
-      "status": "CLOSING_PENDING",
+      "status": "COUNSEL_HOLD",
       "purported_issuance_evidenced": false,
       "class": "Common",
       "holder_slug": "replace-holder",
@@ -33,10 +33,10 @@
         "treasury_after": 0,
         "reserved_after": 0,
         "legally_available_after": 0,
-        "formation_state_capacity_rule": "REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED",
+        "formation_state_capacity_rule": "COUNSEL_VALIDATED_JURISDICTION_RULE",
         "capacity_jurisdiction_code": "XX",
         "capacity_authority_citation": "REPLACE",
-        "capacity_authority_url": "https://app.leg.wa.gov/RCW/default.aspx?cite=23B.06.310",
+        "capacity_authority_url": "https://example.invalid/replace-with-official-formation-state-source",
         "capacity_authority_verified_at": "2000-01-01T00:00:00Z"
       },
       "gates": {
@@ -73,7 +73,7 @@
         {
           "authority_id": "run-replace-federal-securities",
           "jurisdiction": "United States",
-          "source_url": "https://www.sec.gov/replace",
+          "source_url": "https://example.invalid/replace-with-official-source",
           "verified_at": "2000-01-01T00:00:00Z",
           "effective_from": null,
           "effective_to": null,
@@ -84,7 +84,7 @@
         {
           "authority_id": "run-replace-state-securities",
           "jurisdiction": "REPLACE-STATE",
-          "source_url": "https://example.gov/replace",
+          "source_url": "https://example.invalid/replace-with-official-source",
           "verified_at": "2000-01-01T00:00:00Z",
           "effective_from": null,
           "effective_to": null,
@@ -94,18 +94,18 @@
         }
       ],
       "tax_positions": {
-        "section_83": "NOT_APPLICABLE",
-        "section_351": "ISSUANCE_PRONGS_VERIFIED",
-        "section_1202": "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL",
-        "section_1244": "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL"
+        "section_83": "UNVERIFIED",
+        "section_351": "UNVERIFIED",
+        "section_1202": "UNVERIFIED",
+        "section_1244": "UNVERIFIED"
       },
       "tax_fact_flags": {
         "substantially_nonvested": false,
         "property_transfer": true,
         "liabilities_assumed": false,
         "integrated_transfer_plan": false,
-        "section_351_control_percent_after": 100,
-        "section_351_control_test_status": "SATISFIED",
+        "section_351_control_percent_after": null,
+        "section_351_control_test_status": "COUNSEL_HOLD",
         "section_83_b": {
           "decision": "NOT_APPLICABLE",
           "property_transfer_date": null,

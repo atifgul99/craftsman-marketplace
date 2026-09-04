@@ -101,7 +101,9 @@ Moderate to elevated depending on who, wage level, documentation. Courts have be
 §532(b)(1) excludes a PHC from §531 outright. So the order of work is fixed:
 
 1. Test personal-holding-company status under §542 for the year — the **income
-   test** (PHC income ≥ 60% of adjusted ordinary gross income, §543) and the
+   test** (PHC income **at least** 60% of adjusted ordinary gross income under
+   §542(a)(1), the classes defined in §543; note the statute is `≥`, not `>`,
+   so exactly 60% is inside the test) and the
    **ownership test** (more than 50% in value owned by five or fewer
    individuals at any time in the last half of the year, with §544
    attribution).
@@ -128,16 +130,25 @@ business-needs record is what carries that burden; it is not optional colour.
 - The tax is 20% of **undistributed personal holding company income**, and it
   applies whether or not the accumulation was reasonable. Reasonable business
   needs are not a defense to §541.
-- **§547 deficiency dividend.** A corporation that is determined to owe PHC tax
-  may pay a deficiency dividend after the determination and obtain a deduction
-  that eliminates or reduces the §541 tax, subject to strict timing (generally
-  90 days from the determination) and a Form 976 claim. It does **not** relieve
-  interest or penalties on the original deficiency. Treat this as counsel/CPA
-  work, not a self-serve cure.
-- Ordinary planning is a **consent dividend (§565)** or an actual distribution
-  before year end, or changing the character of the income so the 60% test
-  fails. Route the choice to the CPA/EA with the computed §543/§545 figures,
-  not a general recommendation.
+- **§547 deficiency dividend.** After a determination that PHC tax is owed, the
+  corporation may distribute a deficiency dividend and deduct it against the
+  §541 tax. Two separate clocks: the distribution must occur **within 90 days
+  after the determination and before the claim is filed**, and the **Form 976**
+  claim must be filed **within 120 days** after the determination. The deduction
+  does **not** reduce interest, additional amounts, or assessable penalties
+  computed with respect to the PHC tax. Treat this as CPA/EA and counsel work,
+  not a self-serve cure.
+- **§565 consent dividend.** A holder of consent stock on the **last day** of the
+  corporation's tax year agrees, in a consent filed with the corporation's
+  return, to treat an amount as distributed. The amount is deemed distributed in
+  money and immediately recontributed to capital on that last day — so the
+  **shareholder has dividend income and tax with no cash**, and the shareholder's
+  basis increases. It is not a costless election; present it with the
+  shareholder-level consequence and the filing mechanics, not as ordinary
+  planning.
+- The other routes are an actual distribution before year end, or changing the
+  character of the receipts so the §542(a)(1) test fails. Route the choice to the
+  CPA/EA with the computed §543/§545 figures, not as a general recommendation.
 - Rent, and personal-service-contract income under §543(a)(7), each have
   their own carve-outs; do not classify receipts as PHC income by label.
 
@@ -168,24 +179,35 @@ Triggers: large cash balance vs. operational needs, passive investments dominate
 
 ## Shareholder loans, in either direction
 
-A loan between the corporation and its owner is priced under the **below-market
-loan rules of §7872**, not under §1274(d). §1274(d) is the provision that
-*publishes* the applicable federal rates; it governs debt issued for property.
-Citing it as the authority for pricing a cash loan between related parties is a
-common error and the wrong rule to apply.
+A below-market cash loan between the corporation and its owner is priced under
+**§7872**. §7872(f)(2) then takes the applicable federal rate **from §1274(d)**,
+which supplies the AFR definitions; §1274 as a whole governs issue price for
+certain debt issued for property, and the rates themselves are determined and
+published monthly by Treasury and the IRS. So the two provisions are connected,
+not alternatives — but §1274 is not the operative rule for pricing an owner
+loan, and citing it as if it were leads to the wrong analysis.
 
-Under §7872 the analysis turns on the **type** of loan:
+Under §7872 the mechanics turn on the **type** of loan:
 
-- A **demand loan** is tested against the short-term AFR, and the foregone
-  interest is imputed **annually** for as long as the loan is outstanding.
-- A **term loan** is tested once at issuance against the AFR for its term, and
-  the imputation is fixed by that original test.
+- A **demand loan** produces foregone-interest transfers computed for each
+  calendar-year period at the applicable **short-term** AFR, treated as
+  transferred and retransferred at year end unless regulations provide
+  otherwise, and it recurs every year the loan is outstanding.
+- A **term loan** is tested by **present value at inception**; the statutory
+  excess is treated as transferred when the loan is made, and the resulting
+  original-issue-discount and interest consequences run over the term. A later
+  significant modification is retested.
 
-Getting the type wrong changes both the amount and the number of years it
-recurs. Corporation-to-shareholder loans are generally recharacterized as
-compensation or a distribution to the extent of the foregone interest; the
-character follows the relationship, not the label on the note. The de minimis
-exceptions in §7872(c) are narrow and do not apply to most owner loans.
+Getting the type wrong changes both the amount and how many years it recurs.
+Corporation-to-shareholder loans are generally characterized as compensation or
+a distribution to the extent of the foregone interest; the character follows the
+relationship, not the label on the note.
+
+**Test the §7872(c)(3) exception rather than assuming it.** It provides a
+concrete **$10,000 aggregate** exception for certain compensation-related and
+corporation-shareholder loans, unavailable where tax avoidance is a principal
+purpose of the interest arrangement. Run the test on the actual outstanding
+balances; do not assert that it does or does not cover a given owner's loans.
 
 **Documentation that makes it a loan.** A written note with a stated rate at
 least equal to the applicable AFR, a fixed maturity or demand terms, a
@@ -195,9 +217,10 @@ IRS position is that the advance is a distribution (corporation → shareholder)
 or a contribution to capital (shareholder → corporation), and the entity's own
 books usually supply the evidence.
 
-**Retiring one.** A loan facility is a bilateral instrument. The board cannot
-terminate it by resolution; see `governance.md` rule 10 for the bilateral
-termination and mutual release.
+**Retiring one.** Read the note's own termination and prepayment terms first. A
+board resolution cannot release the counterparty's rights, but the entity may
+hold a unilateral right it can simply exercise; use a bilateral termination only
+where mutual consent is required or wanted. See `governance.md` rule 10.
 
 **AET and PHC interaction.** Loans *to* the shareholder are among the clearest
 accumulated-earnings triggers — Reg. §1.537-2(c) treats loans having no
@@ -205,15 +228,22 @@ reasonable relation to the business as evidence of an unreasonable accumulation
 — and interest received *from* the shareholder is PHC income. Run the §542 test
 before treating either as a planning idea.
 
-## No constructive-wage rule from non-payment alone
+## Officer employee status, and why non-payment alone creates no wage
 
-There is **no rule that an unpaid officer must be imputed a wage.** The
-reasonable-compensation cases and §3121(d)(1)/Reg. §31.3121(d)-1(b) reach an
-officer who **performs more than minor services** and receives remuneration, and
-the recharacterization risk runs in the other direction: distributions or
-loans recharacterized as wages for an officer who *is* being paid something.
-An officer who performs no substantial services, or performs them and is paid
-nothing, does not thereby generate wages.
+**Keep status and amount separate.** A corporate officer is generally an
+**employee** under §3121(d)(1). The exception in Reg. §31.3121(d)-1(b) is narrow:
+it applies only where the officer performs **no services or only minor services
+and neither receives nor is entitled to receive** remuneration. So an officer
+performing substantial services remains an employee even though nothing has been
+paid.
+
+What does **not** follow is a wage. Wages require remuneration actually or
+constructively paid; there is **no rule that an unpaid officer must be imputed
+one**, and non-payment alone does not create a deemed wage payment. The
+recharacterization risk runs the other way: inspect every amount actually or
+constructively paid or made available to the officer — distributions, advances,
+personal expenses paid by the corporation, purported loans — because those may
+be remuneration for services and taxable as wages to that extent.
 
 What that means in practice:
 
