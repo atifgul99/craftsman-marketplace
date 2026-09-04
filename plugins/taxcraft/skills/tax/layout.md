@@ -78,6 +78,7 @@ Loaded by `init.md` and `migrate.md` only. Not needed in steady state — `CLAUD
 │   │   ├── corporate-records-audit-FY<YYYY>.json ← annual structured record-set evidence/status SSOT
 │   │   ├── {formation, minutes, resolutions, annual-reports, licenses}/
 │   │   ├── stock-issuances/                   ← per-tranche legal/tax/securities closing binders + register/ledger/cap table
+│   │   ├── payees/                            ← permanent, year-independent: one folder per payee holding its W-9 / W-8 / Form 8233 certificate and the payee register (`scenarios/information-returns.md`). Belongs to the entity whose EIN issues the return, which for a disregarded entity depends on the return type — see `entities/disregarded.md`
 │   │   └── qsbs-tracking/                     ← per-tranche §1202 issuance position + annual monitoring
 │   ├── accounts/                             ← one subfolder per financial account
 │   │   └── <account-slug>/                   ← e.g. `chase-1234`, `chase-5678-cc`, `ibkr-9012`

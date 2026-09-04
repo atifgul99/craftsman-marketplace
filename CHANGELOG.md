@@ -27,10 +27,27 @@ Nothing yet.
 
 ## [0.7.0] (2026-09-04)
 
-Marketplace `0.7.0`; `taxcraft` moves to `0.2.0` (two new reference files);
-`craftsman` is unchanged at `0.5.0`. This release closes the gaps a full
-C-corporation record-book remediation exposed, including four statements the
-skill made that produced a wrong deliverable.
+Marketplace `0.7.0`; `taxcraft` moves to `0.2.0`; `craftsman` is unchanged at
+`0.5.0`. This release closes the gaps a full C-corporation record-book
+remediation exposed, including four statements the skill made that produced a
+wrong deliverable.
+
+**MINOR is claimed for a breaking change, which the `0.x` line permits.** The
+release adds two routed `scenarios/*.md` files and nine templates, and it
+**breaks the persisted stock-issuance artifact format** — renamed enum members
+and three new required fields. Under the versioning policy above, breaking
+changes may still land in MINOR while the project settles; from `1.0.0` this
+would require MAJOR.
+
+### Breaking — stock-issuance artifacts must be migrated
+
+Any `stock-issuance-audit-FY<YYYY>.json` or closing manifest produced before
+`0.2.0` will fail validation. `migrate.md` gains **Phase M6b** with the enum
+rename table and, more importantly, the fields that must be decided by a human
+rather than scripted: `purported_issuance_evidenced` (a reviewed fact, never
+inferred from the old status) and the jurisdiction codes and statutory citation
+that now bind an authority to the jurisdiction it is claimed to state. Expect
+some tranches to derive a different — and more accurate — status afterwards.
 
 ### Fixed — guidance that produced a wrong deliverable
 

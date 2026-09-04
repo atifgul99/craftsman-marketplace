@@ -45,9 +45,10 @@ Collect the payee certificate **before** money moves, not at year end:
 
 Record for each payee: legal name, TIN (masked to last-4 in workpapers), entity
 classification, the certificate on file with its date, whether the payee is a
-corporation, and the source analysis below. Store under
-`entities/<slug>/corporate/payees/` and reference from the issued-return folder
-named in `layout.md`.
+corporation, and the source analysis below. Store the certificates in the issuer's permanent `payees/` folder and the
+issued returns in the folders named in `layout.md`, using the filename patterns
+in `naming.md`. The issuer is the entity whose EIN appears on the return, which
+for a disregarded entity is resolved by the rule in step 4 below.
 
 **Backup withholding (§3406).** A missing, obviously invalid, or IRS-notified
 incorrect TIN triggers backup withholding at the statutory rate on reportable
@@ -86,8 +87,8 @@ change the source.
 - Services performed **in** the United States are US-source FDAP or ECI
   depending on the facts, and the entity is a **withholding agent** with deposit
   obligations under §1461 and Reg. §1.6302-2 — not merely an annual filer.
-- Forms 1042 and 1042-S are due **March 15** following the calendar year, with
-  their own extension rules.
+- Forms 1042 and 1042-S have their own annual deadline and extension rules; the
+  dates live with the other corporate filing deadlines in `entities/c-corp.md`.
 - A treaty claim is only as good as the certificate supporting it, and an
   expired or defective certificate means the entity withholds at the statutory
   rate.
@@ -127,10 +128,12 @@ For each calendar year, produce and retain:
 3. Copies of the transmitted returns and the acceptance confirmation. **A
    submission is not an acceptance** — carry `SUBMITTED_UNCONFIRMED` until the
    acknowledgement is in the file.
-4. For a disregarded entity, confirm the **regarded owner's EIN** is the issuer
-   (see `entities/disregarded.md`); for K-1s the entity issues, confirm the
-   partner or shareholder of record and the nominee route where the interest is
-   held for another.
+4. For a disregarded entity, the issuer EIN **depends on the return type**: the
+   regarded owner's EIN for 1099 and 1042-S, but the SMLLC's **own** EIN for
+   Forms W-2, W-3, 941, and 940, because an SMLLC is treated as a corporation
+   for employment tax purposes. See `entities/disregarded.md`. For K-1s the
+   entity issues, confirm the partner or shareholder of record and the nominee
+   route where the interest is held for another.
 
 ## Corrections
 
