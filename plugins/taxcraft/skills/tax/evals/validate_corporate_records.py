@@ -2154,6 +2154,10 @@ def _run_artifact_fixtures(clean: dict, schema: dict, fixtures: list[dict]) -> N
         assert audit["overall_status"] == actual
 
 
+# Prose evals are checked for STRUCTURE only: that E1..EXPECTED_EVAL_CASES exist
+# and that each states a mandatory result. Nothing here verifies that a mandatory
+# result is legally correct — that is the independent-reviewer pass named in
+# evals/corporate-records.md.
 EXPECTED_EVAL_CASES = 27
 
 
@@ -2172,7 +2176,7 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     specialist_template = json.loads(read("templates/corporate-specialist-result.json.template"))
 
     require(router, ["corporate-records.md", "record-book", "formation cleanup", "annual governance"], "router")
-    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453", "NOT_LOCATED", "1.6662-6(d)"], "corporate-records orchestrator")
+    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453", "search scope", "no filed §482 method election"], "corporate-records orchestrator")
     require(governance, ["corporate-records.md", "final rule", "domestic"], "governance backlink")
     # Defects that cost the most rework are the ones a draft asserts confidently.
     require(governance, [
@@ -2266,7 +2270,18 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     ):
         text = (ROOT / "templates" / f"{name}.md.template").read_text(encoding="utf-8")
         require(text, ["DRAFT \u2014 NOT EXECUTED", "counsel before signing"], f"{name} legends")
-    require(governance, ["Conflicting-Interest Transactions in Owner-Controlled Entities", "fairness is the only route left", "no \"method election\" filed with anyone", "1.6662-6(d)", "RCW 23B.08.560", "RCW 23B.06.250(4)"], "conflict, bylaws, and intercompany doctrine")
+    require(governance, [
+        "Conflicting-Interest Transactions in Owner-Controlled Entities",
+        "RCW 23B.08.730(2)",
+        "DGCL §144",
+        "RCW 23B.02.060",
+        "RCW 23B.08.400",
+        "unlimited general obligation",
+        "RCW 23B.08.560",
+        "RCW 23B.06.250(4)",
+        "1.6662-6(d)",
+        "Intercompany arrangements between commonly controlled entities",
+    ], "conflict, bylaws, and intercompany doctrine")
     require(ccorp, ["Reg. §1.248-1(c)", "deemed"], "organizational-expenditure deemed election")
     require(ccorp, ["corporate-records.md"], "C-corp backlink")
     require(stock, ["corporate-records.md"], "stock backlink")
@@ -2342,7 +2357,8 @@ def main() -> None:
         validated += 1
     print(
         f"PASS: corporate-records release; 24-row schema, {len(fixtures)} record-set fixtures, "
-        f"{len(specialist_fixtures)} specialist fixtures, {EXPECTED_EVAL_CASES} prose evals, {validated} instantiated audit(s)"
+        f"{len(specialist_fixtures)} specialist fixtures, {EXPECTED_EVAL_CASES} prose evals (structure only), "
+        f"{validated} instantiated audit(s)"
     )
 
 

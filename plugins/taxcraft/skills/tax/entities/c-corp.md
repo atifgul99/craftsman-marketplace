@@ -43,26 +43,29 @@ underlying corporate act.
 1. **What each covers.** §248: costs of creating the corporation — state filing
    fee, incorporation legal and accounting fees, organizational-meeting and
    temporary-director costs. §195: pre-opening costs of investigating and
-   creating an active trade or business. Neither covers costs of issuing or
-   selling stock (syndication) — those are capitalized permanently and never
-   amortized.
+   creating an active trade or business. Neither covers the costs of issuing or
+   selling stock. Successful issuance/syndication costs are not deductible or
+   amortizable and generally reduce the proceeds; an abandoned transaction is a
+   separate §165 question.
 2. **Mechanics.** $5,000 deducted in the year the business begins, phased out
    dollar-for-dollar as the category exceeds $50,000; the remainder amortized
    ratably over 180 months from the month business begins. The two categories
    are computed separately.
-3. **No election statement is required.** Under **Reg. §1.248-1(c)** and
-   **Reg. §1.195-1(b)**, a corporation is **deemed** to have elected on a timely
-   filed return (including extensions) for the year business begins; a statement
-   is permitted but not required. Do not treat a missing statement as a lost
-   election, and do not tell a client an untimely return forfeits the deemed
-   election without checking the current regulation and the return's actual
-   filing status. Forgoing the deemed election requires an affirmative statement
-   of that choice.
+3. **The deduction/amortization treatment is the deemed default.** Under
+   **Reg. §1.248-1(c)** and **Reg. §1.195-1(b)**, a taxpayer is **deemed** to
+   have elected that treatment for the year business begins; no statement is
+   required. It is the opposite choice — **forgoing** the deduction and
+   capitalizing the costs — that must be made affirmatively on a timely filed
+   return including extensions. Do not tell a client a missing statement or a
+   late return forfeited the deduction without checking the current regulations
+   and the return's actual filing status.
 4. **Record-book link.** The organizational consent should identify who paid the
-   formation costs and whether the corporation reimbursed the payer — a founder
-   who paid the filing fee personally and was never reimbursed has a
-   contribution or a personal expense, not a corporate deduction. Route the
-   evidence to `scenarios/corporate-records.md` Gate 7.
+   formation costs and whether the corporation reimbursed the payer. Where a
+   founder paid the corporation's own obligation and was not reimbursed, the
+   analysis is generally a capital contribution followed by a constructive
+   payment by the corporation — not an automatic loss of §248 treatment.
+   Identify the legal obligor and the reimbursement facts before concluding.
+   Route the evidence to `scenarios/corporate-records.md` Gate 7.
 
 ### Loss & Interest Carryovers
 

@@ -465,11 +465,13 @@ For each corporation-owned SMLLC or subsidiary, prove both tiers separately:
 - contracts and signatures in the correct legal entity;
 - intercompany agreements only when an actual legal/tax transaction exists;
   federal disregard does not erase state-law or state-tax separateness. Where
-  one exists, test both sides: each entity's own approval, the written agreement
-  signed in both names, arm's-length pricing support built to Reg. §1.6662-6(d)
-  and current-dated (there is no filed §482 "method election"), counterparts
-  filed in both entities' records, §267(a)(2) timing, and the payee-state
-  consequence of the charge — see `governance.md` → "Intercompany arrangements
+  one exists, first classify each party federally — a payment between an owner
+  and its own disregarded entity is generally not a transaction between separate
+  taxpayers — then test both sides: each entity's own approval, the written
+  agreement signed in both names, current-dated best-method pricing support
+  (there is no filed §482 method election), counterparts in both entities'
+  records, §267(a)(2) only where its predicates hold, and each jurisdiction's
+  own treatment of the charge — see `governance.md` → "Intercompany arrangements
   between commonly controlled entities"; and
 - founder/employee/contractor invention, confidentiality, IP, domain, and
   product-rights assignments to the entity that claims ownership.
@@ -506,12 +508,16 @@ subfolder is an intake unit. If any material file is unprocessed:
 executed instrument refers to is frequently filed under the *other* party — the
 counterparty entity's workpapers, the parent's folder, a tax-year folder rather
 than `corporate/`. Before classifying a cited document missing, search by name,
-date, and subject across the workspace (excluding privileged paths). Where it is
-still not found, record `NOT_LOCATED` **naming the paths searched**, not "does
-not exist"; the distinction is the difference between a fact and an assumption,
-and the remediation differs (obtain and file a counterpart versus create the
-document). When it is found elsewhere, the finding is a filing defect: place a
-counterpart in this entity's records and name the source of truth.
+date, and subject across the workspace (excluding privileged paths). The
+lifecycle value stays `NOT_FOUND` — it is the only one the schema allows — but
+the row must state the **search scope**: which paths were searched, and when.
+Report it as "not located in <paths>", never as "does not exist"; the
+distinction is the difference between a fact and an assumption, and the
+remediation differs (obtain and file a counterpart versus create the document).
+Where the document is found in the counterparty's records, this entity's record
+set has an internal control gap, not a statutory filing defect: with
+authorization, place a counterpart in this entity's records and name the source
+of truth.
 
 ## Core and conditional document families
 

@@ -229,20 +229,25 @@ or ownership-profile mutation. Return the fail-closed statuses, evidence gaps,
 and sequenced remediation/counsel questions; obtain separate authorization for
 any permitted next mode.
 
-### E21 — sole director approving a transaction with himself
+### E21 — sole director and sole shareholder approving a transaction with himself
 
-The corporation's only director and only officer signs a consent approving a
-services agreement with another entity he controls. The draft consent recites
-that "the disinterested directors approved the transaction as fair."
+The corporation's only director, only officer, and only shareholder of record
+signs a consent approving a services agreement with another entity he controls.
+The draft consent recites that "the disinterested directors approved the
+transaction as fair."
 
-Mandatory result: report that no qualified-director or qualified-share route
-exists on these facts, so the recital is false as written and cannot be signed.
-The record must instead show the conflict disclosure, an express statement that
-the entity relies on the fairness route under the formation state's
-conflicting-interest statute, the transaction-specific facts as of commitment,
-and each signature given in a named capacity for each entity. A corporate-law
-fairness record does not establish §482 arm's-length pricing, reasonable
-compensation, or bona fide debt; test those separately.
+Mandatory result: test each statutory route on the facts rather than assuming
+one. On these facts the interested director is not a qualified director and no
+unrelated qualified shares exist, so neither approval route is available and the
+recital is false as written and cannot be signed. Reach that from the ownership
+evidence, not by default: where other shareholders hold qualified shares, or
+where the corporation is a Delaware corporation and the transaction falls under
+DGCL §144(b) or (c), the analysis and the available route differ. Where fairness
+is the route actually relied on, the record states the conflict, the route
+relied on, the transaction-specific facts as of commitment, and each signature
+in a named capacity for each entity. A corporate-law fairness record does not
+establish §482 arm's-length pricing, reasonable compensation, or bona fide debt;
+test those separately.
 
 ### E22 — cited pricing memorandum not in the entity's folder
 
@@ -251,14 +256,18 @@ election and cost buildup" of the agreement's own date. It is not in the paying
 entity's corporate or contracts folders.
 
 Mandatory result: search the workspace, including the counterparty entity's
-folders and tax-year workpapers, before recording any status. If not found,
-record `NOT_LOCATED` naming the paths searched — never "does not exist." If
-found under the counterparty, the finding is a filing defect: file a counterpart
-in this entity's records and name the source of truth. Separately report that
-§1.482-9 provides no filed method election; the document is best-method
-documentation measured against Reg. §1.6662-6(d), it must exist by the return's
-filing date, and it must carry its true preparation date — a later memorandum
-dated back to the agreement is backdating, not remediation.
+folders and tax-year workpapers, before recording any status. If it is not
+found, the lifecycle value is `NOT_FOUND` and the row states the paths searched
+and the search date; report it as "not located in <paths>", never as "does not
+exist." If it is found in the counterparty's records, report an internal
+record-control gap — not a statutory filing defect — and recommend, subject to
+separate authorization, filing a counterpart in this entity's records while
+naming the source of truth. Separately report that no transfer-pricing method
+election is filed with a return; the document is best-method documentation,
+Reg. §1.6662-6(d) documentation supports a reasonable-cause defense to the
+§6662(e) penalties rather than validating the price, it must generally exist by
+the return's filing date, and it must carry its true preparation date — a later
+memorandum dated back to the agreement is backdating, not remediation.
 
 ### E23 — a circular cure for a disputed shareholding
 
