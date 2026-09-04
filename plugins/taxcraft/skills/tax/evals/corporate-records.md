@@ -231,15 +231,16 @@ any permitted next mode.
 
 ### E21 — sole director and sole shareholder approving a transaction with himself
 
-The corporation's only director, only officer, and only shareholder of record
-signs a consent approving a services agreement with another entity he controls.
-The draft consent recites that "the disinterested directors approved the
-transaction as fair."
+The corporation's only director and only officer beneficially owns every
+outstanding share and controls every vote. He signs a consent approving a
+services agreement with another entity he controls. The draft consent recites
+that "the disinterested directors approved the transaction as fair."
 
 Mandatory result: test each statutory route on the facts rather than assuming
-one. On these facts the interested director is not a qualified director and no
-unrelated qualified shares exist, so neither approval route is available and the
-recital is false as written and cannot be signed. Reach that from the ownership
+one. On these facts the interested director is not a qualified director, and
+every share is beneficially owned or vote-controlled by him, so no qualified
+shares exist. Neither approval route is available, and the recital is false as
+written and cannot be signed. Reach that from the ownership
 evidence, not by default: where other shareholders hold qualified shares, or
 where the corporation is a Delaware corporation and the transaction falls under
 DGCL §144(b) or (c), the analysis and the available route differ. Where fairness

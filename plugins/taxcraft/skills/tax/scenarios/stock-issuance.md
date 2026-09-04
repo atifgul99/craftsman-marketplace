@@ -107,6 +107,41 @@ historical cash transfer is not such evidence.
 Never update the recipient to shareholder or change an entity ownership profile
 from a `PURPORTED ISSUANCE` status.
 
+### The persisted artifact records a subset, and says which
+
+The eight statuses above are the working vocabulary. The validated JSON artifact
+(`schemas/stock-issuance-audit.schema.json`) is produced **only for tranches
+that have reached a purported closing**, because every tranche row requires a
+closing manifest. Its `status` enum is therefore a deliberate subset plus two
+machine-only values, and this is the mapping — do not invent another:
+
+| Prose status | Persisted as |
+|---|---|
+| `PROPOSED` | **not persisted** — no closing exists yet; track it in the readiness memo |
+| `APPROVED — NOT ISSUED` | **not persisted** — same reason |
+| `ISSUED — CONSIDERATION OUTSTANDING OR ESCROWED` | `CLOSING_PENDING`, with the escrow/restriction evidence in the manifest |
+| `COUNSEL HOLD` | `COUNSEL_HOLD` |
+| `PURPORTED ISSUANCE — CONSIDERATION UNVERIFIED` | `PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED` |
+| `ISSUED AND PAID — OTHER EVIDENCE INCOMPLETE` | `CLOSING_PENDING` |
+| `ISSUED AND RECONCILED` | `ISSUED_AND_RECONCILED` |
+| `DISPUTED OR DEFECTIVE` | `DISPUTED_OR_DEFECTIVE` |
+
+Two machine-only values carry facts the prose statuses leave implicit:
+
+- **`FACT_CONFLICT`** — material records conflict, but no purported issuance is
+  evidenced. This is the pre-issuance twin of `DISPUTED OR DEFECTIVE`; the prose
+  reaches the same situation through `COUNSEL HOLD`, and the artifact separates
+  it so a conflict is never filed away as a mere hold.
+- **`CLOSING_PENDING`** — a purported closing exists and some gate is unverified
+  for a reason other than consideration.
+
+The artifact carries `purported_issuance_evidenced` for exactly the question
+this section opens with. It is a **reviewed fact, never inferred**: set it true
+only where competent evidence shows a purported issuance actually occurred. A
+tranche with every gate verified and that flag false is rejected rather than
+promoted, because clean paperwork is not evidence that an issuance happened.
+
+
 “Highest supported status” means the first applicable result in this decision
 sequence, not the most complete-sounding label.
 
@@ -156,10 +191,11 @@ Record the actual terms, not merely an intended ownership percentage:
   promised but unissued interests; and
 - related-party conflict disclosure and the formation-state fairness/approval
   route, especially where the purchaser is also the sole director or officer.
-  Where the purchaser is the only director, the disinterested-director and
-  qualified-share safe harbors are unavailable and fairness is the only route;
-  record it as `governance.md` → "Conflicting-Interest Transactions in
-  Owner-Controlled Entities" requires, rather than reciting a disinterested
+  Where the purchaser is the only director, the qualified-director route is
+  unavailable. Test qualified-share beneficial ownership, voting control,
+  disclosure, and the voting requirements separately, and record whichever route
+  is actually relied on as `governance.md` → "Conflicting-Interest Transactions
+  in Owner-Controlled Entities" requires, rather than reciting a disinterested
   approval no one gave.
 
 An ownership percentage is an output of a reconciled cap table, not an

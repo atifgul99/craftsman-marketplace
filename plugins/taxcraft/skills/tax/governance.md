@@ -112,23 +112,26 @@ a founder stock purchase. Do not paper these with a disinterested-approval
 recital the entity cannot satisfy — and do not assume no safe harbor exists
 until the ownership facts show it.
 
-**Test each route on the actual facts, in order.** The MBCA-derived
+**Test each route independently on the actual facts.** The MBCA-derived
 director's-conflicting-interest statutes (WA **RCW 23B.08.700–.730** and state
-analogues) offer three: approval by qualified (disinterested) directors,
-approval by qualified shares, or fairness to the corporation.
+analogues) offer three **alternatives** — approval by qualified (disinterested)
+directors, approval by qualified shares, or fairness to the corporation. They
+are disjunctive: the fairness showing is available whether or not an approval
+route was available, attempted, or completed (WA **RCW 23B.08.710(2)**).
 
 1. **Qualified directors.** An interested director is not a qualified director
    (WA **RCW 23B.08.720**). Where he is the only director, this route is
    unavailable.
-2. **Qualified shares.** Only shares owned or controlled by the interested
-   director or a related person are excluded (WA **RCW 23B.08.730(2)**) — other
-   shareholders' shares still qualify. This route fails only where no unrelated
-   qualified shares exist (a sole shareholder who is the interested director, or
-   a corporation with no shares issued at all). Establish that from the ledger
-   before concluding it.
-3. **Fairness.** Available where no approval route is satisfied: was the
-   transaction fair to the corporation when entered into
-   (WA **RCW 23B.08.710(2)(c)**)?
+2. **Qualified shares.** Shares entitled to vote may qualify unless, to the
+   knowledge of the authorized vote tabulator before the vote, they are
+   beneficially owned or their voting is controlled by the conflicted director
+   or a related person (WA **RCW 23B.08.730(2)**). Other shares may qualify, but
+   their existence alone does not satisfy the route: confirm beneficial
+   ownership, voting control, the required notice and disclosure, quorum, and
+   the affirmative vote under **RCW 23B.08.730(1)–(4)**. Do not infer any of
+   that from record ownership or the stock ledger alone.
+3. **Fairness.** Was the transaction fair to the corporation when entered into
+   (WA **RCW 23B.08.710(2)(c)**)? Judged on the facts at commitment.
 
 **Delaware is not the same statute and changed in 2025.** Current **DGCL §144**
 treats ordinary director/officer conflicts under subsection (a), controlling-
@@ -549,11 +552,13 @@ state's current statute:
   alone cannot grant it. In a pre-issuance corporation that authorization cannot
   exist yet; draft the shareholder resolution to be adopted after the first
   issuance rather than reciting authority the entity lacks.
-- **Officers.** Which offices the bylaws describe, who may hold more than one,
-  and who signs what. Offices are those the bylaws describe, and appointment is
-  by the board or by another officer the bylaws or the board authorize to
-  appoint (WA: **RCW 23B.08.400**). Nobody holds an office before that
-  appointment, so nothing signed earlier can bear the title.
+- **Officers.** Which offices exist, who may hold more than one, and who signs
+  what. A corporation has the officers described in its bylaws **or** appointed
+  by the board in accordance with the bylaws; a duly appointed officer may
+  appoint other officers or assistant officers only where the bylaws or the
+  board authorize it (WA: **RCW 23B.08.400**). Nobody holds an office before
+  that description or appointment takes effect, so nothing signed earlier can
+  bear the title.
 - **Records and signatures.** Electronic records, electronic signatures, and
   written consents in lieu of meetings — permitted, and on what majority.
 
@@ -630,11 +635,14 @@ property, or lends to another.
   the market data belong in both entities' records. A document that exists only
   in the counterparty's workpapers is not in this entity's record — an internal
   record-control gap to fix, not necessarily a legal defect.
-- **§267(a)(2)** defers a deduction only when its predicates hold: the parties
-  are related persons under §267(b), the payer deducts on the accrual method,
-  and the amount is not includible by the cash-method payee by the end of the
-  payer's year. Test those facts; do not treat every related-party payable as
-  deferred.
+- **§267(a)(2)** applies when, at the close of the payer's taxable year, the
+  parties are related persons described in §267(b), the amount would otherwise
+  be deductible for that year, and — because of the **payee's** method of
+  accounting — the amount is not includible in the payee's gross income unless
+  paid. The deduction is then deferred until the amount becomes includible by
+  the payee, subject to the statute's later-date rule and its exceptions. Test
+  those facts; do not treat every related-party payable as deferred, and do not
+  reduce the test to a "cash-method payee" label.
 - **State tax is its own analysis.** Run each relevant jurisdiction's
   classification, nexus, tax-base, apportionment, and sourcing rules; an
   intercompany charge can create taxable gross receipts, a sales-tax event, or a

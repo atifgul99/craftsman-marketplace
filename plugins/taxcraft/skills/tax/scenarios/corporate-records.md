@@ -552,7 +552,7 @@ instrument, and none of them may carry a status the evidence does not support.
 | **Counsel and CPA question register** | Each determination routed out, as a question rather than a conclusion | question, why it cannot be answered internally, what turns on it, documents held pending the answer |
 | **Related-party transaction register** | Every transaction with an owner, affiliate, or family member | date, counterparty and control relationship, subject, approval instrument, fairness evidence, tax treatment, mirror entry in the counterparty's books |
 | **Retention schedule** | How long each record class is kept and why | record class, legal floor and its source, entity policy period, destruction authority |
-| **Payee register** | Information-return coverage (see `scenarios/information-returns.md`) | payee, certificate on file and date, classification, source analysis, calendar-year total, form issued or documented reason none was |
+| **Payee register** | Information-return coverage | Owned by `scenarios/information-returns.md` → "Reconciliation at year end"; do not restate the columns here |
 
 Templates: `templates/address-agent-and-titling-register.md.template`,
 `templates/tax-elections-and-positions-register.md.template`,
@@ -568,8 +568,10 @@ Templates: `templates/address-agent-and-titling-register.md.template`,
 inflation happens, because a one-word cell invites a confident word. Never write
 "filed", "in effect", "recorded", "adopted", or "position ready" for something
 that is submitted-unconfirmed, drafted-unsigned, or merely intended. Use the
-same vocabulary as the audit rows, and where the honest value is `UNVERIFIED` or
-`NOT_LOCATED`, write that.
+same vocabulary as the audit rows: where the evidence is absent after the
+documented search, write `NOT_FOUND` and state the paths searched and the search
+date; where evidence exists but has not been authenticated or reconciled, write
+`UNVERIFIED`.
 
 **Two register-specific traps.**
 

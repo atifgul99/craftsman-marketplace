@@ -92,6 +92,28 @@ def parse_date(value: str | None) -> date | None:
     return None if value is None else date.fromisoformat(value)
 
 
+def government_source_for(parsed, code: str) -> bool:
+    """Is this URL an official source belonging to the named jurisdiction?
+
+    Jurisdiction-neutral by construction: the artifact supplies the two-letter
+    code, and the code must appear as a dot-delimited label in the host or as a
+    path segment. That admits app.leg.wa.gov, sos.ca.gov, dos.ny.gov and
+    sos.state.tx.us for their own states, and rejects an unrelated federal or
+    out-of-state .gov page claimed as a state's authority. No roster of states,
+    regulators, or hostnames is carried anywhere in the skill.
+    """
+    host = (parsed.hostname or "").lower().rstrip(".")
+    if not (host.endswith(".gov") or host.endswith(".us")):
+        return False
+    token = code.lower()
+    labels = host.split(".")
+    if token == "us":
+        # Federal: a .gov host, and never a state-qualified one.
+        return host.endswith(".gov")
+    segments = [segment.lower() for segment in parsed.path.split("/") if segment]
+    return token in labels or token in segments
+
+
 def host_is(host: str, domain: str) -> bool:
     host = host.lower().rstrip(".")
     domain = domain.lower().rstrip(".")
@@ -232,11 +254,13 @@ def validate_stock_issuance_result(
         # implies and insists the rule be sourced to an official government
         # host, but it does not carry a per-state roster - see states/README.md.
         capacity_rule = capital["formation_state_capacity_rule"]
-        capacity_host = capacity_source.hostname or ""
-        if not capacity_host.lower().endswith(".gov"):
+        if not government_source_for(capacity_source, capital["capacity_jurisdiction_code"]):
             raise AssertionError(
-                f"{tranche['tranche_id']}: capacity authority must cite an official .gov source for {formation_state}"
+                f"{tranche['tranche_id']}: capacity authority source does not belong to "
+                f"{formation_state} ({capital['capacity_jurisdiction_code']})"
             )
+        if not capital["capacity_authority_citation"].strip():
+            raise AssertionError(f"{tranche['tranche_id']}: capacity authority lacks a statutory citation")
         if capacity_rule in {"REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED", "NO_REACQUIRED_SHARES"}:
             if capital["treasury_before"] != 0 or capital["treasury_after"] != 0:
                 raise AssertionError(
@@ -306,6 +330,10 @@ def validate_stock_issuance_result(
             path_text = parsed.path.lower()
             query = parse_qs(parsed.query)
             route = authority["route"]
+            if (authority["jurisdiction"] == "United States") != (authority["jurisdiction_code"] == "US"):
+                raise AssertionError(
+                    f"{tranche['tranche_id']}: securities authority jurisdiction and code disagree"
+                )
             if authority["jurisdiction"] == "United States":
                 federal_route_ok = {
                     "SECTION_4_A_2": (
@@ -328,7 +356,7 @@ def validate_stock_issuance_result(
                     "STATE_REGISTRATION", "STATE_EXEMPTION",
                     "STATE_NOTICE_FILING", "STATE_FEDERALLY_COVERED_NOTICE",
                 }
-                if route not in state_routes or not host.lower().endswith(".gov"):
+                if route not in state_routes or not government_source_for(parsed, authority["jurisdiction_code"]):
                     raise AssertionError(
                         f"{tranche['tranche_id']}: {authority['jurisdiction']} securities route/source family is invalid"
                     )
@@ -2176,7 +2204,7 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     specialist_template = json.loads(read("templates/corporate-specialist-result.json.template"))
 
     require(router, ["corporate-records.md", "record-book", "formation cleanup", "annual governance"], "router")
-    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453", "search scope", "no filed §482 method election"], "corporate-records orchestrator")
+    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453", "search scope", "`NOT_FOUND`", "no filed §482 method election"], "corporate-records orchestrator")
     require(governance, ["corporate-records.md", "final rule", "domestic"], "governance backlink")
     # Defects that cost the most rework are the ones a draft asserts confidently.
     require(governance, [
@@ -2200,14 +2228,14 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         "pre-formation formation binder",
         "submission date, not the effective date",
         "EXECUTED_AUTHORITY_UNVERIFIED",
-        "PURPORTED ISSUANCE",
+        "`PURPORTED ISSUANCE \u2014 CONSIDERATION\n  UNVERIFIED` or `DISPUTED OR DEFECTIVE`",
         "never operated",
         "not required at all",
     ], "pre-formation binder scenario")
     info_returns = read("scenarios/information-returns.md")
     require(info_returns, [
         "rules/federal-<year>.json",
-        "Form 8233",
+        "files **Form 8233** with the withholding agent",
         "calendar year of payment",
         "\u00a73406",
         "10 or more information returns of all types",
@@ -2231,10 +2259,17 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     require(router, [
         "Portability rule (STRICT)",
         "ships publicly",
-        "No jurisdiction is hard-coded",
+        "hard-code a jurisdiction",
+        "portability.md",
         "pre-formation-binder",
         "information-returns",
     ], "portability rule and new scenario routing")
+    require(read("portability.md"), [
+        "No jurisdiction is hard-coded",
+        "Workspace data",
+        "Engagement output",
+        "rules/federal-<year>.json",
+    ], "portability reference")
     plan = read("scenarios/accountable-plan.md")
     require(plan, [
         "unsigned plan is not an arrangement in force",
@@ -2295,6 +2330,11 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         for path in ROOT.rglob("*")
         if path.is_file() and path.suffix in {".md", ".template"}
     )
+    # NOT_LOCATED is not a lifecycle value the schema allows; never instruct one.
+    forbid(records, ["NOT_LOCATED"], "lifecycle vocabulary (scenario)")
+    forbid(evals, ["NOT_LOCATED"], "lifecycle vocabulary (evals)")
+    # A sole-director fact alone does not eliminate the qualified-share route.
+    forbid(stock, ["qualified-share safe harbors are unavailable"], "conflict-route overreach")
     forbid(all_skill_text, ["FinCEN BOIR filed (one-time + 30-day updates on changes)", "FinCEN Beneficial Ownership Information Report (BOIR) — initial + updates", "interim final rule", "No state requires a written consent for a single-member LLC distribution"], "skill-wide stale guidance")
 
     jsonschema.Draft202012Validator.check_schema(schema)
