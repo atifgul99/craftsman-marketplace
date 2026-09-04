@@ -622,7 +622,7 @@
    }
   ],
   "expect_valid": false,
-  "expect_contains": "capacity authority source does not belong to"
+  "expect_contains": "capacity authority host does not name WA"
  },
  {
   "name": "unrelated federal .gov claimed as state securities authority",
@@ -640,7 +640,7 @@
    }
   ],
   "expect_valid": false,
-  "expect_contains": "securities route/source family is invalid"
+  "expect_contains": "authority host does not name the jurisdiction"
  },
  {
   "name": "out-of-state government source claimed as state securities authority",
@@ -658,7 +658,7 @@
    }
   ],
   "expect_valid": false,
-  "expect_contains": "securities route/source family is invalid"
+  "expect_contains": "authority host does not name the jurisdiction"
  },
  {
   "name": "capacity authority without a statutory citation",
@@ -694,5 +694,105 @@
   ],
   "expect_valid": false,
   "expect_contains": "jurisdiction and code disagree"
+ },
+ {
+  "name": "non-government host claimed as state capacity authority",
+  "changes": [
+   {
+    "target": "audit",
+    "path": [
+     "tranches",
+     0,
+     "capitalization",
+     "capacity_authority_url"
+    ],
+    "value": "https://evil.example.com/rcw"
+   }
+  ],
+  "expect_valid": false,
+  "expect_contains": "capacity authority source does not belong to"
+ },
+ {
+  "name": "commercial .us host carrying the state code as a label",
+  "changes": [
+   {
+    "target": "audit",
+    "path": [
+     "tranches",
+     0,
+     "securities_authorities",
+     1,
+     "source_url"
+    ],
+    "value": "https://wa.somecompany.us/securities"
+   }
+  ],
+  "expect_valid": false,
+  "expect_contains": "not official HTTPS .gov"
+ },
+ {
+  "name": "state code appearing only in the path of a federal host",
+  "changes": [
+   {
+    "target": "audit",
+    "path": [
+     "tranches",
+     0,
+     "securities_authorities",
+     1,
+     "source_url"
+    ],
+    "value": "https://www.irs.gov/wa/securities"
+   }
+  ],
+  "expect_valid": false,
+  "expect_contains": "authority host does not name the jurisdiction"
+ },
+ {
+  "name": "state site not naming its own code, attested by a named preparer",
+  "changes": [
+   {
+    "target": "audit",
+    "path": [
+     "tranches",
+     0,
+     "securities_authorities",
+     1,
+     "source_url"
+    ],
+    "value": "https://www.securitiesregulator.gov/exemptions"
+   },
+   {
+    "target": "audit",
+    "path": [
+     "tranches",
+     0,
+     "securities_authorities",
+     1,
+     "jurisdiction_source_attested_by"
+    ],
+    "value": "J. Reviewer, corporate counsel, verified 2026-09-04"
+   }
+  ],
+  "expect_valid": true,
+  "expect_contains": ""
+ },
+ {
+  "name": "state host delegated to another state claimed as federal",
+  "changes": [
+   {
+    "target": "audit",
+    "path": [
+     "tranches",
+     0,
+     "securities_authorities",
+     0,
+     "source_url"
+    ],
+    "value": "https://sos.state.tx.gov/exempt-offerings"
+   }
+  ],
+  "expect_valid": false,
+  "expect_contains": "federal securities route/source family is invalid"
  }
 ]

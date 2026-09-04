@@ -126,6 +126,15 @@ easiest way to publish a conclusion nobody reached:
   artifact through its gates, not by a manifest with soft values. If you cannot
   truthfully assert the manifest's fields, the closing is not done.
 
+Every authority the artifact cites carries the **two-letter code of the
+jurisdiction whose law it states**, and the source must be an HTTPS `.gov`
+host. Where the host names the jurisdiction (`dfi.wa.gov`, `sos.ca.gov`) that
+is proof enough. Where it does not — many state sites do not carry their own
+code — a **named person must attest** that the source is that jurisdiction's,
+and the attestation is recorded in the artifact. The point is that citing one
+government's page as another government's law should take a deliberate act by
+someone who signs for it, not a hostname that happens to end in `.gov`.
+
 No template may carry a real jurisdiction's statute or URL. The formation state's
 rule is looked up per engagement and cited from the state's own official source;
 a template that names one state teaches every other state's user the wrong law.

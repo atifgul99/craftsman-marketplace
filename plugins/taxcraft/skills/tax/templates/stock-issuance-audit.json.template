@@ -37,7 +37,8 @@
         "capacity_jurisdiction_code": "XX",
         "capacity_authority_citation": "REPLACE",
         "capacity_authority_url": "https://example.invalid/replace-with-official-formation-state-source",
-        "capacity_authority_verified_at": "2000-01-01T00:00:00Z"
+        "capacity_authority_verified_at": "2000-01-01T00:00:00Z",
+        "jurisdiction_source_attested_by": null
       },
       "gates": {
         "formation_authority": "UNVERIFIED",
@@ -79,7 +80,8 @@
           "effective_to": null,
           "route": "SECTION_4_A_2",
           "status": "VERIFIED",
-          "jurisdiction_code": "US"
+          "jurisdiction_code": "US",
+          "jurisdiction_source_attested_by": null
         },
         {
           "authority_id": "run-replace-state-securities",
@@ -90,7 +92,8 @@
           "effective_to": null,
           "route": "STATE_EXEMPTION",
           "status": "VERIFIED",
-          "jurisdiction_code": "XX"
+          "jurisdiction_code": "XX",
+          "jurisdiction_source_attested_by": null
         }
       ],
       "tax_positions": {

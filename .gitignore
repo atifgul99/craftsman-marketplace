@@ -13,3 +13,6 @@ __pycache__/
 # Field reports and audit output from dogfooding runs. Never publish: they describe real systems.
 .craftsman-field-report.md
 .craftsman/
+
+# Local Codex review reports (contain local absolute paths; kept on disk, not published)
+docs-review-*.md

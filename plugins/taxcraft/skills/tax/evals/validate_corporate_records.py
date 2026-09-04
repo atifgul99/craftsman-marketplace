@@ -92,26 +92,30 @@ def parse_date(value: str | None) -> date | None:
     return None if value is None else date.fromisoformat(value)
 
 
-def government_source_for(parsed, code: str) -> bool:
-    """Is this URL an official source belonging to the named jurisdiction?
+def government_source_for(parsed, code: str) -> str | None:
+    """Classify a cited authority URL against the jurisdiction it claims to state.
 
-    Jurisdiction-neutral by construction: the artifact supplies the two-letter
-    code, and the code must appear as a dot-delimited label in the host or as a
-    path segment. That admits app.leg.wa.gov, sos.ca.gov, dos.ny.gov and
-    sos.state.tx.us for their own states, and rejects an unrelated federal or
-    out-of-state .gov page claimed as a state's authority. No roster of states,
-    regulators, or hostnames is carried anywhere in the skill.
+    Returns "AUTO" when the host itself proves the jurisdiction, "ATTEST" when
+    the host is governmental but does not name it (so a named human must attest
+    to the match), or None when it is not a government source at all.
+
+    Jurisdiction-neutral by construction, and no roster of hostnames anywhere.
+    Every authority source must already be an HTTPS `.gov` host, a registry
+    restricted to US government entities. Within that, a dot-delimited label
+    equal to the two-letter code proves the jurisdiction (dfi.wa.gov,
+    sos.ca.gov). Many legitimate state sites do not carry their own code
+    (mass.gov, michigan.gov), which is why the attestation path exists instead
+    of a hostname list. Substring and path matches are deliberately NOT
+    accepted: they would let irs.gov/wa/... pass as Washington authority.
     """
     host = (parsed.hostname or "").lower().rstrip(".")
-    if not (host.endswith(".gov") or host.endswith(".us")):
-        return False
-    token = code.lower()
+    if not host.endswith(".gov"):
+        return None
     labels = host.split(".")
-    if token == "us":
-        # Federal: a .gov host, and never a state-qualified one.
-        return host.endswith(".gov")
-    segments = [segment.lower() for segment in parsed.path.split("/") if segment]
-    return token in labels or token in segments
+    if code == "US":
+        # Federal, and not a host delegated to a state.
+        return "AUTO" if "state" not in labels else None
+    return "AUTO" if code.lower() in labels[:-1] else "ATTEST"
 
 
 def host_is(host: str, domain: str) -> bool:
@@ -254,10 +258,16 @@ def validate_stock_issuance_result(
         # implies and insists the rule be sourced to an official government
         # host, but it does not carry a per-state roster - see states/README.md.
         capacity_rule = capital["formation_state_capacity_rule"]
-        if not government_source_for(capacity_source, capital["capacity_jurisdiction_code"]):
+        capacity_match = government_source_for(capacity_source, capital["capacity_jurisdiction_code"])
+        if capacity_match is None:
             raise AssertionError(
                 f"{tranche['tranche_id']}: capacity authority source does not belong to "
                 f"{formation_state} ({capital['capacity_jurisdiction_code']})"
+            )
+        if capacity_match == "ATTEST" and not (capital["jurisdiction_source_attested_by"] or "").strip():
+            raise AssertionError(
+                f"{tranche['tranche_id']}: capacity authority host does not name "
+                f"{capital['capacity_jurisdiction_code']}; a named attestation is required"
             )
         if not capital["capacity_authority_citation"].strip():
             raise AssertionError(f"{tranche['tranche_id']}: capacity authority lacks a statutory citation")
@@ -356,9 +366,15 @@ def validate_stock_issuance_result(
                     "STATE_REGISTRATION", "STATE_EXEMPTION",
                     "STATE_NOTICE_FILING", "STATE_FEDERALLY_COVERED_NOTICE",
                 }
-                if route not in state_routes or not government_source_for(parsed, authority["jurisdiction_code"]):
+                match = government_source_for(parsed, authority["jurisdiction_code"])
+                if route not in state_routes or match is None:
                     raise AssertionError(
                         f"{tranche['tranche_id']}: {authority['jurisdiction']} securities route/source family is invalid"
+                    )
+                if match == "ATTEST" and not (authority["jurisdiction_source_attested_by"] or "").strip():
+                    raise AssertionError(
+                        f"{tranche['tranche_id']}: {authority['jurisdiction']} authority host does not name the "
+                        "jurisdiction; a named attestation is required"
                     )
         # Every state whose law reaches the transaction needs a substantive
         # route, not merely a notice filing.
@@ -2315,6 +2331,7 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         "No retroactive true-up",
         "Marital-property character",
         "blank means unverified",
+        "named person must attest",
     ], "stock-issuance adequacy, deferred consideration, and template discipline")
     require(records, [
         "Working registers the record set needs",

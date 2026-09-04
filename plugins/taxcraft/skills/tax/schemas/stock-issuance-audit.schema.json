@@ -32,7 +32,7 @@
           "capitalization": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["scope", "class", "charter_class_authority_path", "charter_class_authority_sha256", "authorized_before", "issued_before", "outstanding_before", "treasury_before", "reserved_before", "legally_available_before", "authorized_after", "issued_after", "outstanding_after", "treasury_after", "reserved_after", "legally_available_after", "formation_state_capacity_rule", "capacity_jurisdiction_code", "capacity_authority_url", "capacity_authority_citation", "capacity_authority_verified_at"],
+            "required": ["scope", "class", "charter_class_authority_path", "charter_class_authority_sha256", "authorized_before", "issued_before", "outstanding_before", "treasury_before", "reserved_before", "legally_available_before", "authorized_after", "issued_after", "outstanding_after", "treasury_after", "reserved_after", "legally_available_after", "formation_state_capacity_rule", "capacity_jurisdiction_code", "jurisdiction_source_attested_by", "capacity_authority_url", "capacity_authority_citation", "capacity_authority_verified_at"],
             "properties": {
               "scope": {"const": "CLASS"},
               "class": {"type": "string", "minLength": 1},
@@ -52,6 +52,7 @@
               "legally_available_after": {"type": "integer", "minimum": 0},
               "formation_state_capacity_rule": {"enum": ["REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED", "REACQUIRED_SHARES_BECOME_TREASURY", "NO_REACQUIRED_SHARES", "COUNSEL_VALIDATED_JURISDICTION_RULE"]},
               "capacity_jurisdiction_code": {"type": "string", "pattern": "^[A-Z]{2}$"},
+              "jurisdiction_source_attested_by": {"type": ["string", "null"]},
               "capacity_authority_url": {"type": "string", "format": "uri"},
               "capacity_authority_citation": {"type": "string", "minLength": 3},
               "capacity_authority_verified_at": {"type": "string", "format": "date-time"}
@@ -98,11 +99,12 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["authority_id", "jurisdiction", "jurisdiction_code", "source_url", "verified_at", "effective_from", "effective_to", "route", "status"],
+              "required": ["authority_id", "jurisdiction", "jurisdiction_code", "jurisdiction_source_attested_by", "source_url", "verified_at", "effective_from", "effective_to", "route", "status"],
               "properties": {
                 "authority_id": {"type": "string", "pattern": "^run-[a-z0-9-]+$"},
                 "jurisdiction": {"type": "string", "minLength": 1},
                 "jurisdiction_code": {"type": "string", "pattern": "^(US|[A-Z]{2})$"},
+                "jurisdiction_source_attested_by": {"type": ["string", "null"]},
                 "source_url": {"type": "string", "format": "uri"},
                 "verified_at": {"type": "string", "format": "date-time"},
                 "effective_from": {"type": ["string", "null"], "format": "date"},
