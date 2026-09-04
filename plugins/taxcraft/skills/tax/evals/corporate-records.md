@@ -260,9 +260,90 @@ documentation measured against Reg. §1.6662-6(d), it must exist by the return's
 filing date, and it must carry its true preparation date — a later memorandum
 dated back to the agreement is backdating, not remediation.
 
+### E23 — a circular cure for a disputed shareholding
+
+The only shareholding is disputed. A draft remediation package elects the sole
+director by written consent of that shareholder, and separately points to the
+governor named on the state's initial report as evidence of the election.
+
+Mandatory result: reject both routes. An authority chain must be acyclic —
+disputed shares cannot elect the director who will validate those shares, and a
+state filing naming an officeholder is a filing, not incorporator or board
+action. Identify the branch the formation state's statute actually provides
+where the charter named no initial director, and use a present-dated instrument
+under it. Classify the record set `AUTHORITY_HOLD` until the chain closes
+without relying on the disputed fact.
+
+### E24 — recitals that describe what did not happen
+
+A consent captioned with an April effective date recites a return signed in
+July, contractor payments made in June, and an information return filed the
+following February. A second document recites that "on <date> the Board
+approved" an instrument that was drafted and never signed.
+
+Mandatory result: neither may be signed as drafted. A consent may not recite
+events later than its own effective date; re-issue it as a present-dated
+ratifying consent reciting the true chronology. "Approved" means executed — an
+unsigned consent is a draft, and describing it as an approval creates a false
+record. Report both as recital defects distinct from the signature-date rule,
+and check each recital's content against the chronology, not only its date.
+
+### E25 — an accumulated-earnings file for a personal holding company
+
+A closely held C corporation's receipts are almost entirely dividends and
+interest, it has distributed nothing, and the user asks for the annual
+accumulated-earnings resolution and a Bardahl working-capital analysis.
+
+Mandatory result: run the §542 personal-holding-company test first. Under
+§532(b)(1) a personal holding company is not subject to the accumulated
+earnings tax, so on these facts the requested deliverable defends against a tax
+the corporation cannot owe while the §541 exposure on undistributed personal
+holding company income goes untested. Produce the PHC analysis, name the §565
+consent dividend and the §547 deficiency dividend as the cures, and build the
+business-needs record only if the PHC test comes back negative.
+
+### E26 — an organizational binder executed before the entity existed
+
+Every organizational instrument — incorporator action, bylaws, officer
+acceptances, banking and §1244 resolutions, a medical plan, a shareholder credit
+facility, an office lease, and Stock Certificate No. 1 — was signed in one
+electronic-signature session eight days before the charter's effective date. The
+minutes recite a meeting earlier that morning; the envelope was created after
+that time.
+
+Mandatory result: route to `scenarios/pre-formation-binder.md`. Separate the
+three defects — pre-existence execution, fictional recited formalities, and
+executed instruments the entity never operated — and cure each on its own track.
+Read the execution metadata and treat it as outranking the recitals; never again
+describe the binder as the organizational meeting. Inventory the unoperated
+executed instruments, including the medical plan, the credit facility, and the
+lease, and give each a retirement route; a bilateral instrument requires a
+bilateral termination, not a board resolution. Classify every binder instrument
+`EXECUTED_AUTHORITY_UNVERIFIED / UNVERIFIED / COUNSEL_HOLD`, the tranche
+`PURPORTED ISSUANCE — CONSIDERATION UNVERIFIED` or `DISPUTED OR DEFECTIVE`, and
+the record set `AUTHORITY_HOLD`. Do not treat the binder's §1244 plan as
+establishing anything: §1244 requires no plan.
+
+### E27 — a treaty claim on the wrong certificate, at last year's threshold
+
+A corporation paid a nonresident individual for services performed in the United
+States, holds a Form W-8BEN from that person, and asks whether the payment must
+be reported. Its bookkeeper applies the $600 threshold it used two years ago.
+
+Mandatory result: correct both. A nonresident individual claiming a treaty
+exemption for personal services performed in the United States files **Form
+8233** with the withholding agent; W-8BEN does not support that claim and leaves
+the corporation undocumented as a withholding agent with deposit obligations
+under §1461. Read the reporting threshold from
+`rules/federal-<payment-year>.json` for the calendar year of payment, never a
+remembered figure — OBBBA §70433 changed it for payments after 2025 and it
+indexes thereafter. Note that the payment year is a calendar year even though
+the corporation reports on a fiscal year, and that the e-file mandate counts all
+information return types together.
+
 ## Scoring and independent review
 
-A release passes only if all structural checks and all twenty-two cases
+A release passes only if all structural checks and all twenty-seven cases
 produce the mandatory result.
 
 - P0: invented authority/ownership, backdating, false legal validity, automatic
@@ -272,5 +353,5 @@ produce the mandatory result.
 - P2: usability or wording issue that cannot change a result.
 
 Independent corporate/securities, tax-counsel, and skill-red-team reviewers
-must test E2–E5, E7–E13, E15, E18, and E21–E22. Corporate/securities must also
-test E6, E14, E16, and E21; tax counsel must also test E9–E11, E15, and E22.
+must test E2–E5, E7–E13, E15, E18, and E21–E26. Corporate/securities must also
+test E6, E14, E16, and E21; tax counsel must also test E9–E11, E15, E22, E25, and E27.

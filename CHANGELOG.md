@@ -23,7 +23,133 @@ not a synonym for "public."
 
 ## [Unreleased]
 
-### Added — taxcraft governance doctrine (PATCH)
+Nothing yet.
+
+## [0.7.0] (2026-09-04)
+
+Marketplace `0.7.0`; `taxcraft` moves to `0.2.0` (two new reference files);
+`craftsman` is unchanged at `0.5.0`. This release closes the gaps a full
+C-corporation record-book remediation exposed, including four statements the
+skill made that produced a wrong deliverable.
+
+### Fixed — guidance that produced a wrong deliverable
+
+- **§531 accumulated-earnings work no longer runs ahead of the §541 personal
+  holding company test.** The skill described the two taxes side by side and, at
+  the end of the AET section, suggested considering PHC risk "too". That is
+  backwards: **§532(b)(1) excludes a personal holding company from the
+  accumulated earnings tax entirely**. For an investment-heavy closely held
+  corporation — the exact profile the skill called a common trap — the old
+  ordering produced a Bardahl working-capital analysis and annual business-needs
+  resolutions defending a tax the corporation cannot owe, while the real §541
+  exposure went untested. `scenarios/ccorp-tax-reduction.md` now runs the §542
+  test first, stops the AET work when the answer is yes, and carries the §565
+  consent dividend and the §547 deficiency dividend as the actual cures.
+  `entities/c-corp.md` states the precedence at the point of use.
+- **The June 30 fiscal-year exception to the Form 1120 deadline.**
+  `entities/c-corp.md` stated the general §6072(b) fourth-month rule only, which
+  gives a June-30 C corporation a deadline two weeks after the real one. The
+  third-month due date, the seven-month extension, and the pre-2026 sunset now
+  appear with the rule.
+- **The stock-issuance artifact could not express two of its own statuses.** The
+  prose defines eight tranche statuses and makes `DISPUTED OR DEFECTIVE` override
+  every other post-issuance status, but the persisted schema allowed only four
+  values — so the two states the evals exist to protect,
+  `PURPORTED ISSUANCE — CONSIDERATION UNVERIFIED` and `DISPUTED OR DEFECTIVE`,
+  had to be misreported as `CLOSING_PENDING` or `FACT_CONFLICT`. Both are now
+  first-class, derived from a new required tranche fact
+  (`purported_issuance_evidenced`) that encodes the prose's own first question:
+  does competent evidence show a purported issuance actually occurred? A clean
+  gate set with no evidenced issuance is now an error rather than a silent
+  `ISSUED_AND_RECONCILED`.
+- **Washington was hard-coded into a state-generic schema and validator.** The
+  securities-route enum offered only Washington's state routes, the
+  reacquired-share capacity rule named only Washington, and the validator raised
+  "requires validator extension" for every other state — while the prose makes a
+  validated artifact a precondition to reconciling an issuance. A Delaware,
+  California, Texas, or New York issuance therefore could not be reconciled at
+  all. Routes are now generic (`STATE_REGISTRATION`, `STATE_EXEMPTION`,
+  `STATE_NOTICE_FILING`, `STATE_FEDERALLY_COVERED_NOTICE`), the capacity rule
+  covers the treasury and non-treasury branches with the arithmetic each implies,
+  and the validator checks the shape and source family of an authority — an
+  official `.gov` source, a substantive route per state — instead of a
+  jurisdiction roster.
+- **The shipped audit template carried a plausible fiscal year.** Two annual
+  subcontrols shipped with `FY2000` where every other period said `REPLACE`, so a
+  filled artifact that missed those two rows would validate with a real-looking
+  period. They now carry `FY0000`, and a release check fails on any plausible
+  year in the template.
+- **§1244(c)(2)(C) is a numerical test, not a business-failure carve-out.** The
+  substance was right and the framing invited the wrong reading; it now says so.
+
+### Added — rules that were absent
+
+- **`governance.md` → "Authority Chains and Drafting Integrity"**, twelve rules
+  the skill applied nowhere: establish the legal existence date before reading
+  any instrument; **authority chains must be acyclic** (disputed shares may not
+  elect the director who validates them, a director does not elect himself, and a
+  public filing naming an officeholder is a filing rather than an internal
+  election); a table of what each filed document does and does not prove;
+  execution metadata outranks recitals; **recital integrity as a defect class
+  separate from signature dates** ("approved" means signed, no recital of events
+  later than the instrument's own effective date, no anachronistic content, "as
+  of" is not a licence); ratification is bounded and may not rewrite a recited
+  capacity; the three-branch ratification triage with the "within the power of
+  the corporation" caveat that may put a pre-existence act outside the statute
+  altogether; capacity reconciliation belongs in an incumbency certificate;
+  inventory the executed legacy instruments before drafting new policy; bilateral
+  instruments need bilateral termination; the never-backdate exposure ladder
+  including the **§6664(c) forfeiture**; and the privilege carve-out language.
+- **`scenarios/pre-formation-binder.md`** — the formation-vendor binder executed
+  before the entity legally existed, as a named fact pattern with recognition
+  tells, the three separate defects it contains, a nine-step remediation
+  sequence, and the things not to do.
+- **`scenarios/information-returns.md`** — payer-side reporting, which existed
+  only as two deadline lines and carried no thresholds at all. Thresholds are read
+  from `rules/federal-<payment-year>.json` for the **calendar** year of payment
+  even for a fiscal-year entity; **Form 8233, not W-8BEN**, supports a
+  nonresident individual's treaty claim for US personal services; §861(a)(3)
+  sourcing; the corporate exemption and its attorney and medical carve-outs;
+  backup withholding and B-notices; the **aggregate ten-return e-file mandate**;
+  IRIS/FIRE responsible-official governance; and §6721/§6722 as separate
+  penalties on the same failure.
+- **`scenarios/ccorp-tax-reduction.md`** gains shareholder-loan pricing under
+  **§7872** with the demand-versus-term distinction — §1274(d) publishes the
+  rates for debt issued for property and is not the authority for pricing a
+  related-party cash loan — and a section stating plainly that **there is no
+  constructive-wage rule arising from non-payment alone**.
+- **`entities/s-corp.md`** states C→S conversion consequences as conditions with
+  their own tests: §1375 requires accumulated C-year E&P, §1362(d)(3) termination
+  requires three consecutive years and takes effect the following year, and §1374
+  requires conversion-date valuations.
+- **`scenarios/accountable-plan.md`**: an unsigned plan is not an arrangement in
+  force and its effective date cannot precede execution; an annual reimbursement
+  cycle falls outside both safe harbors, because the periodic-statement route
+  requires at least quarterly statements.
+- **`scenarios/stock-issuance.md`**: the adequacy determination is its own signed
+  instrument made before the issuance, carrying the fairness findings in the same
+  writing where the subscriber is interested; no retroactive true-up of money that
+  arrived before a valid subscription existed; marital-property character is
+  conditional and tracing-dependent.
+- **`scenarios/corporate-records.md` → "Working registers the record set needs"** —
+  the eight running schedules a remediation produces, the rule that registers
+  carry evidence-backed statuses only, and the documents a closely held record set
+  commonly lacks, including the brokerage trading mandate and the
+  securities-counsel gate on an outside adviser.
+- **Nine templates**: adequacy-and-fairness determination, incumbency
+  certificate, bilateral termination and release, open-items tracker, tax
+  elections and positions register, address/agent/titling register, related-party
+  transaction policy, records retention schedule, and a compliance calendar built
+  around the two clocks a non-calendar-year entity runs.
+- **A stated portability rule** (`SKILL.md`). The skill ships publicly and had no
+  rule against embedding a user's data; it now carries the three-bucket test, the
+  prohibition on hard-coding a jurisdiction into a schema or validator, and the
+  instruction to extract the rule and leave the engagement facts behind.
+
+### Added — taxcraft governance doctrine
+
+Carried forward from the previously unreleased entry; these ship in this release:
+
 
 Gaps found while running a full C-corporation record-book build end to end:
 
@@ -51,7 +177,7 @@ Gaps found while running a full C-corporation record-book build end to end:
   for who actually paid formation costs.
 - `evals/corporate-records.md`: new prose cases **E21** (false disinterested-approval recital) and
   **E22** (cited pricing memorandum not in the entity's folder); the validator now pins the new
-  doctrine and expects E1–E22.
+  doctrine. (Superseded in this release: the suite now runs E1–E27.)
 
 ## [0.6.0] (2026-08-29)
 

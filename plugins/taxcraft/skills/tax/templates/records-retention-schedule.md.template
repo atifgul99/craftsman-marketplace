@@ -1,0 +1,31 @@
+# Records Retention Schedule — <ENTITY NAME>
+
+**Adopted:** <YYYY-MM-DD> · **Records custodian:** <NAME, OFFICE>
+
+Two columns, deliberately. The **legal floor** is what a statute or regulation requires and is not
+a matter of preference. The **entity policy** may be longer, and usually should be for anything
+that establishes basis, authority, or a position that stays open.
+
+| Record class | Legal floor | Source of the floor | Entity policy | Destruction authority |
+|---|---|---|---|---|
+| Charter, amendments, bylaws, minutes, consents, stock records | While the entity exists and after dissolution as the formation state requires | <STATE STATUTE — verify> | Permanent | Board resolution only |
+| Filed returns and acceptance evidence | While material under §6001, and at least until the assessment period closes | §6001; §6501 | Permanent | Board resolution only |
+| Books, ledgers, and the records behind a return | While material under §6001 | §6001; Reg. §1.6001-1 | 7 years after the return's period closes | Custodian |
+| Basis records (shares, contributed property, fixed assets) | While material to a return not yet filed | §6001 | Permanent, and until 7 years after the asset is disposed of and that return's period closes | Custodian |
+| Employment tax records | 4 years after the tax becomes due or is paid, whichever is later | Reg. §31.6001-1 | 7 years | Custodian |
+| Information returns issued, and payee certificates | 4 years | Reg. §31.6001-1; W-9/W-8 instructions | 7 years after the last payment to that payee | Custodian |
+| Accountable-plan claims, receipts, logs, and reconciliations | 4 years after the related employment tax is due or paid | Reg. §31.6001-1 | Retain with the annual workpaper set | Custodian |
+| Bank and brokerage statements, and account-opening records | — | — | Permanent for opening records; 7 years for statements | Custodian |
+| Contracts and their performance records | — | State limitations period | 7 years after the last obligation ends | Custodian |
+| Correspondence with any taxing or licensing authority | — | — | Permanent | Board resolution only |
+| Insurance policies | — | — | Permanent for occurrence policies | Custodian |
+
+**Litigation and audit hold.** All destruction stops for any record class touched by a threatened
+or pending examination, dispute, or proceeding, on written notice from <ROLE>, and resumes only on
+written release.
+
+**Format.** Records may be kept electronically where they remain complete, legible, and retrievable
+for the full period, with the entity able to produce them in a readable form on request.
+
+**Verify before relying.** Statutory citations and periods change; check each floor against current
+law and the formation state's statute before the first destruction under this schedule.

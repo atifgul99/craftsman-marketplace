@@ -10,6 +10,7 @@
       "tranche_id": "ISS-2000-001",
       "issuance_date": "2000-01-01",
       "status": "CLOSING_PENDING",
+      "purported_issuance_evidenced": false,
       "class": "Common",
       "holder_slug": "replace-holder",
       "shares": 1,
@@ -32,7 +33,7 @@
         "treasury_after": 0,
         "reserved_after": 0,
         "legally_available_after": 0,
-        "formation_state_capacity_rule": "WA_REACQUIRED_AUTHORIZED_UNISSUED",
+        "formation_state_capacity_rule": "REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED",
         "capacity_authority_url": "https://app.leg.wa.gov/RCW/default.aspx?cite=23B.06.310",
         "capacity_authority_verified_at": "2000-01-01T00:00:00Z"
       },
@@ -79,7 +80,7 @@
           "verified_at": "2000-01-01T00:00:00Z",
           "effective_from": null,
           "effective_to": null,
-          "route": "WA_NOTICE",
+          "route": "STATE_EXEMPTION",
           "status": "VERIFIED"
         }
       ],

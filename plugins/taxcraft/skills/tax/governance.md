@@ -289,6 +289,197 @@ Rationale: the "never answer standing questions with unprocessed files in the wa
   output, append logs, or update records.
 - **State-specific quirks** (UBI vs file # vs charter #, SOS vs business-services agency, combined-license states vs separate-license states) are extraction details, not new schemas. The above list is the universal frame.
 
+## Authority Chains and Drafting Integrity
+
+These rules apply to every consent, minute, certificate, and ratification this
+skill drafts or audits. They exist because remediation packages fail review on
+the same handful of defects: an authority chain that proves itself, a recital
+that describes something that did not happen, and a ratification broad enough
+that nobody can say what it ratified.
+
+### 1. Establish the legal existence date first
+
+Before reading a single internal instrument, take the entity's legal existence
+date from the filed charter — the **effective** date, which is not necessarily
+the submission date and not the date on the formation vendor's cover letter.
+Then compare every instrument's execution date **and every date it recites** to
+that one. This is the first move of a records audit, not a later cross-check,
+because the answer reclassifies whole categories of documents at once.
+
+Anything dated before existence is a **pre-formation instrument**. It is never
+valid merely because it is signed, notarized, or sitting in a record book. See
+`scenarios/corporate-records.md` Gate 2 for the classification and
+`scenarios/pre-formation-binder.md` for the fact pattern this most often
+produces.
+
+### 2. Authority chains must be acyclic
+
+Never build a cure whose authority depends on the fact it is supposed to
+establish. The three circularities that recur:
+
+- **Disputed shares electing their own validator.** If the only shareholding is
+  itself in question, a shareholder election cannot supply the director election
+  that will later validate that shareholding. Use the incorporator branch, or a
+  court/statutory route, not the shares.
+- **A director electing himself.** A person's own director consent is not the
+  instrument that makes him a director.
+- **A public filing standing in for an internal act.** See rule 3.
+
+State the proven authority order explicitly, source each link to a separate
+instrument, and stop when a link is missing rather than inferring it. A chain
+with a missing link is `AUTHORITY_HOLD`, not a chain with a small gap.
+
+### 3. A filed document controls only the field it proves
+
+A public filing proves the fact the form asks for and nothing else.
+
+| Document | Proves | Does **not** prove |
+|---|---|---|
+| Charter / articles | Existence, effective date, name, authorized shares, whatever the articles actually recite | Any internal election, adoption of bylaws, or receipt of consideration |
+| Initial report / annual report | What the filer reported to the state, and standing as of that filing | That an internal election ever occurred; an officer or governor entry is a **filing**, not board or incorporator action |
+| Stock certificate | That a certificate was printed and signed | That shares were validly authorized, issued, or paid for |
+| Bank signature card | Who the bank will honour | Who holds the office, or that the board authorized the account |
+| EIN letter / CP notice | What the IRS has on record | The entity's start date, tax classification history, or address as a matter of state law |
+
+Carry this as a **"Proves"** column in the evidence inventory. The honest entry
+is often "Nothing by itself" or "Nothing until signed", and writing that down is
+what stops an inference from being laundered into a fact.
+
+### 4. Execution metadata is ground truth
+
+Where a document was electronically signed, read the certificate of completion
+and the envelope timestamps, and compare them to every recited meeting time,
+date, and place. Where it was signed on paper, use the PDF creation and
+modification timestamps and any notarial record. A recited formality that is
+physically impossible against that timeline — a meeting an hour before the
+envelope existed, the same meeting placed in two cities — must never be
+described as having occurred. Preserve the document unaltered and describe it
+for what it is.
+
+Extraction mechanics live in `parsing.md`; the rule that the metadata outranks
+the recital lives here.
+
+### 5. Recitals must be true, and are a separate defect class from dates
+
+The never-backdate rule reaches signature dates. These rules reach the body:
+
+- **No false WHEREAS.** A recital may not assert a meeting, a quorum, an
+  approval, a delivery, or a payment that did not occur.
+- **"Approved" means signed.** Never write "on <date> the Board approved" for an
+  instrument that was drafted and never executed. A written consent is not an
+  approval until it is executed. The honest recital is that a draft was prepared
+  and remains unexecuted.
+- **No recital of events later than the instrument's own effective date.** A
+  consent captioned with one date whose recitals describe events months later
+  cannot be signed as captioned; re-issue it as a present-dated ratifying
+  consent that recites the true chronology.
+- **No anachronistic content.** Check what a recital says against the
+  chronology, not only what it is dated: a consent acknowledging a registered
+  agent change before that change was filed is defective even if its date is
+  defensible.
+- **"As of" is not a licence.** An "effective as of" date that precedes
+  execution states a legal conclusion about relation-back that the drafter is
+  not entitled to assume. Use it only where counsel has approved it in writing
+  for that instrument.
+
+### 6. Ratification is bounded — enumerate, never sweep
+
+An omnibus ratification ratifies a **schedule of identified acts**. It may not:
+
+- say "each and every act" or otherwise ratify by category;
+- reach acts that were beyond the corporation's power, or that predate its
+  existence, without counsel's separate analysis (see rule 7);
+- **rewrite the capacity a signature actually recites.** A present resolution
+  declaring that every past signature labelled "Owner" was made as President
+  does not make it so. Preserve each historical signature's printed capacity and
+  reconcile prospectively instead (rule 8).
+
+Where a single omnibus grows too broad to review, **split it by subject matter**
+— positions and agreements, federal tax filings and payments, state compliance —
+so each is separately reviewable and one subject can be held while the others
+proceed.
+
+### 7. The three-branch ratification triage
+
+For any defective past act, present the branches and let counsel choose. Never
+assume relation-back, and never assert a branch is available:
+
+1. **The formation state's statutory defective-corporate-action procedure**, if
+   the state has one **and if it reaches this act**. These statutes are typically
+   limited to acts "within the power of the corporation", which is a live
+   question for an act dated before the corporation existed. A board recital
+   cannot decide that question.
+2. **Common-law adoption of promoter acts** — the corporation, once it exists,
+   adopts an act taken on its behalf beforehand. Adoption is not relation-back;
+   the act is effective from adoption unless the state says otherwise.
+3. **A fresh, present-dated chain** — elect, adopt, authorize, and issue again
+   now, on today's facts.
+
+Cite the statute from the formation state's file under `states/`, and verify the
+citation against the primary source before it appears in a draft. **A chapter or
+section number that does not exist is the single most damaging error a
+governance draft can contain**, because every downstream document inherits it.
+
+### 8. Capacity reconciliation belongs in an incumbency certificate
+
+Where an owner has signed for the entity under inconsistent labels — Owner,
+Member, Manager, Authorized Signatory, President — reconcile it **prospectively**
+in a Secretary's incumbency certificate that lists the offices actually held,
+the date each was assumed, and the designation to be used going forward. History
+is described, not rewritten. Template:
+`templates/incumbency-certificate.md.template`.
+
+### 9. Inventory the executed legacy instruments before drafting new policy
+
+Before drafting any policy, plan, or agreement, enumerate every **executed**
+instrument already in the record on that subject, and make the new document
+reconcile with, acknowledge, and where appropriate expressly supersede or retire
+its historical counterpart.
+
+A record book that contains an executed medical-reimbursement plan, credit
+facility, or lease the entity does not know it has is a reconciliation failure,
+not a harmless surplus — each one is an outstanding obligation, a deduction
+position, or a benefit-plan compliance duty. Formation-vendor binders routinely
+contain several.
+
+### 10. Bilateral instruments need bilateral termination
+
+A board consent cannot terminate a two-party instrument to which the shareholder
+or a third party is the counterparty. Retire it with a present-dated bilateral
+termination and mutual release, signed in each capacity, reciting the amounts
+actually advanced, outstanding, and accrued, the absence of claims, and the
+cancellation of the originals. Template:
+`templates/bilateral-termination-and-release.md.template`.
+
+### 11. Why the never-backdate rule is not negotiable
+
+The rule is stated throughout this skill. The reason to give an owner, when the
+temptation arises, is the exposure ladder:
+
+- A state filing is typically executed **under penalty of perjury**; a false
+  statement in one is its own offense.
+- A backdated instrument produced to the IRS to support a §1244 basis, an
+  accountable plan, an accumulated-earnings defense, or an S-election timeline
+  converts a late-documentation problem into a **false-document** problem
+  (§7206; 18 U.S.C. §1001).
+- It **forfeits the §6664(c) reasonable-cause defense** the entity will need for
+  every other open item in the same file. That is usually the larger loss.
+- It is trivially discoverable. E-signature certificates, PDF metadata, bank
+  posting dates, and agency timestamps all outlive the document.
+
+What is legitimate: an instrument dated the day it is signed, reciting the true
+chronology, ratifying identified past acts as of their actual dates, and saying
+plainly that the record is being made now.
+
+### 12. Privilege and privacy carve-outs
+
+State the exclusions in the workpaper header rather than leaving them implicit:
+which paths were not opened because they are privileged, that identification
+numbers are masked to last-4, and that sensitive personal identifiers appearing
+in agency transcripts (dates of birth, driver-licence numbers) were **read but
+deliberately not reproduced**. A reader must be able to tell the difference
+between a fact that is absent and a fact that was withheld on purpose.
+
 ## Document Drafting Patterns
 
 All drafted documents are written in plain English (not legalese), tailored to the entity's facts, and end with clear signature blocks.

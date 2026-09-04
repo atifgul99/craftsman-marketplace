@@ -11,18 +11,19 @@
     "fiscal_or_tax_period": {"type": "string", "pattern": "^FY[0-9]{4}$"},
     "as_of": {"type": "string", "format": "date"},
     "source_cutoff": {"type": "string", "format": "date-time"},
-    "overall_status": {"enum": ["COUNSEL_HOLD", "FACT_CONFLICT", "CLOSING_PENDING", "ISSUED_AND_RECONCILED"]},
+    "overall_status": {"enum": ["DISPUTED_OR_DEFECTIVE", "FACT_CONFLICT", "COUNSEL_HOLD", "PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED", "CLOSING_PENDING", "ISSUED_AND_RECONCILED"]},
     "tranches": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["tranche_id", "issuance_date", "status", "class", "holder_slug", "shares", "price_per_share", "total_consideration", "capitalization", "gates", "transaction_jurisdiction_facts", "applicable_securities_jurisdictions", "securities_authorities", "tax_fact_flags", "tax_positions", "tax_authorities", "closing_manifest_path", "closing_manifest_sha256"],
+        "required": ["tranche_id", "issuance_date", "status", "purported_issuance_evidenced", "class", "holder_slug", "shares", "price_per_share", "total_consideration", "capitalization", "gates", "transaction_jurisdiction_facts", "applicable_securities_jurisdictions", "securities_authorities", "tax_fact_flags", "tax_positions", "tax_authorities", "closing_manifest_path", "closing_manifest_sha256"],
         "properties": {
           "tranche_id": {"type": "string", "pattern": "^ISS-[0-9]{4}-[0-9]{3}$"},
           "issuance_date": {"type": "string", "format": "date"},
-          "status": {"enum": ["COUNSEL_HOLD", "FACT_CONFLICT", "CLOSING_PENDING", "ISSUED_AND_RECONCILED"]},
+          "status": {"enum": ["DISPUTED_OR_DEFECTIVE", "FACT_CONFLICT", "COUNSEL_HOLD", "PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED", "CLOSING_PENDING", "ISSUED_AND_RECONCILED"]},
+          "purported_issuance_evidenced": {"type": "boolean"},
           "class": {"type": "string", "minLength": 1},
           "holder_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
           "shares": {"type": "integer", "minimum": 1},
@@ -49,7 +50,7 @@
               "treasury_after": {"type": "integer", "minimum": 0},
               "reserved_after": {"type": "integer", "minimum": 0},
               "legally_available_after": {"type": "integer", "minimum": 0},
-              "formation_state_capacity_rule": {"enum": ["WA_REACQUIRED_AUTHORIZED_UNISSUED", "COUNSEL_VALIDATED_OTHER_STATE"]},
+              "formation_state_capacity_rule": {"enum": ["REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED", "REACQUIRED_SHARES_BECOME_TREASURY", "NO_REACQUIRED_SHARES", "COUNSEL_VALIDATED_JURISDICTION_RULE"]},
               "capacity_authority_url": {"type": "string", "format": "uri"},
               "capacity_authority_verified_at": {"type": "string", "format": "date-time"}
             }
@@ -103,7 +104,7 @@
                 "verified_at": {"type": "string", "format": "date-time"},
                 "effective_from": {"type": ["string", "null"], "format": "date"},
                 "effective_to": {"type": ["string", "null"], "format": "date"},
-                "route": {"enum": ["SECTION_4_A_2", "RULE_506_B", "RULE_506_C", "REGULATION_CF", "REGULATION_A", "RULE_701", "WA_REGISTRATION", "WA_EXEMPTION", "WA_NOTICE"]},
+                "route": {"enum": ["SECTION_4_A_2", "RULE_506_B", "RULE_506_C", "REGULATION_CF", "REGULATION_A", "RULE_701", "STATE_REGISTRATION", "STATE_EXEMPTION", "STATE_NOTICE_FILING", "STATE_FEDERALLY_COVERED_NOTICE"]},
                 "status": {"const": "VERIFIED"}
               }
             }
@@ -177,7 +178,7 @@
   "allOf": [
     {
       "if": {"properties": {"overall_status": {"const": "ISSUED_AND_RECONCILED"}}},
-      "then": {"properties": {"tranches": {"items": {"properties": {"status": {"const": "ISSUED_AND_RECONCILED"}}}}}}
+      "then": {"properties": {"tranches": {"items": {"properties": {"status": {"const": "ISSUED_AND_RECONCILED"}, "purported_issuance_evidenced": {"const": true}}}}}}
     }
   ]
 }

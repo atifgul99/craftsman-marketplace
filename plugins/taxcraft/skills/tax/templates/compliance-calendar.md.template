@@ -1,0 +1,54 @@
+# Compliance Calendar — <ENTITY NAME>
+
+**Fiscal year end:** <MM-DD> · **Formation state:** <STATE> · **Prepared:** <YYYY-MM-DD>
+
+Two clocks run at once and confusing them is the most common miss on a non-calendar-year entity:
+
+- **Fiscal-year clock** — the income tax return, corporate estimated payments, and any election
+  window measured from the tax year.
+- **Calendar-year clock** — information returns, payroll returns, and most state and local report,
+  licence, and property filings, whatever the entity's year end.
+
+Derive every date below from the entity's actual year end. Do not copy a calendar-year template.
+
+## 1. Fiscal-year clock
+
+| Obligation | Rule | Date this cycle | Owner | Status |
+|---|---|---|---|---|
+| Income tax return | <e.g. §6072(b) — 15th day of the 4th month after year end; the June-30 exception applies to a June-30 C corporation> | <DATE> | | |
+| Extension, if used | <FORM 7004 — verify the extension length for this year end> | <DATE> | | |
+| Estimated payment 1 | 15th day of the 4th month of the tax year | <DATE> | | |
+| Estimated payment 2 | 15th day of the 6th month | <DATE> | | |
+| Estimated payment 3 | 15th day of the 9th month | <DATE> | | |
+| Estimated payment 4 | 15th day of the 12th month | <DATE> | | |
+| Annual financial statements to owners, if required | <STATE STATUTE — verify> | <DATE> | | |
+| Annual owner action and any required governing-body action | <BYLAWS / AGREEMENT ARTICLE> | <DATE> | | |
+| Election windows open this cycle | <ELECTION AND STATUTE> | <DATE> | | |
+
+## 2. Calendar-year clock
+
+| Obligation | Rule | Date | Owner | Status |
+|---|---|---|---|---|
+| Payee statements (1099 series) | January 31 | | | |
+| 1099 transmittal | <by form type> | | | |
+| W-2 and payroll returns | January 31 and quarterly | | | |
+| 1042 / 1042-S | March 15 | | | |
+| State annual report | <STATE RULE> | | | |
+| Business licence renewals | <RULE PER LICENCE> | | | |
+| Local personal-property listing | <RULE> | | | |
+| State gross-receipts or franchise filings | <RULE AND PERIOD> | | | |
+
+## 3. One-time and windowed items
+
+| Item | Window opens | Window closes | Consequence of missing it | Status |
+|---|---|---|---|---|
+| <ITEM> | <DATE> | <DATE> | <CONSEQUENCE> | |
+
+## 4. Fiscal-to-calendar bridge
+
+The entity's information-return totals will not tie to a single income tax return. Record here how
+the reconciliation is performed each year and where the workpaper lives: <PATH>.
+
+**Verify every rule against current law before relying on a date in this file.** Deadlines that fall
+on a weekend or legal holiday generally move to the next business day; confirm the rule that applies
+to each filing rather than assuming.

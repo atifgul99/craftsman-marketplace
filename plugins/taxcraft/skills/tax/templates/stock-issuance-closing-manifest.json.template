@@ -31,7 +31,7 @@
     "state_securities_routes": [
       {
         "jurisdiction": "REPLACE-STATE",
-        "substantive_route": "WA_EXEMPTION",
+        "substantive_route": "STATE_EXEMPTION",
         "notice_requirement_status": "NOT_REQUIRED_COUNSEL_VERIFIED",
         "deadline": null,
         "filed_or_resolved_at": "2000-01-01T00:00:00Z"

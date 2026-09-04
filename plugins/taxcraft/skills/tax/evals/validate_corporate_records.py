@@ -224,18 +224,27 @@ def validate_stock_issuance_result(
             formation_state = jurisdiction_facts["issuer_formation_jurisdiction"]
         else:
             formation_state = None
-        if formation_state != "Washington" or capital["formation_state_capacity_rule"] != "WA_REACQUIRED_AUTHORIZED_UNISSUED":
-            raise AssertionError(f"{tranche['tranche_id']}: unsupported formation-state capacity rule requires validator extension")
-        if not (
-            host_is(capacity_source.hostname or "", "app.leg.wa.gov")
-            and capacity_source.path.lower().rstrip("/") == "/rcw/default.aspx"
-            and any(value.lower() == "23b.06.310" for value in parse_qs(capacity_source.query).get("cite", []))
-        ):
-            raise AssertionError(f"{tranche['tranche_id']}: Washington capacity authority source is invalid")
-        if capital["treasury_before"] != 0 or capital["treasury_after"] != 0:
-            raise AssertionError(f"{tranche['tranche_id']}: Washington reacquired shares must be treated as authorized unissued")
-        if capital["outstanding_before"] != capital["issued_before"] or capital["outstanding_after"] != capital["issued_after"]:
-            raise AssertionError(f"{tranche['tranche_id']}: Washington issued/outstanding reconciliation is inconsistent")
+        if not formation_state:
+            raise AssertionError(f"{tranche['tranche_id']}: issuer formation jurisdiction is missing")
+        # Jurisdiction-neutral. States split on what happens to reacquired
+        # shares: some return them to authorized-but-unissued, others hold them
+        # as treasury shares. The validator checks the arithmetic each rule
+        # implies and insists the rule be sourced to an official government
+        # host, but it does not carry a per-state roster - see states/README.md.
+        capacity_rule = capital["formation_state_capacity_rule"]
+        capacity_host = capacity_source.hostname or ""
+        if not capacity_host.lower().endswith(".gov"):
+            raise AssertionError(
+                f"{tranche['tranche_id']}: capacity authority must cite an official .gov source for {formation_state}"
+            )
+        if capacity_rule in {"REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED", "NO_REACQUIRED_SHARES"}:
+            if capital["treasury_before"] != 0 or capital["treasury_after"] != 0:
+                raise AssertionError(
+                    f"{tranche['tranche_id']}: capacity rule {capacity_rule} is inconsistent with a treasury balance"
+                )
+        for suffix in ("before", "after"):
+            if capital[f"outstanding_{suffix}"] != capital[f"issued_{suffix}"] - capital[f"treasury_{suffix}"]:
+                raise AssertionError(f"{tranche['tranche_id']}: issued/outstanding/treasury reconciliation is inconsistent")
         for suffix in ("before", "after"):
             expected_available = capital[f"authorized_{suffix}"] - capital[f"issued_{suffix}"] - capital[f"reserved_{suffix}"]
             if expected_available < 0 or capital[f"legally_available_{suffix}"] != expected_available:
@@ -311,17 +320,27 @@ def validate_stock_issuance_result(
                 }.get(route, False)
                 if not federal_route_ok:
                     raise AssertionError(f"{tranche['tranche_id']}: federal securities route/source family is invalid")
-            elif authority["jurisdiction"] == "Washington":
-                if route not in {"WA_REGISTRATION", "WA_EXEMPTION", "WA_NOTICE"} or not host_is(host, "dfi.wa.gov") or "/securities" not in path_text:
-                    raise AssertionError(f"{tranche['tranche_id']}: Washington securities route/source family is invalid")
             else:
-                raise AssertionError(f"{tranche['tranche_id']}: unsupported state securities jurisdiction requires validator extension")
-        washington_routes = {
-            authority["route"] for authority in tranche["securities_authorities"]
-            if authority["jurisdiction"] == "Washington"
-        }
-        if "Washington" in securities_jurisdictions and not washington_routes.intersection({"WA_REGISTRATION", "WA_EXEMPTION"}):
-            raise AssertionError(f"{tranche['tranche_id']}: Washington lacks a substantive registration or exemption route")
+                # Any state. The route vocabulary is generic and the source must
+                # be an official government host; the skill does not carry a
+                # per-state regulator roster.
+                state_routes = {
+                    "STATE_REGISTRATION", "STATE_EXEMPTION",
+                    "STATE_NOTICE_FILING", "STATE_FEDERALLY_COVERED_NOTICE",
+                }
+                if route not in state_routes or not host.lower().endswith(".gov"):
+                    raise AssertionError(
+                        f"{tranche['tranche_id']}: {authority['jurisdiction']} securities route/source family is invalid"
+                    )
+        # Every state whose law reaches the transaction needs a substantive
+        # route, not merely a notice filing.
+        for state in securities_jurisdictions - {"United States"}:
+            state_routes = {
+                authority["route"] for authority in tranche["securities_authorities"]
+                if authority["jurisdiction"] == state
+            }
+            if not state_routes.intersection({"STATE_REGISTRATION", "STATE_EXEMPTION"}):
+                raise AssertionError(f"{tranche['tranche_id']}: {state} lacks a substantive registration or exemption route")
         doctrines = {item["doctrine"] for item in tranche["tax_authorities"]}
         if doctrines != {"section_83", "section_351", "section_1202", "section_1244"}:
             raise AssertionError(f"{tranche['tranche_id']}: tax authority set is incomplete")
@@ -434,12 +453,29 @@ def validate_stock_issuance_result(
                 raise AssertionError(f"{tranche['tranche_id']}: {rule} authority source family is invalid")
         gate_values = list(tranche["gates"].values())
         tax_values = list(tranche["tax_positions"].values())
+        # scenarios/stock-issuance.md "Status precedence": the first question is
+        # whether competent evidence shows a purported issuance actually
+        # occurred. That fact is what separates a conflicted record of a
+        # completed act (DISPUTED_OR_DEFECTIVE, which "overrides all other
+        # post-issuance statuses") from a conflicted record of a proposal
+        # (FACT_CONFLICT), and an unproved payment on a purported issuance
+        # (PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED) from an ordinary
+        # incomplete closing (CLOSING_PENDING).
+        evidenced = tranche["purported_issuance_evidenced"]
         if "CONFLICTED" in gate_values:
-            derived_tranche = "FACT_CONFLICT"
+            derived_tranche = "DISPUTED_OR_DEFECTIVE" if evidenced else "FACT_CONFLICT"
         elif "COUNSEL_HOLD" in gate_values or "COUNSEL_HOLD" in tax_values:
             derived_tranche = "COUNSEL_HOLD"
+        elif evidenced and tranche["gates"]["consideration"] == "UNVERIFIED":
+            derived_tranche = "PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED"
         elif "UNVERIFIED" in gate_values or "UNVERIFIED" in tax_values:
             derived_tranche = "CLOSING_PENDING"
+        elif not evidenced:
+            # Every gate is clean but nothing evidences that the issuance
+            # happened. Never infer an issuance from clean paperwork.
+            raise AssertionError(
+                f"{tranche['tranche_id']}: all gates verified but no purported issuance is evidenced"
+            )
         else:
             derived_tranche = "ISSUED_AND_RECONCILED"
         if tranche["status"] != derived_tranche:
@@ -510,7 +546,8 @@ def validate_stock_issuance_result(
             resolved_at = datetime.fromisoformat(state_route["filed_or_resolved_at"].replace("Z", "+00:00"))
             if state_route["substantive_route"] not in matching_routes or resolved_at > cutoff_at:
                 raise AssertionError(f"{tranche['tranche_id']}: closing state route or resolution time is invalid")
-            if state_route["notice_requirement_status"] == "REQUIRED_FILED_ACCEPTED" and "WA_NOTICE" not in matching_routes:
+            notice_routes = {"STATE_NOTICE_FILING", "STATE_FEDERALLY_COVERED_NOTICE"}
+            if state_route["notice_requirement_status"] == "REQUIRED_FILED_ACCEPTED" and not matching_routes.intersection(notice_routes):
                 raise AssertionError(f"{tranche['tranche_id']}: required state notice lacks a validated notice route")
             if state_route["deadline"] is not None and resolved_at.date() > parse_date(state_route["deadline"]):
                 raise AssertionError(f"{tranche['tranche_id']}: state securities notice missed its recorded deadline")
@@ -556,12 +593,17 @@ def validate_stock_issuance_result(
         signed_at = datetime.fromisoformat(manifest_data["signoff"]["signed_at"].replace("Z", "+00:00"))
         if signed_at > cutoff_at or signed_at.date() < issuance_date:
             raise AssertionError(f"{tranche['tranche_id']}: closing signoff time is invalid")
-    if "FACT_CONFLICT" in derived_tranche_statuses:
-        derived_overall = "FACT_CONFLICT"
-    elif "COUNSEL_HOLD" in derived_tranche_statuses:
-        derived_overall = "COUNSEL_HOLD"
-    elif "CLOSING_PENDING" in derived_tranche_statuses:
-        derived_overall = "CLOSING_PENDING"
+    # Fail closed: the worst tranche sets the artifact status, most severe first.
+    for candidate in (
+        "DISPUTED_OR_DEFECTIVE",
+        "FACT_CONFLICT",
+        "COUNSEL_HOLD",
+        "PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED",
+        "CLOSING_PENDING",
+    ):
+        if candidate in derived_tranche_statuses:
+            derived_overall = candidate
+            break
     else:
         derived_overall = "ISSUED_AND_RECONCILED"
     if result["overall_status"] != derived_overall:
@@ -2029,6 +2071,7 @@ def validate_artifact_fixtures(template: dict, schema: dict, fixtures: list[dict
         "annual financial statements missing", "permanent record subcontrols omitted",
         "permanent core record falsely marked not yet due",
         "annual record evidence uses wrong fiscal year",
+        "unadopted recommended-only control lands on disclosed gaps",
     }
     assert names == required, "artifact fixture set drifted"
 
@@ -2111,7 +2154,7 @@ def _run_artifact_fixtures(clean: dict, schema: dict, fixtures: list[dict]) -> N
         assert audit["overall_status"] == actual
 
 
-EXPECTED_EVAL_CASES = 22
+EXPECTED_EVAL_CASES = 27
 
 
 def structural_release_checks(schema: dict, template: dict) -> None:
@@ -2131,6 +2174,98 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     require(router, ["corporate-records.md", "record-book", "formation cleanup", "annual governance"], "router")
     require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453", "NOT_LOCATED", "1.6662-6(d)"], "corporate-records orchestrator")
     require(governance, ["corporate-records.md", "final rule", "domestic"], "governance backlink")
+    # Defects that cost the most rework are the ones a draft asserts confidently.
+    require(governance, [
+        "Authority Chains and Drafting Integrity",
+        "Authority chains must be acyclic",
+        "A filed document controls only the field it proves",
+        "Execution metadata is ground truth",
+        '"Approved" means signed',
+        "No recital of events later than",
+        "Ratification is bounded",
+        "rewrite the capacity a signature actually recites",
+        "three-branch ratification triage",
+        "within the power of the corporation",
+        "executed legacy instruments",
+        "bilateral termination",
+        "\u00a76664(c)",
+        "read but deliberately not reproduced",
+    ], "governance authority-chain doctrine")
+    binder = read("scenarios/pre-formation-binder.md")
+    require(binder, [
+        "pre-formation formation binder",
+        "submission date, not the effective date",
+        "EXECUTED_AUTHORITY_UNVERIFIED",
+        "PURPORTED ISSUANCE",
+        "never operated",
+        "not required at all",
+    ], "pre-formation binder scenario")
+    info_returns = read("scenarios/information-returns.md")
+    require(info_returns, [
+        "rules/federal-<year>.json",
+        "Form 8233",
+        "calendar year of payment",
+        "\u00a73406",
+        "10 or more information returns of all types",
+        "Responsible Official",
+        "\u00a76721",
+        "\u00a7861(a)(3)",
+        "Reg. \u00a71.6041-3(p)",
+    ], "information-returns scenario")
+    ccorp_reduction = read("scenarios/ccorp-tax-reduction.md")
+    require(ccorp_reduction, [
+        "\u00a7532(b)(1)",
+        "Run the PHC test first",
+        "\u00a7547",
+        "\u00a7565",
+        "\u00a77872",
+        "demand loan",
+        "No constructive-wage rule",
+    ], "AET/PHC ordering and loan pricing")
+    forbid(ccorp_reduction, ["consider PHC \u00a7541 risk too"], "stale AET-first ordering")
+    require(ccorp, ["\u00a76072(b)", "June 30 fiscal-year exception", "\u00a7532(b)(1)"], "c-corp deadlines and PHC precedence")
+    require(router, [
+        "Portability rule (STRICT)",
+        "ships publicly",
+        "No jurisdiction is hard-coded",
+        "pre-formation-binder",
+        "information-returns",
+    ], "portability rule and new scenario routing")
+    plan = read("scenarios/accountable-plan.md")
+    require(plan, [
+        "unsigned plan is not an arrangement in force",
+        "cannot precede its execution",
+        "outside both safe harbors",
+    ], "accountable-plan execution dating")
+    require(stock, [
+        "adequacy determination is its own signed instrument",
+        "No retroactive true-up",
+        "Marital-property character",
+    ], "stock-issuance adequacy and true-up rules")
+    require(records, [
+        "Working registers the record set needs",
+        "Registers carry evidence-backed statuses only",
+        "adequacy-and-fairness-determination.md.template",
+        "incumbency-certificate.md.template",
+        "open-items-tracker.md.template",
+    ], "corporate-records registers")
+    for name in (
+        "adequacy-and-fairness-determination", "incumbency-certificate",
+        "bilateral-termination-and-release", "open-items-tracker",
+        "tax-elections-and-positions-register", "address-agent-and-titling-register",
+        "related-party-transaction-policy", "records-retention-schedule",
+        "compliance-calendar",
+    ):
+        path = ROOT / "templates" / f"{name}.md.template"
+        assert path.is_file(), f"missing template {name}.md.template"
+    # Every drafting template must carry both legends: a counsel notice alone is
+    # not enough to stop an unsigned draft being treated as executed.
+    for name in (
+        "adequacy-and-fairness-determination", "incumbency-certificate",
+        "bilateral-termination-and-release", "related-party-transaction-policy",
+    ):
+        text = (ROOT / "templates" / f"{name}.md.template").read_text(encoding="utf-8")
+        require(text, ["DRAFT \u2014 NOT EXECUTED", "counsel before signing"], f"{name} legends")
     require(governance, ["Conflicting-Interest Transactions in Owner-Controlled Entities", "fairness is the only route left", "no \"method election\" filed with anyone", "1.6662-6(d)", "RCW 23B.08.560", "RCW 23B.06.250(4)"], "conflict, bylaws, and intercompany doctrine")
     require(ccorp, ["Reg. §1.248-1(c)", "deemed"], "organizational-expenditure deemed election")
     require(ccorp, ["corporate-records.md"], "C-corp backlink")
@@ -2156,6 +2291,17 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         f"specialist template violates schema: {specialist_template_errors[:10]}"
     )
     assert [row["id"] for row in template["requirements"]] == list(CANONICAL_IDS)
+
+    # A shipped template must not carry a plausible fiscal year: a filled
+    # artifact that forgets one of these rows would otherwise validate with a
+    # real-looking period. FY0000 is syntactically valid and obviously unfilled.
+    for row in template["requirements"]:
+        for sub in row.get("record_subcontrols") or []:
+            period = sub.get("evidence_period")
+            if period and period != "PERMANENT" and period != "FY0000":
+                raise AssertionError(
+                    f"template row {row['id']}/{sub['id']} ships a plausible period {period!r}; use FY0000"
+                )
 
     sections = {int(number): body for number, body in re.findall(r"^### E(\d+) —.*?\n(.*?)(?=^### E\d+ —|^## Scoring)", evals, flags=re.MULTILINE | re.DOTALL)}
     assert set(sections) == set(range(1, EXPECTED_EVAL_CASES + 1)), (

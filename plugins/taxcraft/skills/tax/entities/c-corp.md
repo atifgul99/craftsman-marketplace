@@ -74,7 +74,7 @@ underlying corporate act.
 ### Penalty Taxes
 
 1. **Accumulated Earnings Tax (§531)** — 20% surtax on unreasonably accumulated earnings beyond reasonable business needs (§535). Threshold: $250k accumulation safe harbor ($150k for PSC). Defense: documented business-need resolutions (expansion plans, working-capital needs, debt service). Coordinate with `governance.md` for board resolutions.
-2. **Personal Holding Company Tax (§541)** — 20% surtax if (a) PHC income > 60% of adjusted ordinary gross income AND (b) > 50% owned by ≤5 individuals. Common trap for investment-heavy C-corps. Defense: dividend-out or convert income character.
+2. **Personal Holding Company Tax (§541)** — 20% surtax if (a) PHC income > 60% of adjusted ordinary gross income AND (b) > 50% in value owned by ≤5 individuals in the last half of the year (§542, with §544 attribution). Common trap for investment-heavy C-corps. Defense: dividend-out, §565 consent dividend, or convert income character; §547 allows a deficiency dividend after a determination. **Test PHC status before building any §531 record** — under **§532(b)(1) a personal holding company is not subject to the accumulated earnings tax**, so a Bardahl/business-needs file built for a corporation that is in fact a PHC defends against a tax it cannot owe while the real exposure goes untested. Ordering and cures: `scenarios/ccorp-tax-reduction.md`.
 
 ### R&D Expensing (§174A, restored by OBBBA)
 
@@ -215,7 +215,9 @@ Narrative — issues, elections, open questions, state filings, audit-risk callo
 
 ## Deadlines & Penalties
 
-- **Form 1120 due**: 3½ months after FY end (April 15 for CY; for fiscal-year corps, 15th day of 4th month). Extension via Form 7004 → 6 months.
+- **Form 1120 due** (§6072(b)): 15th day of the **4th** month after the tax year ends — April 15 for a calendar-year corporation. Extension via Form 7004 → 6 months.
+  - **June 30 fiscal-year exception.** For a C corporation whose tax year ends June 30, the return is due the 15th day of the **3rd** month (September 15) and the Form 7004 extension is **7** months, for tax years beginning before January 1, 2026. Do not apply the general 4th-month rule to a June-30 corporation without checking the tax year against that sunset — the general rule gives a deadline two weeks late.
+  - Verify the year-end against the EIN letter and any Form 1128 before computing any date (Preflight #4).
 - **Estimated tax (§6655 worksheet, formerly Form 1120-W)** — quarterly, due on 15th of 4th/6th/9th/12th month of fiscal year. Safe-harbor rules under §6655. Paid via EFTPS (no standalone voucher). See `quarterly.md`.
 - **Form 1042 / 1042-S** — foreign-payee withholding returns, due March 15 following calendar year.
 - **Form 1099-NEC** — to contractors by January 31; to IRS (electronic via IRIS) by January 31 for NEC (other 1099 types vary).

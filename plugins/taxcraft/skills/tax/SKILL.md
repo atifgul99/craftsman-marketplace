@@ -164,7 +164,7 @@ Or describe what you need.
 | `entities/c-corp.md` | Form 1120 workpapers, SMLLC consolidation, M-1, §163(j), §174, §1202 |
 | `entities/disregarded.md` | Nested SMLLCs: books at nested level, tax at parent level |
 | `governance.md` | State-law drafting patterns, minutes/consents/resolutions, corporate-document intake, state filings, and veil discipline |
-| `scenarios/<topic>.md` | Rental, K-1 (VC/PE, O&G), equity comp, SDIRA, multi-state, audit response, C-corp reduction, entity trading, **corporate-records** (C-corporation record-set lifecycle, authority chronology, completeness invariants, annual governance, standing/licenses, subsidiaries), **accountable-plan** (§62(c)/Reg §1.62-2 eligibility, audit, drafting, adoption, operations, payroll), **stock-issuance** (canonical authority → consideration → §351/§83/§1202/§1244 → securities → closing → ledger/accounting orchestrator), amend-partnership (BBA AAR / 1065-X / 1040-X cascade), penalty-abatement (Rev. Proc. 84-35 / FTA / reasonable cause / Form 843), irs-transcripts (pull + read + TC codes), tiered-partnership-se (GP-interest SE pass-through, *Soroban*), turbotax-business (`.tax20XX` file handling), qsbs-1202 (§1202 dual regimes pre/post-OBBBA), section-1244 (§1244 ordinary loss on small-business stock; bare-contribution basis trap), contested-k1 (disputed/withdrawn K-1, Form 8082, protective filings), aca-medicaid-magi (PTC/Medicaid MAGI management, Form 8962), meals-substantiation (§274(d)), home-office-280a (§280A(c)(1) three prongs, business %, accountable-plan vs. rent-to-employer, §121 exposure on separate structures) |
+| `scenarios/<topic>.md` | Rental, K-1 (VC/PE, O&G), equity comp, SDIRA, multi-state, audit response, C-corp reduction, entity trading, **corporate-records** (C-corporation record-set lifecycle, authority chronology, completeness invariants, annual governance, standing/licenses, subsidiaries), **accountable-plan** (§62(c)/Reg §1.62-2 eligibility, audit, drafting, adoption, operations, payroll), **stock-issuance** (canonical authority → consideration → §351/§83/§1202/§1244 → securities → closing → ledger/accounting orchestrator), amend-partnership (BBA AAR / 1065-X / 1040-X cascade), penalty-abatement (Rev. Proc. 84-35 / FTA / reasonable cause / Form 843), irs-transcripts (pull + read + TC codes), tiered-partnership-se (GP-interest SE pass-through, *Soroban*), turbotax-business (`.tax20XX` file handling), qsbs-1202 (§1202 dual regimes pre/post-OBBBA), section-1244 (§1244 ordinary loss on small-business stock; bare-contribution basis trap), contested-k1 (disputed/withdrawn K-1, Form 8082, protective filings), aca-medicaid-magi (PTC/Medicaid MAGI management, Form 8962), meals-substantiation (§274(d)), home-office-280a (§280A(c)(1) three prongs, business %, accountable-plan vs. rent-to-employer, §121 exposure on separate structures), **pre-formation-binder** (the organizational suite executed before the entity legally existed; formation-vendor binder triage), **information-returns** (payer-side 1099/1042-S/W-2, payee certificates, Form 8233 vs W-8BEN, sourcing, e-file mandate, backup withholding) |
 | `rules/federal-<year>.json` | Curated annual inputs; never self-authenticating—apply `authority.md` at point of use |
 | `rules/manifest.json` + `rules/schema-v{1,2}.json` | Rules inventory, shape migrations, provenance metadata, and validation schema. New rules files validate against **v2** (v1 is frozen for external consumers; v2 is a strict superset that adds the freshness fields) — see `authority.md` |
 | `templates/*` | Skeletons for every file the skill creates |
@@ -204,6 +204,16 @@ Read sub-skill files via Read tool as needed. Never load all upfront.
 - Accountable-plan design, audit, drafting, adoption, reimbursement operations,
   owner advances, excess reimbursements, or payroll treatment route to
   `scenarios/accountable-plan.md`.
+- **An organizational document suite dated before the entity's charter became
+  effective**, or a formation-vendor binder nobody re-executed after formation,
+  routes to `scenarios/pre-formation-binder.md` before any drafting begins. It
+  owns the recognition tells, the three separate defects, and the remediation
+  sequence; `governance.md` owns the drafting rules it applies.
+- **Anything the entity issues on a payee's behalf** — 1099, 1042-S, W-2, or the
+  W-9/W-8/8233 certificate behind it — routes to
+  `scenarios/information-returns.md`. Thresholds are read from
+  `rules/federal-<payment-year>.json`, never from prose, and the payment year is
+  a calendar year even for a fiscal-year entity.
 - Annual estimates, quarterly closes, installment questions, and “how much
   should I pay?” route to `close-estimate.md`; that orchestrator owns authority,
   evidence, reconciliation, payment-credit, and non-execution controls.
@@ -238,6 +248,38 @@ list, with the reasoning behind each route, is in `individual/README.md`
 - **Digital assets** route to `individual/digital-assets.md`; basis-lot method
   and the Rev. Proc. 2024-28 wallet-by-wallet transition are not the same as
   ordinary securities basis.
+
+## Portability rule (STRICT)
+
+**This skill ships publicly. It must contain no user's data.** The workspace and
+the skill are different things, and every edit to the skill is subject to the
+three-bucket test:
+
+| Bucket | Contents | Where it lives |
+|---|---|---|
+| **Skill** | Method, doctrine, statutes and regulations, status vocabularies, schemas, templates, worked *hypotheticals* | This plugin — public |
+| **Workspace data** | Entity names, people, addresses, EINs and other identifiers, dollar amounts, account numbers, engagement facts, holdings | `workspace-profile/`, `individual/`, `entities/<slug>/` — never here |
+| **Engagement output** | Audits, workpapers, drafts, record books | The workspace, under the entity it belongs to |
+
+Concretely, and without exception:
+
+- No real entity, person, address, identifier, or dollar figure enters a skill
+  file, a template, a schema, or an eval fixture. Fixture data is invented and
+  obviously so.
+- **No jurisdiction is hard-coded into a schema enum, a validator branch, or a
+  required field.** Vocabularies are generic (`STATE_REGISTRATION`, not a
+  particular state's route) and validators check the *shape and source family*
+  of an authority, not a roster of jurisdictions. A validator that refuses every
+  state but one is a portability bug, not strictness.
+- State-specific statutes live under `states/<code>/`, and are cited from the
+  general files as examples, clearly labelled as such.
+- No absolute local path appears in any tracked file.
+- Numbers that change by year live in `rules/federal-<year>.json`, never in
+  prose. See the anti-duplication rule below.
+
+When a lesson comes out of a real engagement, extract the **rule** and leave the
+facts behind. If a passage cannot be written without naming the matter it came
+from, it is not yet a rule.
 
 ## Anti-duplication rule (STRICT)
 

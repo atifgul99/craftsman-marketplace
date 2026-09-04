@@ -529,6 +529,84 @@ Use this as an inventory frame, then apply the requirement classes above.
 | Subsidiary/IP | parent ownership/authority when a subsidiary exists | subsidiary binder, intercompany terms, IP/domain assignments |
 | Insurance/commercial | entity contract identity and records | D&O, E&O, cyber, workers' compensation, regulated permits |
 
+## Working registers the record set needs
+
+The document families above are the *inventory* frame. A remediation or
+completeness engagement also produces a small set of **registers** — running
+schedules that answer a question no single document answers. Each is a
+deliverable in its own right; none of them is a substitute for the underlying
+instrument, and none of them may carry a status the evidence does not support.
+
+| Register | The question it answers | Minimum columns |
+|---|---|---|
+| **Evidence inventory** | What is in the record, and what does each item actually prove? | file path, content hash, pages, document type, date borne, **signed? and how verified**, **what it proves**, multi-axis status |
+| **Address, agent, and titling register** | Which address and agent each authority has on record *right now*, and which one controls | authority (charter state, revenue agency, IRS, city, bank, broker, insurer), value on record, evidence, date verified, controls-now?, change instrument required |
+| **Tax elections and positions register** | Every election and return position taken, and the evidence status of each | election/position, tax year first taken, statutory authority, instrument or return that made it, evidence status, who must confirm |
+| **Open items tracker** | What is unresolved, what blocks it, and who must act | item, description, blocker keyed to a specific document, owner (counsel / CPA-EA / third party / entity), opened date, closure evidence path |
+| **Counsel and CPA question register** | Each determination routed out, as a question rather than a conclusion | question, why it cannot be answered internally, what turns on it, documents held pending the answer |
+| **Related-party transaction register** | Every transaction with an owner, affiliate, or family member | date, counterparty and control relationship, subject, approval instrument, fairness evidence, tax treatment, mirror entry in the counterparty's books |
+| **Retention schedule** | How long each record class is kept and why | record class, legal floor and its source, entity policy period, destruction authority |
+| **Payee register** | Information-return coverage (see `scenarios/information-returns.md`) | payee, certificate on file and date, classification, source analysis, calendar-year total, form issued or documented reason none was |
+
+Templates: `templates/address-agent-and-titling-register.md.template`,
+`templates/tax-elections-and-positions-register.md.template`,
+`templates/open-items-tracker.md.template`,
+`templates/records-retention-schedule.md.template`,
+`templates/related-party-transaction-policy.md.template`,
+`templates/compliance-calendar.md.template`,
+`templates/incumbency-certificate.md.template`,
+`templates/bilateral-termination-and-release.md.template`, and
+`templates/adequacy-and-fairness-determination.md.template`.
+
+**Registers carry evidence-backed statuses only.** A register is where status
+inflation happens, because a one-word cell invites a confident word. Never write
+"filed", "in effect", "recorded", "adopted", or "position ready" for something
+that is submitted-unconfirmed, drafted-unsigned, or merely intended. Use the
+same vocabulary as the audit rows, and where the honest value is `UNVERIFIED` or
+`NOT_LOCATED`, write that.
+
+**Two register-specific traps.**
+
+- The **address register** exists because a change of address is not one act. A
+  charter-state amendment does not move the IRS address of record; a Form 8822-B
+  does not move the state's; a bank's change of mailing address moves neither.
+  List each authority separately with its own instrument, and treat an unsigned
+  or unconfirmed change as not made.
+- The **elections register** must separate the election from its evidence. "We
+  take this position" and "the return that took it was accepted" are different
+  facts; a register that merges them produces a confident answer where a
+  transcript check is what is actually required.
+
+## Documents a closely held record set commonly lacks
+
+These are **conditional**, not universally required — the applicability rules
+above still govern — but each is a document a record set is regularly found to
+need and rarely has. Test applicability, then draft or record `NOT_FOUND` with
+the reason.
+
+- **Adequacy and fairness determination** for share consideration, signed before
+  the issuance it supports; where the subscriber is also a director or officer,
+  the conflict findings belong in the same signed writing
+  (`scenarios/stock-issuance.md`).
+- **Incumbency certificate**, reconciling the capacities an owner has actually
+  used going forward (`governance.md`).
+- **Banking and brokerage authority resolution**, including — for an entity with
+  a live trading account — the trading mandate: who may trade, whether margin,
+  options, or short sales are authorized, position and concentration limits, any
+  outside adviser's appointment, and the written client agreement behind it. An
+  outside investment adviser is not ratified without a registration or exemption
+  check; route that to securities counsel first.
+- **Related-party transaction policy**, with a standing approval procedure that
+  requires approval *before* the transaction, naming every affiliate by
+  relationship rather than by a list that will rot.
+- **Compliance calendar** keyed to the entity's actual fiscal year, carrying
+  estimate dates on the fiscal cycle, information returns and payroll on the
+  calendar cycle, state report and licence renewals, election windows, any
+  financial-statement duty, and local personal-property listings.
+- **Bilateral termination and release** for each legacy two-party instrument the
+  entity no longer operates (`governance.md`).
+- **Retention schedule**, and a records-custodian designation.
+
 ## Annual monitoring reopeners
 
 An annual review reopens continuing conditions; it is not a checkbox carried

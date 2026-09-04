@@ -1,0 +1,58 @@
+# Tax Elections and Positions Register — <ENTITY NAME>
+
+**As of:** <YYYY-MM-DD>
+**EIN (last 4):** <XXXX> · **Tax year end:** <MM-DD> · **Classification:** <C corporation / S
+corporation / partnership / disregarded>
+
+Separate the **position** from the **evidence for it**. "We take this position" and "the return
+taking it was accepted" are different facts; a register that merges them produces confidence where
+a transcript check is what is actually required.
+
+## Evidence status vocabulary
+
+`TAKEN_AND_ACCEPTED` (return accepted; transcript checked) · `TAKEN_FILED_UNCONFIRMED` (return filed,
+acceptance not yet verified) · `TAKEN_NOT_FILED` (decided, return not yet filed) · `PROPOSED`
+(recommended, not decided) · `UNDETERMINED` (a prerequisite fact is unresolved) · `SUPERSEDED`
+
+Never write `IN EFFECT`, `RECORDED`, `POSITION READY`, or `FILED` for anything short of
+`TAKEN_AND_ACCEPTED`.
+
+## 1. Entity-level elections
+
+| # | Election | Statutory authority | First tax year | Instrument that made it (form, line, statement, or consent) | Evidence status | Who must confirm |
+|---|---|---|---|---|---|---|
+| 1 | <e.g. tax year / accounting method / §248 organizational expenditures> | <CITE> | <FY> | <FORM / STATEMENT / PATH> | <STATUS> | <CPA-EA / COUNSEL / NONE> |
+
+## 2. Return positions
+
+| # | Position | Authority | Years affected | Where taken | Evidence status | Exposure if wrong |
+|---|---|---|---|---|---|---|
+| 1 | <POSITION> | <CITE> | <FY–FY> | <RETURN / SCHEDULE / LINE> | <STATUS> | <DESCRIBE> |
+
+## 3. Shareholder- or partner-level positions dependent on entity facts
+
+| # | Position | Holder | Entity fact it depends on | Status of that fact | Evidence status |
+|---|---|---|---|---|---|
+| 1 | <e.g. §1244 ordinary loss, §1202 exclusion, basis> | <HOLDER> | <FACT> | <STATUS> | <STATUS> |
+
+## 4. Elections considered and not made
+
+Recording the decision is what stops it being re-litigated every year, and what evidences that it
+was considered at all.
+
+| # | Election | Considered on | Decision and reason | Window, if it can still be made |
+|---|---|---|---|---|
+| 1 | <ELECTION> | <YYYY-MM-DD> | <DECISION> | <DATE / "closed"> |
+
+## Annex A — quantified business-needs schedule
+
+*(Complete only where an accumulated-earnings position is actually being taken — and only after the
+§542 personal-holding-company test has come back negative, because §532(b)(1) removes the
+accumulated-earnings tax for a PHC. See `scenarios/ccorp-tax-reduction.md`.)*
+
+| Need | Reg. §1.537-2 category | Amount | Basis for the amount | Expected timing | Evidence |
+|---|---|---|---|---|---|
+| <NEED> | <CATEGORY> | $<AMOUNT> | <WORKPAPER> | <PERIOD> | <PATH> |
+
+**Total identified needs:** $<AMOUNT> · **Accumulated earnings at year end:** $<AMOUNT> ·
+**Unexplained excess:** $<AMOUNT>

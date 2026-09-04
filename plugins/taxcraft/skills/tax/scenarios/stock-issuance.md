@@ -188,10 +188,43 @@ treatment, whether any stock was actually authorized or delivered then, and
 the proposed present action. Any conclusion that old cash supports newly issued
 §1244 stock must be expressly attributed to written tax-counsel analysis.
 
+### Marital-property character (conditional)
+
+Where the holder is married and domiciled in a community-property state, the
+character of the shares is a **conditional, tracing-dependent** question, not a
+default. Say what the tracing evidence shows for the specific tranche and stop
+there. Do not state a categorical conclusion, do not extend a conclusion to
+shares not yet acquired, and do not treat a spousal acknowledgment as a
+determination of character — it records what the spouses acknowledge on stated
+facts. Separate-property tracing, commingling, and any premarital or marital
+agreement are counsel questions; the record's job is to preserve the funding
+trail that makes tracing possible.
+
 ## Gate 4 — valuation, price, and vesting
 
 No-par stock does not mean free stock or arbitrary value. Document the board's
 good-faith adequacy determination under state law and the tax FMV evidence.
+
+**The adequacy determination is its own signed instrument, made before the
+issuance it supports.** A recital inside the issuance resolution that the
+consideration "is adequate" is not the determination; most corporation statutes
+make the board's determination of adequacy conclusive only when it was actually
+made, and a determination cannot be made about a payment that has already been
+converted into shares. Draft it as a separate consent carrying: the class and
+number of shares, the consideration and its form, the facts relied on, the
+determination itself, and — where the subscriber is also a director or officer —
+the fairness findings in the **same** signed writing. Record the receipt
+timestamp and the issuance timestamp so the order is provable. Instantiate
+`templates/adequacy-and-fairness-determination.md.template`, one per closing.
+
+**No retroactive true-up.** Money that reached the corporation before a valid
+subscription and an effective authorization existed is a refundable subscription
+deposit, a loan, or a bare contribution to capital — the contemporaneous facts
+decide which. It is not share consideration, and a later quarterly or annual
+"true-up" resolution may not convert it into share consideration as of the date
+it arrived. Where the parties intend future shares, use a refundable deposit
+with written terms and issue against a signed subscription when the
+authorization is in place.
 
 - Cash purchase: reconcile price to contemporaneous facts, prior/subsequent
   financings, liabilities, IP, revenue, and capitalization.
