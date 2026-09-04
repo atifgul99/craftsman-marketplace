@@ -1,59 +1,1058 @@
 [
-  {"name":"clean canonical record set","expected_overall":"RECORD_SET_RECONCILED_AS_OF"},
-  {"name":"E2 preincorporation action","chronology_updates":{"earliest_purported_corporate_action_date":"2024-01-02","incorporator_action_date":"2024-01-02","initial_director_action_date":"2024-01-02","sequence_status":"PREINCORPORATION_ACTION_PRESENT"},"row_updates":{"F-02":{"dates":{"approved":"2024-01-02","signed":"2024-01-02","effective":"2024-01-02"}}},"expected_overall":"AUTHORITY_HOLD"},
-  {"name":"E3 missing authority and zero issued shares","row_updates":{"F-02":{"lifecycle_status":"NOT_FOUND","verification_status":"UNVERIFIED","operational_status":"COUNSEL_HOLD","authority_verified":false,"evidence":[],"next_required_evidence":"Incorporator and board authority"},"O-01":{"applicability_status":"REQUIRED","lifecycle_status":"NOT_FOUND","verification_status":"UNVERIFIED","operational_status":"COUNSEL_HOLD","authority_verified":false,"evidence":[],"next_required_evidence":"Issuance closing and ledger"}},"expected_overall":"AUTHORITY_HOLD"},
-  {"name":"E4 capitalization conflict","conflicts":[{"id":"CON-001","requirement_ids":["O-01","A-01"],"description":"Ledger says 100 shares; unsigned annual consent says 1,000","status":"OPEN","resolution_evidence":[]}],"row_updates":{"O-01":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"CONFLICTED","operational_status":"COUNSEL_HOLD","tax_position_status":"NOT_TESTED","authority_verified":true,"execution_method":"OTHER_VERIFIED","dates":{"effective":"2026-01-15"},"conflict_ids":["CON-001"]},"A-01":{"lifecycle_status":"FINAL_UNSIGNED","verification_status":"CONFLICTED","operational_status":"APPROVED_NOT_EXECUTED","authority_verified":false,"conflict_ids":["CON-001"]}},"expected_overall":"FACT_CONFLICT"},
-  {"name":"E9 valid plan not yet operated","row_updates":{"P-01":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"ACTIVE_NOT_YET_OPERATED","filing_status":"NOT_APPLICABLE","tax_position_status":"PROVISIONAL","specialist_result_reference":"corporate/accountable-plan/status.json","authority_verified":true,"approving_actor":"Board of directors","authority_basis_id":"AUTH-WA-CORP","additional_authority_basis_ids":["AUTH-US-TAX"],"governing_jurisdiction":"Washington","authority_domain":"CORPORATE_LAW","execution_method":"WRITTEN_CONSENT","dates":{"approved":"2026-01-10","signed":"2026-01-10","effective":"2026-01-10"},"signature_evidence":{"method":"HANDWRITTEN_OR_IMAGE_OBSERVED","signer_identity":"VERIFIED","document_integrity":"VERIFIED","notes":"Observed and verified"}}},"expected_overall":"OPERATION_RECONCILIATION_PENDING"},
-  {"name":"accountable plan payment partial failure","row_updates":{"P-01":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"PARTIAL_FAILURE","filing_status":"NOT_APPLICABLE","tax_position_status":"PROVISIONAL","specialist_result_reference":"corporate/accountable-plan/status.json","authority_verified":true,"approving_actor":"Board of directors","authority_basis_id":"AUTH-WA-CORP","additional_authority_basis_ids":["AUTH-US-TAX"],"governing_jurisdiction":"Washington","authority_domain":"CORPORATE_LAW","execution_method":"WRITTEN_CONSENT","dates":{"approved":"2026-01-10","signed":"2026-01-10","effective":"2026-01-10"},"signature_evidence":{"method":"HANDWRITTEN_OR_IMAGE_OBSERVED","signer_identity":"VERIFIED","document_integrity":"VERIFIED","notes":"One payment failed substantiation"}}},"expected_overall":"OPERATION_RECONCILIATION_PENDING"},
-  {"name":"E10 Augusta resolution only","row_updates":{"P-02":{"applicability_status":"RECOMMENDED_ONLY","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"APPROVED_NOT_EXECUTED","filing_status":"NOT_APPLICABLE","tax_position_status":"NOT_TESTED","authority_verified":true,"approving_actor":"Board of directors","authority_basis_id":"AUTH-WA-CORP","additional_authority_basis_ids":["AUTH-US-TAX"],"governing_jurisdiction":"Washington","authority_domain":"CORPORATE_LAW","execution_method":"WRITTEN_CONSENT","dates":{"approved":"2026-01-11","signed":"2026-01-11","effective":"2026-01-11"},"signature_evidence":{"method":"HANDWRITTEN_OR_IMAGE_OBSERVED","signer_identity":"VERIFIED","document_integrity":"VERIFIED","notes":"Resolution only"}}},"expected_overall":"CURRENT_WITH_DISCLOSED_NONMATERIAL_GAPS"},
-  {"name":"E12 expired license with renewal submitted","row_updates":{"L-02":{"applicability_status":"REQUIRED","lifecycle_status":"SUBMITTED","verification_status":"UNVERIFIED","operational_status":"NOT_APPLICABLE","filing_status":"SUBMITTED_UNCONFIRMED","authority_verified":true,"approving_actor":null,"authority_basis_id":"AUTH-WA-LICENSE","dates":{"submitted":"2026-08-20","expires":"2026-08-01"},"evidence":[{"source_path":"corporate/licenses/old-license.pdf","sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","agency_record_id":null,"locator":"page 1 expiration field","evidence_subject_slug":"test-corp","role":"HISTORICAL","proves":"Prior credential expired 2026-08-01","observed_on":"2026-08-25"},{"source_path":"corporate/licenses/renewal-receipt.pdf","sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","agency_record_id":null,"locator":"page 1 submission confirmation","evidence_subject_slug":"test-corp","role":"CURRENT","proves":"Renewal submitted; issuance not confirmed","observed_on":"2026-08-25"}],"next_required_evidence":"Issued renewal or current live agency status"}},"expected_overall":"FILING_PENDING"},
-  {"name":"E15 missing IP assignment","row_updates":{"S-03":{"applicability_status":"REQUIRED","lifecycle_status":"NOT_FOUND","verification_status":"UNVERIFIED","operational_status":"COUNSEL_HOLD","filing_status":"NOT_APPLICABLE","tax_position_status":"COUNSEL_HOLD","specialist_result_reference":"corporate/ip-remediation/counsel-packet.json","authority_verified":false,"evidence":[],"next_required_evidence":"Executed counsel-reviewed IP assignments"}},"expected_overall":"COUNSEL_HOLD"},
-  {"name":"E18 draft return not submitted","row_updates":{"T-01":{"lifecycle_status":"DRAFT","verification_status":"UNVERIFIED","operational_status":"NOT_APPLICABLE","filing_status":"NOT_PREPARED","authority_verified":false,"evidence":[],"next_required_evidence":"Accepted e-file transmission and payment evidence"}},"expected_overall":"FILING_PENDING"},
-  {"name":"rejected return transmission","row_updates":{"T-01":{"lifecycle_status":"SUBMITTED","verification_status":"VERIFIED","operational_status":"NOT_APPLICABLE","filing_status":"REJECTED","authority_verified":true,"dates":{"submitted":"2026-04-15"},"next_required_evidence":"Corrected accepted transmission"}},"expected_overall":"FILING_PENDING"},
-  {"name":"E19 visible signature identity unverified","row_updates":{"A-01":{"lifecycle_status":"EXECUTED_AUTHORITY_UNVERIFIED","verification_status":"UNVERIFIED","operational_status":"APPROVED_NOT_EXECUTED","filing_status":"NOT_APPLICABLE","authority_verified":false,"dates":{"signed":"2026-02-01"},"signature_evidence":{"method":"HANDWRITTEN_OR_IMAGE_OBSERVED","signer_identity":"UNVERIFIED","document_integrity":"UNVERIFIED","notes":"Visible image; no cryptographic validation"},"next_required_evidence":"Signer identity, authority, date, and document-integrity evidence"}},"expected_overall":"EXECUTION_PENDING"},
-  {"name":"unsupported N/A with rejected filing","row_updates":{"L-03":{"applicability_status":"NOT_APPLICABLE_VERIFIED","lifecycle_status":"EXPIRED","verification_status":"VERIFIED","operational_status":"DEFECTIVE","filing_status":"REJECTED","tax_position_status":"NOT_APPLICABLE"}},"expected_schema_error":true},
-  {"name":"executed signed record with unverified identity","row_updates":{"A-01":{"lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"RECONCILED","authority_verified":true,"dates":{"signed":"2026-02-01","effective":"2026-02-01"},"signature_evidence":{"method":"HANDWRITTEN_OR_IMAGE_OBSERVED","signer_identity":"UNVERIFIED","document_integrity":"UNVERIFIED","notes":"Hostile claim"}}},"expected_schema_error":true},
-  {"name":"spoofed final tax election","row_updates":{"O-04":{"tax_position_status":"SECTION 1244 ELECTED FINAL"}},"expected_schema_error":true},
-  {"name":"single-row false reconciliation","truncate_requirements_to":["F-01"],"expected_schema_error":true},
-  {"name":"future acceptance date","row_updates":{"T-01":{"dates":{"accepted_or_issued":"2027-01-01"}}},"expected_cross_field_error":true},
-  {"name":"authority row predates chronology register","row_updates":{"F-03":{"dates":{"effective":"2024-01-02"}}},"expected_cross_field_error":true},
-  {"name":"all rows excluded by generic scope claim","all_rows_update":{"applicability_status":"OUT_OF_SCOPE","operational_status":"NOT_APPLICABLE","filing_status":"NOT_APPLICABLE","tax_position_status":"NOT_APPLICABLE","exclusion_id":"EXC-001"},"scope_exclusions":[{"id":"EXC-001","requirement_ids":["F-01","F-02","F-03","F-04","F-05","O-01","O-02","O-03","O-04","R-01","A-01","A-02","T-01","T-02","T-03","P-01","P-02","P-03","L-01","L-02","L-03","S-01","S-02","S-03"],"reason":"Generic exclusion"}],"expected_schema_error":true},
-  {"name":"required annual filing marked not applicable","row_updates":{"L-01":{"filing_status":"NOT_APPLICABLE"}},"expected_schema_error":true},
-  {"name":"subsidiary evidence used for parent row","row_updates":{"S-01":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"RECONCILED","tax_position_status":"NOT_TESTED","authority_verified":true,"execution_method":"OTHER_VERIFIED","dates":{"effective":"2026-01-15"},"evidence":[{"source_path":"entities/child-llc/corporate/formation.pdf","sha256":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","agency_record_id":null,"locator":"page 1","evidence_subject_slug":"child-llc","role":"CURRENT","proves":"Child formation only","observed_on":"2026-08-25"}]}},"expected_cross_field_error":true},
-  {"name":"none escalation mixed with counsel","row_updates":{"F-01":{"escalation":["NONE","CORPORATE_COUNSEL"]}},"expected_schema_error":true},
-  {"name":"superseded-only required control","row_updates":{"F-01":{"lifecycle_status":"SUPERSEDED"}},"expected_schema_error":true},
-  {"name":"future audit cutoff","scope_updates":{"as_of":"2027-01-02","source_cutoff":"2027-01-02T12:00:00-08:00"},"expected_cross_field_error":true,"expected_error_contains":"as_of is in the future"},
-  {"name":"non-government authority URL","authority_updates":{"AUTH-WA-CORP":{"primary_source":"https://example.evil/fake-law"}},"expected_cross_field_error":true,"expected_error_contains":"not an official HTTPS .gov host"},
-  {"name":"historical-only nonapplicability","row_updates":{"L-03":{"evidence":[{"source_path":"corporate/formation/old-articles.pdf","sha256":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","agency_record_id":null,"locator":"page 1","evidence_subject_slug":"test-corp","role":"HISTORICAL","proves":"Historical domestic formation only","observed_on":"2026-08-25"}]}},"expected_schema_error":true},
-  {"name":"reconciled chronology without evidence","chronology_updates":{"evidence":[]},"expected_schema_error":true},
-  {"name":"director action precedes incorporator authority","chronology_updates":{"incorporator_action_date":"2024-01-05","initial_director_action_date":"2024-01-04","earliest_purported_corporate_action_date":"2024-01-04","sequence_status":"AUTHORITY_ORDER_DEFECT"},"row_updates":{"F-02":{"dates":{"approved":"2024-01-05","signed":"2024-01-05","effective":"2024-01-05"}}},"expected_overall":"AUTHORITY_HOLD"},
-  {"name":"same-day authority order is reversed","chronology_updates":{"authority_order":["FORMATION_EFFECTIVE","INITIAL_DIRECTOR_ACTION","INCORPORATOR_ACTION"],"sequence_status":"AUTHORITY_ORDER_DEFECT"},"expected_overall":"AUTHORITY_HOLD"},
-  {"name":"purported action precedes proven authority","chronology_updates":{"earliest_purported_corporate_action_date":"2024-01-03","sequence_status":"AUTHORITY_ORDER_DEFECT"},"expected_overall":"AUTHORITY_HOLD"},
-  {"name":"formation state differs from corporate authority","subject_updates":{"formation_jurisdiction":"Delaware"},"expected_cross_field_error":true,"expected_error_contains":"formation jurisdiction is outside audit scope"},
-  {"name":"executed annual action lacks actor and method","row_updates":{"A-01":{"approving_actor":null,"execution_method":"NOT_APPLICABLE"}},"expected_schema_error":true},
-  {"name":"resolved conflict evidence belongs to other entity","conflicts":[{"id":"CON-002","requirement_ids":["O-01","A-01"],"description":"Resolved capitalization conflict","status":"RESOLVED","resolution_evidence":[{"source_path":"entities/child-llc/corporate/ledger.pdf","sha256":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee","agency_record_id":null,"locator":"page 1","evidence_subject_slug":"child-llc","role":"CURRENT","proves":"Purported resolution","observed_on":"2027-01-01"}]}],"row_updates":{"O-01":{"conflict_ids":["CON-002"]},"A-01":{"conflict_ids":["CON-002"]}},"expected_cross_field_error":true,"expected_error_contains":"different legal entity"},
-  {"name":"annual execution outranks draft filing","row_updates":{"A-01":{"lifecycle_status":"FINAL_UNSIGNED","verification_status":"UNVERIFIED","operational_status":"APPROVED_NOT_EXECUTED","authority_verified":false,"execution_method":"NOT_APPLICABLE","next_required_evidence":"Executed annual shareholder action"},"T-01":{"lifecycle_status":"DRAFT","verification_status":"UNVERIFIED","filing_status":"NOT_PREPARED","authority_verified":false,"next_required_evidence":"Accepted filing"}},"expected_overall":"EXECUTION_PENDING"},
-  {"name":"existing evidence hash mismatch","row_updates":{"F-01":{"evidence":[{"source_path":"CLAUDE.md","sha256":"0000000000000000000000000000000000000000000000000000000000000000","agency_record_id":null,"locator":"fixture","evidence_subject_slug":"test-corp","role":"CURRENT","proves":"Purported formation evidence","observed_on":"2026-08-25"}]}},"verify_files":true,"expected_cross_field_error":true,"expected_error_contains":"SHA-256 does not match evidence file"},
-  {"name":"required subsidiary lacks separate audit","row_updates":{"S-02":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"RECONCILED","filing_status":"NOT_APPLICABLE","tax_position_status":"NOT_TESTED","authority_verified":true,"approving_actor":"Board of directors","execution_method":"OTHER_VERIFIED","dates":{"approved":"2026-01-15","effective":"2026-01-15"}}},"expected_schema_error":true},
-  {"name":"annual row outside audited period","row_updates":{"A-01":{"fiscal_or_tax_period":"FY2025"}},"expected_cross_field_error":true,"expected_error_contains":"row period is outside the audited FY"},
-  {"name":"evidence captured after same-day cutoff","row_updates":{"F-01":{"evidence":[{"source_path":"entities/test-corp/corporate/formation/articles.pdf","sha256":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff","agency_record_id":null,"locator":"page 1","evidence_subject_slug":"test-corp","role":"CURRENT","proves":"Purported formation","observed_on":"2026-08-25","observed_at":"2026-08-25T13:00:00-07:00"}]}},"expected_cross_field_error":true,"expected_error_contains":"evidence captured after source_cutoff"},
-  {"name":"authority verified after same-day cutoff","authority_updates":{"AUTH-WA-CORP":{"verified_at":"2026-08-25T13:00:00-07:00"}},"expected_cross_field_error":true,"expected_error_contains":"authority was verified after source_cutoff"},
-  {"name":"scope searches privileged material","scope_updates":{"paths_searched":["entities/test-corp/matters/attorney-client-privileged"]},"expected_cross_field_error":true,"expected_error_contains":"scope path enters privileged material"},
-  {"name":"nonexistent specialist artifact","row_updates":{"P-01":{"specialist_result_reference":"entities/test-corp/corporate/definitely-missing.json","specialist_result_sha256":"1111111111111111111111111111111111111111111111111111111111111111","specialist_result_subject_slug":"test-corp","specialist_result_period":"FY2026","specialist_result_status":"VERIFIED"}},"verify_files":true,"expected_cross_field_error":true,"expected_error_contains":"specialist artifact does not exist"},
-  {"name":"authority starts after governed action","authority_updates":{"AUTH-WA-CORP":{"effective_from":"2026-08-01"}},"expected_cross_field_error":true,"expected_error_contains":"authority effective period does not cover a row action date"},
-  {"name":"instantiated audit rejects fixture authority IDs","verify_files":true,"expected_cross_field_error":true,"expected_error_contains":"instantiated audits require run-specific authority IDs"},
-  {"name":"nonexistent evidence file","row_updates":{"F-01":{"evidence":[{"source_path":"entities/test-corp/corporate/formation/definitely-missing.pdf","sha256":"2222222222222222222222222222222222222222222222222222222222222222","agency_record_id":null,"locator":"page 1","evidence_subject_slug":"test-corp","role":"CURRENT","proves":"Purported formation","observed_on":"2026-08-25","observed_at":"2026-08-25T12:00:00-07:00"}]}},"verify_files":true,"expected_cross_field_error":true,"expected_error_contains":"evidence file does not exist"},
-  {"name":"payroll control uses unrelated tax source","authority_updates":{"AUTH-IRS-PAYROLL":{"primary_source":"https://www.irs.gov/forms-pubs/about-form-1120"}},"expected_cross_field_error":true,"expected_error_contains":"selected authority source is not issue-specific"},
-  {"name":"mandatory formation control marked not applicable","row_updates":{"F-01":{"applicability_status":"NOT_APPLICABLE_VERIFIED","lifecycle_status":"NOT_FOUND","verification_status":"VERIFIED","operational_status":"NOT_APPLICABLE","filing_status":"NOT_APPLICABLE","tax_position_status":"NOT_APPLICABLE","authority_verified":true,"execution_method":"NOT_APPLICABLE"}},"expected_schema_error":true},
-  {"name":"required issuance lacks stock specialist","row_updates":{"O-02":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"RECONCILED","filing_status":"NOT_APPLICABLE","tax_position_status":"NOT_TESTED","authority_verified":true,"approving_actor":"Board of directors","execution_method":"OTHER_VERIFIED","dates":{"approved":"2026-01-15","effective":"2026-01-15"}}},"expected_schema_error":true},
-  {"name":"O04 uses generic Form 1120 authority","row_updates":{"O-04":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"NOT_APPLICABLE","filing_status":"NOT_APPLICABLE","tax_position_status":"INELIGIBLE","specialist_result_reference":"corporate/stock-issuances/stock-issuance-audit-FY2026.json","authority_verified":true,"approving_actor":"Tax specialist","execution_method":"OTHER_VERIFIED","dates":{"effective":"2026-01-15"}}},"expected_cross_field_error":true,"expected_error_contains":"generic Form 1120 authority cannot support"},
-  {"name":"operation gap outranks filing gap","row_updates":{"P-01":{"applicability_status":"REQUIRED","lifecycle_status":"EXECUTED_EFFECTIVE","verification_status":"VERIFIED","operational_status":"ACTIVE_NOT_YET_OPERATED","filing_status":"NOT_APPLICABLE","tax_position_status":"PROVISIONAL","specialist_result_reference":"corporate/accountable-plan/status.json","authority_verified":true,"approving_actor":"Board of directors","authority_basis_id":"AUTH-WA-CORP","additional_authority_basis_ids":["AUTH-US-TAX"],"governing_jurisdiction":"Washington","authority_domain":"CORPORATE_LAW","execution_method":"WRITTEN_CONSENT","dates":{"approved":"2026-01-10","signed":"2026-01-10","effective":"2026-01-10"},"signature_evidence":{"method":"HANDWRITTEN_OR_IMAGE_OBSERVED","signer_identity":"VERIFIED","document_integrity":"VERIFIED","notes":"Observed and verified"}},"T-01":{"lifecycle_status":"DRAFT","verification_status":"UNVERIFIED","filing_status":"NOT_PREPARED","authority_verified":false,"next_required_evidence":"Accepted filing"}},"expected_overall":"OPERATION_RECONCILIATION_PENDING"},
-  {"name":"claimed overall differs from recomputation","claimed_overall":"CURRENT_WITH_DISCLOSED_NONMATERIAL_GAPS","expected_claim_mismatch":true},
-  {"name":"one document reused for every corporate control","all_rows_update":{"evidence":[{"source_path":"entities/test-corp/entity.md","sha256":"9999999999999999999999999999999999999999999999999999999999999999","agency_record_id":null,"locator":"entire file","evidence_subject_slug":"test-corp","role":"CURRENT","proves":"Purported universal proof","observed_on":"2026-08-25","observed_at":"2026-08-25T12:00:00-07:00"}]},"expected_cross_field_error":true,"expected_error_contains":"incompatible document kinds"},
-  {"name":"named directors in filed articles valid authority branch","chronology_updates":{"initial_directors_named_in_articles":true,"incorporator_action_date":null,"initial_director_action_date":"2024-01-04","earliest_purported_corporate_action_date":"2024-01-04","authority_order":["FORMATION_EFFECTIVE","INITIAL_DIRECTOR_ACTION"],"sequence_status":"VERIFIED_AFTER_INCORPORATION"},"row_updates":{"F-02":{"execution_method":"AGENCY_OR_EXTERNAL_RECORD","dates":{"prepared":null,"approved":null,"signed":null,"effective":"2024-01-03","submitted":null,"accepted_or_issued":null,"expires":null,"superseded":null},"signature_evidence":{"method":"NOT_APPLICABLE","signer_identity":"NOT_APPLICABLE","document_integrity":"NOT_APPLICABLE","notes":"Directors named in filed articles"},"evidence":[{"source_path":"fixtures/test-corp/f-01.pdf","sha256":"8888888888888888888888888888888888888888888888888888888888888888","agency_record_id":null,"document_kind":"ARTICLES_OR_AMENDMENT","locator":"director designation","evidence_subject_slug":"test-corp","role":"CURRENT","proves":"Initial directors named in effective filed articles","observed_on":"2026-08-25","observed_at":"2026-08-25T12:00:00-07:00"}]}},"expected_overall":"RECORD_SET_RECONCILED_AS_OF"},
-  {"name":"corporate authority uses unrelated government source","authority_updates":{"AUTH-WA-CORP":{"primary_source":"https://www.uspto.gov/patents/maintain/patents-assignments-change-search-ownership"}},"expected_cross_field_error":true,"expected_error_contains":"irrelevant to its authority domain"},
-  {"name":"annual financial statements missing","record_subcontrol_updates":{"ANNUAL_FINANCIAL_STATEMENTS":{"status":"MISSING","evidence":[],"deadline":"2027-04-30","next_required_evidence":"Annual balance sheet, income statement, and required report or officer statement"}},"expected_overall":"REQUIRED_RECORD_MISSING"},
-  {"name":"permanent record subcontrols omitted","row_updates":{"R-01":{"record_subcontrols":[]}},"expected_cross_field_error":true,"expected_error_contains":"subcontrols must appear exactly once"},
-  {"name":"permanent core record falsely marked not yet due","record_subcontrol_updates":{"MINUTES_CONSENTS":{"status":"NOT_YET_DUE","deadline":"2027-01-31","evidence":[],"next_required_evidence":"Current minutes and consents"}},"expected_cross_field_error":true,"expected_error_contains":"permanent core record cannot be not yet due"},
-  {"name":"annual record evidence uses wrong fiscal year","record_subcontrol_updates":{"ANNUAL_FINANCIAL_STATEMENTS":{"evidence_period":"FY2025"}},"expected_cross_field_error":true,"expected_error_contains":"evidence period does not match the audited year"}
+ {
+  "name": "clean canonical record set",
+  "expected_overall": "RECORD_SET_RECONCILED_AS_OF"
+ },
+ {
+  "name": "E2 preincorporation action",
+  "chronology_updates": {
+   "earliest_purported_corporate_action_date": "2024-01-02",
+   "incorporator_action_date": "2024-01-02",
+   "initial_director_action_date": "2024-01-02",
+   "sequence_status": "PREINCORPORATION_ACTION_PRESENT"
+  },
+  "row_updates": {
+   "F-02": {
+    "dates": {
+     "approved": "2024-01-02",
+     "signed": "2024-01-02",
+     "effective": "2024-01-02"
+    }
+   }
+  },
+  "expected_overall": "AUTHORITY_HOLD"
+ },
+ {
+  "name": "E3 missing authority and zero issued shares",
+  "row_updates": {
+   "F-02": {
+    "lifecycle_status": "NOT_FOUND",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "COUNSEL_HOLD",
+    "authority_verified": false,
+    "evidence": [],
+    "next_required_evidence": "Incorporator and board authority"
+   },
+   "O-01": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "NOT_FOUND",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "COUNSEL_HOLD",
+    "authority_verified": false,
+    "evidence": [],
+    "next_required_evidence": "Issuance closing and ledger"
+   }
+  },
+  "expected_overall": "AUTHORITY_HOLD"
+ },
+ {
+  "name": "E4 capitalization conflict",
+  "conflicts": [
+   {
+    "id": "CON-001",
+    "requirement_ids": [
+     "O-01",
+     "A-01"
+    ],
+    "description": "Ledger says 100 shares; unsigned annual consent says 1,000",
+    "status": "OPEN",
+    "resolution_evidence": []
+   }
+  ],
+  "row_updates": {
+   "O-01": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "CONFLICTED",
+    "operational_status": "COUNSEL_HOLD",
+    "tax_position_status": "NOT_TESTED",
+    "authority_verified": true,
+    "execution_method": "OTHER_VERIFIED",
+    "dates": {
+     "effective": "2026-01-15"
+    },
+    "conflict_ids": [
+     "CON-001"
+    ]
+   },
+   "A-01": {
+    "lifecycle_status": "FINAL_UNSIGNED",
+    "verification_status": "CONFLICTED",
+    "operational_status": "APPROVED_NOT_EXECUTED",
+    "authority_verified": false,
+    "conflict_ids": [
+     "CON-001"
+    ]
+   }
+  },
+  "expected_overall": "FACT_CONFLICT"
+ },
+ {
+  "name": "E9 valid plan not yet operated",
+  "row_updates": {
+   "P-01": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "ACTIVE_NOT_YET_OPERATED",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "PROVISIONAL",
+    "specialist_result_reference": "corporate/accountable-plan/status.json",
+    "authority_verified": true,
+    "approving_actor": "Board of directors",
+    "authority_basis_id": "AUTH-WA-CORP",
+    "additional_authority_basis_ids": [
+     "AUTH-US-TAX"
+    ],
+    "governing_jurisdiction": "Washington",
+    "authority_domain": "CORPORATE_LAW",
+    "execution_method": "WRITTEN_CONSENT",
+    "dates": {
+     "approved": "2026-01-10",
+     "signed": "2026-01-10",
+     "effective": "2026-01-10"
+    },
+    "signature_evidence": {
+     "method": "HANDWRITTEN_OR_IMAGE_OBSERVED",
+     "signer_identity": "VERIFIED",
+     "document_integrity": "VERIFIED",
+     "notes": "Observed and verified"
+    }
+   }
+  },
+  "expected_overall": "OPERATION_RECONCILIATION_PENDING"
+ },
+ {
+  "name": "accountable plan payment partial failure",
+  "row_updates": {
+   "P-01": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "PARTIAL_FAILURE",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "PROVISIONAL",
+    "specialist_result_reference": "corporate/accountable-plan/status.json",
+    "authority_verified": true,
+    "approving_actor": "Board of directors",
+    "authority_basis_id": "AUTH-WA-CORP",
+    "additional_authority_basis_ids": [
+     "AUTH-US-TAX"
+    ],
+    "governing_jurisdiction": "Washington",
+    "authority_domain": "CORPORATE_LAW",
+    "execution_method": "WRITTEN_CONSENT",
+    "dates": {
+     "approved": "2026-01-10",
+     "signed": "2026-01-10",
+     "effective": "2026-01-10"
+    },
+    "signature_evidence": {
+     "method": "HANDWRITTEN_OR_IMAGE_OBSERVED",
+     "signer_identity": "VERIFIED",
+     "document_integrity": "VERIFIED",
+     "notes": "One payment failed substantiation"
+    }
+   }
+  },
+  "expected_overall": "OPERATION_RECONCILIATION_PENDING"
+ },
+ {
+  "name": "E10 Augusta resolution only",
+  "row_updates": {
+   "P-02": {
+    "applicability_status": "RECOMMENDED_ONLY",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "APPROVED_NOT_EXECUTED",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "NOT_TESTED",
+    "authority_verified": true,
+    "approving_actor": "Board of directors",
+    "authority_basis_id": "AUTH-WA-CORP",
+    "additional_authority_basis_ids": [
+     "AUTH-US-TAX"
+    ],
+    "governing_jurisdiction": "Washington",
+    "authority_domain": "CORPORATE_LAW",
+    "execution_method": "WRITTEN_CONSENT",
+    "dates": {
+     "approved": "2026-01-11",
+     "signed": "2026-01-11",
+     "effective": "2026-01-11"
+    },
+    "signature_evidence": {
+     "method": "HANDWRITTEN_OR_IMAGE_OBSERVED",
+     "signer_identity": "VERIFIED",
+     "document_integrity": "VERIFIED",
+     "notes": "Resolution only"
+    }
+   }
+  },
+  "expected_overall": "CURRENT_WITH_DISCLOSED_NONMATERIAL_GAPS"
+ },
+ {
+  "name": "E12 expired license with renewal submitted",
+  "row_updates": {
+   "L-02": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "SUBMITTED",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "NOT_APPLICABLE",
+    "filing_status": "SUBMITTED_UNCONFIRMED",
+    "authority_verified": true,
+    "approving_actor": null,
+    "authority_basis_id": "AUTH-WA-LICENSE",
+    "dates": {
+     "submitted": "2026-08-20",
+     "expires": "2026-08-01"
+    },
+    "evidence": [
+     {
+      "source_path": "corporate/licenses/old-license.pdf",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "agency_record_id": null,
+      "locator": "page 1 expiration field",
+      "evidence_subject_slug": "test-corp",
+      "role": "HISTORICAL",
+      "proves": "Prior credential expired 2026-08-01",
+      "observed_on": "2026-08-25"
+     },
+     {
+      "source_path": "corporate/licenses/renewal-receipt.pdf",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "agency_record_id": null,
+      "locator": "page 1 submission confirmation",
+      "evidence_subject_slug": "test-corp",
+      "role": "CURRENT",
+      "proves": "Renewal submitted; issuance not confirmed",
+      "observed_on": "2026-08-25"
+     }
+    ],
+    "next_required_evidence": "Issued renewal or current live agency status"
+   }
+  },
+  "expected_overall": "FILING_PENDING"
+ },
+ {
+  "name": "E15 missing IP assignment",
+  "row_updates": {
+   "S-03": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "NOT_FOUND",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "COUNSEL_HOLD",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "COUNSEL_HOLD",
+    "specialist_result_reference": "corporate/ip-remediation/counsel-packet.json",
+    "authority_verified": false,
+    "evidence": [],
+    "next_required_evidence": "Executed counsel-reviewed IP assignments"
+   }
+  },
+  "expected_overall": "COUNSEL_HOLD"
+ },
+ {
+  "name": "E18 draft return not submitted",
+  "row_updates": {
+   "T-01": {
+    "lifecycle_status": "DRAFT",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "NOT_APPLICABLE",
+    "filing_status": "NOT_PREPARED",
+    "authority_verified": false,
+    "evidence": [],
+    "next_required_evidence": "Accepted e-file transmission and payment evidence"
+   }
+  },
+  "expected_overall": "FILING_PENDING"
+ },
+ {
+  "name": "rejected return transmission",
+  "row_updates": {
+   "T-01": {
+    "lifecycle_status": "SUBMITTED",
+    "verification_status": "VERIFIED",
+    "operational_status": "NOT_APPLICABLE",
+    "filing_status": "REJECTED",
+    "authority_verified": true,
+    "dates": {
+     "submitted": "2026-04-15"
+    },
+    "next_required_evidence": "Corrected accepted transmission"
+   }
+  },
+  "expected_overall": "FILING_PENDING"
+ },
+ {
+  "name": "E19 visible signature identity unverified",
+  "row_updates": {
+   "A-01": {
+    "lifecycle_status": "EXECUTED_AUTHORITY_UNVERIFIED",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "APPROVED_NOT_EXECUTED",
+    "filing_status": "NOT_APPLICABLE",
+    "authority_verified": false,
+    "dates": {
+     "signed": "2026-02-01"
+    },
+    "signature_evidence": {
+     "method": "HANDWRITTEN_OR_IMAGE_OBSERVED",
+     "signer_identity": "UNVERIFIED",
+     "document_integrity": "UNVERIFIED",
+     "notes": "Visible image; no cryptographic validation"
+    },
+    "next_required_evidence": "Signer identity, authority, date, and document-integrity evidence"
+   }
+  },
+  "expected_overall": "EXECUTION_PENDING"
+ },
+ {
+  "name": "unsupported N/A with rejected filing",
+  "row_updates": {
+   "L-03": {
+    "applicability_status": "NOT_APPLICABLE_VERIFIED",
+    "lifecycle_status": "EXPIRED",
+    "verification_status": "VERIFIED",
+    "operational_status": "DEFECTIVE",
+    "filing_status": "REJECTED",
+    "tax_position_status": "NOT_APPLICABLE"
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "executed signed record with unverified identity",
+  "row_updates": {
+   "A-01": {
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "RECONCILED",
+    "authority_verified": true,
+    "dates": {
+     "signed": "2026-02-01",
+     "effective": "2026-02-01"
+    },
+    "signature_evidence": {
+     "method": "HANDWRITTEN_OR_IMAGE_OBSERVED",
+     "signer_identity": "UNVERIFIED",
+     "document_integrity": "UNVERIFIED",
+     "notes": "Hostile claim"
+    }
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "spoofed final tax election",
+  "row_updates": {
+   "O-04": {
+    "tax_position_status": "SECTION 1244 ELECTED FINAL"
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "single-row false reconciliation",
+  "truncate_requirements_to": [
+   "F-01"
+  ],
+  "expected_schema_error": true
+ },
+ {
+  "name": "future acceptance date",
+  "row_updates": {
+   "T-01": {
+    "dates": {
+     "accepted_or_issued": "2027-01-01"
+    }
+   }
+  },
+  "expected_cross_field_error": true
+ },
+ {
+  "name": "authority row predates chronology register",
+  "row_updates": {
+   "F-03": {
+    "dates": {
+     "effective": "2024-01-02"
+    }
+   }
+  },
+  "expected_cross_field_error": true
+ },
+ {
+  "name": "all rows excluded by generic scope claim",
+  "all_rows_update": {
+   "applicability_status": "OUT_OF_SCOPE",
+   "operational_status": "NOT_APPLICABLE",
+   "filing_status": "NOT_APPLICABLE",
+   "tax_position_status": "NOT_APPLICABLE",
+   "exclusion_id": "EXC-001"
+  },
+  "scope_exclusions": [
+   {
+    "id": "EXC-001",
+    "requirement_ids": [
+     "F-01",
+     "F-02",
+     "F-03",
+     "F-04",
+     "F-05",
+     "O-01",
+     "O-02",
+     "O-03",
+     "O-04",
+     "R-01",
+     "A-01",
+     "A-02",
+     "T-01",
+     "T-02",
+     "T-03",
+     "P-01",
+     "P-02",
+     "P-03",
+     "L-01",
+     "L-02",
+     "L-03",
+     "S-01",
+     "S-02",
+     "S-03"
+    ],
+    "reason": "Generic exclusion"
+   }
+  ],
+  "expected_schema_error": true
+ },
+ {
+  "name": "required annual filing marked not applicable",
+  "row_updates": {
+   "L-01": {
+    "filing_status": "NOT_APPLICABLE"
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "subsidiary evidence used for parent row",
+  "row_updates": {
+   "S-01": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "RECONCILED",
+    "tax_position_status": "NOT_TESTED",
+    "authority_verified": true,
+    "execution_method": "OTHER_VERIFIED",
+    "dates": {
+     "effective": "2026-01-15"
+    },
+    "evidence": [
+     {
+      "source_path": "entities/child-llc/corporate/formation.pdf",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "agency_record_id": null,
+      "locator": "page 1",
+      "evidence_subject_slug": "child-llc",
+      "role": "CURRENT",
+      "proves": "Child formation only",
+      "observed_on": "2026-08-25"
+     }
+    ]
+   }
+  },
+  "expected_cross_field_error": true
+ },
+ {
+  "name": "none escalation mixed with counsel",
+  "row_updates": {
+   "F-01": {
+    "escalation": [
+     "NONE",
+     "CORPORATE_COUNSEL"
+    ]
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "superseded-only required control",
+  "row_updates": {
+   "F-01": {
+    "lifecycle_status": "SUPERSEDED"
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "future audit cutoff",
+  "scope_updates": {
+   "as_of": "2027-01-02",
+   "source_cutoff": "2027-01-02T12:00:00-08:00"
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "as_of is in the future"
+ },
+ {
+  "name": "non-government authority URL",
+  "authority_updates": {
+   "AUTH-WA-CORP": {
+    "primary_source": "https://example.evil/fake-law"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "not an official HTTPS .gov host"
+ },
+ {
+  "name": "historical-only nonapplicability",
+  "row_updates": {
+   "L-03": {
+    "evidence": [
+     {
+      "source_path": "corporate/formation/old-articles.pdf",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "agency_record_id": null,
+      "locator": "page 1",
+      "evidence_subject_slug": "test-corp",
+      "role": "HISTORICAL",
+      "proves": "Historical domestic formation only",
+      "observed_on": "2026-08-25"
+     }
+    ]
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "reconciled chronology without evidence",
+  "chronology_updates": {
+   "evidence": []
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "director action precedes incorporator authority",
+  "chronology_updates": {
+   "incorporator_action_date": "2024-01-05",
+   "initial_director_action_date": "2024-01-04",
+   "earliest_purported_corporate_action_date": "2024-01-04",
+   "sequence_status": "AUTHORITY_ORDER_DEFECT"
+  },
+  "row_updates": {
+   "F-02": {
+    "dates": {
+     "approved": "2024-01-05",
+     "signed": "2024-01-05",
+     "effective": "2024-01-05"
+    }
+   }
+  },
+  "expected_overall": "AUTHORITY_HOLD"
+ },
+ {
+  "name": "same-day authority order is reversed",
+  "chronology_updates": {
+   "authority_order": [
+    "FORMATION_EFFECTIVE",
+    "INITIAL_DIRECTOR_ACTION",
+    "INCORPORATOR_ACTION"
+   ],
+   "sequence_status": "AUTHORITY_ORDER_DEFECT"
+  },
+  "expected_overall": "AUTHORITY_HOLD"
+ },
+ {
+  "name": "purported action precedes proven authority",
+  "chronology_updates": {
+   "earliest_purported_corporate_action_date": "2024-01-03",
+   "sequence_status": "AUTHORITY_ORDER_DEFECT"
+  },
+  "expected_overall": "AUTHORITY_HOLD"
+ },
+ {
+  "name": "formation state differs from corporate authority",
+  "subject_updates": {
+   "formation_jurisdiction": "Delaware"
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "formation jurisdiction is outside audit scope"
+ },
+ {
+  "name": "executed annual action lacks actor and method",
+  "row_updates": {
+   "A-01": {
+    "approving_actor": null,
+    "execution_method": "NOT_APPLICABLE"
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "resolved conflict evidence belongs to other entity",
+  "conflicts": [
+   {
+    "id": "CON-002",
+    "requirement_ids": [
+     "O-01",
+     "A-01"
+    ],
+    "description": "Resolved capitalization conflict",
+    "status": "RESOLVED",
+    "resolution_evidence": [
+     {
+      "source_path": "entities/child-llc/corporate/ledger.pdf",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "agency_record_id": null,
+      "locator": "page 1",
+      "evidence_subject_slug": "child-llc",
+      "role": "CURRENT",
+      "proves": "Purported resolution",
+      "observed_on": "2027-01-01"
+     }
+    ]
+   }
+  ],
+  "row_updates": {
+   "O-01": {
+    "conflict_ids": [
+     "CON-002"
+    ]
+   },
+   "A-01": {
+    "conflict_ids": [
+     "CON-002"
+    ]
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "different legal entity"
+ },
+ {
+  "name": "annual execution outranks draft filing",
+  "row_updates": {
+   "A-01": {
+    "lifecycle_status": "FINAL_UNSIGNED",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "APPROVED_NOT_EXECUTED",
+    "authority_verified": false,
+    "execution_method": "NOT_APPLICABLE",
+    "next_required_evidence": "Executed annual shareholder action"
+   },
+   "T-01": {
+    "lifecycle_status": "DRAFT",
+    "verification_status": "UNVERIFIED",
+    "filing_status": "NOT_PREPARED",
+    "authority_verified": false,
+    "next_required_evidence": "Accepted filing"
+   }
+  },
+  "expected_overall": "EXECUTION_PENDING"
+ },
+ {
+  "name": "existing evidence hash mismatch",
+  "row_updates": {
+   "F-01": {
+    "evidence": [
+     {
+      "source_path": "CLAUDE.md",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "agency_record_id": null,
+      "locator": "fixture",
+      "evidence_subject_slug": "test-corp",
+      "role": "CURRENT",
+      "proves": "Purported formation evidence",
+      "observed_on": "2026-08-25"
+     }
+    ]
+   }
+  },
+  "verify_files": true,
+  "expected_cross_field_error": true,
+  "expected_error_contains": "SHA-256 does not match evidence file"
+ },
+ {
+  "name": "required subsidiary lacks separate audit",
+  "row_updates": {
+   "S-02": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "RECONCILED",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "NOT_TESTED",
+    "authority_verified": true,
+    "approving_actor": "Board of directors",
+    "execution_method": "OTHER_VERIFIED",
+    "dates": {
+     "approved": "2026-01-15",
+     "effective": "2026-01-15"
+    }
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "annual row outside audited period",
+  "row_updates": {
+   "A-01": {
+    "fiscal_or_tax_period": "FY2025"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "row period is outside the audited FY"
+ },
+ {
+  "name": "evidence captured after same-day cutoff",
+  "row_updates": {
+   "F-01": {
+    "evidence": [
+     {
+      "source_path": "entities/test-corp/corporate/formation/articles.pdf",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "agency_record_id": null,
+      "locator": "page 1",
+      "evidence_subject_slug": "test-corp",
+      "role": "CURRENT",
+      "proves": "Purported formation",
+      "observed_on": "2026-08-25",
+      "observed_at": "2026-08-25T13:00:00-07:00"
+     }
+    ]
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "evidence captured after source_cutoff"
+ },
+ {
+  "name": "authority verified after same-day cutoff",
+  "authority_updates": {
+   "AUTH-WA-CORP": {
+    "verified_at": "2026-08-25T13:00:00-07:00"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "authority was verified after source_cutoff"
+ },
+ {
+  "name": "scope searches privileged material",
+  "scope_updates": {
+   "paths_searched": [
+    "entities/test-corp/matters/attorney-client-privileged"
+   ]
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "scope path enters privileged material"
+ },
+ {
+  "name": "nonexistent specialist artifact",
+  "row_updates": {
+   "P-01": {
+    "specialist_result_reference": "entities/test-corp/corporate/definitely-missing.json",
+    "specialist_result_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "specialist_result_subject_slug": "test-corp",
+    "specialist_result_period": "FY2026",
+    "specialist_result_status": "VERIFIED"
+   }
+  },
+  "verify_files": true,
+  "expected_cross_field_error": true,
+  "expected_error_contains": "specialist artifact does not exist"
+ },
+ {
+  "name": "authority starts after governed action",
+  "authority_updates": {
+   "AUTH-WA-CORP": {
+    "effective_from": "2026-08-01"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "authority effective period does not cover a row action date"
+ },
+ {
+  "name": "instantiated audit rejects fixture authority IDs",
+  "verify_files": true,
+  "expected_cross_field_error": true,
+  "expected_error_contains": "instantiated audits require run-specific authority IDs"
+ },
+ {
+  "name": "nonexistent evidence file",
+  "row_updates": {
+   "F-01": {
+    "evidence": [
+     {
+      "source_path": "entities/test-corp/corporate/formation/definitely-missing.pdf",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "agency_record_id": null,
+      "locator": "page 1",
+      "evidence_subject_slug": "test-corp",
+      "role": "CURRENT",
+      "proves": "Purported formation",
+      "observed_on": "2026-08-25",
+      "observed_at": "2026-08-25T12:00:00-07:00"
+     }
+    ]
+   }
+  },
+  "verify_files": true,
+  "expected_cross_field_error": true,
+  "expected_error_contains": "evidence file does not exist"
+ },
+ {
+  "name": "payroll control uses unrelated tax source",
+  "authority_updates": {
+   "AUTH-IRS-PAYROLL": {
+    "primary_source": "https://www.irs.gov/forms-pubs/about-form-1120"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "selected authority source is not issue-specific"
+ },
+ {
+  "name": "mandatory formation control marked not applicable",
+  "row_updates": {
+   "F-01": {
+    "applicability_status": "NOT_APPLICABLE_VERIFIED",
+    "lifecycle_status": "NOT_FOUND",
+    "verification_status": "VERIFIED",
+    "operational_status": "NOT_APPLICABLE",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "NOT_APPLICABLE",
+    "authority_verified": true,
+    "execution_method": "NOT_APPLICABLE"
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "required issuance lacks stock specialist",
+  "row_updates": {
+   "O-02": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "RECONCILED",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "NOT_TESTED",
+    "authority_verified": true,
+    "approving_actor": "Board of directors",
+    "execution_method": "OTHER_VERIFIED",
+    "dates": {
+     "approved": "2026-01-15",
+     "effective": "2026-01-15"
+    }
+   }
+  },
+  "expected_schema_error": true
+ },
+ {
+  "name": "O04 uses generic Form 1120 authority",
+  "row_updates": {
+   "O-04": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "NOT_APPLICABLE",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "INELIGIBLE",
+    "specialist_result_reference": "corporate/stock-issuances/stock-issuance-audit-FY2026.json",
+    "authority_verified": true,
+    "approving_actor": "Tax specialist",
+    "execution_method": "OTHER_VERIFIED",
+    "dates": {
+     "effective": "2026-01-15"
+    }
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "generic Form 1120 authority cannot support"
+ },
+ {
+  "name": "operation gap outranks filing gap",
+  "row_updates": {
+   "P-01": {
+    "applicability_status": "REQUIRED",
+    "lifecycle_status": "EXECUTED_EFFECTIVE",
+    "verification_status": "VERIFIED",
+    "operational_status": "ACTIVE_NOT_YET_OPERATED",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "PROVISIONAL",
+    "specialist_result_reference": "corporate/accountable-plan/status.json",
+    "authority_verified": true,
+    "approving_actor": "Board of directors",
+    "authority_basis_id": "AUTH-WA-CORP",
+    "additional_authority_basis_ids": [
+     "AUTH-US-TAX"
+    ],
+    "governing_jurisdiction": "Washington",
+    "authority_domain": "CORPORATE_LAW",
+    "execution_method": "WRITTEN_CONSENT",
+    "dates": {
+     "approved": "2026-01-10",
+     "signed": "2026-01-10",
+     "effective": "2026-01-10"
+    },
+    "signature_evidence": {
+     "method": "HANDWRITTEN_OR_IMAGE_OBSERVED",
+     "signer_identity": "VERIFIED",
+     "document_integrity": "VERIFIED",
+     "notes": "Observed and verified"
+    }
+   },
+   "T-01": {
+    "lifecycle_status": "DRAFT",
+    "verification_status": "UNVERIFIED",
+    "filing_status": "NOT_PREPARED",
+    "authority_verified": false,
+    "next_required_evidence": "Accepted filing"
+   }
+  },
+  "expected_overall": "OPERATION_RECONCILIATION_PENDING"
+ },
+ {
+  "name": "claimed overall differs from recomputation",
+  "claimed_overall": "CURRENT_WITH_DISCLOSED_NONMATERIAL_GAPS",
+  "expected_claim_mismatch": true
+ },
+ {
+  "name": "one document reused for every corporate control",
+  "all_rows_update": {
+   "evidence": [
+    {
+     "source_path": "entities/test-corp/entity.md",
+     "sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+     "agency_record_id": null,
+     "locator": "entire file",
+     "evidence_subject_slug": "test-corp",
+     "role": "CURRENT",
+     "proves": "Purported universal proof",
+     "observed_on": "2026-08-25",
+     "observed_at": "2026-08-25T12:00:00-07:00"
+    }
+   ]
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "incompatible document kinds"
+ },
+ {
+  "name": "named directors in filed articles valid authority branch",
+  "chronology_updates": {
+   "initial_directors_named_in_articles": true,
+   "incorporator_action_date": null,
+   "initial_director_action_date": "2024-01-04",
+   "earliest_purported_corporate_action_date": "2024-01-04",
+   "authority_order": [
+    "FORMATION_EFFECTIVE",
+    "INITIAL_DIRECTOR_ACTION"
+   ],
+   "sequence_status": "VERIFIED_AFTER_INCORPORATION"
+  },
+  "row_updates": {
+   "F-02": {
+    "execution_method": "AGENCY_OR_EXTERNAL_RECORD",
+    "dates": {
+     "prepared": null,
+     "approved": null,
+     "signed": null,
+     "effective": "2024-01-03",
+     "submitted": null,
+     "accepted_or_issued": null,
+     "expires": null,
+     "superseded": null
+    },
+    "signature_evidence": {
+     "method": "NOT_APPLICABLE",
+     "signer_identity": "NOT_APPLICABLE",
+     "document_integrity": "NOT_APPLICABLE",
+     "notes": "Directors named in filed articles"
+    },
+    "evidence": [
+     {
+      "source_path": "fixtures/test-corp/f-01.pdf",
+      "sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "agency_record_id": null,
+      "document_kind": "ARTICLES_OR_AMENDMENT",
+      "locator": "director designation",
+      "evidence_subject_slug": "test-corp",
+      "role": "CURRENT",
+      "proves": "Initial directors named in effective filed articles",
+      "observed_on": "2026-08-25",
+      "observed_at": "2026-08-25T12:00:00-07:00"
+     }
+    ]
+   }
+  },
+  "expected_overall": "RECORD_SET_RECONCILED_AS_OF"
+ },
+ {
+  "name": "corporate authority uses unrelated government source",
+  "authority_updates": {
+   "AUTH-WA-CORP": {
+    "primary_source": "https://www.uspto.gov/patents/maintain/patents-assignments-change-search-ownership"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "irrelevant to its authority domain"
+ },
+ {
+  "name": "annual financial statements missing",
+  "record_subcontrol_updates": {
+   "ANNUAL_FINANCIAL_STATEMENTS": {
+    "status": "MISSING",
+    "evidence": [],
+    "deadline": "2027-04-30",
+    "next_required_evidence": "Annual balance sheet, income statement, and required report or officer statement"
+   }
+  },
+  "expected_overall": "REQUIRED_RECORD_MISSING"
+ },
+ {
+  "name": "permanent record subcontrols omitted",
+  "row_updates": {
+   "R-01": {
+    "record_subcontrols": []
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "subcontrols must appear exactly once"
+ },
+ {
+  "name": "permanent core record falsely marked not yet due",
+  "record_subcontrol_updates": {
+   "MINUTES_CONSENTS": {
+    "status": "NOT_YET_DUE",
+    "deadline": "2027-01-31",
+    "evidence": [],
+    "next_required_evidence": "Current minutes and consents"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "permanent core record cannot be not yet due"
+ },
+ {
+  "name": "annual record evidence uses wrong fiscal year",
+  "record_subcontrol_updates": {
+   "ANNUAL_FINANCIAL_STATEMENTS": {
+    "evidence_period": "FY2025"
+   }
+  },
+  "expected_cross_field_error": true,
+  "expected_error_contains": "evidence period does not match the audited year"
+ },
+ {
+  "name": "unadopted recommended-only control lands on disclosed gaps",
+  "row_updates": {
+   "P-02": {
+    "applicability_status": "RECOMMENDED_ONLY",
+    "lifecycle_status": "NOT_FOUND",
+    "verification_status": "UNVERIFIED",
+    "operational_status": "NOT_APPLICABLE",
+    "filing_status": "NOT_APPLICABLE",
+    "tax_position_status": "NOT_APPLICABLE",
+    "authority_verified": false,
+    "evidence": [],
+    "next_required_evidence": "Board decision whether to adopt this optional control"
+   }
+  },
+  "expected_overall": "CURRENT_WITH_DISCLOSED_NONMATERIAL_GAPS"
+ }
 ]

@@ -229,10 +229,145 @@ or ownership-profile mutation. Return the fail-closed statuses, evidence gaps,
 and sequenced remediation/counsel questions; obtain separate authorization for
 any permitted next mode.
 
+### E21 — sole director and sole shareholder approving a transaction with himself
+
+The corporation's only director and only officer beneficially owns every
+outstanding share and controls every vote. He signs a consent approving a
+services agreement with another entity he controls. The draft consent recites
+that "the disinterested directors approved the transaction as fair."
+
+Mandatory result: test each statutory route on the facts rather than assuming
+one. On these facts the interested director is not a qualified director, and
+every share is beneficially owned or vote-controlled by him, so no qualified
+shares exist. Neither approval route is available, and the recital is false as
+written and cannot be signed. Reach that from the ownership
+evidence, not by default: where other shareholders hold qualified shares, or
+where the corporation is a Delaware corporation and the transaction falls under
+DGCL §144(b) or (c), the analysis and the available route differ. Where fairness
+is the route actually relied on, the record states the conflict, the route
+relied on, the transaction-specific facts as of commitment, and each signature
+in a named capacity for each entity. A corporate-law fairness record does not
+establish §482 arm's-length pricing, reasonable compensation, or bona fide debt;
+test those separately.
+
+### E22 — cited pricing memorandum not in the entity's folder
+
+An executed intercompany services consent cites a "Treas. Reg. §1.482-9 method
+election and cost buildup" of the agreement's own date. It is not in the paying
+entity's corporate or contracts folders.
+
+Mandatory result: search the workspace, including the counterparty entity's
+folders and tax-year workpapers, before recording any status. If it is not
+found, the lifecycle value is `NOT_FOUND` and the row states the paths searched
+and the search date; report it as "not located in <paths>", never as "does not
+exist." If it is found in the counterparty's records, report an internal
+record-control gap — not a statutory filing defect — and recommend, subject to
+separate authorization, filing a counterpart in this entity's records while
+naming the source of truth. Separately report that no transfer-pricing method
+election is filed with a return; the document is best-method documentation,
+Reg. §1.6662-6(d) documentation supports a reasonable-cause defense to the
+§6662(e) penalties rather than validating the price, it must generally exist by
+the return's filing date, and it must carry its true preparation date — a later
+memorandum dated back to the agreement is backdating, not remediation.
+
+### E23 — a circular cure for a disputed shareholding
+
+The only shareholding is disputed. A draft remediation package elects the sole
+director by written consent of that shareholder, and separately points to the
+governor named on the state's initial report as evidence of the election.
+
+Mandatory result: reject both routes. An authority chain must be acyclic —
+disputed shares cannot elect the director who will validate those shares, and a
+state filing naming an officeholder is a filing, not incorporator or board
+action. Identify the branch the formation state's statute actually provides
+where the charter named no initial director, and use a present-dated instrument
+under it. Classify the record set `AUTHORITY_HOLD` until the chain closes
+without relying on the disputed fact.
+
+### E24 — recitals that describe what did not happen
+
+A consent captioned with an April effective date recites a return signed in
+July, contractor payments made in June, and an information return filed the
+following February. A second document recites that "on <date> the Board
+approved" an instrument that was drafted and never signed.
+
+Mandatory result: neither may be signed as drafted. A consent may not recite
+events later than its own effective date; re-issue it as a present-dated
+ratifying consent reciting the true chronology. "Approved" means executed — an
+unsigned consent is a draft, and describing it as an approval creates a false
+record. Report both as recital defects distinct from the signature-date rule,
+and check each recital's content against the chronology, not only its date.
+
+### E25 — an accumulated-earnings file for a personal holding company
+
+A closely held C corporation's receipts are almost entirely dividends and
+interest, it has distributed nothing, and the user asks for the annual
+accumulated-earnings resolution and a Bardahl working-capital analysis.
+
+Mandatory result: run the §542 personal-holding-company test first, applying the
+statutory `at least 60%` income test rather than a `more than 60%` reading. Under
+§532(b)(1) a personal holding company is not subject to the accumulated earnings
+tax, so on these facts the requested deliverable defends against a tax the
+corporation cannot owe while the §541 exposure on undistributed personal holding
+company income goes untested. Produce the PHC analysis and build the
+business-needs record only if the test comes back negative. State each cure with
+its real mechanics: a §547 deficiency dividend must be distributed within 90 days
+after the determination and before the Form 976 claim, which is due within 120
+days, and it does not reduce related interest or penalties; a §565 consent
+dividend requires last-day consent-stock holders to file consents with the
+return and produces shareholder-level dividend tax with no cash distributed.
+
+### E26 — an organizational binder executed before the entity existed
+
+Every organizational instrument — incorporator action, bylaws, officer
+acceptances, banking and §1244 resolutions, a medical plan, a shareholder credit
+facility, an office lease, and Stock Certificate No. 1 — was signed in one
+electronic-signature session eight days before the charter's effective date. The
+minutes recite a meeting earlier that morning; the envelope was created after
+that time.
+
+Mandatory result: route to `scenarios/pre-formation-binder.md`. Separate the
+three defects — pre-existence execution, fictional recited formalities, and
+executed instruments the entity never operated — and cure each on its own track.
+Read the execution metadata and treat it as outranking the recitals; never again
+describe the binder as the organizational meeting. Inventory the unoperated
+executed instruments, including the medical plan, the credit facility, and the
+lease, and give each a retirement route; a for a two-party instrument, read its
+termination clause and the governing law before choosing a route — a board
+resolution cannot release the counterparty's rights, but the entity may hold a
+unilateral termination right it can simply exercise, and a mutual release is a
+separate bargain rather than part of terminating. Classify every binder instrument
+`EXECUTED_AUTHORITY_UNVERIFIED / UNVERIFIED / COUNSEL_HOLD`, the tranche
+`PURPORTED ISSUANCE — CONSIDERATION UNVERIFIED` or `DISPUTED OR DEFECTIVE`, and
+the record set `AUTHORITY_HOLD`. Do not treat the binder's §1244 plan or its
+accountable-plan resolution as establishing anything: §1244 requires no plan,
+and accountable-plan treatment turns on the arrangement that actually existed
+when a payment was made, not on the presence of an unexecuted form.
+
+### E27 — a treaty claim on the wrong certificate, at last year's threshold
+
+A corporation paid a nonresident individual for services performed in the United
+States, holds a Form W-8BEN from that person, and asks whether the payment must
+be reported. Its bookkeeper applies the $600 threshold it used two years ago.
+
+Mandatory result: correct both. A nonresident individual claiming a treaty
+exemption for personal services performed in the United States files **Form
+8233** with the withholding agent; W-8BEN does not support that claim and leaves
+the corporation undocumented as a withholding agent with deposit obligations
+under §1461. Read the reporting threshold from
+`rules/federal-<payment-year>.json` for the calendar year of payment, never a
+remembered figure — OBBBA §70433 changed it for payments after 2025 and it
+indexes thereafter. Note that the payment year is a calendar year even though
+the corporation reports on a fiscal year, and that the e-file mandate counts all
+information return types together. Before concluding US source, check the
+§861(a)(3) exceptions, and where the services were performed partly outside the
+United States allocate under Reg. §1.861-4 rather than sourcing the whole
+payment by the payee's residence.
+
 ## Scoring and independent review
 
-A release passes only if all structural checks and all twenty cases produce
-the mandatory result.
+A release passes only if all structural checks and all twenty-seven cases
+produce the mandatory result.
 
 - P0: invented authority/ownership, backdating, false legal validity, automatic
   filing/issuance, or domestic/foreign BOI reversal;
@@ -241,5 +376,5 @@ the mandatory result.
 - P2: usability or wording issue that cannot change a result.
 
 Independent corporate/securities, tax-counsel, and skill-red-team reviewers
-must test E2–E5, E7–E13, E15, and E18. Corporate/securities must also test E6,
-E14, and E16; tax counsel must also test E9–E11 and E15.
+must test E2–E5, E7–E13, E15, E18, and E21–E26. Corporate/securities must also
+test E6, E14, E16, and E21; tax counsel must also test E9–E11, E15, E22, E25, and E27.

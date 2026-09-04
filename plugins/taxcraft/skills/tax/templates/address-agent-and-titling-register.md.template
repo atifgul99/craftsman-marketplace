@@ -1,0 +1,49 @@
+# Address, Registered Agent, and Titling Register — <ENTITY NAME>
+
+**As of:** <YYYY-MM-DD>
+
+A change of address is not one act. Each authority below holds its own record and is changed by its
+own instrument. An unsigned or unconfirmed change **has not been made**, whatever the entity intends.
+
+## 1. Address of record, by authority
+
+| Authority | Value on record now | Evidence (path) | Date verified | Controls now? | Instrument required to change it | Status |
+|---|---|---|---|---|---|---|
+| Formation-state charter/registry | <ADDRESS> | <PATH> | <DATE> | <yes/no> | <AMENDMENT / ANNUAL REPORT> | <STATUS> |
+| Formation-state revenue agency | <ADDRESS> | <PATH> | <DATE> | | <AGENCY FORM> | |
+| IRS | <ADDRESS> | <PATH> | <DATE> | | Form 8822-B <or the address on the next filed return> | |
+| City / local licensing | <ADDRESS> | <PATH> | <DATE> | | <FORM> | |
+| Bank(s) | <ADDRESS> | <PATH> | <DATE> | | <BANK PROCESS> | |
+| Broker(s) | <ADDRESS> | <PATH> | <DATE> | | <BROKER PROCESS> | |
+| Insurer(s) | <ADDRESS> | <PATH> | <DATE> | | <CARRIER PROCESS> | |
+| Foreign-qualified states | <ADDRESS> | <PATH> | <DATE> | | <FORM> | |
+
+Use `UNVERIFIED` where the value is believed but not evidenced, and say what would evidence it.
+
+## 2. Registered agent
+
+State-side designation and agent-side consent are **separate evidence**. A state record showing an
+agent does not prove the agent agreed to serve, and an engagement letter does not prove the state
+was told.
+
+| Item | Value | Evidence | Date | Status |
+|---|---|---|---|---|
+| Agent named on the state's record | <AGENT> | <PATH> | <DATE> | |
+| Agent's written consent / engagement | <YES/NO> | <PATH> | <DATE> | |
+| Agent's registered office address | <ADDRESS> | <PATH> | <DATE> | |
+| Prior agent(s) and the change instrument | <AGENT, DATES> | <PATH> | <DATE> | |
+
+## 3. Titling of assets and accounts
+
+| Asset or account | Titled to | Evidence of title | Should be titled to | Gap and remediation | Status |
+|---|---|---|---|---|---|
+| <ACCOUNT — last 4 only> | <NAME ON TITLE> | <SIGNATURE CARD / DEED / STATEMENT> | <ENTITY> | <ACTION> | |
+
+Operating an account as the entity's is not evidence that it is titled to the entity. Obtain the
+signature card, the deed, or the account-opening record; until then the row is `UNVERIFIED`.
+
+## 4. Action memo
+
+| # | Action | Authority affected | Instrument | Owner | Due | Status |
+|---|---|---|---|---|---|---|
+| 1 | <ACTION> | <AUTHORITY> | <INSTRUMENT> | <WHO> | <DATE> | |

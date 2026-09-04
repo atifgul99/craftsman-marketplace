@@ -4,12 +4,13 @@
   "fiscal_or_tax_period": "FY2000",
   "as_of": "2000-01-01",
   "source_cutoff": "2000-01-01T00:00:00Z",
-  "overall_status": "CLOSING_PENDING",
+  "overall_status": "COUNSEL_HOLD",
   "tranches": [
     {
       "tranche_id": "ISS-2000-001",
       "issuance_date": "2000-01-01",
-      "status": "CLOSING_PENDING",
+      "status": "COUNSEL_HOLD",
+      "purported_issuance_evidenced": false,
       "class": "Common",
       "holder_slug": "replace-holder",
       "shares": 1,
@@ -32,9 +33,12 @@
         "treasury_after": 0,
         "reserved_after": 0,
         "legally_available_after": 0,
-        "formation_state_capacity_rule": "WA_REACQUIRED_AUTHORIZED_UNISSUED",
-        "capacity_authority_url": "https://app.leg.wa.gov/RCW/default.aspx?cite=23B.06.310",
-        "capacity_authority_verified_at": "2000-01-01T00:00:00Z"
+        "formation_state_capacity_rule": "COUNSEL_VALIDATED_JURISDICTION_RULE",
+        "capacity_jurisdiction_code": "XX",
+        "capacity_authority_citation": "REPLACE",
+        "capacity_authority_url": "https://example.invalid/replace-with-official-formation-state-source",
+        "capacity_authority_verified_at": "2000-01-01T00:00:00Z",
+        "jurisdiction_source_attested_by": null
       },
       "gates": {
         "formation_authority": "UNVERIFIED",
@@ -54,48 +58,57 @@
       "transaction_jurisdiction_facts": {
         "issuer_formation_jurisdiction": "REPLACE-STATE",
         "holder_residence_jurisdiction": "REPLACE-STATE",
-        "offer_jurisdictions": ["REPLACE-STATE"],
+        "offer_jurisdictions": [
+          "REPLACE-STATE"
+        ],
         "sale_jurisdiction": "REPLACE-STATE",
         "solicitation_jurisdictions": [],
         "evidence_path": "entities/replace-me/corporate/stock-issuances/ISS-2000-001-jurisdiction-facts.pdf",
         "evidence_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
       },
-      "applicable_securities_jurisdictions": ["United States", "REPLACE-STATE"],
+      "applicable_securities_jurisdictions": [
+        "United States",
+        "REPLACE-STATE"
+      ],
       "securities_authorities": [
         {
           "authority_id": "run-replace-federal-securities",
           "jurisdiction": "United States",
-          "source_url": "https://www.sec.gov/replace",
+          "source_url": "https://example.invalid/replace-with-official-source",
           "verified_at": "2000-01-01T00:00:00Z",
           "effective_from": null,
           "effective_to": null,
           "route": "SECTION_4_A_2",
-          "status": "VERIFIED"
+          "status": "VERIFIED",
+          "jurisdiction_code": "US",
+          "jurisdiction_source_attested_by": null
         },
         {
           "authority_id": "run-replace-state-securities",
           "jurisdiction": "REPLACE-STATE",
-          "source_url": "https://example.gov/replace",
+          "source_url": "https://example.invalid/replace-with-official-source",
           "verified_at": "2000-01-01T00:00:00Z",
           "effective_from": null,
           "effective_to": null,
-          "route": "WA_NOTICE",
-          "status": "VERIFIED"
+          "route": "STATE_EXEMPTION",
+          "status": "VERIFIED",
+          "jurisdiction_code": "XX",
+          "jurisdiction_source_attested_by": null
         }
       ],
       "tax_positions": {
-        "section_83": "NOT_APPLICABLE",
-        "section_351": "ISSUANCE_PRONGS_VERIFIED",
-        "section_1202": "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL",
-        "section_1244": "ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL"
+        "section_83": "UNVERIFIED",
+        "section_351": "UNVERIFIED",
+        "section_1202": "UNVERIFIED",
+        "section_1244": "UNVERIFIED"
       },
       "tax_fact_flags": {
         "substantially_nonvested": false,
         "property_transfer": true,
         "liabilities_assumed": false,
         "integrated_transfer_plan": false,
-        "section_351_control_percent_after": 100,
-        "section_351_control_test_status": "SATISFIED",
+        "section_351_control_percent_after": null,
+        "section_351_control_test_status": "COUNSEL_HOLD",
         "section_83_b": {
           "decision": "NOT_APPLICABLE",
           "property_transfer_date": null,
@@ -109,16 +122,106 @@
         }
       },
       "tax_authorities": [
-        {"doctrine":"section_83","rule":"SECTION_83_CODE","authority_id":"run-replace-83","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section83","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_351","rule":"SECTION_351_CODE","authority_id":"run-replace-351","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section351","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_351","rule":"REG_1_351_1","authority_id":"run-replace-reg-351","source_url":"https://www.ecfr.gov/current/title-26/section-1.351-1","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_351","rule":"SECTION_358_CODE","authority_id":"run-replace-358","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section358","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_351","rule":"SECTION_362_CODE","authority_id":"run-replace-362","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section362","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_351","rule":"SECTION_368_C_CODE","authority_id":"run-replace-368c","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section368","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_351","rule":"REG_1_351_3","authority_id":"run-replace-reg-351-3","source_url":"https://www.ecfr.gov/current/title-26/section-1.351-3","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_351","rule":"REG_1_358_2","authority_id":"run-replace-reg-358-2","source_url":"https://www.ecfr.gov/current/title-26/section-1.358-2","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_1202","rule":"SECTION_1202_CODE","authority_id":"run-replace-1202","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section1202","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"},
-        {"doctrine":"section_1244","rule":"SECTION_1244_CODE","authority_id":"run-replace-1244","source_url":"https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section1244","verified_at":"2000-01-01T00:00:00Z","effective_from":null,"effective_to":null,"status":"VERIFIED"}
+        {
+          "doctrine": "section_83",
+          "rule": "SECTION_83_CODE",
+          "authority_id": "run-replace-83",
+          "source_url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section83",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_351",
+          "rule": "SECTION_351_CODE",
+          "authority_id": "run-replace-351",
+          "source_url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section351",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_351",
+          "rule": "REG_1_351_1",
+          "authority_id": "run-replace-reg-351",
+          "source_url": "https://www.ecfr.gov/current/title-26/section-1.351-1",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_351",
+          "rule": "SECTION_358_CODE",
+          "authority_id": "run-replace-358",
+          "source_url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section358",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_351",
+          "rule": "SECTION_362_CODE",
+          "authority_id": "run-replace-362",
+          "source_url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section362",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_351",
+          "rule": "SECTION_368_C_CODE",
+          "authority_id": "run-replace-368c",
+          "source_url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section368",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_351",
+          "rule": "REG_1_351_3",
+          "authority_id": "run-replace-reg-351-3",
+          "source_url": "https://www.ecfr.gov/current/title-26/section-1.351-3",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_351",
+          "rule": "REG_1_358_2",
+          "authority_id": "run-replace-reg-358-2",
+          "source_url": "https://www.ecfr.gov/current/title-26/section-1.358-2",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_1202",
+          "rule": "SECTION_1202_CODE",
+          "authority_id": "run-replace-1202",
+          "source_url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section1202",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        },
+        {
+          "doctrine": "section_1244",
+          "rule": "SECTION_1244_CODE",
+          "authority_id": "run-replace-1244",
+          "source_url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title26-section1244",
+          "verified_at": "2000-01-01T00:00:00Z",
+          "effective_from": null,
+          "effective_to": null,
+          "status": "VERIFIED"
+        }
       ],
       "closing_manifest_path": "entities/replace-me/corporate/stock-issuances/ISS-2000-001-closing-manifest.json",
       "closing_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000"

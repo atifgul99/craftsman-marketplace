@@ -64,6 +64,18 @@ All inbound documents are renamed to canonical form on ingest (`intake.md` Step 
 | W-2 | `FY<YYYY> - W-2 issued - <employee-slug>.pdf` |
 | K-1 (1065/1120-S) | `FY<YYYY> - K-1 issued - <recipient-slug>.pdf` |
 
+### Payee certificates (year-independent, in `corporate/payees/<payee-slug>/`)
+
+| Doc | Filename |
+|---|---|
+| Form W-9 | `<yyyy-mm-dd> - W-9 - <payee-slug>.pdf` |
+| Form W-8BEN / W-8BEN-E / W-8ECI / W-8EXP / W-8IMY | `<yyyy-mm-dd> - <w8-form> - <payee-slug>.pdf` |
+| Form 8233 | `<yyyy-mm-dd> - 8233 - <payee-slug>.pdf` |
+| Payee register | `payee-register.md` |
+
+The date is the date the payee signed the certificate, because that is what
+governs when it expires and whether it covered a given payment.
+
 ### Year-independent / governance
 
 | Doc | Filename |

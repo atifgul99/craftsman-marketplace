@@ -130,7 +130,7 @@ def build_clean_closing(workspace: Path) -> tuple[dict, dict, Path, dict[str, Pa
             "journal_entry_id": "JE-ISS-2026-001", "journal_posted_at": "2026-08-21T09:00:00-07:00",
             "federal_securities_route": "SECTION_4_A_2",
             "state_securities_routes": [{
-                "jurisdiction": "Washington", "substantive_route": "WA_EXEMPTION",
+                "jurisdiction": "Washington", "substantive_route": "STATE_EXEMPTION",
                 "notice_requirement_status": "NOT_REQUIRED_COUNSEL_VERIFIED", "deadline": None,
                 "filed_or_resolved_at": "2026-08-20T14:00:00-07:00",
             }],
@@ -159,6 +159,7 @@ def build_clean_closing(workspace: Path) -> tuple[dict, dict, Path, dict[str, Pa
             "tranche_id": "ISS-2026-001",
             "issuance_date": "2026-08-20",
             "status": "ISSUED_AND_RECONCILED",
+            "purported_issuance_evidenced": True,
             "class": "Common",
             "holder_slug": "test-founder",
             "shares": 10,
@@ -172,7 +173,10 @@ def build_clean_closing(workspace: Path) -> tuple[dict, dict, Path, dict[str, Pa
                 "outstanding_before": 0, "reserved_before": 0, "legally_available_before": 1000,
                 "authorized_after": 1000, "issued_after": 10, "outstanding_after": 10,
                 "treasury_after": 0, "reserved_after": 0, "legally_available_after": 990,
-                "formation_state_capacity_rule": "WA_REACQUIRED_AUTHORIZED_UNISSUED",
+                "formation_state_capacity_rule": "REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED",
+                "capacity_jurisdiction_code": "WA",
+                "jurisdiction_source_attested_by": None,
+                "capacity_authority_citation": "RCW 23B.06.310",
                 "capacity_authority_url": "https://app.leg.wa.gov/RCW/default.aspx?cite=23B.06.310",
                 "capacity_authority_verified_at": "2026-08-25T10:00:00-07:00",
             },
@@ -196,8 +200,8 @@ def build_clean_closing(workspace: Path) -> tuple[dict, dict, Path, dict[str, Pa
             },
             "applicable_securities_jurisdictions": ["United States", "Washington"],
             "securities_authorities": [
-                {"authority_id":"run-fixture-sec","jurisdiction":"United States","source_url":"https://www.sec.gov/resources-small-businesses/exempt-offerings","verified_at":"2026-08-25T10:00:00-07:00","effective_from":None,"effective_to":None,"route":"SECTION_4_A_2","status":"VERIFIED"},
-                {"authority_id":"run-fixture-wa","jurisdiction":"Washington","source_url":"https://dfi.wa.gov/securities/securities-registrations-and-exemptions","verified_at":"2026-08-25T10:00:00-07:00","effective_from":None,"effective_to":None,"route":"WA_EXEMPTION","status":"VERIFIED"}
+                {"authority_id":"run-fixture-sec","jurisdiction":"United States","jurisdiction_code":"US","jurisdiction_source_attested_by":None,"source_url":"https://www.sec.gov/resources-small-businesses/exempt-offerings","verified_at":"2026-08-25T10:00:00-07:00","effective_from":None,"effective_to":None,"route":"SECTION_4_A_2","status":"VERIFIED"},
+                {"authority_id":"run-fixture-wa","jurisdiction":"Washington","jurisdiction_code":"WA","jurisdiction_source_attested_by":None,"source_url":"https://dfi.wa.gov/securities/securities-registrations-and-exemptions","verified_at":"2026-08-25T10:00:00-07:00","effective_from":None,"effective_to":None,"route":"STATE_EXEMPTION","status":"VERIFIED"}
             ],
             "tax_positions": {"section_83":"NOT_APPLICABLE","section_351":"ISSUANCE_PRONGS_VERIFIED","section_1202":"ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL","section_1244":"ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL"},
             "tax_fact_flags": {

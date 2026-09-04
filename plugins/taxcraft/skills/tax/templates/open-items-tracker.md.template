@@ -1,0 +1,55 @@
+# Open Items Tracker — <ENTITY NAME>
+
+**As of:** <YYYY-MM-DD>
+**Rule: rows are never deleted.** A resolved row is marked `CLOSED` with the evidence path that
+closed it. A row that turns out to be wrong is marked `WITHDRAWN` with the reason. Deleting a row
+destroys the audit trail this file exists to keep.
+
+## Status vocabulary
+
+`OPEN` · `BLOCKED` (waiting on a named third party or determination) · `CLOSED` (evidence in hand,
+path recorded) · `WITHDRAWN` (the item was wrong or moot; say why)
+
+## A. Determinations routed to counsel
+
+| # | Question | Why it cannot be answered internally | What is held pending the answer | Status |
+|---|---|---|---|---|
+| A1 | <QUESTION> | <REASON> | <DOCUMENTS / DECISIONS ON HOLD> | OPEN |
+
+## B. Determinations routed to the CPA or EA
+
+| # | Question | Figures or facts supplied | What is held pending the answer | Status |
+|---|---|---|---|---|
+| B1 | <QUESTION> | <WORKPAPER REF> | <ON HOLD> | OPEN |
+
+## C. Documents or records to obtain from third parties
+
+| # | Item | Holder | Requested on | Needed for | Status |
+|---|---|---|---|---|---|
+| C1 | <ITEM> | <BANK / AGENCY / SPONSOR / COUNTERPARTY> | <YYYY-MM-DD> | <WHAT IT UNBLOCKS> | OPEN |
+
+## D. Instruments drafted and awaiting signature
+
+| # | Instrument | Tab / path | Blocker (name the specific document or determination) | Status |
+|---|---|---|---|---|
+| D1 | <TITLE> | <PATH> | <BLOCKER> | BLOCKED |
+
+## E. Facts in conflict
+
+| # | The conflict | Sources that disagree | How it will be resolved | Status |
+|---|---|---|---|---|
+| E1 | <DESCRIBE> | <SOURCE A> vs <SOURCE B> | <METHOD> | OPEN |
+
+## F. Corrections applied during this engagement
+
+Kept so a later reader can see what changed and why, rather than finding a clean file with no
+history.
+
+| # | What was wrong | Correction | Where applied | Source of the correction |
+|---|---|---|---|---|
+| F1 | <STATEMENT AS DRAFTED> | <REPLACEMENT> | <PATH> | <REVIEW / AUTHORITY> |
+
+## Closure rule
+
+An item closes only against a **corrected file at a named path**, or a document received and filed.
+"Discussed", "understood", and "will handle" are not closures.

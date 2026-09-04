@@ -38,6 +38,35 @@ underlying corporate act.
 2. **Double taxation** — corporate tax + shareholder tax on dividends (LTCG/QDiv rates if qualified).
 3. **Fiscal year choice** — any month-end permitted (with IRS consent via Form 1128 if changing from CY); popular for deferral or GP/fund-mgmt alignment.
 
+### First-Year Costs — §248 Organizational and §195 Start-Up Expenditures
+
+1. **What each covers.** §248: costs of creating the corporation — state filing
+   fee, incorporation legal and accounting fees, organizational-meeting and
+   temporary-director costs. §195: pre-opening costs of investigating and
+   creating an active trade or business. Neither covers the costs of issuing or
+   selling stock. Successful issuance/syndication costs are not deductible or
+   amortizable and generally reduce the proceeds; an abandoned transaction is a
+   separate §165 question.
+2. **Mechanics.** $5,000 deducted in the year the business begins, phased out
+   dollar-for-dollar as the category exceeds $50,000; the remainder amortized
+   ratably over 180 months from the month business begins. The two categories
+   are computed separately.
+3. **The deduction/amortization treatment is the deemed default.** Under
+   **Reg. §1.248-1(c)** and **Reg. §1.195-1(b)**, a taxpayer is **deemed** to
+   have elected that treatment for the year business begins; no statement is
+   required. It is the opposite choice — **forgoing** the deduction and
+   capitalizing the costs — that must be made affirmatively on a timely filed
+   return including extensions. Do not tell a client a missing statement or a
+   late return forfeited the deduction without checking the current regulations
+   and the return's actual filing status.
+4. **Record-book link.** The organizational consent should identify who paid the
+   formation costs and whether the corporation reimbursed the payer. Where a
+   founder paid the corporation's own obligation and was not reimbursed, the
+   analysis is generally a capital contribution followed by a constructive
+   payment by the corporation — not an automatic loss of §248 treatment.
+   Identify the legal obligor and the reimbursement facts before concluding.
+   Route the evidence to `scenarios/corporate-records.md` Gate 7.
+
 ### Loss & Interest Carryovers
 
 1. **NOL** — post-TCJA: indefinite carryforward, 80% of current-year taxable income limit. Pre-2018 NOLs retain 20-year life at 100% limit. Track vintages separately.
@@ -48,7 +77,7 @@ underlying corporate act.
 ### Penalty Taxes
 
 1. **Accumulated Earnings Tax (§531)** — 20% surtax on unreasonably accumulated earnings beyond reasonable business needs (§535). Threshold: $250k accumulation safe harbor ($150k for PSC). Defense: documented business-need resolutions (expansion plans, working-capital needs, debt service). Coordinate with `governance.md` for board resolutions.
-2. **Personal Holding Company Tax (§541)** — 20% surtax if (a) PHC income > 60% of adjusted ordinary gross income AND (b) > 50% owned by ≤5 individuals. Common trap for investment-heavy C-corps. Defense: dividend-out or convert income character.
+2. **Personal Holding Company Tax (§541)** — 20% surtax if (a) PHC income is **at least** 60% of adjusted ordinary gross income (§542(a)(1)) AND (b) > 50% in value owned by ≤5 individuals in the last half of the year (§542, with §544 attribution). Common trap for investment-heavy C-corps. Defense: dividend-out, §565 consent dividend, or convert income character; §547 allows a deficiency dividend after a determination. **Test PHC status before building any §531 record** — under **§532(b)(1) a personal holding company is not subject to the accumulated earnings tax**, so a Bardahl/business-needs file built for a corporation that is in fact a PHC defends against a tax it cannot owe while the real exposure goes untested. Ordering and cures: `scenarios/ccorp-tax-reduction.md`.
 
 ### R&D Expensing (§174A, restored by OBBBA)
 
@@ -189,7 +218,9 @@ Narrative — issues, elections, open questions, state filings, audit-risk callo
 
 ## Deadlines & Penalties
 
-- **Form 1120 due**: 3½ months after FY end (April 15 for CY; for fiscal-year corps, 15th day of 4th month). Extension via Form 7004 → 6 months.
+- **Form 1120 due** — under current **§6072(a)**, the 15th day of the **4th** month after the tax year ends; April 15 for a calendar-year corporation. Extension via Form 7004 → 6 months. (Current §6072(b) covers partnership and S-corporation returns, not Form 1120; do not cite it here.)
+  - **June 30 fiscal-year transition.** For a C corporation whose tax year **ends June 30 and begins before January 1, 2026**, the return is due the 15th day of the **3rd** month (September 15) with a **7**-month Form 7004 extension. This is an effective-date rule in **Pub. L. 114-41 §2006(a)(3)(B)**, not a current-text exception. For a June-30 year beginning in 2026 or later, the general 4th-month/6-month regime applies. Applying the general rule to a covered June-30 year puts the unextended deadline a **month** late, on October 15.
+  - Verify the year-end against the EIN letter and any Form 1128 before computing any date (Preflight #4).
 - **Estimated tax (§6655 worksheet, formerly Form 1120-W)** — quarterly, due on 15th of 4th/6th/9th/12th month of fiscal year. Safe-harbor rules under §6655. Paid via EFTPS (no standalone voucher). See `quarterly.md`.
 - **Form 1042 / 1042-S** — foreign-payee withholding returns, due March 15 following calendar year.
 - **Form 1099-NEC** — to contractors by January 31; to IRS (electronic via IRIS) by January 31 for NEC (other 1099 types vary).

@@ -95,6 +95,63 @@ Moderate to elevated depending on who, wage level, documentation. Courts have be
 
 ## Accumulated Earnings Tax Defense (§531)
 
+### Run the PHC test first — §532(b)(1)
+
+**A personal holding company is not subject to the accumulated earnings tax.**
+§532(b)(1) excludes a PHC from §531 outright. So the order of work is fixed:
+
+1. Test personal-holding-company status under §542 for the year — the **income
+   test** (PHC income **at least** 60% of adjusted ordinary gross income under
+   §542(a)(1), the classes defined in §543; note the statute is `≥`, not `>`,
+   so exactly 60% is inside the test) and the
+   **ownership test** (more than 50% in value owned by five or fewer
+   individuals at any time in the last half of the year, with §544
+   attribution).
+2. **If the corporation is a PHC**, stop the §531 work. A Bardahl analysis and
+   an annual business-needs resolution are the wrong deliverable: they defend
+   against a tax the corporation cannot owe, while the real exposure —
+   the §541 tax on undistributed personal holding company income — goes
+   untested. Move to the PHC section below.
+3. **Only if the corporation is not a PHC** does the reasonable-needs record
+   below become the right work.
+
+This ordering matters most for exactly the profile that looks like an AET case:
+a closely held corporation holding investments and distributing nothing. Passive
+receipts push it toward PHC status at the same time they push it toward the
+appearance of an unreasonable accumulation, and the two taxes do not stack.
+
+An accumulation can also fail for a reason unrelated to size: §533(a) treats the
+fact of accumulation beyond reasonable needs as **determinative of the tax-avoidance
+purpose unless the corporation proves the contrary** by a preponderance. The
+business-needs record is what carries that burden; it is not optional colour.
+
+### If the corporation is a PHC (§541)
+
+- The tax is 20% of **undistributed personal holding company income**, and it
+  applies whether or not the accumulation was reasonable. Reasonable business
+  needs are not a defense to §541.
+- **§547 deficiency dividend.** After a determination that PHC tax is owed, the
+  corporation may distribute a deficiency dividend and deduct it against the
+  §541 tax. Two separate clocks: the distribution must occur **within 90 days
+  after the determination and before the claim is filed**, and the **Form 976**
+  claim must be filed **within 120 days** after the determination. The deduction
+  does **not** reduce interest, additional amounts, or assessable penalties
+  computed with respect to the PHC tax. Treat this as CPA/EA and counsel work,
+  not a self-serve cure.
+- **§565 consent dividend.** A holder of consent stock on the **last day** of the
+  corporation's tax year agrees, in a consent filed with the corporation's
+  return, to treat an amount as distributed. The amount is deemed distributed in
+  money and immediately recontributed to capital on that last day — so the
+  **shareholder has dividend income and tax with no cash**, and the shareholder's
+  basis increases. It is not a costless election; present it with the
+  shareholder-level consequence and the filing mechanics, not as ordinary
+  planning.
+- The other routes are an actual distribution before year end, or changing the
+  character of the receipts so the §542(a)(1) test fails. Route the choice to the
+  CPA/EA with the computed §543/§545 figures, not as a general recommendation.
+- Rent, and personal-service-contract income under §543(a)(7), each have
+  their own carve-outs; do not classify receipts as PHC income by label.
+
 ### Mechanism
 C-corp accumulates earnings beyond $250k ($150k for PSCs) safe harbor → IRS can assess 20% surtax on accumulated taxable income if accumulation is beyond "reasonable needs of the business" (§535, §537).
 
@@ -118,7 +175,86 @@ Enumerated examples:
 
 ### Audit risk
 
-Triggers: large cash balance vs. operational needs, passive investments dominate assets, no dividends + no documented plan. Mitigation: annual resolutions + capital plan + (if income is passive-heavy) consider PHC §541 risk too.
+Triggers: large cash balance vs. operational needs, passive investments dominate assets, no dividends + no documented plan. Mitigation: annual resolutions + capital plan — **after** the §542 PHC test has come back negative. If it comes back positive, §532(b)(1) removes the AET and the §541 analysis above is the whole of the work.
+
+## Shareholder loans, in either direction
+
+A below-market cash loan between the corporation and its owner is priced under
+**§7872**. §7872(f)(2) then takes the applicable federal rate **from §1274(d)**,
+which supplies the AFR definitions; §1274 as a whole governs issue price for
+certain debt issued for property, and the rates themselves are determined and
+published monthly by Treasury and the IRS. So the two provisions are connected,
+not alternatives — but §1274 is not the operative rule for pricing an owner
+loan, and citing it as if it were leads to the wrong analysis.
+
+Under §7872 the mechanics turn on the **type** of loan:
+
+- A **demand loan** produces foregone-interest transfers computed for each
+  calendar-year period at the applicable **short-term** AFR, treated as
+  transferred and retransferred at year end unless regulations provide
+  otherwise, and it recurs every year the loan is outstanding.
+- A **term loan** is tested by **present value at inception**; the statutory
+  excess is treated as transferred when the loan is made, and the resulting
+  original-issue-discount and interest consequences run over the term. A later
+  significant modification is retested.
+
+Getting the type wrong changes both the amount and how many years it recurs.
+Corporation-to-shareholder loans are generally characterized as compensation or
+a distribution to the extent of the foregone interest; the character follows the
+relationship, not the label on the note.
+
+**Test the §7872(c)(3) exception rather than assuming it.** It provides a
+concrete **$10,000 aggregate** exception for certain compensation-related and
+corporation-shareholder loans, unavailable where tax avoidance is a principal
+purpose of the interest arrangement. Run the test on the actual outstanding
+balances; do not assert that it does or does not cover a given owner's loans.
+
+**Documentation that makes it a loan.** A written note with a stated rate at
+least equal to the applicable AFR, a fixed maturity or demand terms, a
+repayment history that matches the note, board authorization, and — where the
+corporation is the borrower — the entity's ability to repay. Absent these, the
+IRS position is that the advance is a distribution (corporation → shareholder)
+or a contribution to capital (shareholder → corporation), and the entity's own
+books usually supply the evidence.
+
+**Retiring one.** Read the note's own termination and prepayment terms first. A
+board resolution cannot release the counterparty's rights, but the entity may
+hold a unilateral right it can simply exercise; use a bilateral termination only
+where mutual consent is required or wanted. See `governance.md` rule 10.
+
+**AET and PHC interaction.** Loans *to* the shareholder are among the clearest
+accumulated-earnings triggers — Reg. §1.537-2(c) treats loans having no
+reasonable relation to the business as evidence of an unreasonable accumulation
+— and interest received *from* the shareholder is PHC income. Run the §542 test
+before treating either as a planning idea.
+
+## Officer employee status, and why non-payment alone creates no wage
+
+**Keep status and amount separate.** A corporate officer is generally an
+**employee** under §3121(d)(1). The exception in Reg. §31.3121(d)-1(b) is narrow:
+it applies only where the officer performs **no services or only minor services
+and neither receives nor is entitled to receive** remuneration. So an officer
+performing substantial services remains an employee even though nothing has been
+paid.
+
+What does **not** follow is a wage. Wages require remuneration actually or
+constructively paid; there is **no rule that an unpaid officer must be imputed
+one**, and non-payment alone does not create a deemed wage payment. The
+recharacterization risk runs the other way: inspect every amount actually or
+constructively paid or made available to the officer — distributions, advances,
+personal expenses paid by the corporation, purported loans — because those may
+be remuneration for services and taxable as wages to that extent.
+
+What that means in practice:
+
+- Do not assert an imputed-wage exposure from the absence of payroll alone.
+  Document the services actually performed, by whom, and what was paid.
+- Where an owner does work for the corporation without pay, the live questions
+  are whether payments *labelled* otherwise are really compensation, and whether
+  the corporation is really carrying on a business — not a phantom wage.
+- Do not describe an officer's duties as protecting the shareholder's own
+  investment. That framing undermines the entity's separate business purpose,
+  which is the thing the record set exists to establish.
 
 ## Fringe Benefits (C-corp advantage)
 

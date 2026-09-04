@@ -47,7 +47,7 @@
             "required": ["jurisdiction", "substantive_route", "notice_requirement_status", "deadline", "filed_or_resolved_at"],
             "properties": {
               "jurisdiction": {"type": "string", "minLength": 1},
-              "substantive_route": {"enum": ["WA_REGISTRATION", "WA_EXEMPTION"]},
+              "substantive_route": {"enum": ["STATE_REGISTRATION", "STATE_EXEMPTION"]},
               "notice_requirement_status": {"enum": ["NOT_REQUIRED_COUNSEL_VERIFIED", "REQUIRED_FILED_ACCEPTED"]},
               "deadline": {"type": ["string", "null"], "format": "date"},
               "filed_or_resolved_at": {"type": "string", "format": "date-time"}

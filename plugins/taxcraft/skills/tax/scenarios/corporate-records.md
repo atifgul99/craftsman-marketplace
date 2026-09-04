@@ -382,7 +382,12 @@ Identify event-triggered approvals and operating evidence for:
 - new bank/brokerage authority;
 - loans, guarantees, dividends/distributions, and capital events;
 - major customer/vendor, lease, IP, acquisition, and financing contracts;
-- shareholder-, director-, officer-, family-, or affiliate-related transactions;
+- shareholder-, director-, officer-, family-, or affiliate-related transactions
+  — for each, test whether any disinterested-approval route actually exists
+  before accepting a consent that recites one, and record the conflict
+  disclosure, the route relied on, and the contemporaneous fairness facts per
+  `governance.md` → "Conflicting-Interest Transactions in Owner-Controlled
+  Entities";
 - accountable-plan adoption/amendment/termination and actual operations;
 - §280A(g) rentals and per-event evidence;
 - retirement, health, cafeteria, education, or other benefit plans; and
@@ -459,7 +464,15 @@ For each corporation-owned SMLLC or subsidiary, prove both tiers separately:
 - consideration/funding trail and mirrored books;
 - contracts and signatures in the correct legal entity;
 - intercompany agreements only when an actual legal/tax transaction exists;
-  federal disregard does not erase state-law or state-tax separateness; and
+  federal disregard does not erase state-law or state-tax separateness. Where
+  one exists, first classify each party federally — a payment between an owner
+  and its own disregarded entity is generally not a transaction between separate
+  taxpayers — then test both sides: each entity's own approval, the written
+  agreement signed in both names, current-dated best-method pricing support
+  (there is no filed §482 method election), counterparts in both entities'
+  records, §267(a)(2) only where its predicates hold, and each jurisdiction's
+  own treatment of the charge — see `governance.md` → "Intercompany arrangements
+  between commonly controlled entities"; and
 - founder/employee/contractor invention, confidentiality, IP, domain, and
   product-rights assignments to the entity that claims ownership.
 
@@ -491,6 +504,21 @@ subfolder is an intake unit. If any material file is unprocessed:
 - never infer that absence of a file proves an event did not occur without
   stating the search scope and evidence limitation.
 
+**Search the whole workspace before recording `NOT_FOUND`.** A document an
+executed instrument refers to is frequently filed under the *other* party — the
+counterparty entity's workpapers, the parent's folder, a tax-year folder rather
+than `corporate/`. Before classifying a cited document missing, search by name,
+date, and subject across the workspace (excluding privileged paths). The
+lifecycle value stays `NOT_FOUND` — it is the only one the schema allows — but
+the row must state the **search scope**: which paths were searched, and when.
+Report it as "not located in <paths>", never as "does not exist"; the
+distinction is the difference between a fact and an assumption, and the
+remediation differs (obtain and file a counterpart versus create the document).
+Where the document is found in the counterparty's records, this entity's record
+set has an internal control gap, not a statutory filing defect: with
+authorization, place a counterpart in this entity's records and name the source
+of truth.
+
 ## Core and conditional document families
 
 Use this as an inventory frame, then apply the requirement classes above.
@@ -506,6 +534,88 @@ Use this as an inventory frame, then apply the requirement classes above.
 | Licenses/standing | formation-state standing/agent | revenue, city, industry, DBA, foreign qualification |
 | Subsidiary/IP | parent ownership/authority when a subsidiary exists | subsidiary binder, intercompany terms, IP/domain assignments |
 | Insurance/commercial | entity contract identity and records | D&O, E&O, cyber, workers' compensation, regulated permits |
+
+## Working registers the record set needs
+
+The document families above are the *inventory* frame. A remediation or
+completeness engagement also produces a small set of **registers** — running
+schedules that answer a question no single document answers. Each is a
+deliverable in its own right; none of them is a substitute for the underlying
+instrument, and none of them may carry a status the evidence does not support.
+
+| Register | The question it answers | Minimum columns |
+|---|---|---|
+| **Evidence inventory** | What is in the record, and what does each item actually prove? | file path, content hash, pages, document type, date borne, **signed? and how verified**, **what it proves**, multi-axis status |
+| **Address, agent, and titling register** | Which address and agent each authority has on record *right now*, and which one controls | authority (charter state, revenue agency, IRS, city, bank, broker, insurer), value on record, evidence, date verified, controls-now?, change instrument required |
+| **Tax elections and positions register** | Every election and return position taken, and the evidence status of each | election/position, tax year first taken, statutory authority, instrument or return that made it, evidence status, who must confirm |
+| **Open items tracker** | What is unresolved, what blocks it, and who must act | item, description, blocker keyed to a specific document, owner (counsel / CPA-EA / third party / entity), opened date, closure evidence path |
+| **Counsel and CPA question register** | Each determination routed out, as a question rather than a conclusion | question, why it cannot be answered internally, what turns on it, documents held pending the answer |
+| **Related-party transaction register** | Every transaction with an owner, affiliate, or family member | date, counterparty and control relationship, subject, approval instrument, fairness evidence, tax treatment, mirror entry in the counterparty's books |
+| **Retention schedule** | How long each record class is kept and why | record class, legal floor and its source, entity policy period, destruction authority |
+| **Payee register** | Information-return coverage | Owned by `scenarios/information-returns.md` → "Reconciliation at year end"; do not restate the columns here |
+
+Templates: `templates/address-agent-and-titling-register.md.template`,
+`templates/tax-elections-and-positions-register.md.template`,
+`templates/open-items-tracker.md.template`,
+`templates/records-retention-schedule.md.template`,
+`templates/related-party-transaction-policy.md.template`,
+`templates/compliance-calendar.md.template`,
+`templates/incumbency-certificate.md.template`,
+`templates/bilateral-termination-and-release.md.template`, and
+`templates/adequacy-and-fairness-determination.md.template`.
+
+**Registers carry evidence-backed statuses only.** A register is where status
+inflation happens, because a one-word cell invites a confident word. Never write
+"filed", "in effect", "recorded", "adopted", or "position ready" for something
+that is submitted-unconfirmed, drafted-unsigned, or merely intended. Use the
+same vocabulary as the audit rows: where the evidence is absent after the
+documented search, write `NOT_FOUND` and state the paths searched and the search
+date; where evidence exists but has not been authenticated or reconciled, write
+`UNVERIFIED`.
+
+**Two register-specific traps.**
+
+- The **address register** exists because a change of address is not one act. A
+  charter-state amendment does not move the IRS address of record; a Form 8822-B
+  does not move the state's; a bank's change of mailing address moves neither.
+  List each authority separately with its own instrument, and treat an unsigned
+  or unconfirmed change as not made.
+- The **elections register** must separate the election from its evidence. "We
+  take this position" and "the return that took it was accepted" are different
+  facts; a register that merges them produces a confident answer where a
+  transcript check is what is actually required.
+
+## Documents a closely held record set commonly lacks
+
+These are **conditional**, not universally required — the applicability rules
+above still govern — but each is a document a record set is regularly found to
+need and rarely has. Test applicability, then draft or record `NOT_FOUND` with
+the reason.
+
+- **Adequacy determination** for share consideration, made before the issuance
+  it supports. It may sit in the issuance resolution or in a separate
+  contemporaneous instrument, depending on what the formation state requires;
+  a separate signed form is an evidentiary preference. Where the subscriber is
+  also a director or officer, put the conflict and fairness findings in the same
+  signed writing as the determination (`scenarios/stock-issuance.md`).
+- **Incumbency certificate**, reconciling the capacities an owner has actually
+  used going forward (`governance.md`).
+- **Banking and brokerage authority resolution**, including — for an entity with
+  a live trading account — the trading mandate: who may trade, whether margin,
+  options, or short sales are authorized, position and concentration limits, any
+  outside adviser's appointment, and the written client agreement behind it. An
+  outside investment adviser is not ratified without a registration or exemption
+  check; route that to securities counsel first.
+- **Related-party transaction policy**, with a standing approval procedure that
+  requires approval *before* the transaction, naming every affiliate by
+  relationship rather than by a list that will rot.
+- **Compliance calendar** keyed to the entity's actual fiscal year, carrying
+  estimate dates on the fiscal cycle, information returns and payroll on the
+  calendar cycle, state report and licence renewals, election windows, any
+  financial-statement duty, and local personal-property listings.
+- **Bilateral termination and release** for each legacy two-party instrument the
+  entity no longer operates (`governance.md`).
+- **Retention schedule**, and a records-custodian designation.
 
 ## Annual monitoring reopeners
 

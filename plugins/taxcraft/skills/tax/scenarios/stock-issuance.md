@@ -107,6 +107,73 @@ historical cash transfer is not such evidence.
 Never update the recipient to shareholder or change an entity ownership profile
 from a `PURPORTED ISSUANCE` status.
 
+### The templates ship blank, and blank means unverified
+
+Two rules about the shipped JSON templates, because a filled-in default is the
+easiest way to publish a conclusion nobody reached:
+
+- **The audit template ships every tax position `UNVERIFIED`, the §351 control
+  test `COUNSEL_HOLD`, every gate `UNVERIFIED`, and the capacity rule
+  `COUNSEL_VALIDATED_JURISDICTION_RULE` with a placeholder source.** §351
+  requires qualifying transferors to control the corporation immediately after
+  the exchange, and §§1202 and 1244 each carry further issuance-date and
+  continuing tests. None of that can be true of a blank form. Never ship, commit,
+  or rely on a template value you did not affirmatively establish.
+- **The closing manifest is produced only for a closing that actually
+  completed.** That is why its evidence and signature fields admit only the
+  verified values: the manifest is the preparer's assertion that each of those
+  checks was performed. An incomplete closing is represented in the *audit*
+  artifact through its gates, not by a manifest with soft values. If you cannot
+  truthfully assert the manifest's fields, the closing is not done.
+
+Every authority the artifact cites carries the **two-letter code of the
+jurisdiction whose law it states**, and the source must be an HTTPS `.gov`
+host. Where the host names the jurisdiction (`dfi.wa.gov`, `sos.ca.gov`) that
+is proof enough. Where it does not — many state sites do not carry their own
+code — a **named person must attest** that the source is that jurisdiction's,
+and the attestation is recorded in the artifact. The point is that citing one
+government's page as another government's law should take a deliberate act by
+someone who signs for it, not a hostname that happens to end in `.gov`.
+
+No template may carry a real jurisdiction's statute or URL. The formation state's
+rule is looked up per engagement and cited from the state's own official source;
+a template that names one state teaches every other state's user the wrong law.
+
+### The persisted artifact records a subset, and says which
+
+The eight statuses above are the working vocabulary. The validated JSON artifact
+(`schemas/stock-issuance-audit.schema.json`) is produced **only for tranches
+that have reached a purported closing**, because every tranche row requires a
+closing manifest. Its `status` enum is therefore a deliberate subset plus two
+machine-only values, and this is the mapping — do not invent another:
+
+| Prose status | Persisted as |
+|---|---|
+| `PROPOSED` | **not persisted** — no closing exists yet; track it in the readiness memo |
+| `APPROVED — NOT ISSUED` | **not persisted** — same reason |
+| `ISSUED — CONSIDERATION OUTSTANDING OR ESCROWED` | `CLOSING_PENDING`, with the escrow/restriction evidence in the manifest |
+| `COUNSEL HOLD` | `COUNSEL_HOLD` |
+| `PURPORTED ISSUANCE — CONSIDERATION UNVERIFIED` | `PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED` |
+| `ISSUED AND PAID — OTHER EVIDENCE INCOMPLETE` | `CLOSING_PENDING` |
+| `ISSUED AND RECONCILED` | `ISSUED_AND_RECONCILED` |
+| `DISPUTED OR DEFECTIVE` | `DISPUTED_OR_DEFECTIVE` |
+
+Two machine-only values carry facts the prose statuses leave implicit:
+
+- **`FACT_CONFLICT`** — material records conflict, but no purported issuance is
+  evidenced. This is the pre-issuance twin of `DISPUTED OR DEFECTIVE`; the prose
+  reaches the same situation through `COUNSEL HOLD`, and the artifact separates
+  it so a conflict is never filed away as a mere hold.
+- **`CLOSING_PENDING`** — a purported closing exists and some gate is unverified
+  for a reason other than consideration.
+
+The artifact carries `purported_issuance_evidenced` for exactly the question
+this section opens with. It is a **reviewed fact, never inferred**: set it true
+only where competent evidence shows a purported issuance actually occurred. A
+tranche with every gate verified and that flag false is rejected rather than
+promoted, because clean paperwork is not evidence that an issuance happened.
+
+
 “Highest supported status” means the first applicable result in this decision
 sequence, not the most complete-sounding label.
 
@@ -156,6 +223,12 @@ Record the actual terms, not merely an intended ownership percentage:
   promised but unissued interests; and
 - related-party conflict disclosure and the formation-state fairness/approval
   route, especially where the purchaser is also the sole director or officer.
+  Where the purchaser is the only director, the qualified-director route is
+  unavailable. Test qualified-share beneficial ownership, voting control,
+  disclosure, and the voting requirements separately, and record whichever route
+  is actually relied on as `governance.md` → "Conflicting-Interest Transactions
+  in Owner-Controlled Entities" requires, rather than reciting a disinterested
+  approval no one gave.
 
 An ownership percentage is an output of a reconciled cap table, not an
 independent fact. Do not describe someone as a shareholder until issuance is
@@ -183,10 +256,57 @@ treatment, whether any stock was actually authorized or delivered then, and
 the proposed present action. Any conclusion that old cash supports newly issued
 §1244 stock must be expressly attributed to written tax-counsel analysis.
 
+### Marital-property character (conditional)
+
+Where the holder is married and domiciled in a community-property state, the
+character of the shares is a **conditional, tracing-dependent** question, not a
+default. Say what the tracing evidence shows for the specific tranche and stop
+there. Do not state a categorical conclusion, do not extend a conclusion to
+shares not yet acquired, and do not treat a spousal acknowledgment as a
+determination of character — it records what the spouses acknowledge on stated
+facts. Separate-property tracing, commingling, and any premarital or marital
+agreement are counsel questions; the record's job is to preserve the funding
+trail that makes tracing possible.
+
 ## Gate 4 — valuation, price, and vesting
 
 No-par stock does not mean free stock or arbitrary value. Document the board's
 good-faith adequacy determination under state law and the tax FMV evidence.
+
+**Document the adequacy determination before the issuance, in whichever
+instrument the formation state allows.** The determination must actually be
+made by the authorized decision-maker on the specified consideration; it does
+**not** have to live in a separate document. The MBCA §6.21 official comment
+says no explicit resolution is required and the determination may be inferred
+from authorization of the shares for specified consideration, and DGCL §152(a)
+expressly permits the number, timing, and consideration to be fixed in the board
+resolution, with §152(d) making the directors' valuation judgment conclusive
+absent actual fraud. Verify the formation state's own statute and the charter.
+
+A separate contemporaneous instrument is an **evidentiary preference**, not a
+legal requirement — and it is the right choice where the subscriber is
+interested, because the conflict findings then sit in the same signed writing.
+Whichever form is used, capture the class and number of shares, the
+consideration and its form, the facts relied on, the determination itself, and
+the receipt and issuance timestamps so the order is provable. Instantiate
+`templates/adequacy-and-fairness-determination.md.template` where a separate
+instrument is used.
+
+**Deferred consideration may be lawful.** Do not assume shares can never issue
+before payment. MBCA §6.21(b), (e) permits promissory notes and contracts for
+future services or benefits, with escrow or transfer restrictions available, and
+DGCL §156 permits partly paid shares. Determine what the formation state allows,
+what protection it requires, and do not describe shares as fully paid and
+nonassessable before the governing statute permits it.
+
+**No retroactive true-up.** Money that reached the corporation before a valid
+subscription and an effective authorization existed is a refundable subscription
+deposit, a loan, or a bare contribution to capital — the contemporaneous facts
+decide which. It is not share consideration, and a later quarterly or annual
+"true-up" resolution may not convert it into share consideration as of the date
+it arrived. Where the parties intend future shares, use a refundable deposit
+with written terms and issue against a signed subscription when the
+authorization is in place.
 
 - Cash purchase: reconcile price to contemporaneous facts, prior/subsequent
   financings, liabilities, IP, revenue, and capitalization.

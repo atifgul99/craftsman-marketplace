@@ -92,6 +92,32 @@ def parse_date(value: str | None) -> date | None:
     return None if value is None else date.fromisoformat(value)
 
 
+def government_source_for(parsed, code: str) -> str | None:
+    """Classify a cited authority URL against the jurisdiction it claims to state.
+
+    Returns "AUTO" when the host itself proves the jurisdiction, "ATTEST" when
+    the host is governmental but does not name it (so a named human must attest
+    to the match), or None when it is not a government source at all.
+
+    Jurisdiction-neutral by construction, and no roster of hostnames anywhere.
+    Every authority source must already be an HTTPS `.gov` host, a registry
+    restricted to US government entities. Within that, a dot-delimited label
+    equal to the two-letter code proves the jurisdiction (dfi.wa.gov,
+    sos.ca.gov). Many legitimate state sites do not carry their own code
+    (mass.gov, michigan.gov), which is why the attestation path exists instead
+    of a hostname list. Substring and path matches are deliberately NOT
+    accepted: they would let irs.gov/wa/... pass as Washington authority.
+    """
+    host = (parsed.hostname or "").lower().rstrip(".")
+    if not host.endswith(".gov"):
+        return None
+    labels = host.split(".")
+    if code == "US":
+        # Federal, and not a host delegated to a state.
+        return "AUTO" if "state" not in labels else None
+    return "AUTO" if code.lower() in labels[:-1] else "ATTEST"
+
+
 def host_is(host: str, domain: str) -> bool:
     host = host.lower().rstrip(".")
     domain = domain.lower().rstrip(".")
@@ -224,18 +250,35 @@ def validate_stock_issuance_result(
             formation_state = jurisdiction_facts["issuer_formation_jurisdiction"]
         else:
             formation_state = None
-        if formation_state != "Washington" or capital["formation_state_capacity_rule"] != "WA_REACQUIRED_AUTHORIZED_UNISSUED":
-            raise AssertionError(f"{tranche['tranche_id']}: unsupported formation-state capacity rule requires validator extension")
-        if not (
-            host_is(capacity_source.hostname or "", "app.leg.wa.gov")
-            and capacity_source.path.lower().rstrip("/") == "/rcw/default.aspx"
-            and any(value.lower() == "23b.06.310" for value in parse_qs(capacity_source.query).get("cite", []))
-        ):
-            raise AssertionError(f"{tranche['tranche_id']}: Washington capacity authority source is invalid")
-        if capital["treasury_before"] != 0 or capital["treasury_after"] != 0:
-            raise AssertionError(f"{tranche['tranche_id']}: Washington reacquired shares must be treated as authorized unissued")
-        if capital["outstanding_before"] != capital["issued_before"] or capital["outstanding_after"] != capital["issued_after"]:
-            raise AssertionError(f"{tranche['tranche_id']}: Washington issued/outstanding reconciliation is inconsistent")
+        if not formation_state:
+            raise AssertionError(f"{tranche['tranche_id']}: issuer formation jurisdiction is missing")
+        # Jurisdiction-neutral. States split on what happens to reacquired
+        # shares: some return them to authorized-but-unissued, others hold them
+        # as treasury shares. The validator checks the arithmetic each rule
+        # implies and insists the rule be sourced to an official government
+        # host, but it does not carry a per-state roster - see states/README.md.
+        capacity_rule = capital["formation_state_capacity_rule"]
+        capacity_match = government_source_for(capacity_source, capital["capacity_jurisdiction_code"])
+        if capacity_match is None:
+            raise AssertionError(
+                f"{tranche['tranche_id']}: capacity authority source does not belong to "
+                f"{formation_state} ({capital['capacity_jurisdiction_code']})"
+            )
+        if capacity_match == "ATTEST" and not (capital["jurisdiction_source_attested_by"] or "").strip():
+            raise AssertionError(
+                f"{tranche['tranche_id']}: capacity authority host does not name "
+                f"{capital['capacity_jurisdiction_code']}; a named attestation is required"
+            )
+        if not capital["capacity_authority_citation"].strip():
+            raise AssertionError(f"{tranche['tranche_id']}: capacity authority lacks a statutory citation")
+        if capacity_rule in {"REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED", "NO_REACQUIRED_SHARES"}:
+            if capital["treasury_before"] != 0 or capital["treasury_after"] != 0:
+                raise AssertionError(
+                    f"{tranche['tranche_id']}: capacity rule {capacity_rule} is inconsistent with a treasury balance"
+                )
+        for suffix in ("before", "after"):
+            if capital[f"outstanding_{suffix}"] != capital[f"issued_{suffix}"] - capital[f"treasury_{suffix}"]:
+                raise AssertionError(f"{tranche['tranche_id']}: issued/outstanding/treasury reconciliation is inconsistent")
         for suffix in ("before", "after"):
             expected_available = capital[f"authorized_{suffix}"] - capital[f"issued_{suffix}"] - capital[f"reserved_{suffix}"]
             if expected_available < 0 or capital[f"legally_available_{suffix}"] != expected_available:
@@ -297,6 +340,10 @@ def validate_stock_issuance_result(
             path_text = parsed.path.lower()
             query = parse_qs(parsed.query)
             route = authority["route"]
+            if (authority["jurisdiction"] == "United States") != (authority["jurisdiction_code"] == "US"):
+                raise AssertionError(
+                    f"{tranche['tranche_id']}: securities authority jurisdiction and code disagree"
+                )
             if authority["jurisdiction"] == "United States":
                 federal_route_ok = {
                     "SECTION_4_A_2": (
@@ -311,17 +358,33 @@ def validate_stock_issuance_result(
                 }.get(route, False)
                 if not federal_route_ok:
                     raise AssertionError(f"{tranche['tranche_id']}: federal securities route/source family is invalid")
-            elif authority["jurisdiction"] == "Washington":
-                if route not in {"WA_REGISTRATION", "WA_EXEMPTION", "WA_NOTICE"} or not host_is(host, "dfi.wa.gov") or "/securities" not in path_text:
-                    raise AssertionError(f"{tranche['tranche_id']}: Washington securities route/source family is invalid")
             else:
-                raise AssertionError(f"{tranche['tranche_id']}: unsupported state securities jurisdiction requires validator extension")
-        washington_routes = {
-            authority["route"] for authority in tranche["securities_authorities"]
-            if authority["jurisdiction"] == "Washington"
-        }
-        if "Washington" in securities_jurisdictions and not washington_routes.intersection({"WA_REGISTRATION", "WA_EXEMPTION"}):
-            raise AssertionError(f"{tranche['tranche_id']}: Washington lacks a substantive registration or exemption route")
+                # Any state. The route vocabulary is generic and the source must
+                # be an official government host; the skill does not carry a
+                # per-state regulator roster.
+                state_routes = {
+                    "STATE_REGISTRATION", "STATE_EXEMPTION",
+                    "STATE_NOTICE_FILING", "STATE_FEDERALLY_COVERED_NOTICE",
+                }
+                match = government_source_for(parsed, authority["jurisdiction_code"])
+                if route not in state_routes or match is None:
+                    raise AssertionError(
+                        f"{tranche['tranche_id']}: {authority['jurisdiction']} securities route/source family is invalid"
+                    )
+                if match == "ATTEST" and not (authority["jurisdiction_source_attested_by"] or "").strip():
+                    raise AssertionError(
+                        f"{tranche['tranche_id']}: {authority['jurisdiction']} authority host does not name the "
+                        "jurisdiction; a named attestation is required"
+                    )
+        # Every state whose law reaches the transaction needs a substantive
+        # route, not merely a notice filing.
+        for state in securities_jurisdictions - {"United States"}:
+            state_routes = {
+                authority["route"] for authority in tranche["securities_authorities"]
+                if authority["jurisdiction"] == state
+            }
+            if not state_routes.intersection({"STATE_REGISTRATION", "STATE_EXEMPTION"}):
+                raise AssertionError(f"{tranche['tranche_id']}: {state} lacks a substantive registration or exemption route")
         doctrines = {item["doctrine"] for item in tranche["tax_authorities"]}
         if doctrines != {"section_83", "section_351", "section_1202", "section_1244"}:
             raise AssertionError(f"{tranche['tranche_id']}: tax authority set is incomplete")
@@ -434,12 +497,29 @@ def validate_stock_issuance_result(
                 raise AssertionError(f"{tranche['tranche_id']}: {rule} authority source family is invalid")
         gate_values = list(tranche["gates"].values())
         tax_values = list(tranche["tax_positions"].values())
+        # scenarios/stock-issuance.md "Status precedence": the first question is
+        # whether competent evidence shows a purported issuance actually
+        # occurred. That fact is what separates a conflicted record of a
+        # completed act (DISPUTED_OR_DEFECTIVE, which "overrides all other
+        # post-issuance statuses") from a conflicted record of a proposal
+        # (FACT_CONFLICT), and an unproved payment on a purported issuance
+        # (PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED) from an ordinary
+        # incomplete closing (CLOSING_PENDING).
+        evidenced = tranche["purported_issuance_evidenced"]
         if "CONFLICTED" in gate_values:
-            derived_tranche = "FACT_CONFLICT"
+            derived_tranche = "DISPUTED_OR_DEFECTIVE" if evidenced else "FACT_CONFLICT"
         elif "COUNSEL_HOLD" in gate_values or "COUNSEL_HOLD" in tax_values:
             derived_tranche = "COUNSEL_HOLD"
+        elif evidenced and tranche["gates"]["consideration"] == "UNVERIFIED":
+            derived_tranche = "PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED"
         elif "UNVERIFIED" in gate_values or "UNVERIFIED" in tax_values:
             derived_tranche = "CLOSING_PENDING"
+        elif not evidenced:
+            # Every gate is clean but nothing evidences that the issuance
+            # happened. Never infer an issuance from clean paperwork.
+            raise AssertionError(
+                f"{tranche['tranche_id']}: all gates verified but no purported issuance is evidenced"
+            )
         else:
             derived_tranche = "ISSUED_AND_RECONCILED"
         if tranche["status"] != derived_tranche:
@@ -510,7 +590,8 @@ def validate_stock_issuance_result(
             resolved_at = datetime.fromisoformat(state_route["filed_or_resolved_at"].replace("Z", "+00:00"))
             if state_route["substantive_route"] not in matching_routes or resolved_at > cutoff_at:
                 raise AssertionError(f"{tranche['tranche_id']}: closing state route or resolution time is invalid")
-            if state_route["notice_requirement_status"] == "REQUIRED_FILED_ACCEPTED" and "WA_NOTICE" not in matching_routes:
+            notice_routes = {"STATE_NOTICE_FILING", "STATE_FEDERALLY_COVERED_NOTICE"}
+            if state_route["notice_requirement_status"] == "REQUIRED_FILED_ACCEPTED" and not matching_routes.intersection(notice_routes):
                 raise AssertionError(f"{tranche['tranche_id']}: required state notice lacks a validated notice route")
             if state_route["deadline"] is not None and resolved_at.date() > parse_date(state_route["deadline"]):
                 raise AssertionError(f"{tranche['tranche_id']}: state securities notice missed its recorded deadline")
@@ -556,12 +637,17 @@ def validate_stock_issuance_result(
         signed_at = datetime.fromisoformat(manifest_data["signoff"]["signed_at"].replace("Z", "+00:00"))
         if signed_at > cutoff_at or signed_at.date() < issuance_date:
             raise AssertionError(f"{tranche['tranche_id']}: closing signoff time is invalid")
-    if "FACT_CONFLICT" in derived_tranche_statuses:
-        derived_overall = "FACT_CONFLICT"
-    elif "COUNSEL_HOLD" in derived_tranche_statuses:
-        derived_overall = "COUNSEL_HOLD"
-    elif "CLOSING_PENDING" in derived_tranche_statuses:
-        derived_overall = "CLOSING_PENDING"
+    # Fail closed: the worst tranche sets the artifact status, most severe first.
+    for candidate in (
+        "DISPUTED_OR_DEFECTIVE",
+        "FACT_CONFLICT",
+        "COUNSEL_HOLD",
+        "PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED",
+        "CLOSING_PENDING",
+    ):
+        if candidate in derived_tranche_statuses:
+            derived_overall = candidate
+            break
     else:
         derived_overall = "ISSUED_AND_RECONCILED"
     if result["overall_status"] != derived_overall:
@@ -2029,6 +2115,7 @@ def validate_artifact_fixtures(template: dict, schema: dict, fixtures: list[dict
         "annual financial statements missing", "permanent record subcontrols omitted",
         "permanent core record falsely marked not yet due",
         "annual record evidence uses wrong fiscal year",
+        "unadopted recommended-only control lands on disclosed gaps",
     }
     assert names == required, "artifact fixture set drifted"
 
@@ -2111,6 +2198,13 @@ def _run_artifact_fixtures(clean: dict, schema: dict, fixtures: list[dict]) -> N
         assert audit["overall_status"] == actual
 
 
+# Prose evals are checked for STRUCTURE only: that E1..EXPECTED_EVAL_CASES exist
+# and that each states a mandatory result. Nothing here verifies that a mandatory
+# result is legally correct — that is the independent-reviewer pass named in
+# evals/corporate-records.md.
+EXPECTED_EVAL_CASES = 27
+
+
 def structural_release_checks(schema: dict, template: dict) -> None:
     router = read("SKILL.md")
     records = read("scenarios/corporate-records.md")
@@ -2126,8 +2220,182 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     specialist_template = json.loads(read("templates/corporate-specialist-result.json.template"))
 
     require(router, ["corporate-records.md", "record-book", "formation cleanup", "annual governance"], "router")
-    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453"], "corporate-records orchestrator")
+    require(records, ["READ_ONLY_AUDIT", "INTAKE_RECONCILIATION", "Multi-axis evidence model", "OPERATION_RECONCILIATION_PENDING", "Reconciled-record-set invariant", "after incorporation", "zero shares issued", "no general §1244 or §1202 election/plan", "stock-issuance-audit-FY<YYYY>.json", "corporate-specialist-result.schema.json", "does not impose a categorical annual board-meeting requirement", "renewal submission is not an issued renewal", "final rule effective August 14, 2026", "subsidiary filings do not cure", "local `_processed.log`", "never backdate", "PARTIAL_FAILURE", "no federal “Augusta election”", "signed Form 8879/8453", "search scope", "`NOT_FOUND`", "no filed §482 method election"], "corporate-records orchestrator")
     require(governance, ["corporate-records.md", "final rule", "domestic"], "governance backlink")
+    # Defects that cost the most rework are the ones a draft asserts confidently.
+    require(governance, [
+        "Authority Chains and Drafting Integrity",
+        "Authority chains must be acyclic",
+        "A filed document controls only the field it proves",
+        "Execution evidence is weighed, not ranked",
+        "none is categorically",
+        '"Approved" means signed',
+        "No recital of events later than",
+        "Ratification is bounded",
+        "rewrite the capacity a signature actually recites",
+        "three-branch ratification triage",
+        "within the power of the corporation",
+        "executed legacy instruments",
+        "Read the termination clause before choosing",
+        "is a separate bargain",
+        "portion by portion",
+        "does not legislatively forfeit relief for unrelated items",
+        "read but deliberately not reproduced",
+    ], "governance authority-chain doctrine")
+    binder = read("scenarios/pre-formation-binder.md")
+    require(binder, [
+        "pre-formation formation binder",
+        "submission date, not the effective date",
+        "EXECUTED_AUTHORITY_UNVERIFIED",
+        "`PURPORTED ISSUANCE \u2014 CONSIDERATION\n  UNVERIFIED` or `DISPUTED OR DEFECTIVE`",
+        "never operated",
+        "not required at all",
+    ], "pre-formation binder scenario")
+    info_returns = read("scenarios/information-returns.md")
+    require(info_returns, [
+        "rules/federal-<year>.json",
+        "files **Form 8233** with the withholding agent",
+        "calendar year of payment",
+        "\u00a73406",
+        "10 or more information returns of all types",
+        "Responsible Official",
+        "\u00a76721",
+        "\u00a7861(a)(3)",
+        "Reg. \u00a71.6041-3(p)",
+        "Two different attorney rules",
+        "\u00a76045(f)",
+        "Reg. \u00a71.861-4",
+        "Responsible Officials",
+        "does **not** require a\n  statutory corporate office",
+    ], "information-returns scenario")
+    require(read("scenarios/section-1244.md"), [
+        "numerical test, not a business-failure narrative",
+        "Business labels do not decide it",
+    ], "\u00a71244 numerical exception")
+    require(read("entities/s-corp.md"), [
+        "accumulated earnings and profits at the close of the year",
+        "succeeded to in a qualifying reorganization",
+        "does not require a separate appraisal of every asset",
+    ], "S-corp conversion conditionality")
+    ccorp_reduction = read("scenarios/ccorp-tax-reduction.md")
+    require(ccorp_reduction, [
+        "\u00a7532(b)(1)",
+        "Run the PHC test first",
+        "at least** 60%",
+        "within 90 days",
+        "within 120 days",
+        "\u00a7565 consent dividend",
+        "dividend income and tax with no cash",
+        "\u00a77872(f)(2)",
+        "demand loan",
+        "present value at inception",
+        "$10,000 aggregate",
+        "Keep status and amount separate",
+        "no rule that an unpaid officer must be imputed",
+    ], "AET/PHC ordering, dividend cures, and loan pricing")
+    forbid(ccorp_reduction, ["consider PHC \u00a7541 risk too"], "stale AET-first ordering")
+    require(ccorp, [
+        "\u00a76072(a)",
+        "June 30 fiscal-year transition",
+        "Pub. L. 114-41",
+        "\u00a7532(b)(1)",
+        "at least** 60%",
+    ], "c-corp deadlines and PHC precedence")
+    forbid(ccorp, ["Form 1120 due** (\u00a76072(b))"], "wrong 1120 deadline citation")
+    require(router, [
+        "Portability rule (STRICT)",
+        "ships publicly",
+        "hard-code a jurisdiction",
+        "portability.md",
+        "pre-formation-binder",
+        "information-returns",
+    ], "portability rule and new scenario routing")
+    require(read("portability.md"), [
+        "No jurisdiction is hard-coded",
+        "Workspace data",
+        "Engagement output",
+        "rules/federal-<year>.json",
+    ], "portability reference")
+    plan = read("scenarios/accountable-plan.md")
+    require(plan, [
+        "does not depend on a written or signed plan",
+        "a missing signature is **not**\n  conclusive",
+        "Publication 5137",
+        "requires statements at\nleast **quarterly**",
+        "item by item",
+    ], "accountable-plan arrangement-in-fact rule")
+    require(stock, [
+        "does **not** have to live in a separate document",
+        "evidentiary preference**, not a\nlegal requirement",
+        "Deferred consideration may be lawful",
+        "No retroactive true-up",
+        "Marital-property character",
+        "blank means unverified",
+        "named person must attest",
+    ], "stock-issuance adequacy, deferred consideration, and template discipline")
+    require(records, [
+        "Working registers the record set needs",
+        "Registers carry evidence-backed statuses only",
+        "adequacy-and-fairness-determination.md.template",
+        "incumbency-certificate.md.template",
+        "open-items-tracker.md.template",
+    ], "corporate-records registers")
+    for name in (
+        "adequacy-and-fairness-determination", "incumbency-certificate",
+        "bilateral-termination-and-release", "open-items-tracker",
+        "tax-elections-and-positions-register", "address-agent-and-titling-register",
+        "related-party-transaction-policy", "records-retention-schedule",
+        "compliance-calendar",
+    ):
+        path = ROOT / "templates" / f"{name}.md.template"
+        assert path.is_file(), f"missing template {name}.md.template"
+    # Every drafting template must carry both legends: a counsel notice alone is
+    # not enough to stop an unsigned draft being treated as executed.
+    for name in (
+        "adequacy-and-fairness-determination", "incumbency-certificate",
+        "bilateral-termination-and-release", "related-party-transaction-policy",
+    ):
+        text = (ROOT / "templates" / f"{name}.md.template").read_text(encoding="utf-8")
+        require(text, ["DRAFT \u2014 NOT EXECUTED", "counsel before signing"], f"{name} legends")
+    # A shipped template must not teach one state's law to every state's user,
+    # and must not pre-assert a tax or evidence conclusion nobody reached.
+    # A JSON template's values are machine-readable defaults a user can leave in
+    # place, so they must never carry one jurisdiction's law or a tax conclusion
+    # nobody reached. (Markdown templates may cite a statute as a labelled
+    # example, which a reader can see is an example.)
+    import re as _re
+    for path in sorted((ROOT / "templates").glob("*.json.template")):
+        body = path.read_text(encoding="utf-8")
+        for pattern, label in (
+            (r"https?://[a-z0-9.-]*\.(?:wa|ca|ny|tx|de|fl)\.gov", "a live state-government URL"),
+            (r"\bRCW\s+\d", "a Washington statute citation"),
+            (r"\bDGCL\b", "a Delaware statute citation"),
+        ):
+            if _re.search(pattern, body):
+                raise AssertionError(
+                    f"template {path.name} ships {label} as a default value; "
+                    "jurisdiction rules are looked up per engagement"
+                )
+        for banned in (
+            '"ISSUANCE_PRONGS_VERIFIED"',
+            '"ISSUANCE_DATE_PRONGS_SATISFIED_PROVISIONAL"',
+            '"section_351_control_test_status": "SATISFIED"',
+        ):
+            if banned in body:
+                raise AssertionError(f"template {path.name} pre-asserts a tax conclusion: {banned}")
+    require(governance, [
+        "Conflicting-Interest Transactions in Owner-Controlled Entities",
+        "RCW 23B.08.730(2)",
+        "DGCL §144",
+        "RCW 23B.02.060",
+        "RCW 23B.08.400",
+        "unlimited general obligation",
+        "RCW 23B.08.560",
+        "RCW 23B.06.250(4)",
+        "1.6662-6(d)",
+        "Intercompany arrangements between commonly controlled entities",
+    ], "conflict, bylaws, and intercompany doctrine")
+    require(ccorp, ["Reg. §1.248-1(c)", "deemed"], "organizational-expenditure deemed election")
     require(ccorp, ["corporate-records.md"], "C-corp backlink")
     require(stock, ["corporate-records.md"], "stock backlink")
     require(layout, ["corporate-records-audit-FY<YYYY>.json"], "layout")
@@ -2140,6 +2408,11 @@ def structural_release_checks(schema: dict, template: dict) -> None:
         for path in ROOT.rglob("*")
         if path.is_file() and path.suffix in {".md", ".template"}
     )
+    # NOT_LOCATED is not a lifecycle value the schema allows; never instruct one.
+    forbid(records, ["NOT_LOCATED"], "lifecycle vocabulary (scenario)")
+    forbid(evals, ["NOT_LOCATED"], "lifecycle vocabulary (evals)")
+    # A sole-director fact alone does not eliminate the qualified-share route.
+    forbid(stock, ["qualified-share safe harbors are unavailable"], "conflict-route overreach")
     forbid(all_skill_text, ["FinCEN BOIR filed (one-time + 30-day updates on changes)", "FinCEN Beneficial Ownership Information Report (BOIR) — initial + updates", "interim final rule", "No state requires a written consent for a single-member LLC distribution"], "skill-wide stale guidance")
 
     jsonschema.Draft202012Validator.check_schema(schema)
@@ -2152,8 +2425,21 @@ def structural_release_checks(schema: dict, template: dict) -> None:
     )
     assert [row["id"] for row in template["requirements"]] == list(CANONICAL_IDS)
 
+    # A shipped template must not carry a plausible fiscal year: a filled
+    # artifact that forgets one of these rows would otherwise validate with a
+    # real-looking period. FY0000 is syntactically valid and obviously unfilled.
+    for row in template["requirements"]:
+        for sub in row.get("record_subcontrols") or []:
+            period = sub.get("evidence_period")
+            if period and period != "PERMANENT" and period != "FY0000":
+                raise AssertionError(
+                    f"template row {row['id']}/{sub['id']} ships a plausible period {period!r}; use FY0000"
+                )
+
     sections = {int(number): body for number, body in re.findall(r"^### E(\d+) —.*?\n(.*?)(?=^### E\d+ —|^## Scoring)", evals, flags=re.MULTILINE | re.DOTALL)}
-    assert set(sections) == set(range(1, 21)), "eval suite must contain E1–E20"
+    assert set(sections) == set(range(1, EXPECTED_EVAL_CASES + 1)), (
+        f"eval suite must contain E1–E{EXPECTED_EVAL_CASES}"
+    )
     for case, body in sections.items():
         require(body, ["Mandatory result:"], f"eval E{case}")
     require(evals, ["RECORD_SET_RECONCILED_AS_OF", "EXECUTED_AUTHORITY_UNVERIFIED", "FINAL_UNSIGNED", "EVIDENCE_INTAKE_PENDING", "SUBMITTED_UNCONFIRMED", "visible handwritten", "does not authorize", "Independent corporate/securities, tax-counsel, and skill-red-team reviewers"], "substantive eval contract")
@@ -2189,7 +2475,8 @@ def main() -> None:
         validated += 1
     print(
         f"PASS: corporate-records release; 24-row schema, {len(fixtures)} record-set fixtures, "
-        f"{len(specialist_fixtures)} specialist fixtures, 20 prose evals, {validated} instantiated audit(s)"
+        f"{len(specialist_fixtures)} specialist fixtures, {EXPECTED_EVAL_CASES} prose evals (structure only), "
+        f"{validated} instantiated audit(s)"
     )
 
 

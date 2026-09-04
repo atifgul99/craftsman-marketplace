@@ -103,6 +103,74 @@ and intake branches.
 - [ ] Capital adequately infused (factor in piercing-veil analysis)
 - [ ] Required shareholder and director actions truthfully documented; no fictional meetings
 
+## Conflicting-Interest Transactions in Owner-Controlled Entities
+
+Nearly every closely-held governance document this skill drafts approves a
+transaction the signer is on both sides of: officer compensation, a shareholder
+loan, an Augusta rental, family employment, an intercompany services agreement,
+a founder stock purchase. Do not paper these with a disinterested-approval
+recital the entity cannot satisfy — and do not assume no safe harbor exists
+until the ownership facts show it.
+
+**Test each route independently on the actual facts.** The MBCA-derived
+director's-conflicting-interest statutes (WA **RCW 23B.08.700–.730** and state
+analogues) offer three **alternatives** — approval by qualified (disinterested)
+directors, approval by qualified shares, or fairness to the corporation. They
+are disjunctive: the fairness showing is available whether or not an approval
+route was available, attempted, or completed (WA **RCW 23B.08.710(2)**).
+
+1. **Qualified directors.** An interested director is not a qualified director
+   (WA **RCW 23B.08.720**). Where he is the only director, this route is
+   unavailable.
+2. **Qualified shares.** Shares entitled to vote may qualify unless, to the
+   knowledge of the authorized vote tabulator before the vote, they are
+   beneficially owned or their voting is controlled by the conflicted director
+   or a related person (WA **RCW 23B.08.730(2)**). Other shares may qualify, but
+   their existence alone does not satisfy the route: confirm beneficial
+   ownership, voting control, the required notice and disclosure, quorum, and
+   the affirmative vote under **RCW 23B.08.730(1)–(4)**. Do not infer any of
+   that from record ownership or the stock ledger alone.
+3. **Fairness.** Was the transaction fair to the corporation when entered into
+   (WA **RCW 23B.08.710(2)(c)**)? Judged on the facts at commitment.
+
+**Delaware is not the same statute and changed in 2025.** Current **DGCL §144**
+treats ordinary director/officer conflicts under subsection (a), controlling-
+stockholder transactions under (b), and controlling-stockholder going-private
+transactions under (c), each with its own conditions. Classify the transaction
+before naming a route; do not cite §144(a)(3) generically. The statutory
+standard is fairness "as to the corporation and the corporation's stockholders,"
+which the legislative history ties to common-law entire fairness.
+
+**What the record should contain**, per transaction and contemporaneously.
+These are evidentiary controls, not a recitation of statutory elements — the
+fairness route's statutory question is fairness at the time of commitment, and
+the express-disclosure conditions belong to the two approval routes:
+
+1. the conflict and the material facts known to the interested actor;
+2. the route actually relied on, stated accurately. Do **not** recite that no
+   safe harbor was available unless the capitalization and control facts
+   establish it — a false recital is worse than none, because it is the record
+   the transaction will be defended with;
+3. the transaction-specific facts supporting fairness **at the time of
+   commitment** — price, terms, alternatives, process, corporate benefit, and
+   the comparables or other market evidence actually consulted, not a
+   conclusory "the Board finds this fair";
+4. the capacity in which each signature is given, where one person acts for two
+   entities (sign twice, in each capacity, rather than once for both); and
+5. the date the determination was actually made. A later-dated memorandum must
+   say it was prepared later and describe the data available at commitment.
+   Never date it back.
+
+**LLCs** run on the operating agreement plus the state's duty-of-loyalty
+provisions (a self-dealing transaction is typically permitted only if the
+agreement authorizes it or the members with knowledge of the material facts
+approve it). Verify the current act; do not import corporate conflict statutes.
+
+**A clean conflict record is not a tax result.** Fairness under corporate law
+does not establish arm's-length pricing under §482, reasonable compensation
+under §162(a)(1), or a bona fide debt. Those are tested separately on their own
+authority.
+
 ## Document Intake (post-filing)
 
 Trigger and high-level rules live in `SKILL.md` → "Corporate document intake". This section owns the mechanics. State-generic by design — examples cite specific agencies (WA SOS, FinCEN, etc.) only as illustrations; real intake reads the agency name from the document itself.
@@ -244,9 +312,281 @@ Rationale: the "never answer standing questions with unprocessed files in the wa
   output, append logs, or update records.
 - **State-specific quirks** (UBI vs file # vs charter #, SOS vs business-services agency, combined-license states vs separate-license states) are extraction details, not new schemas. The above list is the universal frame.
 
+## Authority Chains and Drafting Integrity
+
+These rules apply to every consent, minute, certificate, and ratification this
+skill drafts or audits. They exist because remediation packages fail review on
+the same handful of defects: an authority chain that proves itself, a recital
+that describes something that did not happen, and a ratification broad enough
+that nobody can say what it ratified.
+
+### 1. Establish the legal existence date first
+
+Before reading a single internal instrument, take the entity's legal existence
+date from the filed charter — the **effective** date, which is not necessarily
+the submission date and not the date on the formation vendor's cover letter.
+Then compare every instrument's execution date **and every date it recites** to
+that one. This is the first move of a records audit, not a later cross-check,
+because the answer reclassifies whole categories of documents at once.
+
+Anything dated before existence is a **pre-formation instrument**. It is never
+valid merely because it is signed, notarized, or sitting in a record book. See
+`scenarios/corporate-records.md` Gate 2 for the classification and
+`scenarios/pre-formation-binder.md` for the fact pattern this most often
+produces.
+
+### 2. Authority chains must be acyclic
+
+Never build a cure whose authority depends on the fact it is supposed to
+establish. The three circularities that recur:
+
+- **Disputed shares electing their own validator.** If the only shareholding is
+  itself in question, a shareholder election cannot supply the director election
+  that will later validate that shareholding. Use the incorporator branch, or a
+  court/statutory route, not the shares.
+- **A director electing himself.** A person's own director consent is not the
+  instrument that makes him a director.
+- **A public filing standing in for an internal act.** See rule 3.
+
+State the proven authority order explicitly, source each link to a separate
+instrument, and stop when a link is missing rather than inferring it. A chain
+with a missing link is `AUTHORITY_HOLD`, not a chain with a small gap.
+
+### 3. A filed document controls only the field it proves
+
+A public filing proves the fact the form asks for and nothing else.
+
+| Document | Proves | Does **not** prove |
+|---|---|---|
+| Charter / articles | Existence, effective date, name, authorized shares, whatever the articles actually recite | Any internal election, adoption of bylaws, or receipt of consideration |
+| Initial report / annual report | What the filed report states and, with an agency acknowledgment, that it was accepted | Current good standing, or that an internal election ever occurred — an officer or governor entry is a **filing**, not board or incorporator action. For standing, obtain the formation state's own status certificate |
+| Stock certificate | That a certificate was printed and signed | That shares were validly authorized, issued, or paid for |
+| Bank signature card | Who the bank will honour | Who holds the office, or that the board authorized the account |
+| EIN letter / CP notice | What the IRS has on record | The entity's start date, tax classification history, or address as a matter of state law |
+
+Carry this as a **"Proves"** column in the evidence inventory. The honest entry
+is often "Nothing by itself" or "Nothing until signed", and writing that down is
+what stops an inference from being laundered into a fact.
+
+### 4. Execution evidence is weighed, not ranked
+
+Collect and reconcile every source: the signed document, a trusted e-signature
+certificate of completion, the notarial record, the delivery record, file
+provenance, and native or PDF metadata. Compare them to every recited meeting
+time, date, and place.
+
+These sources are **not equally reliable**, and none is categorically "ground
+truth". A trusted e-signature completion certificate is strong evidence of when
+signatures were applied; ordinary PDF creation and modification timestamps are
+weak, because a file can be regenerated and its metadata edited. Authenticity is
+a foundation supported by the item, the process that produced it, and the
+surrounding circumstances (cf. Fed. R. Evid. 901), not a property a timestamp
+confers by itself.
+
+The operative rule: where **authenticated** evidence shows a recited formality
+was impossible — a meeting an hour before the envelope that contains its minutes
+existed, the same meeting placed in two cities — report the conflict and never
+again repeat the recital as fact. Where the evidence is only suggestive, record
+it as a discrepancy to resolve. Preserve the document unaltered either way.
+
+Extraction mechanics live in `parsing.md`.
+
+### 5. Recitals must be true, and are a separate defect class from dates
+
+The never-backdate rule reaches signature dates. These rules reach the body:
+
+- **No false WHEREAS.** A recital may not assert a meeting, a quorum, an
+  approval, a delivery, or a payment that did not occur.
+- **"Approved" means signed.** Never write "on <date> the Board approved" for an
+  instrument that was drafted and never executed. A written consent is not an
+  approval until it is executed. The honest recital is that a draft was prepared
+  and remains unexecuted.
+- **No recital of events later than the instrument's own effective date.** A
+  consent captioned with one date whose recitals describe events months later
+  cannot be signed as captioned; re-issue it as a present-dated ratifying
+  consent that recites the true chronology.
+- **No anachronistic content.** Check what a recital says against the
+  chronology, not only what it is dated: a consent acknowledging a registered
+  agent change before that change was filed is defective even if its date is
+  defensible.
+- **"As of" is not a licence.** An "effective as of" date that precedes
+  execution states a legal conclusion about relation-back that the drafter is
+  not entitled to assume. Use it only where counsel has approved it in writing
+  for that instrument.
+
+### 6. Ratification is bounded — enumerate, never sweep
+
+An omnibus ratification ratifies a **schedule of identified acts**. It may not:
+
+- say "each and every act" or otherwise ratify by category;
+- reach acts that were beyond the corporation's power, or that predate its
+  existence, without counsel's separate analysis (see rule 7);
+- **rewrite the capacity a signature actually recites.** A present resolution
+  declaring that every past signature labelled "Owner" was made as President
+  does not make it so. Preserve each historical signature's printed capacity and
+  reconcile prospectively instead (rule 8).
+
+Where a single omnibus grows too broad to review, **split it by subject matter**
+— positions and agreements, federal tax filings and payments, state compliance —
+so each is separately reviewable and one subject can be held while the others
+proceed.
+
+### 7. The three-branch ratification triage
+
+For any defective past act, present the branches and let counsel choose. Never
+assume relation-back, and never assert a branch is available:
+
+1. **The formation state's statutory defective-corporate-action procedure**, if
+   the state has one **and if it reaches this act**. These statutes are typically
+   limited to acts "within the power of the corporation", which is a live
+   question for an act dated before the corporation existed. A board recital
+   cannot decide that question.
+2. **Common-law adoption of promoter acts** — the corporation, once it exists,
+   adopts an act taken on its behalf beforehand. Adoption is not relation-back;
+   the act is effective from adoption unless the state says otherwise.
+3. **A fresh, present-dated chain** — elect, adopt, authorize, and issue again
+   now, on today's facts.
+
+Cite the statute from the formation state's file under `states/`, and verify the
+citation against the primary source before it appears in a draft. **A chapter or
+section number that does not exist is the single most damaging error a
+governance draft can contain**, because every downstream document inherits it.
+
+### 8. Capacity reconciliation belongs in an incumbency certificate
+
+Where an owner has signed for the entity under inconsistent labels — Owner,
+Member, Manager, Authorized Signatory, President — reconcile it **prospectively**
+in a Secretary's incumbency certificate that lists the offices actually held,
+the date each was assumed, and the designation to be used going forward. History
+is described, not rewritten. Template:
+`templates/incumbency-certificate.md.template`.
+
+### 9. Inventory the executed legacy instruments before drafting new policy
+
+Before drafting any policy, plan, or agreement, enumerate every **executed**
+instrument already in the record on that subject, and make the new document
+reconcile with, acknowledge, and where appropriate expressly supersede or retire
+its historical counterpart.
+
+A record book that contains an executed medical-reimbursement plan, credit
+facility, or lease the entity does not know it has is a reconciliation failure,
+not a harmless surplus — each one is an outstanding obligation, a deduction
+position, or a benefit-plan compliance duty. Formation-vendor binders routinely
+contain several.
+
+### 10. Read the termination clause before choosing a termination route
+
+A board consent cannot, by itself, release or amend a counterparty's rights. It
+does **not** follow that every two-party instrument needs bilateral termination.
+Establish first: the instrument's own termination clause, the governing law,
+accrued obligations, any security or guaranty, and what survives termination.
+An agreement may give the entity a unilateral termination right, an indefinite
+agreement may be terminable on reasonable notice under applicable law, or an
+agreed event may already have ended it. Where the entity holds a termination
+right, the board action authorizes the entity to **exercise** it.
+
+Use a bilateral termination where the instrument or the governing law requires
+mutual consent, or where both sides want the record closed. A **mutual release
+is a separate bargain**, not part of terminating — add one only after counsel
+identifies the claims and the carve-outs, because a blanket release can waive
+fraud, indemnity, confidentiality, security, accrued-payment, and tax claims
+nobody meant to give up. Template:
+`templates/bilateral-termination-and-release.md.template`.
+
+### 11. Why the never-backdate rule is not negotiable
+
+The rule is stated throughout this skill. The reason to give an owner, when the
+temptation arises, is the exposure ladder:
+
+- A state filing is typically executed **under penalty of perjury**, so a false
+  statement in one carries its own exposure.
+- A knowingly false or backdated instrument produced in a federal tax matter —
+  to support a §1244 basis, an accountable plan, an accumulated-earnings
+  defense, or an S-election timeline — may create criminal exposure under
+  **§7206** or **18 U.S.C. §1001** where those statutes' elements are met.
+  Neither is automatic: §7206 requires willfulness and material falsity (and
+  §7206(1) a document subscribed under penalties of perjury), and §1001 requires
+  a knowing and willful materially false statement in a matter within federal
+  jurisdiction. State the exposure as exposure, not as a foregone conclusion.
+- It is powerful evidence **against** reasonable cause and good faith under
+  **§6664(c)**, especially for the portion of an underpayment and the factual
+  issues the document relates to. But §6664(c) applies **portion by portion**
+  and Reg. §1.6664-4 is a facts-and-circumstances inquiry; one false document
+  does not legislatively forfeit relief for unrelated items.
+- It is trivially discoverable. E-signature certificates, file metadata, bank
+  posting dates, and agency timestamps all outlive the document.
+
+What is legitimate: an instrument dated the day it is signed, reciting the true
+chronology, ratifying identified past acts as of their actual dates, and saying
+plainly that the record is being made now.
+
+### 12. Privilege and privacy carve-outs
+
+State the exclusions in the workpaper header rather than leaving them implicit:
+which paths were not opened because they are privileged, that identification
+numbers are masked to last-4, and that sensitive personal identifiers appearing
+in agency transcripts (dates of birth, driver-licence numbers) were **read but
+deliberately not reproduced**. A reader must be able to tell the difference
+between a fact that is absent and a fact that was withheld on purpose.
+
 ## Document Drafting Patterns
 
 All drafted documents are written in plain English (not legalese), tailored to the entity's facts, and end with clear signature blocks.
+
+### Bylaws (first adoption or restatement)
+
+Bylaws are the one document a record-book cleanup most often finds missing, and
+the one most often adopted from a generic form that contradicts the entity's
+facts. Decide each of these on the entity's actual facts and the formation
+state's current statute:
+
+- **Who adopts them.** Initial bylaws are adopted by the incorporators or by
+  the board (WA: **RCW 23B.02.060**) — the incorporators may adopt them
+  themselves and need not elect a director first. A corporation with no shares
+  issued has no shareholder who can act. Where the articles name no initial
+  director, the incorporators hold the organizational meeting and elect the
+  first directors (WA: **RCW 23B.02.050(1)(b)**); record which body in fact
+  acted, because the two paths produce different authority chains.
+- **No shareholder action before shares exist.** State the point expressly, so
+  no later consent recites a shareholder that the ledger does not show. A person
+  entitled to subscribe is not a shareholder.
+- **Share issuance.** The board issues shares and determines that the
+  consideration is adequate **unless the articles reserve that power to the
+  shareholders** (WA: **RCW 23B.06.210(1)**) — read the articles before drafting
+  the clause. State the consequence the statute attaches: shares are fully paid
+  and nonassessable when the corporation receives the authorized consideration
+  (WA: **RCW 23B.06.210(2)** approval, **(3)** adequacy and fully-paid effect). Do not draft money previously advanced as automatic
+  consideration; route it to `scenarios/stock-issuance.md`.
+- **Certificates or uncertificated shares.** Either say the corporation issues
+  uncertificated shares and delivers the statutory information statement, or
+  meet the certificate signature requirement — which in several states is **two
+  officers** (WA: **RCW 23B.06.250(4)**; uncertificated statement:
+  **RCW 23B.06.260**). Whether one individual holding two offices satisfies a
+  two-officer requirement is a counsel question; default to uncertificated.
+- **Indemnification, in tiers, without overstating the board's authority.**
+  Distinguish (i) mandatory indemnification of a successful defendant, (ii)
+  permissive indemnification on the statutory standard of conduct, (iii)
+  advancement of expenses — which typically requires the director's executed
+  written affirmation of the good-faith belief that the standard of conduct was
+  met and an executed written undertaking to repay that is the director's
+  **unlimited general obligation**, need not be secured, and may be accepted
+  without regard to ability to pay (WA: **RCW 23B.08.530(2)**), (iv) witness
+  expenses, (v) derivative-proceeding limits and any court/notice requirement,
+  and (vi) D&O insurance, which the corporation may buy beyond what it may
+  indemnify. Broader-than-statutory indemnity generally requires **shareholder
+  authorization** (WA: **RCW 23B.08.560**) or an articles provision — bylaws
+  alone cannot grant it. In a pre-issuance corporation that authorization cannot
+  exist yet; draft the shareholder resolution to be adopted after the first
+  issuance rather than reciting authority the entity lacks.
+- **Officers.** Which offices exist, who may hold more than one, and who signs
+  what. A corporation has the officers described in its bylaws **or** appointed
+  by the board in accordance with the bylaws; a duly appointed officer may
+  appoint other officers or assistant officers only where the bylaws or the
+  board authorize it (WA: **RCW 23B.08.400**). Nobody holds an office before
+  that description or appointment takes effect, so nothing signed earlier can
+  bear the title.
+- **Records and signatures.** Electronic records, electronic signatures, and
+  written consents in lieu of meetings — permitted, and on what majority.
 
 ### Written Consent in Lieu of Annual Shareholder Meeting
 
@@ -282,6 +622,60 @@ Verify the section number is *current* — several states recodified their LLC a
 **Confirm who may approve.** Do not assume the sole member is the correct actor; a manager-managed LLC or an agreement reserving distribution authority may require the manager or another authorized person.
 
 **Execute as two transfers, never one.** The distribution goes to the member's own account; the member then pays its own obligations from that account as a separate, later transaction. The LLC paying the member's creditors directly is commingling. One consent per distribution — a blanket authorisation for ongoing sweeps reads as the very commingling the document exists to rebut.
+
+### Intercompany arrangements between commonly controlled entities
+
+Applies whenever one entity in the group provides services, licences IP, leases
+property, or lends to another.
+
+- **Classify the parties federally before applying any federal rule.** A
+  disregarded single-member LLC is a separate person under state law, so a
+  written agreement, separate approvals, and separate books still matter — but a
+  payment between an owner and its own disregarded entity is generally not a
+  transaction between separate taxpayers. Do not create federal income, expense,
+  a §482 allocation, or a §267 deferral merely because two state-law entities
+  signed an agreement. Determine each side's classification, and whether the
+  arrangement is between separate taxpayers (or separate trades or businesses),
+  first.
+- **Write the agreement before or at the start of performance,** signed by both
+  entities in their own names with each signer's capacity stated. Approvals on
+  both sides (each entity's own board/member action), not one consent covering
+  both.
+- **Pricing support is best-method documentation, not an election.** The §482
+  regulations require selecting the *best method* on the facts; **no
+  transfer-pricing method election is filed with a return** and there is nothing
+  to attach. Where the **services cost method** (Reg. §1.482-9(b)) is used, the
+  taxpayer must maintain in its books and records a statement of its intention
+  to apply it, together with eligibility, cost-pool, and allocation support.
+- **What Reg. §1.6662-6(d) documentation does and does not do.** Principal and
+  background documents meeting it can support a reasonable-cause defense to the
+  §6662(e) net-§482-adjustment penalties. They do not validate the price, do not
+  create a deduction, and do not make a penalty impossible. The documents must
+  generally exist by the date the return is filed and be produced within 30 days
+  of a request, subject to the regulation's exceptions.
+- **Timing.** Date the documentation when it was actually prepared. A memorandum
+  written later and dated to the agreement date is a backdated document; it
+  forfeits the protection it was written to obtain. Prepare it current-dated and
+  say what data was available at the transaction date.
+- **File counterparts on both sides.** The agreement, the pricing support, and
+  the market data belong in both entities' records. A document that exists only
+  in the counterparty's workpapers is not in this entity's record — an internal
+  record-control gap to fix, not necessarily a legal defect.
+- **§267(a)(2)** applies when, at the close of the payer's taxable year, the
+  parties are related persons described in §267(b), the amount would otherwise
+  be deductible for that year, and — because of the **payee's** method of
+  accounting — the amount is not includible in the payee's gross income unless
+  paid. The deduction is then deferred until the amount becomes includible by
+  the payee, subject to the statute's later-date rule and its exceptions. Test
+  those facts; do not treat every related-party payable as deferred, and do not
+  reduce the test to a "cash-method payee" label.
+- **State tax is its own analysis.** Run each relevant jurisdiction's
+  classification, nexus, tax-base, apportionment, and sourcing rules; an
+  intercompany charge can create taxable gross receipts, a sales-tax event, or a
+  nexus fact. An invoice or billing address is evidence and sometimes a
+  statutory fallback in a sourcing cascade — it is not the rule.
+- Route the conflict record to "Conflicting-Interest Transactions in
+  Owner-Controlled Entities" above; the same person is on both sides.
 
 ### Board Resolution — Standalone
 

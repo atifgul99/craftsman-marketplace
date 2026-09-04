@@ -31,7 +31,7 @@
     "state_securities_routes": [
       {
         "jurisdiction": "REPLACE-STATE",
-        "substantive_route": "WA_EXEMPTION",
+        "substantive_route": "STATE_EXEMPTION",
         "notice_requirement_status": "NOT_REQUIRED_COUNSEL_VERIFIED",
         "deadline": null,
         "filed_or_resolved_at": "2000-01-01T00:00:00Z"
@@ -39,21 +39,173 @@
     ]
   },
   "artifacts": [
-    {"kind":"BOARD_APPROVAL","path":"entities/replace-me/corporate/stock-issuances/ISS-2000-001-board-approval.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Approval and exact terms","professional_review_role":"CORPORATE_COUNSEL","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}},
-    {"kind":"PURCHASE_OR_SUBSCRIPTION_AGREEMENT","path":"entities/replace-me/corporate/stock-issuances/ISS-2000-001-purchase-agreement.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Executed purchase terms","professional_review_role":"CORPORATE_COUNSEL","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}},
-    {"kind":"CONSIDERATION_PROOF","path":"entities/replace-me/corporate/stock-issuances/ISS-2000-001-consideration-proof.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Consideration receipt","professional_review_role":"NOT_APPLICABLE","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}},
-    {"kind":"CERTIFICATE_OR_NOTICE","path":"entities/replace-me/corporate/stock-issuances/ISS-2000-001-share-notice.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Certificate or notice delivery","professional_review_role":"CORPORATE_COUNSEL","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}},
-    {"kind":"STOCK_LEDGER","path":"entities/replace-me/corporate/stock-issuances/stock-ledger.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Ledger entry","professional_review_role":"NOT_APPLICABLE","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}},
-    {"kind":"CAP_TABLE","path":"entities/replace-me/corporate/stock-issuances/stock-cap-table.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Cap-table entry","professional_review_role":"NOT_APPLICABLE","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}},
-    {"kind":"TAX_MEMO","path":"entities/replace-me/corporate/stock-issuances/ISS-2000-001-tax-memo.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Per-doctrine tax analysis","professional_review_role":"TAX_COUNSEL","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}},
-    {"kind":"SECURITIES_MEMO","path":"entities/replace-me/corporate/stock-issuances/ISS-2000-001-securities-memo.pdf","sha256":"0000000000000000000000000000000000000000000000000000000000000000","document_date":"2000-01-01","observed_at":"2000-01-01T00:00:00Z","evidence_subject_slug":"replace-me","tranche_id":"ISS-2000-001","verification_status":"VERIFIED","locator":"REPLACE","proves":"Federal and state securities route","professional_review_role":"SECURITIES_COUNSEL","extracted_facts":{"class":"Common","holder_slug":"replace-holder","shares":1,"price_per_share":"1.00","total_consideration":"1.00"}}
+    {
+      "kind": "BOARD_APPROVAL",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/ISS-2000-001-board-approval.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "CORPORATE_COUNSEL",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    },
+    {
+      "kind": "PURCHASE_OR_SUBSCRIPTION_AGREEMENT",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/ISS-2000-001-purchase-agreement.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "CORPORATE_COUNSEL",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    },
+    {
+      "kind": "CONSIDERATION_PROOF",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/ISS-2000-001-consideration-proof.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "NOT_APPLICABLE",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    },
+    {
+      "kind": "CERTIFICATE_OR_NOTICE",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/ISS-2000-001-share-notice.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "CORPORATE_COUNSEL",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    },
+    {
+      "kind": "STOCK_LEDGER",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/stock-ledger.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "NOT_APPLICABLE",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    },
+    {
+      "kind": "CAP_TABLE",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/stock-cap-table.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "NOT_APPLICABLE",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    },
+    {
+      "kind": "TAX_MEMO",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/ISS-2000-001-tax-memo.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "TAX_COUNSEL",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    },
+    {
+      "kind": "SECURITIES_MEMO",
+      "path": "entities/REPLACE-ME/corporate/stock-issuances/ISS-2000-001-securities-memo.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "document_date": "2000-01-01",
+      "observed_at": "2000-01-01T00:00:00Z",
+      "evidence_subject_slug": "replace-me",
+      "tranche_id": "ISS-2000-001",
+      "verification_status": "VERIFIED",
+      "locator": "REPLACE",
+      "proves": "REPLACE",
+      "professional_review_role": "SECURITIES_COUNSEL",
+      "extracted_facts": {
+        "class": "Common",
+        "holder_slug": "replace-holder",
+        "shares": 1,
+        "price_per_share": "1.00",
+        "total_consideration": "1.00"
+      }
+    }
   ],
   "exceptions": [],
   "signoff": {
     "actor": "REPLACE",
     "role": "AUTHORIZED_CORPORATE_RECORDS_OFFICER",
     "signed_at": "2000-01-01T00:00:00Z",
-    "signature_method": "CRYPTOGRAPHIC_VALIDATED",
+    "signature_method": "HANDWRITTEN_OR_IMAGE_OBSERVED",
     "signer_identity": "VERIFIED",
     "document_integrity": "VERIFIED"
   }

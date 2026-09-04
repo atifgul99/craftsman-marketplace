@@ -41,6 +41,35 @@ Separately from capital accounts (instantiate `entities/<slug>/books/capital-acc
 - **Trap**: disproportionate distributions, unequal shareholder loans, binding agreements for unequal distributions can create a second class and terminate S election.
 - Audit-defense: documented governance + uniform distribution resolutions — coordinate with `governance.md`.
 
+### 4a. C→S conversion consequences are conditional, never automatic
+
+When modelling an S election for an existing C corporation, state each of these
+as a **condition with its own test**. Presenting them as automatic consequences
+of electing is a common and material error:
+
+- **§1375 passive investment income tax** applies only if the corporation has
+  **accumulated earnings and profits at the close of the year** *and* passive
+  investment income exceeds 25% of gross receipts. An S corporation with no AE&P
+  cannot owe it at all, however passive its income. Determine AE&P from **all**
+  relevant sources, not only this corporation's own prior C years — AE&P
+  succeeded to in a qualifying reorganization with a C corporation counts, as the
+  Form 1120-S instructions note. Establish the balance before saying anything
+  about §1375.
+- **§1362(d)(3) termination** requires **three consecutive** tax years meeting
+  both conditions, and terminates the election as of the following tax year —
+  not immediately, and not on a single bad year.
+- **§1374 built-in gains tax** measures net unrealized built-in gain **as of the
+  first day of the first S year**, under the statutory aggregate formula. The
+  Code does not require a separate appraisal of every asset, and a supportable
+  whole-business valuation with a defensible allocation can be appropriate. But
+  obtain evidence sufficient for both the aggregate NUBIG figure **and**
+  asset-level tracking through the recognition period, and commission it as part
+  of the conversion rather than after the first sale — the measurement date does
+  not move.
+
+Each of these turns on figures the entity may not have. Say what is unknown and
+what would resolve it rather than modelling a consequence on assumed facts.
+
 ### 5. §1374 Built-in Gains Tax
 
 - 5-year recognition period after C→S conversion.

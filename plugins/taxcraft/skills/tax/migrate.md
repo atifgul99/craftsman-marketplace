@@ -123,6 +123,44 @@ OneDrive/iCloud sync produces conflict copies during migration: `(1)`-suffixed f
 
 See also `naming.md` collision rules, which points back here.
 
+## Phase M6b — Stock-issuance artifact migration (schema break, taxcraft 0.2.0)
+
+Applies to any `stock-issuance-audit-FY<YYYY>.json` or
+`*-closing-manifest.json` produced before taxcraft 0.2.0. Those artifacts no
+longer validate. Migrate, then re-validate; never edit an artifact to make a
+validator pass without re-establishing the underlying fact.
+
+**Mechanical renames** — the jurisdiction-specific enum members became generic:
+
+| Old value | New value |
+|---|---|
+| `WA_REGISTRATION` | `STATE_REGISTRATION` |
+| `WA_EXEMPTION` | `STATE_EXEMPTION` |
+| `WA_NOTICE` | `STATE_NOTICE_FILING` (or `STATE_FEDERALLY_COVERED_NOTICE` where the filing was a covered-security notice) |
+| `WA_REACQUIRED_AUTHORIZED_UNISSUED` | `REACQUIRED_SHARES_RETURN_TO_AUTHORIZED_UNISSUED` |
+| `COUNSEL_VALIDATED_OTHER_STATE` | `COUNSEL_VALIDATED_JURISDICTION_RULE` |
+
+**New fields that require a human decision — do not script these:**
+
+- `purported_issuance_evidenced` (per tranche). Set it from the evidence, not
+  from the old status. Ask: does competent evidence show that a purported
+  issuance actually occurred? A prior `ISSUED_AND_RECONCILED` is not the answer;
+  re-read the closing manifest. Getting this wrong changes the derived status.
+- `capacity_jurisdiction_code` and `jurisdiction_code` — the two-letter code for
+  the jurisdiction each authority belongs to. The validator now requires the
+  source URL to belong to that jurisdiction, so an authority that was accepted
+  on a bare hostname check may now fail. That is the point: re-source it.
+- `capacity_authority_citation` — the statute or rule the capacity source states,
+  not a homepage.
+
+**Expect status changes.** A tranche whose consideration gate was `UNVERIFIED`
+on an evidenced issuance now derives
+`PURPORTED_ISSUANCE_CONSIDERATION_UNVERIFIED` rather than `CLOSING_PENDING`, and
+a conflicted evidenced issuance derives `DISPUTED_OR_DEFECTIVE` rather than
+`FACT_CONFLICT`. These are more accurate, not regressions. Re-run
+`evals/validate_stock_issuance.py --artifact <path>` and record the new status
+in the entity's records rather than restoring the old label.
+
 ## Phase M7 — Verification
 
 - Every file is under the new layout.

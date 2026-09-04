@@ -1,0 +1,78 @@
+# DRAFT — NOT EXECUTED
+
+# Related-Party Transaction Policy
+
+## <ENTITY NAME>
+
+**Adopted:** <YYYY-MM-DD — the actual date of signature; this policy takes effect on execution>
+
+---
+
+**1. Purpose.** To ensure that every transaction between the Entity and a related party is
+authorized before it happens, priced on a defensible basis, and documented on both sides.
+
+**2. Who is a related party.** Defined by **relationship, not by a list** — a roster goes stale and
+the omission becomes the loophole:
+
+   a. any holder of an equity interest in the Entity, and any member of that person's family;
+   b. any director, manager, officer, or person performing an equivalent function;
+   c. any entity in which a person in (a) or (b) holds an equity interest, serves as a governing
+      person, or otherwise has the ability to direct its management;
+   d. any trust or estate in which such a person has a beneficial interest or serves as fiduciary;
+   e. any person the Board designates as related for the purposes of this policy.
+
+**3. Approval before the transaction.** No related-party transaction may be entered into, and no
+payment made under one, before it has been approved in a signed writing that records: the parties
+and the control relationship, the subject and the amount or formula, the term, the basis for the
+price, and the approving actor and their authority.
+
+**4. Approval route, then pricing.** Identify the formation state's conflict statute and the
+interested person's role, then test each route separately on the actual facts: authorization by
+qualified or disinterested **directors**; approval or ratification by informed qualified or
+disinterested **shares**; or **fairness** to the Entity. The interested person's participation does
+not by itself eliminate every disinterested route — other directors may be qualified, and shares
+not owned or controlled by the interested person or a related person may still qualify. Establish
+that from the ledger and the board composition before concluding a route is unavailable, and never
+recite that no safe harbor existed unless the facts show it. See `governance.md`.
+
+State the basis for the price in every case: a market quote, a comparable third-party transaction,
+a cost-plus computation, or a valuation. Where fairness is the route relied on, make the fairness
+findings — price, terms, alternatives, process, and corporate benefit at the time of commitment —
+in the same signed writing.
+
+**5. Two-transfer rule.** Money owed by the Entity to a related party is paid **to that party**, and
+any onward payment is that party's own transaction. The Entity does not pay a related party's
+creditors directly. One approval per transaction; no standing authorization for ongoing sweeps.
+
+**6. Both sides of the books.** Every related-party transaction is recorded by both entities in the
+same period, with mirrored amounts and consistent characterization. The intercompany balances are
+reconciled at every close, and a one-sided or character-mismatched entry is investigated, not
+plugged.
+
+**7. No double deduction.** Where a cost is shared or recharged, confirm the allocations total 100%
+or less and that no entity has deducted the same economic cost twice.
+
+**8. Characterization is decided at the time.** Whether a transfer is a loan, a capital
+contribution, a distribution, a reimbursement, or payment for services is decided and documented
+when it happens. A later resolution may memorialize the characterization; it may not change it.
+
+**9. Loans.** Any loan in either direction carries a written note with a rate at least equal to the
+applicable federal rate for its type, stated maturity or demand terms, and a repayment record that
+matches the note. See `scenarios/ccorp-tax-reduction.md` for the §7872 analysis.
+
+**10. Register.** The Secretary maintains a register of related-party transactions with the columns
+in `scenarios/corporate-records.md`, reviewed annually.
+
+**11. Information returns.** Payments to related parties are tested for reporting like any other
+payment; relationship is not an exemption. See `scenarios/information-returns.md`.
+
+---
+
+Date: ______________
+
+______________________________________
+**<NAME>**, <CAPACITY>
+
+---
+
+*DRAFT — NOT EXECUTED. Review with corporate counsel before signing.*
